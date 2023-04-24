@@ -32,7 +32,7 @@ export const queryKeys = {
   /////////////////////
   /* figmaFiles 하위 */
   /////////////////////
-  figmaDatas: (figmaId: string) =>
+  figmaAllDatas: (figmaId: string) =>
     [...queryKeys.figmaFiles(figmaId), `all`] as const,
   figmaSections: (figmaId: string) =>
     [...queryKeys.figmaFiles(figmaId), `sections`] as const,

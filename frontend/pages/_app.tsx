@@ -39,6 +39,7 @@ const App = function ({ Component, ...rest }: AppProps) {
       ) : null}
       <Hydrate state={rest.pageProps.dehydratedState}>
         <Provider store={store}>
+          <Toast />
           <Component {...props.pageProps}></Component>
         </Provider>
       </Hydrate>
