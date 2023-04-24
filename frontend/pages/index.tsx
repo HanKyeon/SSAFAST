@@ -10,3 +10,13 @@ export default function Home() {
     </main>
   );
 }
+
+// export const getStaticProps = wrapper.getStaticProps(function (store) {
+//   return async function (context) {
+//     return {
+//       props: {
+//         asdf: `asd`,
+//       },
+//     };
+//   };
+// });
