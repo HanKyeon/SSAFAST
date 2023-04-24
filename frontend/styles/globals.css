@@ -13,7 +13,7 @@ body {
   box-sizing: border-box;
   outline: none;
 
-  /* font-family: dolbomB; */
+  font-family: nx2-g-m;
   font-size: 22px;
 }
 
@@ -29,7 +29,7 @@ body {
   color: #efefef;
   outline: none;
 
-  /* font-family: dolbomB; */
+  font-family: nx2-g-m;
   font-size: 22px;
   /* overflow: scroll; */
 }

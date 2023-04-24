@@ -1,0 +1,44 @@
+@font-face {
+  font-family: 'black-hans';
+  src: url('./black-hans.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'dangdang';
+  src: url('./dangdang.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'hopang-black';
+  src: url('./hopang-black.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'hopang-white';
+  src: url('./hopang-white.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'jalnan';
+  src: url('./jalnan.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'nx2-g-b';
+  src: url('./nx2-g-b.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'nx2-g-m';
+  src: url('./nx2-g-m.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'nx2-g-l';
+  src: url('./nx2-g-l.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'surround-air';
+  src: url('./surround-air.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'surround';
+  src: url('./surround.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'taebaek';
+  src: url('./taebaek.ttf') format('truetype');
+}
