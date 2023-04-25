@@ -1,4 +1,9 @@
-const SpaceWorkPage = function () {
+import { wrapper } from '@/store';
+import { InferGetServerSidePropsType } from 'next';
+
+const SpaceWorkPage = function (
+  props: InferGetServerSidePropsType<typeof getServerSideProps>
+) {
   return (
     <>
       <div>하잏 워킹</div>
@@ -8,3 +13,11 @@ const SpaceWorkPage = function () {
 };
 
 export default SpaceWorkPage;
+
+export const getServerSideProps = wrapper.getServerSideProps(function (store) {
+  return async function (context) {
+    return {
+      props: {},
+    };
+  };
+});
