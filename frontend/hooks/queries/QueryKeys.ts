@@ -9,10 +9,9 @@ user                    // 유저 정보              //
       ㄴapi               //                        // api 작성 관련 get
       ㄴpages
 figma  피그마 파일 아이디
-  ㄴtokens      // 피그마 토큰들
   ㄴfile     
     ㄴall          // 피그마 파일의 depth 3까지 모든 데이터
-    ㄴsections     // 선택된 figma section들 데이터
+    ㄴsections     // 선택된 figma section들 사진 데이터
 `;
 export const queryKeys = {
   ////////////
@@ -21,11 +20,13 @@ export const queryKeys = {
   user: () => [`user`] as const,
   figma: (figmaId: string) => [`figma`, figmaId] as const,
 
+  space: (spaceId: string | number) => [queryKeys.user(), spaceId] as const,
+  selectedFrames: (spaceId: string | number) =>
+    [queryKeys.space(spaceId), `frames`] as const,
+
   ////////////
   /* figma */
   ////////////
-  figmaTokens: (figmaId: string) =>
-    [...queryKeys.figma(figmaId), `tokens`] as const,
   figmaFiles: (figmaId: string) =>
     [...queryKeys.figma(figmaId), `file`] as const,
 

@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { queryKeys } from './QueryKeys';
 import axios from 'axios';
+import figmaAxios from '@/utils/figmaAxios';
+import apiRequest from '@/utils/axios';
 
 export interface FigmaBasic {
   id?: string;
@@ -12,6 +14,23 @@ export interface FigmaBasic {
   sharedPluginData?: any; // 쓰지말라고!
   componentPropertyReferences?: Map<String, String>;
 }
+
+export const useSelectedFrames = function (spaceId: string | number = ``) {
+  return useQuery({
+    queryKey: queryKeys.selectedFrames(spaceId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: ``, // 여기에 spaceID를 같이 보내야 함. 아니면 params
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId,
+  });
+};
+
+////////////////////////////
+// 피그마
+/////////////////////////////
 
 export interface FigmaNode extends FigmaBasic {
   absoluteBoundingBox?: { x: number; y: number; width: number; height: number };
@@ -55,59 +74,81 @@ export interface FigmaRawDatas {
   version: string;
 }
 
-export const useFigmaTokens = function (figmaId: string) {
+export interface FigmaServerData {
+  name: string;
+  figmaId: string;
+  image?: string;
+  selected?: boolean;
+}
+export interface FigmaRefineData {
+  ids: string;
+  noz: FigmaServerData[];
+}
+
+// figma 데이터 받아오기
+export const useFigmaDatas = function (figmaId: string) {
   return useQuery({
-    queryKey: queryKeys.figmaTokens(figmaId),
+    queryKey: queryKeys.figmaAllDatas(figmaId),
     queryFn: async function () {
-      return;
+      return figmaAxios({
+        method: `get`,
+        baseURL: `${process.env.NEXT_PUBLIC_HOSTNAME}`,
+        url: `/api/figma`,
+        params: {
+          figmaId,
+        },
+      }).then((res) => {
+        const data: FigmaRawDatas = res.data;
+        let ret: FigmaServerData[] = [];
+        let ids = ``;
+        data.document.children[0].children?.map((nod) => {
+          nod.children?.map((inod) => {
+            if (inod.type === 'FRAME') {
+              ids += inod.id + `,`;
+              ret.push({
+                name: inod.name!,
+                figmaId: inod.id!,
+              });
+            }
+          });
+          if (nod.type === 'FRAME') {
+            ids += nod.id + `,`;
+            ret.push({
+              name: nod.name!,
+              figmaId: nod.id!,
+            });
+          }
+        });
+        return { ids: ids.slice(0, -1), noz: ret };
+      });
     },
-    onSuccess: function () {},
-    onError: function () {},
+    enabled: !!figmaId,
     refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+    cacheTime: Infinity,
+    keepPreviousData: true,
   });
 };
 
-export const useFigmaDatas = function (figmaId: string) {
-  return useQuery<FigmaRawDatas>({
-    queryKey: queryKeys.figmaAllDatas(figmaId),
+// figma 이미지 파일 링크 받아오기
+export const useFigmaSections = function (figmaId: string, ids: string) {
+  return useQuery({
+    queryKey: queryKeys.figmaSections(figmaId),
     queryFn: async function () {
-      return axios({
-        // 이걸 figmaAxios로 따로 지정해야 할 것 같음.
-        // 피그마 정보 받아오기
+      return figmaAxios({
         method: `get`,
-        baseURL: `https://api.figma.com`,
-        url: `/v1/files/HIHVcGBjWhgE6sfaR6IKMj`, // figmaId 입력해야함.
+        baseURL: `${process.env.NEXT_PUBLIC_HOSTNAME}`,
+        url: `/api/figma-images`,
         params: {
-          depth: 3,
-        },
-        headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_FIGMA_TEST_ACCESS_TOKEN}`, // 토큰 자동 입력되는 interceptor를 따로 생성해야 할듯
+          figmaId,
+          ids,
         },
       }).then((res) => {
         return res.data;
       });
     },
-    onSuccess: function () {},
-    onError: function () {},
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    staleTime: Infinity,
-    cacheTime: Infinity,
-    refetchInterval: false,
-    refetchIntervalInBackground: false,
-    refetchOnReconnect: false,
-    keepPreviousData: true,
-  });
-};
-
-export const useFigmaSections = function (figmaId: string) {
-  return useQuery({
-    queryKey: queryKeys.figmaSections(figmaId),
-    queryFn: async function () {
-      return;
-    },
-    onSuccess: function () {},
-    onError: function () {},
+    enabled: !!figmaId && !!ids,
     refetchOnMount: false,
   });
 };
