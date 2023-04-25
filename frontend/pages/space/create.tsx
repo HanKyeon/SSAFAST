@@ -1,15 +1,54 @@
 import { wrapper } from '@/store';
 import { QueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { QueryClientOption } from '../_app';
+import { useFigmaDatas, useFigmaSections } from '@/hooks/queries/queries';
+import { useStoreDispatch } from '@/hooks/useStore';
+import { figmaTokenActions } from '@/store/figma-token-slice';
+import FigmaImageList from '@/components/FigmaImageList';
+import { SpinnerDots } from '@/components/common/Spinner';
+import useFigmaOrigin from '@/hooks/useFigmaOrigin';
 
 const SpaceCreatePage = function () {
   const [figmaId, setFigmaId] = useState<string>(``);
-  useEffect(function () {}, [figmaId]);
+  const {
+    figmaData,
+    figmaDataLoading,
+    figmaImages,
+    figmaImagesLoading,
+    figmaRefineData,
+  } = useFigmaOrigin(figmaId);
+
+  const dispatch = useStoreDispatch();
+
+  const setFigmaIdHandler = function () {
+    setFigmaId(() => `GTrnPhdA7vjujMiA54I2QI`);
+  };
+
+  const setFigmaToken = function () {
+    dispatch(
+      figmaTokenActions.setTokens({
+        figmaAccess: process.env.NEXT_PUBLIC_FIGMA_TEST_ACCESS_TOKEN,
+        figmaRefresh: process.env.NEXT_PUBLIC_FIGMA_TEST_REFRESH_TOKEN,
+      })
+    );
+    console.log('디스패치함');
+  };
   return (
-    <>
+    <div className="h-full w-full">
+      <div onClick={setFigmaToken}>피그마 토큰 세팅하기</div>
+      <div onClick={setFigmaIdHandler}>figma ID 우리꺼로 세팅</div>
       <div>하이요 스페이스 생성 라우팅</div>
-    </>
+      {figmaDataLoading ? <div>데이터 레이지쿼리 되는중</div> : <div>아님</div>}
+      {figmaImagesLoading ? <div>이미지 레이지쿼리</div> : <div>끝남</div>}
+      <div className="h-[80%] w-full overflow-y-scroll flex flex-row flex-wrap items-center justify-center gap-5 px-[10%]">
+        {figmaDataLoading || figmaImagesLoading ? (
+          <SpinnerDots />
+        ) : (
+          <FigmaImageList images={figmaRefineData} />
+        )}
+      </div>
+    </div>
   );
 };
 

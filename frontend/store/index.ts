@@ -34,7 +34,7 @@ const rootReducers = combineReducers({
 
 const persistedReducer = persistReducer(persistConfig, rootReducers);
 
-export const store = configureStore({
+const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -52,6 +52,8 @@ const makeStore: MakeStore<any> = function (context: any) {
 };
 export const persistor = persistStore(store);
 export const wrapper = createWrapper<Store>(makeStore);
+export default store;
+// 아래는 이전에 매번 redux가 재생성 되었음.
 
 // // 1. slice의 State를 StoreStates에 추가.
 // interface StoreStates {

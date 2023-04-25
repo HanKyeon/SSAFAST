@@ -8,7 +8,7 @@ import { figmaTokenActions } from '@/store/figma-token-slice';
 */
 
 const figmaAxios = axios.create({
-  baseURL: 'https://www.figma.com', // 서버 주소
+  baseURL: `${process.env.NEXT_PUBLIC_HOSTNAME}`,
   withCredentials: true,
 });
 
@@ -31,9 +31,11 @@ figmaAxios.interceptors.request.use(
 // response 인터셉터
 figmaAxios.interceptors.response.use(
   (response) => {
+    console.log(response);
     return response;
   },
   async (error) => {
+    console.log(error);
     const response = error.response; // 에러 정보
     if (response.status === 401) {
       const originalConfig = error.config; // 기존 요청 정보 저장 (accessToken 재발급 후 재요청)
@@ -55,7 +57,7 @@ figmaAxios.interceptors.response.use(
           store.dispatch(
             figmaTokenActions.setAccessToken({ figmaAccess: figmaAccess })
           );
-          originalConfig.headers['X-Figma-Token'] = `Bearer ${figmaAccess}`;
+          originalConfig.headers.Authorization = `Bearer ${figmaAccess}`;
           return axios(originalConfig);
         })
         .catch((err) => {
