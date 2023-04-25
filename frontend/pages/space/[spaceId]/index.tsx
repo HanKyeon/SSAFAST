@@ -37,13 +37,16 @@ export const getServerSideProps: GetServerSideProps =
     return async function (context) {
       const queryClient = new QueryClient();
       const { spaceId } = context.query as SpaceParams;
-      const figmaId = `HIHVcGBjWhgE6sfaR6IKMj`;
+      const figmaId = `HIHVcGBjWhgE6sfaR6IKMj`; // figma ID 역시 user의 spacedetail에서 가져온 것으로 fetch 해야함.
       await queryClient.prefetchQuery({
-        queryKey: queryKeys.user(), // 이 부분은 user의 spaceList로 변경해야함.
+        queryKey: queryKeys.user(), // 이 부분은 user의 spacedetail로 변경해야함.
         queryFn: async function () {
           return apiRequest({
             // 이 부분은 spaceId로 우리 db의 space Info를 가져오는 것.
             method: `get`,
+          }).then((res) => {
+            // 여기서 store의 figmaToken을 팀의 토큰으로 dispatch 해주기.
+            // 여기서 figma ID 가져와두기.
           });
         },
       });

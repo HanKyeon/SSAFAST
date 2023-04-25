@@ -1,5 +1,5 @@
 import Toast from '@/components/common/Toast';
-import { wrapper } from '@/store';
+import { persistor, wrapper } from '@/store';
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
 import { Provider } from 'react-redux';
@@ -11,27 +11,27 @@ import {
 import { useState } from 'react';
 
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { PersistGate } from 'redux-persist/integration/react';
+
+export const QueryClientOption = {
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      // useErrorBoundary: true,
+      // enabled: true,
+      cacheTime: 10000 * 60 * 5,
+      staleTime: 10000 * 60 * 5,
+      refetchOnWindowFocus: false,
+    },
+    mutations: {
+      // useErrorBoundary: true,
+    },
+  },
+};
 
 const App = function ({ Component, ...rest }: AppProps) {
   const { store, props } = wrapper.useWrappedStore(rest);
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            retry: 1,
-            // useErrorBoundary: true,
-            // enabled: true,
-            cacheTime: 10000 * 60 * 5,
-            staleTime: 10000 * 60 * 5,
-            refetchOnWindowFocus: false,
-          },
-          mutations: {
-            // useErrorBoundary: true,
-          },
-        },
-      })
-  );
+  const [queryClient] = useState(() => new QueryClient(QueryClientOption));
   return (
     <QueryClientProvider client={queryClient}>
       {process.env.NODE_ENV !== 'production' ? (
@@ -39,8 +39,10 @@ const App = function ({ Component, ...rest }: AppProps) {
       ) : null}
       <Hydrate state={rest.pageProps.dehydratedState}>
         <Provider store={store}>
-          <Toast />
-          <Component {...props.pageProps}></Component>
+          <PersistGate persistor={persistor} loading={null}>
+            <Toast />
+            <Component {...props.pageProps}></Component>
+          </PersistGate>
         </Provider>
       </Hydrate>
     </QueryClientProvider>

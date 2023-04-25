@@ -1,9 +1,13 @@
 import { useStoreDispatch } from '@/hooks/useStore';
 import { DispatchToast } from '@/store';
+import { figmaTokenActions } from '@/store/figma-token-slice';
 import apiRequest from '@/utils/axios';
-import axios from 'axios';
+import figmaAxios from '@/utils/figmaAxios';
+import axios, { AxiosResponse } from 'axios';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+
+// 여기는 권한 요청 받고서만 들어오는 곳.
 
 const FigmaCodeLoadingPage = function () {
   const router = useRouter();
@@ -14,7 +18,7 @@ const FigmaCodeLoadingPage = function () {
       if (!code || code.length === 0) {
         return;
       }
-      axios({
+      figmaAxios({
         method: `post`,
         baseURL: `https://www.figma.com`,
         url: `/api/oauth/token`,
@@ -28,15 +32,25 @@ const FigmaCodeLoadingPage = function () {
         },
       })
         .then((res) => {
-          // tokenDispatch
-          // res[`user_id`]
-          // res[`access_token`]
-          // res[`refresh_token`]
-
-          // user의 figma token 갱신하는 요청
-          apiRequest({
-            method: `post`,
-          });
+          const access = res[`access_token` as keyof AxiosResponse];
+          const refresh = res[`refresh_token` as keyof AxiosResponse];
+          if (access && refresh) {
+            dispatch(figmaTokenActions.setAccessToken({ figmaAccess: access }));
+            dispatch(
+              figmaTokenActions.setRefreshToken({ figmaRefresh: refresh })
+            );
+            // user의 figma token을 저장하는 요청.
+            apiRequest({
+              method: `post`,
+              data: {
+                // 토큰 두개 넣어서 post
+              },
+            });
+          }
+        })
+        .then((res) => {
+          dispatch(DispatchToast('생성 완료!', true));
+          router.push(`/space`);
         })
         .catch((err) => {
           dispatch(DispatchToast('에러가 발생했습니다!', false));
