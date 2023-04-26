@@ -150,5 +150,6 @@ export const useFigmaSections = function (figmaId: string, ids: string) {
     },
     enabled: !!figmaId && !!ids,
     refetchOnMount: false,
+    keepPreviousData: true,
   });
 };
