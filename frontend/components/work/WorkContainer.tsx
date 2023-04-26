@@ -4,41 +4,36 @@ import { WebrtcProvider } from 'y-webrtc';
 import { getYjsValue, syncedStore } from '@syncedstore/core';
 import { RoomProvider } from '@y-presence/react';
 import { useSyncedStore } from '@syncedstore/react';
-import * as Y from 'yjs';
-
-export interface PresenceUserData {
-  cursor?: {
-    x: number;
-    y: number;
-  };
-  name: string;
-  color: string;
-  step?: number;
-  img?: string;
-}
+import { PresenceUserData } from './presence-type';
+import DTOContainer from './DTOContainer';
 
 const WorkContainer = function () {
-  const ydoc = new Y.Doc();
-  const [step, setStep] = useState<number>(0);
+  const [step, setStep] = useState<number>(1);
   const router = useRouter();
   const { spaceId } = router.query;
   // const {} = useSpaceData // ReactQuery훅 만들어서 space data를 받아와야 한다.
   const [awareness, setAwareness] = useState<any>(null);
   const [sessions, setSessions] = useState<object>();
   const newStore = syncedStore({
-    pjt: {} as object,
+    space: {} as object,
   });
   const [store, setStore] = useState<any>(useSyncedStore(newStore));
-
+  const [yjsDoc, setYjsDoc] = useState<any>(getYjsValue(newStore));
+  console.log(store);
   useEffect(
     function () {
-      setAwareness(
-        () =>
-          new WebrtcProvider(
-            `${spaceId} 프로젝트 이름`,
-            getYjsValue(newStore) as any
-          ).awareness
-      );
+      if (store && spaceId?.length) {
+        const rtcProvider = new WebrtcProvider(
+          `${spaceId}:ssaffast`,
+          yjsDoc as any
+        );
+        const { awareness: innerAwareness } = rtcProvider;
+        setAwareness(() => innerAwareness);
+
+        return function () {
+          rtcProvider.destroy();
+        };
+      }
     },
     [spaceId, store]
   ); // 여기에 space data를 의존성으로 넣는다.
@@ -59,7 +54,7 @@ const WorkContainer = function () {
   //   [updatePresence]
   // );
   return (
-    <div>
+    <div className="h-full w-full">
       {awareness && (
         <RoomProvider<PresenceUserData>
           awareness={awareness}
@@ -68,12 +63,9 @@ const WorkContainer = function () {
             color: `#${Math.round(Math.random() * 0xffffff).toString(16)}`,
           }}
         >
-          <div className="h-full w-full">하이요</div>
+          {step === 1 && <DTOContainer store={store} />}
         </RoomProvider>
       )}
-      <div>ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ</div>
-      <div>ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ</div>
-      <div>ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ</div>
     </div>
   );
 };
