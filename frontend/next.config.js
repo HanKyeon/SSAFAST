@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   images: {
     remotePatterns: [
       {
@@ -8,6 +8,10 @@ const nextConfig = {
         hostname: `figma-alpha-api.s3.us-west-2.amazonaws.com`,
         port: ``,
         pathname: `/images/**`,
+      },
+      {
+        protocol: `https`,
+        hostname: `**`,
       },
     ],
   },
