@@ -61,7 +61,7 @@ const DTOContainer = function ({ store }: DTOProps) {
           })}
       </div>
       {others
-        .filter((user) => user.presence.step === 1)
+        .filter((user) => user.presence.step === 1 && !user.presence.place)
         .map((user) => (
           <Cursor key={`${Math.random()}`} {...user.presence} />
         ))}

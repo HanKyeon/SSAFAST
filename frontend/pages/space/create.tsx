@@ -8,8 +8,10 @@ import { figmaTokenActions } from '@/store/figma-token-slice';
 import FigmaImageList from '@/components/FigmaImageList';
 import { SpinnerDots } from '@/components/common/Spinner';
 import useFigmaOrigin from '@/hooks/useFigmaOrigin';
+import { useRouter } from 'next/router';
 
 const SpaceCreatePage = function () {
+  const router = useRouter();
   const [figmaId, setFigmaId] = useState<string>(``);
   const {
     figmaData,
@@ -34,11 +36,15 @@ const SpaceCreatePage = function () {
     );
     console.log('디스패치함');
   };
+  const pushHandler = function () {
+    router.push(`/`);
+  };
   return (
     <div className="h-full w-full">
       <div onClick={setFigmaToken}>피그마 토큰 세팅하기</div>
       <div onClick={setFigmaIdHandler}>figma ID 우리꺼로 세팅</div>
       <div>하이요 스페이스 생성 라우팅</div>
+      <div onClick={pushHandler}>이동</div>
       {figmaDataLoading ? <div>데이터 레이지쿼리 되는중</div> : <div>아님</div>}
       {figmaImagesLoading ? <div>이미지 레이지쿼리</div> : <div>끝남</div>}
       <div className="h-[80%] w-full overflow-y-scroll flex flex-row flex-wrap items-center justify-center gap-5 px-[10%]">
