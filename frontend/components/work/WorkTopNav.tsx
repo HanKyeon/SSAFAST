@@ -9,7 +9,8 @@ import { PresenceUserData } from './presence-type';
 import { CircleBtn } from '../common';
 import Logo from '/public/assets/images/Logo.png';
 import Image from 'next/image';
-import { useStoreSelector } from '@/hooks/useStore';
+import { useStoreDispatch, useStoreSelector } from '@/hooks/useStore';
+import { darkActions } from '@/store/dark-slice';
 
 interface TopNavProps {}
 
@@ -27,7 +28,11 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
   const modalOnHandler = function () {
     setIsTutorial(() => true);
   };
-  const { dark } = useStoreSelector((state) => state.dark);
+  const { dark, presence } = useStoreSelector((state) => state.dark);
+  const dispatch = useStoreDispatch();
+  const dispatchPresenceHandler = function () {
+    dispatch(darkActions.togglePresencs({}));
+  };
   return (
     <>
       {isTutorial && (
@@ -50,7 +55,7 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
         <div className={`flex items-center justify-center basis-[5%] w-[5%]`}>
           <BsQuestionCircleFill
             className={`h-full w-full p-[25%] cursor-pointer hover:scale-[105%] duration-[0.33s] ${
-              !dark
+              dark
                 ? 'text-mincho-strong active:text-teal-600'
                 : 'text-taro-strong active:text-violet-500'
             }`}
@@ -58,7 +63,15 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
           />
         </div>
         <div className={`flex items-center justify-center basis-[18%] w-[18%]`}>
-          <HorizonBadgeList users={users} />
+          {
+            <div
+              onClick={dispatchPresenceHandler}
+              className={`h-full w-[20%] mr-3 cursor-pointer hover:scale-[105%] duration-[0.33s]`}
+            >
+              {presence ? 'OFF' : 'ON'}
+            </div>
+          }
+          <HorizonBadgeList className="w-full" users={users} />
         </div>
         <div className={`flex items-center justify-center basis-[8%] w-[8%]`}>
           온오프
