@@ -9,6 +9,7 @@ import {
 } from '@reduxjs/toolkit';
 import { HYDRATE, MakeStore, createWrapper } from 'next-redux-wrapper';
 import exSlice, { exActions, exState } from './ex-slice';
+import darkSlice, { darkActions } from './dark-slice';
 import tokenSlice, { tokenActions, tokenState } from './token-slice';
 import toastSlice, { toastActions, toastState } from './toast-slice';
 import figmaTokenSlice, { figmaTokenState } from './figma-token-slice';
@@ -30,6 +31,7 @@ const rootReducers = combineReducers({
   token: tokenSlice,
   toast: toastSlice,
   figmatoken: figmaTokenSlice,
+  dark: darkSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducers);
