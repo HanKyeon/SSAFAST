@@ -10,6 +10,7 @@ import { useSyncedStore } from '@syncedstore/react';
 import { RTCSpaceData } from '@/pages/space/[spaceId]/work';
 import APIContainer from './APIContainer';
 import DTOContainer from './DTOContainer';
+import { useStoreSelector } from '@/hooks/useStore';
 
 interface Props {
   serverSideStore?: RTCSpaceData;
@@ -34,6 +35,7 @@ const APIEditContainer = function ({ store, serverSideStore }: Props) {
     [updatePresence]
   );
 
+  const { presence: isPresence } = useStoreSelector((state) => state.dark);
   const [API1DTO2, setAPI1DTO2] = useState<1 | 2>(1);
   const goAPI = function () {
     setAPI1DTO2(() => 1);
@@ -68,13 +70,14 @@ const APIEditContainer = function ({ store, serverSideStore }: Props) {
         onPointerMove={pointerMoveHandler}
       >
         <EditTab goAPI={goAPI} goDTO={goDTO} isActive={API1DTO2} />
-        {API1DTO2 % 2 ? <APIContainer /> : <DTOContainer />}
+        {API1DTO2 % 2 ? <APIContainer store={store} /> : <DTOContainer />}
       </div>
-      {others
-        .filter((user) => user.presence.step === 1 && !user.presence.place)
-        .map((user) => (
-          <Cursor key={`${Math.random()}`} {...user.presence} />
-        ))}
+      {isPresence &&
+        others
+          .filter((user) => user.presence.step === 1 && !user.presence.place)
+          .map((user) => (
+            <Cursor key={`${Math.random()}`} {...user.presence} />
+          ))}
     </>
   );
 };

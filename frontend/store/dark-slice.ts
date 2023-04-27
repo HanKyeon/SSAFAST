@@ -3,11 +3,13 @@ import { createSlice } from '@reduxjs/toolkit';
 // 1. state의 타입 선언
 export interface darkState {
   dark: boolean;
+  presence: boolean;
 }
 
 // 2. state의 initialState 지정
 const initialState: darkState = {
-  dark: false,
+  dark: true,
+  presence: true,
 };
 
 // 3. slice 생성
@@ -17,6 +19,9 @@ const darkSlice = createSlice({
   reducers: {
     toggleDark(state, action) {
       state.dark = !state.dark;
+    },
+    togglePresencs(state, action) {
+      state.presence = !state.presence;
     },
   },
 });
