@@ -6,11 +6,11 @@ import { PresenceUserData } from '../presence-type';
 import Badge from '@/components/common/Badge';
 import useInput from '@/hooks/useInput';
 
-interface DTOProps {
+interface Props {
   store: any;
 }
 
-const DTOContainer = function ({ store }: DTOProps) {
+const DTOContainer = function ({ store }: Props) {
   const others = useOthers<PresenceUserData>();
   const users = useUsers();
   //  프리센스커서 이동 관련 이벤트
