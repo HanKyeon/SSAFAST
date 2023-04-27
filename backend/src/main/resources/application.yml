@@ -8,12 +8,12 @@ spring:
     username: ssafast
     password: 502502502
 
-#  data:
-#    mongodb:
-#      host: localhost
-#      port: 27017
-#      username: ssafast
-#      password: 502502502
+  #  data:
+  #    mongodb:
+  #      host: localhost
+  #      port: 27017
+  #      username: ssafast
+  #      password: 502502502
 
   jpa:
     properties:
