@@ -74,6 +74,15 @@ module.exports = {
           white: `#FFFFFF`,
           black: `#212121`,
         },
+        jossbar: {
+          blue: `#7CC8EC`,
+          pink: `#EC7E9A`,
+        },
+        grayscale: {
+          deepdark: `#515457`,
+          dark: `#9D9D9D`,
+          light: `#D9D9D9`,
+        },
       },
       fontFamily: {
         'black-hans': ['black-hans', 'ui-sans-serif'],
