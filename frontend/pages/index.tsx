@@ -6,6 +6,7 @@ import { Box, Button, CircleBtn } from '@/components/common';
 import { useStoreDispatch, useStoreSelector } from '@/hooks/useStore';
 import { darkActions } from '@/store/dark-slice';
 import { FormEvent } from 'react';
+import ToggleModeBtn from '@/components/common/ToggleModeBtn';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -39,6 +40,7 @@ export default function Home() {
       <Button isEmpty onClick={changeDark}>
         toggle
       </Button>
+      <ToggleModeBtn />
       <CircleBtn isEmpty btnType="plus">
         +
       </CircleBtn>

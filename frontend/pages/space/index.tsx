@@ -10,7 +10,7 @@ import { ParsedUrlQuery } from 'querystring';
 
 const SpacePage = function (): JSX.Element {
   return (
-    <div className={'flex'}>
+    <div className="flex">
       <SpaceNavContainer />
       <PreviewLeftContainer />
       <PreviewRightContainer />
