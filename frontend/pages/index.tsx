@@ -6,6 +6,7 @@ import { Box, Button, CircleBtn } from '@/components/common';
 import { useStoreDispatch, useStoreSelector } from '@/hooks/useStore';
 import { darkActions } from '@/store/dark-slice';
 import { FormEvent } from 'react';
+import { TestForm } from '@/components/forms';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -42,6 +43,7 @@ export default function Home() {
       <CircleBtn isEmpty btnType="plus">
         +
       </CircleBtn>
+      <TestForm />
     </main>
   );
 }
