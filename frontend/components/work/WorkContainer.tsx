@@ -7,17 +7,22 @@ import { useSyncedStore } from '@syncedstore/react';
 import { PresenceUserData } from './presence-type';
 import DTOContainer from './DTOContainer';
 import WorkTopNav from './WorkTopNav';
+import APIConnectContainer from './APIConnectContainer';
+import APIDocsContainer from './APIDocsContainer';
+import TestContainer from './TestContainer';
 
-const WorkContainer = function () {
+interface Props {
+  serverSideStore: object;
+}
+
+const WorkContainer = function ({ serverSideStore }: Props) {
   const [step, setStep] = useState<number>(1);
   const router = useRouter();
   const { spaceId } = router.query;
   // const {} = useSpaceData // ReactQuery훅 만들어서 space data를 받아와야 한다.
   const [awareness, setAwareness] = useState<any>(null);
   const [sessions, setSessions] = useState<object>();
-  const newStore = syncedStore({
-    space: {} as object,
-  });
+  const newStore = syncedStore({ space: {} } as any);
   const [store, setStore] = useState<any>(useSyncedStore(newStore));
   const [yjsDoc, setYjsDoc] = useState<any>(getYjsValue(newStore));
   useEffect(
@@ -36,23 +41,8 @@ const WorkContainer = function () {
       }
     },
     [spaceId, store]
-  ); // 여기에 space data를 의존성으로 넣는다.
+  );
 
-  // const others = useOthers<PresenceUserData>();
-
-  // //  프리센스커서 이동 관련 이벤트
-  // const updatePresence = useUpdatePresence<PresenceUserData>();
-  // const pointerMoveHandler = useCallback(
-  //   function (e: MouseEvent) {
-  //     updatePresence({
-  //       cursor: {
-  //         x: e.clientX,
-  //         y: e.clientY,
-  //       },
-  //     });
-  //   },
-  //   [updatePresence]
-  // );
   return (
     <>
       <div className="h-[93.2%] w-full">
@@ -110,7 +100,15 @@ const WorkContainer = function () {
                 </div>
               </div>
             </WorkTopNav>
-            {step === 1 && <DTOContainer store={store} />}
+            {step === 1 ? (
+              <DTOContainer store={store} />
+            ) : step === 2 ? (
+              <APIConnectContainer />
+            ) : step === 3 ? (
+              <APIDocsContainer />
+            ) : (
+              <TestContainer />
+            )}
           </RoomProvider>
         )}
       </div>
