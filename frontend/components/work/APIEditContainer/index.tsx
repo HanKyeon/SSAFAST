@@ -1,19 +1,26 @@
 import { useOthers, useUpdatePresence, useUsers } from '@y-presence/react';
-import { PointerEvent, useCallback, useEffect, useRef } from 'react';
+import { PointerEvent, useCallback, useEffect, useRef, useState } from 'react';
 // import { PresenceUserData } from './WorkContainer';
 import Cursor from '../../common/Cursor';
 import { PresenceUserData } from '../presence-type';
 import Badge from '@/components/common/Badge';
 import useInput from '@/hooks/useInput';
+import EditTab from './EditTab';
+import { useSyncedStore } from '@syncedstore/react';
+import { RTCSpaceData } from '@/pages/space/[spaceId]/work';
+import APIContainer from './APIContainer';
+import DTOContainer from './DTOContainer';
 
 interface Props {
+  serverSideStore?: RTCSpaceData;
   store: any;
 }
 
-const DTOContainer = function ({ store }: Props) {
+const APIEditContainer = function ({ store, serverSideStore }: Props) {
   const others = useOthers<PresenceUserData>();
   const users = useUsers();
   //  프리센스커서 이동 관련 이벤트
+  const state = useSyncedStore(store);
   const updatePresence = useUpdatePresence<PresenceUserData>();
   const pointerMoveHandler = useCallback(
     function (e: PointerEvent) {
@@ -22,43 +29,46 @@ const DTOContainer = function ({ store }: Props) {
           x: e.clientX,
           y: e.clientY,
         },
-        step: 1,
       });
     },
     [updatePresence]
   );
+
+  const [API1DTO2, setAPI1DTO2] = useState<1 | 2>(1);
+  const goAPI = function () {
+    setAPI1DTO2(() => 1);
+  };
+  const goDTO = function () {
+    setAPI1DTO2(() => 2);
+  };
+
   const inputRef = useRef<HTMLInputElement>(null);
   const { inputData, onChangeHandler, setFstData } = useInput(inputRef);
   useEffect(
     function () {
-      store.space.inputData = inputData;
+      if (store.space.inputData) {
+        setFstData(store.space.inputData);
+      }
     },
-    [inputData]
+    [store.space.inputData]
   );
   useEffect(
     function () {
-      setFstData(store.space.inputData);
+      if (store.space.inputData != undefined) {
+        store.space.inputData = inputData;
+      }
     },
-    [store.space.inputData]
+    [inputData]
   );
 
   return (
     <>
-      <div className="h-full w-full" onPointerMove={pointerMoveHandler}>
-        <div>ㅇㅇㅇ</div>
-        <div>ㅇㅇㅇ</div>
-        <div>ㅇㅇㅇ</div>
-        <input
-          ref={inputRef}
-          onChange={onChangeHandler}
-          className="text-slate-900"
-        />
-        <div>{store.space.inputData}</div>
-        {others
-          .filter((user) => user.presence.step === 1)
-          .map((user) => {
-            return <Badge name={`asd`} />;
-          })}
+      <div
+        className="h-full w-full overflow-hidden"
+        onPointerMove={pointerMoveHandler}
+      >
+        <EditTab goAPI={goAPI} goDTO={goDTO} isActive={API1DTO2} />
+        {API1DTO2 % 2 ? <APIContainer /> : <DTOContainer />}
       </div>
       {others
         .filter((user) => user.presence.step === 1 && !user.presence.place)
@@ -69,4 +79,4 @@ const DTOContainer = function ({ store }: Props) {
   );
 };
 
-export default DTOContainer;
+export default APIEditContainer;

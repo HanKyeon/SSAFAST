@@ -15,14 +15,7 @@ const useFigmaOrigin = function (figmaId: string = ``, spaceId: string = ``) {
   const { data: selectedFrames, isLoading: selectedFramesLoading } =
     useSelectedFrames(spaceId);
   const figmaIds = figmaData?.ids.split(','); // selectedFrames에서 figmaIds를 받음
-  const 골라진임의값 = [
-    `4:14`,
-    `115:522`,
-    `101:417`,
-    `232:1897`,
-    `232:2481`,
-    `232:2759`,
-  ];
+  const 골라진임의값 = [`4:14`, `115:522`, `101:417`, `232:1897`, `232:2481`];
 
   const figmaRefineData = useMemo(
     function () {

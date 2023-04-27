@@ -9,3 +9,10 @@ export interface PresenceUserData {
   img?: string;
   place?: string;
 }
+
+export interface workFigma {
+  figmaSectionId: string | number;
+  sectionUrl: string;
+  refreshId: string;
+  name: string;
+}

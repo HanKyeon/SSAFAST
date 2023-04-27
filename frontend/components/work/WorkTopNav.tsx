@@ -6,6 +6,8 @@ import Modal from '../common/Modal';
 import { HorizonBadgeList } from '../common/BadgeList';
 import { useUsers } from '@y-presence/react';
 import { PresenceUserData } from './presence-type';
+import Logo from '/public/assets/images/Logo.png';
+import Image from 'next/image';
 
 interface TopNavProps {}
 
@@ -34,10 +36,10 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
         className={`sticky flex flex-row w-full h-[6.8%] items-center pl-[1%] pr-[2%] py-[8px]`}
       >
         <div
-          className={`flex items-center justify-center basis-[6%] w-[6%] cursor-pointer hover:scale-[105%] duration-[0.33s]`}
+          className={`flex items-center justify-center basis-[6%] w-[6%] cursor-pointer hover:scale-[105%] duration-[0.33s] pt-3 pb-1`}
           onClick={() => router.push(`/`)}
         >
-          로고
+          <Image src={Logo} alt="SSAFAST" width={50} height={50} />
         </div>
         <div className={`flex items-center justify-center basis-[48%]`}>
           {children}
