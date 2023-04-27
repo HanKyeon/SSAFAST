@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9d0cd8f2-638c-4445-9e04-ce13ea6ac666" name="Changes" comment="" />
+    <list default="true" id="9d0cd8f2-638c-4445-9e04-ce13ea6ac666" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/backend/ssafast/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/ssafast/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/ssafast/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/ssafast/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/ssafast/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/ssafast/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/ssafast/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/ssafast/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/ssafast/src/main/java/com/rocket/ssafast/SsafastApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/ssafast/src/main/java/com/rocket/ssafast/auth/controller/test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/ssafast/src/main/java/com/rocket/ssafast/auth/domain/test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/ssafast/src/main/java/com/rocket/ssafast/auth/dto/test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/ssafast/src/main/java/com/rocket/ssafast/auth/repository/test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/ssafast/src/main/java/com/rocket/ssafast/auth/service/test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/ssafast/src/main/java/com/rocket/ssafast/config/test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/ssafast/src/main/resources/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/ssafast/src/test/java/com/rocket/ssafast/SsafastApplicationTests.java" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -23,18 +41,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/SSAFY/Desktop/ssafast/S08P31A502",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/SSAFY/Desktop/ssafast/S08P31A502&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -44,6 +62,7 @@
       <option name="presentableId" value="Default" />
       <updated>1682557376763</updated>
       <workItem from="1682557379023" duration="277000" />
+      <workItem from="1682583943591" duration="96000" />
     </task>
     <servers />
   </component>
