@@ -29,7 +29,7 @@ const WorkContainer = function ({ serverSideStore }: Props) {
     function () {
       if (store && spaceId?.length) {
         const rtcProvider = new WebrtcProvider(
-          `${spaceId}:ssaffast`,
+          `${spaceId}:ssafast`,
           yjsDoc as any
         );
         const { awareness: innerAwareness } = rtcProvider;
