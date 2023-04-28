@@ -1,15 +1,19 @@
 import { useStoreSelector } from '@/hooks/useStore';
 import { PropsWithChildren, FC, ButtonHTMLAttributes } from 'react';
+import { RxQuestionMark } from 'react-icons/rx';
+import { AiOutlinePlus } from 'react-icons/ai';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   btnType?: 'question' | 'plus';
   isEmpty?: boolean;
+  gray?: boolean;
   className?: string;
 }
 
 const CircleBtn = function ({
   btnType = 'question',
   isEmpty = false,
+  gray = false,
   children,
   className,
   ...rest
@@ -17,16 +21,20 @@ const CircleBtn = function ({
   const { dark: isDark } = useStoreSelector((state) => state.dark);
   const styles = {
     question: `${
-      isDark && !isEmpty
-        ? 'bg-mincho-strong text-white text-[16px] pt-1'
+      gray
+        ? ' bg-grayscale-deepdark text-theme-white-strong'
+        : isDark && !isEmpty
+        ? 'bg-mincho-strong text-theme-white-strong'
         : !isDark && !isEmpty
-        ? 'bg-taro-strong text-white text-[16px] pt-1'
-        : 'text-grayscale-dark border-grayscale-dark border-[2px] text-[16px] pt-1'
+        ? 'bg-taro-strong text-theme-white-strong'
+        : 'text-grayscale-dark border-grayscale-dark border-[2px]'
     }`,
     plus: `${
-      isDark
-        ? 'bg-taro-strong text-white text-[18px] pt-[1.5px] text-center'
-        : 'bg-mincho-strong text-white text-[18px] pt-[1.5px] text-center'
+      gray
+        ? ' bg-grayscale-deepdark text-theme-white-strong text-[16px]'
+        : isDark
+        ? 'bg-taro-strong text-theme-white-strong text-[16px]'
+        : 'bg-mincho-strong text-theme-white-strong text-[16px]'
     }`,
   };
 
@@ -34,10 +42,10 @@ const CircleBtn = function ({
     <button
       className={`${className} ${
         styles[`${btnType}`]
-      } rounded-full duration-[0.33s] w-7 h-7`}
+      } inline-flex justify-center items-center rounded-full duration-[0.33s] w-7 h-7`}
       {...rest}
     >
-      {children}
+      {btnType === 'question' ? <RxQuestionMark /> : <AiOutlinePlus />}
     </button>
   );
 };
