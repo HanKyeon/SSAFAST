@@ -5,8 +5,9 @@ import { useRouter } from 'next/router';
 import { Box, Button, CircleBtn } from '@/components/common';
 import { useStoreDispatch, useStoreSelector } from '@/hooks/useStore';
 import { darkActions } from '@/store/dark-slice';
-import { FormEvent } from 'react';
-import { TestForm } from '@/components/forms';
+import { FormEvent, useState } from 'react';
+import { RequestForm } from '@/components/forms';
+import { useForm } from 'react-hook-form';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,6 +21,7 @@ export default function Home() {
   const changeDark = function () {
     dispatch(darkActions.toggleDark({}));
   };
+
   return (
     <main>
       <div>하이요ㅕ</div>
@@ -43,7 +45,7 @@ export default function Home() {
       <CircleBtn isEmpty btnType="plus">
         +
       </CircleBtn>
-      <TestForm />
+      <RequestForm />
     </main>
   );
 }
