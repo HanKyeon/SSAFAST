@@ -37,7 +37,7 @@ const mok = [
     figmaSectionId: `5`,
     sectionUrl:
       'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/35599cc7-27ff-4584-834a-e53af3849446',
-    refreshId: `232:2481,232:2759`,
+    refreshId: `232:2481`,
     name: `api명세 작성 - postman - dark`,
   },
 ];
@@ -53,6 +53,19 @@ const FigmaList = function ({ figmaList = mok, store }: Props) {
     setActiveIdx(() => idx);
   };
 
+  const addSyncedStoreFigmaItem = function () {
+    const addItem = {
+      figmaSectionId: `6`,
+      sectionUrl:
+        'https://thumbnail6.coupangcdn.com/thumbnails/remote/230x230ex/image/vendor_inventory/4dd4/f0211895f2765bf6459771ed1bc6b5c4e53ea4cc6024d291c8aee115445c.jpg',
+      refreshId: `232:2759`,
+      name: `무야호`,
+    };
+    if (store.space.figmaList) {
+      store.space.figmaList.push(addItem);
+    }
+  };
+
   return (
     <div className="h-full w-full p-[3%] flex flex-col gap-[2%]">
       {/* {figmaList.map((figmaData, idx) => {
@@ -66,6 +79,7 @@ const FigmaList = function ({ figmaList = mok, store }: Props) {
           />
         );
       })} */}
+      <Box onClick={addSyncedStoreFigmaItem}>store 관련 테스트 해봅시다.</Box>
       {store?.space?.figmaList
         ? store.space.figmaList.map((figmaData: workFigma, idx: number) => {
             return (
