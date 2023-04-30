@@ -23,7 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			.orElseThrow(() -> new UsernameNotFoundException("유저 없음"));
 
 		if(user != null) {
-			UserDetailsImpl userDetails = new UserDetailsImpl(user);
+			UserDetailsImpl userDetails = new UserDetailsImpl(user, null);
 			return userDetails;
 		}
 

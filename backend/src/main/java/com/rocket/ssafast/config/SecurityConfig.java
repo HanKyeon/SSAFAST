@@ -11,10 +11,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.rocket.ssafast.auth.handler.OAuth2SuccessHandler;
 import com.rocket.ssafast.auth.jwt.JwtAccessDeniedHandler;
 import com.rocket.ssafast.auth.jwt.JwtAuthenticationEntryPoint;
 import com.rocket.ssafast.auth.jwt.JwtAuthenticationFilter;
 import com.rocket.ssafast.auth.jwt.JwtTokenProvider;
+import com.rocket.ssafast.auth.service.AuthService;
+import com.rocket.ssafast.auth.service.PrincipalOauth2UserService;
+import com.rocket.ssafast.auth.service.RedisService;
+import com.rocket.ssafast.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,8 +28,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 	private final JwtTokenProvider jwtTokenProvider;
+	private final RedisService redisService;
 	private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+	private final PrincipalOauth2UserService principalOauth2UserService;
 
 	@Bean
 	public BCryptPasswordEncoder encoder() {
@@ -50,12 +57,19 @@ public class SecurityConfig {
 
 			.and()
 			.authorizeRequests()
-			.antMatchers("/api/user/signup", "/api/auth/login").permitAll() 	// signup permit
+			.antMatchers("/login","/api/user/signup", "/api/auth/login").permitAll() 	// signup permit
 			.anyRequest().authenticated()
 
 			.and()
 			.headers()
-			.frameOptions().sameOrigin();
+			.frameOptions().sameOrigin()
+
+			// OAuth2
+			.and()
+			.oauth2Login()
+			.successHandler(new OAuth2SuccessHandler(redisService, jwtTokenProvider))
+			.userInfoEndpoint()		// login 성공 후 user 정보 가져옴
+			.userService(principalOauth2UserService);	// user 정보 처리
 
 		return http.build();
 	}
