@@ -34,25 +34,6 @@ public class AuthService {
 	private final RedisService redisService;
 	private final UserRepository userRepository;
 
-	// 로그인: 인증 정보 저장 및 비어 토큰 발급
-	@Transactional
-	public TokenDto login(LoginReqUserDto reqUserDto) {
-		Optional<User> user = userRepository.findByEmail(reqUserDto.getEmail());
-		if(!user.isPresent()) {
-			throw new CustomException(ErrorCode.NOT_FOUND);
-		}
-		if(!encoder.matches(reqUserDto.getPassword(), user.get().getPassword())) {
-			throw new CustomException(ErrorCode.BAD_REQUEST);
-		}
-		UsernamePasswordAuthenticationToken authenticationToken =
-			new UsernamePasswordAuthenticationToken(reqUserDto.getEmail(), reqUserDto.getPassword());
-
-		Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-
-		return generateToken(authentication.getName());
-	}
-
 	// 토큰 재발급: validate 메서드가 true 반환할 때만 사용 -> AT, RT 재발급
 	@Transactional
 	public TokenDto reissue(String requestAccessTokenInHeader, String requestRefreshToken) {

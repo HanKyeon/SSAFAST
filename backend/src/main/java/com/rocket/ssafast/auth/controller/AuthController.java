@@ -34,38 +34,6 @@ public class AuthController {
 	private final long COOKIE_EXPIRATION = 7776000; // 90일
 	private final RedisService redisService;
 
-	// 로그인 -> 토큰 발급
-	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody @Validated LoginReqUserDto reqUserDto) {
-		try {
-			log.info("---------------로그인ㅋ--------------------");
-			log.info("prev redis all data: "+ redisService.getAllKeysAndValues());
-			// User 등록 및 Refresh Token 저장
-			TokenDto tokenDto = authService.login(reqUserDto);
-			log.info("after redis all data: "+ redisService.getAllKeysAndValues());
-
-			// RT
-			HttpCookie httpCookie = ResponseCookie.from("refresh-token", tokenDto.getRefreshToken())
-				.maxAge(COOKIE_EXPIRATION)
-				.httpOnly(true)
-				.secure(true)
-				.build();
-
-			return ResponseEntity.ok()
-				.header(HttpHeaders.SET_COOKIE, httpCookie.toString())
-				// AT 저장
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken())
-				.build();
-		} catch (CustomException e) {
-			log.error("error: ", e);
-			return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
-		} catch (Exception e) {
-			log.error("error: ", e);
-			ErrorCode ec = ErrorCode.INTERNAL_SERVER_ERROR;
-			return new ResponseEntity<>(ec.getMessage(), ec.getHttpStatus());
-		}
-	}
-
 	// 토큰 재발급
 	@PostMapping("/reissue")
 	public ResponseEntity<?> reissue(@CookieValue(name = "refresh-token") String requestRefreshToken,

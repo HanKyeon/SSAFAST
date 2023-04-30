@@ -21,16 +21,12 @@ public class SignUpReqUserDto {
 	@Email
 	String email;
 
-	@NotEmpty
-	String password;
-
 	String profileImg;
 
 	@Builder
 	public SignUpReqUserDto(String name, String email, String password, String profileImg) {
 		this.name = name;
 		this.email = email;
-		this.password = password;
 		this.profileImg = profileImg;
 	}
 
@@ -38,7 +34,6 @@ public class SignUpReqUserDto {
 		return User.builder()
 			.name(name)
 			.email(email)
-			.password(password)
 			.profileImg(profileImg)
 			.build();
 	}

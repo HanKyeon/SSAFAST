@@ -46,12 +46,12 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 			.maxAge(COOKIE_EXPIRATION)
 			.httpOnly(true)
 			.secure(true)
+			.path("/")
 			.build();
 
+		System.out.println(tokenDto.getAccessToken());
 		response.addHeader(HttpHeaders.SET_COOKIE, httpCookie.toString());
 		response.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken());
 		response.setContentType("application/json;charset=UTF-8");
-
-		response.sendRedirect("/oauth-redirect");
 	}
 }

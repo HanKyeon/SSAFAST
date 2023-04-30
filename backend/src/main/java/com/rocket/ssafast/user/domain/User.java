@@ -30,9 +30,6 @@ public class User {
 	@Column(name = "email")
 	String email;
 
-	@Column(name = "password")
-	String password;
-
 	@Column(name = "profileImg")
 	String profileImg;
 

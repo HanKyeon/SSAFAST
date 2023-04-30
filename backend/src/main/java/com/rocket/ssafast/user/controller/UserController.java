@@ -21,14 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserController {
-
 	private final UserService userService;
-	private final BCryptPasswordEncoder encoder;
 
 	@PostMapping("/signup")
 	public ResponseEntity<?> signup(@RequestBody SignUpReqUserDto reqUserDto) {
 		try {
-			reqUserDto.setPassword(encoder.encode(reqUserDto.getPassword()));
 			return new ResponseEntity<>(userService.createUser(reqUserDto), HttpStatus.OK);
 		} catch (CustomException e) {
 			log.error("error: ", e);
