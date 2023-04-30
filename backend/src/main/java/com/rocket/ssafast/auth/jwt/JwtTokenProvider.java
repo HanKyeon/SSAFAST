@@ -35,12 +35,8 @@ public class JwtTokenProvider implements InitializingBean {
 
 	private final UserDetailsServiceImpl userDetailsService;
 	private final RedisService redisService;
-
 	private static Key signingKey;
 	private static String EMAIL_KEY = "email";
-
-	@Value("${server.url}")
-	private String url;
 
 	@Value("${jwt.secret}")
 	private String secretKey;
