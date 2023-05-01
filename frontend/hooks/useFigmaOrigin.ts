@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   useFigmaDatas,
   useFigmaSections,
-  useSelectedFrames,
+  useSpaceFrames,
 } from './queries/queries';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -23,7 +23,7 @@ const useFigmaOrigin = function (
     figmaData?.ids || ``
   );
   const { data: selectedFrames, isLoading: selectedFramesLoading } =
-    useSelectedFrames(spaceId);
+    useSpaceFrames(spaceId);
   const figmaIds = figmaData?.ids.split(','); // selectedFrames에서 figmaIds를 받음
 
   const figmaRefineData = useMemo(
