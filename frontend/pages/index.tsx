@@ -6,7 +6,7 @@ import { Box, Button, CircleBtn } from '@/components/common';
 import { useStoreDispatch, useStoreSelector } from '@/hooks/useStore';
 import { darkActions } from '@/store/dark-slice';
 import { FormEvent, useState } from 'react';
-import { RequestForm } from '@/components/forms';
+import { RequestForm, ResponseForm } from '@/components/forms';
 import { useForm } from 'react-hook-form';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -46,6 +46,7 @@ export default function Home() {
         +
       </CircleBtn>
       <RequestForm />
+      <ResponseForm/>
     </main>
   );
 }
