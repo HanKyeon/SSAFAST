@@ -16,18 +16,6 @@ COPY . .
 # start build
 RUN npm run build
 
-# nginx base image
-FROM nginx:alpine
-
-# delete nginx default.conf
-RUN rm /etc/nginx/conf.d/default.conf
-
-# copy nginx.conf in host to container
-COPY nginx/nginx.conf /etc/nginx/conf.d
-
-# copy build files to nginx container
-COPY --from=build /app /usr/share/nginx/html
-
 EXPOSE 3000
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["npm", "start"]
