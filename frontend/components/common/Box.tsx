@@ -5,13 +5,11 @@ interface BoxProps extends AllHTMLAttributes<HTMLDivElement> {
   variant?: `one` | `two` | `three`;
   fontType?: `normal` | `header` | `content`;
   className?: string;
-  title?: string;
 }
 
 const Box = function ({
   variant = 'two',
   fontType = `normal`,
-  title,
   children,
   className,
   ...rest
@@ -44,12 +42,9 @@ const Box = function ({
     <div
       className={`${className} ${styles[`${variant}`]} ${
         fontStyle[`${fontType}`]
-      } rounded-[13px] p-5`}
+      } rounded-[13px]`}
       {...rest}
     >
-      {title && (
-        <div className="pb-5 text-[14px] text-grayscale-dark">{title}</div>
-      )}
       {children}
     </div>
   );

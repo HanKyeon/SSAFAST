@@ -6,6 +6,7 @@ import { object } from 'yup';
 import { useStoreSelector } from '@/hooks/useStore';
 import ToggleModeBtn from '../common/ToggleModeBtn';
 import SpaceNameItem from './SpaceNameItem';
+import UserBadge from '../common/UserBadge';
 
 const SpaceNavContainer = function (): JSX.Element {
   const { dark: isDark } = useStoreSelector((state) => state.dark);
@@ -18,16 +19,10 @@ const SpaceNavContainer = function (): JSX.Element {
       <div className="h-[10%]">
         <Image src={UserImg} alt="logo" height={70} />
       </div>
-      <Box className="h-[90%] flex flex-col" fontType="normal">
+      <Box className="flex-1 min-h-0 flex flex-col p-5" fontType="normal">
         {/* 이미지 */}
         <div className="flex flex-col justify-center items-center mb-8">
-          <div className={`${styles['userImgWrapper']}`}>
-            <Image
-              src={UserImg}
-              alt="user image"
-              className="min-w-full min-h-full object-cover"
-            />
-          </div>
+          <UserBadge size="large" />
           <span className="text-theme-white-strong text-[15px] mt-3">
             고북씨
           </span>

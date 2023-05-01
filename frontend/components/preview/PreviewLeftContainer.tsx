@@ -1,11 +1,13 @@
 import Image from 'next/image';
 import { Box } from '../common';
 import SpaceIcon from '/public/assets/images/Ggo.png';
+import BoxHeader from '../common/BoxHeader';
+import APIlistItem from '../apis/APIlistItem';
 
 const PreviewLeftContainer = function (): JSX.Element {
   return (
-    <div className="flex-[2] py-3 flex flex-col gap-3">
-      <Box className="flex-[3] bg-preview bg-no-repeat bg-cover bg-center p-0">
+    <div className="h-full flex-[2] py-3 flex flex-col gap-3 min-w-0">
+      <Box className="flex-[3] bg-preview bg-no-repeat bg-cover bg-center">
         <div className="w-full h-full p-10 bg-basic-black bg-opacity-60 flex flex-col gap-5">
           {/* header */}
           <div className="flex gap-3 items-center">
@@ -42,8 +44,61 @@ const PreviewLeftContainer = function (): JSX.Element {
           </div>
         </div>
       </Box>
-      <Box title="API list" className="flex-[2]">
-        ffff
+      <Box className="p-5 flex-[2] min-h-0 flex flex-col">
+        <BoxHeader title="API list" />
+        <div className="flex gap-3 items-center pb-2 border-b-[1px] border-grayscale-dark text-grayscale-dark text-[14px]">
+          <span className="w-[55px] text-center">method</span>
+          <span className="flex-1">description</span>
+          <span className="w-[70px] text-center">status</span>
+        </div>
+        <ul className="flex-1 flex flex-col overflow-scroll scrollbar-hide">
+          <APIlistItem
+            type="POST"
+            desc="목록 수정하기인데 이제 여기서 뭔가를 더 받으면 뭐 어쩌고 되는건가"
+            status="명세중"
+          />
+          <APIlistItem
+            type="GET"
+            desc="목록 수정하기인데 이제 여기서 뭔가를 더 받으면 뭐 어쩌고 되는건가"
+            status="명세완료"
+          />
+          <APIlistItem
+            type="POST"
+            desc="목록 수정하기인데 이제"
+            status="명세중"
+          />
+          <APIlistItem
+            type="GET"
+            desc="목록 수정하기인데 이제 여기서 뭔가를 더 받으면 뭐 어쩌고 되는건가"
+            status="개발중"
+          />
+          <APIlistItem type="DEL" desc="목록 수정" status="개발완료" />
+          <APIlistItem
+            type="PATCH"
+            desc="회원 관리를 하다가 배가고픔"
+            status="명세중"
+          />
+          <APIlistItem
+            type="GET"
+            desc="회원 관리를 하다가 배가고픔"
+            status="명세중"
+          />
+          <APIlistItem
+            type="GET"
+            desc="회원 관리를 하다가 배가고픔"
+            status="명세중"
+          />
+          <APIlistItem
+            type="POST"
+            desc="회원 관리를 하다가 배가고픔"
+            status="명세중"
+          />
+          <APIlistItem
+            type="GET"
+            desc="회원 관리를 하다가 배가고픔"
+            status="명세중"
+          />
+        </ul>
       </Box>
     </div>
   );
