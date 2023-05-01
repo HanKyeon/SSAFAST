@@ -3,7 +3,7 @@ import { queryKeys } from './QueryKeys';
 import axios from 'axios';
 import figmaAxios from '@/utils/figmaAxios';
 import apiRequest from '@/utils/axios';
-import { useStoreDispatch } from '../useStore';
+import { useStoreDispatch, useStoreSelector } from '../useStore';
 import { figmaTokenActions } from '@/store/figma-token-slice';
 
 export interface FigmaBasic {
@@ -16,23 +16,6 @@ export interface FigmaBasic {
   sharedPluginData?: any; // 쓰지말라고!
   componentPropertyReferences?: Map<String, String>;
 }
-
-export const useSelectedFrames = function (spaceId: string | number = ``) {
-  return useQuery({
-    queryKey: queryKeys.selectedFrames(spaceId),
-    queryFn: async function () {
-      return apiRequest({
-        method: `get`,
-        url: ``, // 여기에 spaceID를 같이 보내야 함. 아니면 params
-      }).then((res) => res.data);
-    },
-    enabled: !!spaceId,
-  });
-};
-
-////////////////////////////
-// 피그마
-/////////////////////////////
 
 export interface FigmaNode extends FigmaBasic {
   absoluteBoundingBox?: { x: number; y: number; width: number; height: number };
@@ -94,15 +77,210 @@ export interface FigmaTokenData {
   figmaRefresh: string;
 }
 
-export const useUserFigmaTokens = function (lazy: any = true) {
+export interface SearchUserResult {
+  id: string | number;
+  name: string;
+  profileImg: string;
+}
+
+export interface User extends SearchUserResult {
+  email: string;
+}
+
+export interface SpaceShortcut {
+  workspaceId: string | number;
+  name: string;
+}
+
+export interface SpaceDetail {
+  figmaUrl: string;
+  figmaFileId: string;
+  figmaFileName: string;
+  figmaImg: string;
+  name: string;
+  favicon: string;
+  description: string;
+  startDate: any;
+  endDate: any;
+  totalApiCount: number;
+  completeApiCount: number;
+  leaderId: string | number;
+}
+
+export interface TeamMember {
+  id: string | number;
+  memberProfileImg: string;
+  memberName: string;
+}
+
+export interface SpaceFigma {
+  id: string | number;
+  sectionUrl: string | null;
+  sectionId: string;
+  name: string;
+}
+
+export interface SpaceComplete {
+  totalApiCount: number;
+  completeApiCount: number;
+}
+
+export interface SpaceFigmaToken {
+  figmaAccessToken: string;
+  figmaRefreshToken: string;
+}
+
+// space 팀 리더의 figma의 access/refresh 토큰들
+export const useSpaceFigmaTokens = function (
+  spaceId: string | number,
+  leaderId: string | number
+) {
+  return useQuery<SpaceFigmaToken>({
+    queryKey: queryKeys.spaceFigmaTokens(spaceId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/workspace/figma-section/token`,
+        params: {
+          leaderId: leaderId,
+        },
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId && !!`${leaderId}`,
+  });
+};
+
+// space의 api들 몇개 중 몇개 완성인지
+export const useSpaceApiComplete = function (spaceId: string | number) {
+  return useQuery<SpaceComplete>({
+    queryKey: queryKeys.spaceApiComplete(spaceId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/workspace/project/complete`,
+        params: {
+          workspaceId: spaceId,
+        },
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId,
+  });
+};
+
+// space가 가진 figma sections
+export const useSpaceFrames = function (spaceId: string | number = ``) {
+  return useQuery<SpaceFigma>({
+    queryKey: queryKeys.spaceFigmas(spaceId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/workspace/figma-section/list`, // 여기에 spaceID를 같이 보내야 함. 아니면 params
+        params: {
+          workspaceId: spaceId,
+        },
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId,
+  });
+};
+
+// space 멤버 확인
+export const useSpaceMembers = function (spaceId: string | number) {
+  return useQuery<TeamMember[]>({
+    queryKey: queryKeys.spaceMembers(spaceId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/workspace/member`,
+        params: {
+          workspaceId: spaceId,
+        },
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId,
+  });
+};
+
+// 유저 space 상세
+export const useSpaceDetail = function (spaceId: string | number) {
+  return useQuery<SpaceDetail>({
+    queryKey: queryKeys.spaceDetail(spaceId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/workspace/project`,
+        params: {
+          workspaceId: spaceId,
+        },
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId,
+  });
+};
+
+// 유저 space 목록
+export const useSpaceList = function () {
+  const { accessToken, refreshToken } = useStoreSelector(
+    (state) => state.token
+  );
+  return useQuery<SpaceShortcut[]>({
+    queryKey: queryKeys.spaceList(),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/workspace/project/list`,
+      }).then((res) => res.data);
+    },
+    enabled: !!accessToken,
+  });
+};
+
+// 토큰으로 정보 갖고 오기
+export const useUserData = function () {
+  const { accessToken, refreshToken } = useStoreSelector(
+    (state) => state.token
+  );
+  return useQuery<User>({
+    queryKey: queryKeys.user(),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/user`,
+      }).then((res) => res.data);
+    },
+    enabled: !!accessToken,
+  });
+};
+
+// 검색
+export const useSearchUser = function (email: string) {
+  return useQuery<SearchUserResult[]>({
+    queryKey: queryKeys.search(),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/user/list`,
+        params: {
+          email,
+        },
+      }).then((res) => res.data);
+    },
+    enabled: !!email,
+  });
+};
+
+// 유저 개인 피그마 토큰 확인
+export const useUserFigmaTokens = function () {
+  const { accessToken, refreshToken } = useStoreSelector(
+    (state) => state.token
+  );
   const dispatch = useStoreDispatch();
   return useQuery<FigmaTokenData>({
     queryKey: queryKeys.figmaTokens(),
     queryFn: async function () {
       return apiRequest({
         method: `get`,
-        baseURL: `${process.env.NEXT_PUBLIC_HOSTNAME}`,
-        url: `/api/figma`,
+        url: `/api/figma`, // 여기 아직임
       }).then((res) => res.data);
     },
     onSuccess: function (data) {
@@ -113,20 +291,7 @@ export const useUserFigmaTokens = function (lazy: any = true) {
         figmaTokenActions.setRefreshToken({ figmaRefresh: data.figmaRefresh })
       );
     },
-    enabled: !!lazy,
-  });
-};
-
-export const useTeamFigmaTokens = function () {
-  return useQuery({
-    queryKey: [`user`, `space`, `figma`, `token`],
-    queryFn: async function () {
-      return apiRequest({
-        method: `get`,
-        baseURL: `${process.env.NEXT_PUBLIC_HOSTNAME}`,
-        url: `/api/figma`,
-      }).then((res) => res.data);
-    },
+    enabled: !!accessToken,
   });
 };
 
