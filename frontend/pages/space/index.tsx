@@ -28,6 +28,15 @@ export const getServerSideProps: GetServerSideProps =
   wrapper.getServerSideProps(function (store) {
     return async function (context) {
       const queryClient = new QueryClient();
+      const { spaceId } = context.params as { spaceId: string };
+      queryClient.prefetchQuery({
+        queryKey: [`sapce`, spaceId],
+        queryFn: async function () {
+          return apiRequest({
+            method: `get`,
+          }).then((res) => res.data);
+        },
+      });
       queryClient.prefetchQuery({
         queryKey: queryKeys.user(), // 이부분은 store에 담긴 유저 token으로 spaceList 키로 변경.
         queryFn: async function () {

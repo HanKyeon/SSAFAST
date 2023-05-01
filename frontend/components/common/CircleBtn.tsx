@@ -7,6 +7,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   btnType?: 'question' | 'plus';
   isEmpty?: boolean;
   gray?: boolean;
+  small?: boolean;
   className?: string;
 }
 
@@ -14,6 +15,7 @@ const CircleBtn = function ({
   btnType = 'question',
   isEmpty = false,
   gray = false,
+  small = false,
   children,
   className,
   ...rest
@@ -31,10 +33,10 @@ const CircleBtn = function ({
     }`,
     plus: `${
       gray
-        ? ' bg-grayscale-deepdark text-theme-white-strong text-[16px]'
+        ? ' bg-grayscale-deepdark text-theme-white-strong'
         : isDark
-        ? 'bg-taro-strong text-theme-white-strong text-[16px]'
-        : 'bg-mincho-strong text-theme-white-strong text-[16px]'
+        ? 'bg-taro-strong text-theme-white-strong'
+        : 'bg-mincho-strong text-theme-white-strong'
     }`,
   };
 
@@ -42,7 +44,9 @@ const CircleBtn = function ({
     <button
       className={`${className} ${
         styles[`${btnType}`]
-      } inline-flex justify-center items-center rounded-full duration-[0.33s] w-7 h-7`}
+      } inline-flex justify-center items-center rounded-full duration-[0.33s] ${
+        small ? 'w-5 h-5 text-[14px]' : 'w-7 h-7 text-[16px]'
+      }`}
       {...rest}
     >
       {btnType === 'question' ? <RxQuestionMark /> : <AiOutlinePlus />}
