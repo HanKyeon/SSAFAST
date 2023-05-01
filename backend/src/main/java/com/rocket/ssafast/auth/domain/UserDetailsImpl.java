@@ -7,14 +7,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import com.rocket.ssafast.user.domain.User;
+import com.rocket.ssafast.member.domain.Member;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class UserDetailsImpl implements UserDetails, OAuth2User {
 
-	private final User user;
+	private final Member member;
 	private final Map<String, Object> attributes;
 
 	@Override
@@ -34,7 +34,7 @@ public class UserDetailsImpl implements UserDetails, OAuth2User {
 
 	@Override
 	public String getUsername() {
-		return user.getEmail();
+		return member.getEmail();
 	}
 
 	@Override
