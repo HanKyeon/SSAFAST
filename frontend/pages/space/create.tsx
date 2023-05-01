@@ -1,6 +1,6 @@
 import { wrapper } from '@/store';
 import { QueryClient } from '@tanstack/react-query';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { QueryClientOption } from '../_app';
 import { useFigmaDatas, useFigmaSections } from '@/hooks/queries/queries';
 import { useStoreDispatch } from '@/hooks/useStore';
@@ -9,10 +9,18 @@ import FigmaImageList from '@/components/FigmaImageList';
 import { SpinnerDots } from '@/components/common/Spinner';
 import useFigmaOrigin from '@/hooks/useFigmaOrigin';
 import { useRouter } from 'next/router';
+import AnimationBox from '@/components/common/AnimationBox';
+import GetFigmaURL from '@/components/create/GetFigmaURL';
+import GetSpaceData from '@/components/create/GetSpaceData';
+import SelectFigma from '@/components/create/SelectFIgma';
+import SpaceNavContainer from '@/components/preview/SpaceNavContainer';
+import { useWidthHeight } from '@/hooks/useWidthHeight';
+import { Box } from '@/components/common';
 
 const SpaceCreatePage = function () {
   const router = useRouter();
   const [figmaId, setFigmaId] = useState<string>(``);
+  const [step, setStep] = useState<1 | 2 | 3>(1);
   const {
     figmaData,
     figmaDataLoading,
@@ -39,21 +47,23 @@ const SpaceCreatePage = function () {
   const pushHandler = function () {
     router.push(`/`);
   };
+  const fullBoxRef = useRef<HTMLDivElement>(null);
+  const { width, height } = useWidthHeight(fullBoxRef);
+  console.log(step);
   return (
-    <div className="h-full w-full">
-      <div onClick={setFigmaToken}>피그마 토큰 세팅하기</div>
-      <div onClick={setFigmaIdHandler}>figma ID 우리꺼로 세팅</div>
-      <div>하이요 스페이스 생성 라우팅</div>
-      <div onClick={pushHandler}>이동</div>
-      {figmaDataLoading ? <div>데이터 레이지쿼리 되는중</div> : <div>아님</div>}
-      {figmaImagesLoading ? <div>이미지 레이지쿼리</div> : <div>끝남</div>}
-      <div className="h-[80%] w-full overflow-y-scroll flex flex-row flex-wrap items-center justify-center gap-5 px-[10%]">
-        {figmaDataLoading || figmaImagesLoading ? (
-          <SpinnerDots />
-        ) : (
-          <FigmaImageList images={figmaRefineData} />
-        )}
-      </div>
+    <div ref={fullBoxRef} className="h-full w-full flex flex-row">
+      <div className="h-full w-[250px]">사이드냅빠</div>
+      <Box variant="two">
+        <AnimationBox className="w-full h-full" isOpened={step === 1}>
+          <GetFigmaURL />
+        </AnimationBox>
+        <AnimationBox className="w-full h-full" isOpened={step === 2}>
+          <GetSpaceData />
+        </AnimationBox>
+        <AnimationBox className="w-full h-full" isOpened={step === 3}>
+          <SelectFigma />
+        </AnimationBox>
+      </Box>
     </div>
   );
 };

@@ -5,9 +5,7 @@ const SpaceNavContainer = function (): JSX.Element {
     <div className={'w-[250px]'}>
       <div>logo</div>
       <div>
-        <div>
-          <Image />
-        </div>
+        <div>{/* <Image /> */}</div>
         <div>sapce list</div>
         <div>toggle dark mode</div>
       </div>
