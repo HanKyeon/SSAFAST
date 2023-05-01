@@ -4,6 +4,7 @@ import axios from 'axios';
 import figmaAxios from '@/utils/figmaAxios';
 import apiRequest from '@/utils/axios';
 import { useStoreDispatch } from '../useStore';
+import { figmaTokenActions } from '@/store/figma-token-slice';
 
 export interface FigmaBasic {
   id?: string;
@@ -88,8 +89,14 @@ export interface FigmaRefineData {
   noz: FigmaServerData[];
 }
 
+export interface FigmaTokenData {
+  figmaAccess: string;
+  figmaRefresh: string;
+}
+
 export const useUserFigmaTokens = function (lazy: any = true) {
-  return useQuery({
+  const dispatch = useStoreDispatch();
+  return useQuery<FigmaTokenData>({
     queryKey: queryKeys.figmaTokens(),
     queryFn: async function () {
       return apiRequest({
@@ -97,6 +104,14 @@ export const useUserFigmaTokens = function (lazy: any = true) {
         baseURL: `${process.env.NEXT_PUBLIC_HOSTNAME}`,
         url: `/api/figma`,
       }).then((res) => res.data);
+    },
+    onSuccess: function (data) {
+      dispatch(
+        figmaTokenActions.setAccessToken({ figmaAccess: data.figmaAccess })
+      );
+      dispatch(
+        figmaTokenActions.setRefreshToken({ figmaRefresh: data.figmaRefresh })
+      );
     },
     enabled: !!lazy,
   });
