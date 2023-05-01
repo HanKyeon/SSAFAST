@@ -1,15 +1,35 @@
 let queryKeyMap = `
 Query Key
 
-search
-user
-  ㄴspace
+search                                // 그냥 안할듯
+
+user                                  // 로그인or로그아웃 시 invalidate
+  ㄴspace                             // space CRUD 관련
     ㄴlist
-    ㄴspaceId
-      ㄴpreview
+    ㄴdetail, [spaceId]               // 하위 중 멤버, 피그마토큰 싹다 invalidate
+      ㄴmembers                       // 멤버 관련 변경
+      ㄴfigmas
+      ㄴapicomplete
+      ㄴfigmaTokens
+      ㄴbaseUrl
       ㄴapi
-      ㄴpage
-figma
+        ㄴlist
+        ㄴdetail, [apiId]
+          ㄴresult
+            ㄴlist
+            ㄴdetail, [resId]
+            ㄴrequest
+            ㄴdto
+        ㄴsectionApi, [sectionId]
+        ㄴcategoryApi, [categoryId]
+      ㄴdto
+        ㄴlist
+        ㄴdetail, [dtoId]
+          ㄴcodeBE
+          ㄴcodeFE
+
+figma // 로그아웃 정도 초기화 고민할듯
+  ㄴtokens
   ㄴfile
     ㄴall
     ㄴsections
@@ -28,7 +48,7 @@ export const queryKeys = {
   spaceList: () => [...queryKeys.space(), `list`] as const,
   // space 상세.
   spaceDetail: (spaceId: string | number) =>
-    [queryKeys.space(), `${spaceId}`] as const,
+    [queryKeys.space(), `detail`, `${spaceId}`] as const,
   // space에 멤버 조회
   spaceMembers: (spaceId: string | number) =>
     [queryKeys.spaceDetail(spaceId), `member`] as const,
