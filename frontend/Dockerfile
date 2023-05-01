@@ -5,13 +5,16 @@ FROM node:lts as build
 WORKDIR /app
 
 # copy package.json and package-lock.json to container
-COPY package*.json .
+COPY package*.json ./
 
 # install dependencies
 RUN npm install
 
 # copy the rest of the application code to the container
 COPY . .
+
+# start build
+RUN npm run build
 
 # nginx base image
 FROM nginx:alpine
