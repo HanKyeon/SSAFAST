@@ -11,7 +11,7 @@ const Box = function ({
   variant = 'two',
   fontType = `normal`,
   children,
-  className,
+  className = ``,
   ...rest
 }: PropsWithChildren<BoxProps>) {
   const { dark: isDark } = useStoreSelector((state) => state.dark);
