@@ -3,6 +3,7 @@ import { queryKeys } from './QueryKeys';
 import axios from 'axios';
 import figmaAxios from '@/utils/figmaAxios';
 import apiRequest from '@/utils/axios';
+import { useStoreDispatch } from '../useStore';
 
 export interface FigmaBasic {
   id?: string;
@@ -77,17 +78,46 @@ export interface FigmaRawDatas {
 export interface FigmaServerData {
   name: string;
   figmaId: string;
-  image?: string;
+  image?: string | null | undefined;
   selected?: boolean;
 }
 export interface FigmaRefineData {
   ids: string;
+  thumbnails: string;
+  name: string;
   noz: FigmaServerData[];
 }
 
+export const useUserFigmaTokens = function (lazy: any = true) {
+  return useQuery({
+    queryKey: queryKeys.figmaTokens(),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        baseURL: `${process.env.NEXT_PUBLIC_HOSTNAME}`,
+        url: `/api/figma`,
+      }).then((res) => res.data);
+    },
+    enabled: !!lazy,
+  });
+};
+
+export const useTeamFigmaTokens = function () {
+  return useQuery({
+    queryKey: [`user`, `space`, `figma`, `token`],
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        baseURL: `${process.env.NEXT_PUBLIC_HOSTNAME}`,
+        url: `/api/figma`,
+      }).then((res) => res.data);
+    },
+  });
+};
+
 // figma 데이터 받아오기
 export const useFigmaDatas = function (figmaId: string) {
-  return useQuery({
+  return useQuery<FigmaRefineData>({
     queryKey: queryKeys.figmaAllDatas(figmaId),
     queryFn: async function () {
       return figmaAxios({
@@ -119,7 +149,12 @@ export const useFigmaDatas = function (figmaId: string) {
             });
           }
         });
-        return { ids: ids.slice(0, -1), noz: ret };
+        return {
+          ids: ids.slice(0, -1),
+          thumbnails: `${data.thumbnailUrl}`,
+          name: `${data.name}`,
+          noz: ret,
+        };
       });
     },
     enabled: !!figmaId,
@@ -134,7 +169,7 @@ export const useFigmaDatas = function (figmaId: string) {
 // figma 이미지 파일 링크 받아오기
 export const useFigmaSections = function (figmaId: string, ids: string) {
   return useQuery({
-    queryKey: queryKeys.figmaSections(figmaId),
+    queryKey: queryKeys.figmaSections(figmaId, ids),
     queryFn: async function () {
       return figmaAxios({
         method: `get`,
@@ -150,6 +185,6 @@ export const useFigmaSections = function (figmaId: string, ids: string) {
     },
     enabled: !!figmaId && !!ids,
     refetchOnMount: false,
-    keepPreviousData: true,
+    keepPreviousData: false,
   });
 };
