@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { PropsWithChildren, useState } from 'react';
 import { BsQuestionCircleFill } from 'react-icons/bs';
 import { TbSettingsFilled } from 'react-icons/tb';
+import { IoMdSettings } from 'react-icons/io';
 import Modal from '../common/Modal';
 import { HorizonBadgeList } from '../common/BadgeList';
 import { useUsers } from '@y-presence/react';
@@ -11,6 +12,7 @@ import Logo from '/public/assets/images/Logo.png';
 import Image from 'next/image';
 import { useStoreDispatch, useStoreSelector } from '@/hooks/useStore';
 import { darkActions } from '@/store/dark-slice';
+import ToggleModeBtn from '../common/ToggleModeBtn';
 
 interface TopNavProps {}
 
@@ -53,14 +55,7 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
           {children}
         </div>
         <div className={`flex items-center justify-center basis-[5%] w-[5%]`}>
-          <BsQuestionCircleFill
-            className={`h-full w-full p-[25%] cursor-pointer hover:scale-[105%] duration-[0.33s] ${
-              dark
-                ? 'text-mincho-strong active:text-teal-600'
-                : 'text-taro-strong active:text-violet-500'
-            }`}
-            onClick={modalOnHandler}
-          />
+          <CircleBtn onClick={modalOnHandler} />
         </div>
         <div className={`flex items-center justify-center basis-[18%] w-[18%]`}>
           {
@@ -68,13 +63,13 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
               onClick={dispatchPresenceHandler}
               className={`h-full w-[20%] mr-3 cursor-pointer hover:scale-[105%] duration-[0.33s]`}
             >
-              {presence ? 'OFF' : 'ON'}
+              {presence ? '넘의마우스OFF' : '넘의마웅스ON'}
             </div>
           }
           <HorizonBadgeList className="w-full" users={users} />
         </div>
         <div className={`flex items-center justify-center basis-[8%] w-[8%]`}>
-          온오프
+          <ToggleModeBtn />
         </div>
         <div className={`flex items-center justify-center basis-[5%] w-[5%]`}>
           <TbSettingsFilled className="h-full w-full p-[25%] text-gray-300 active:text-gray-500 hover:scale-[105%] duration-[0.33s] cursor-pointer" />

@@ -7,15 +7,34 @@ import { useStoreSelector } from '@/hooks/useStore';
 import ToggleModeBtn from '../common/ToggleModeBtn';
 import SpaceNameItem from './SpaceNameItem';
 import UserBadge from '../common/UserBadge';
+import { useState } from 'react';
+
+const spaceMockup = [
+  { id: 0, name: 'spaceffffff1' },
+  { id: 1, name: 'space 2' },
+  { id: 2, name: 'space 3' },
+  { id: 3, name: 'space 4' },
+  { id: 4, name: 'space 5' },
+  { id: 5, name: 'space 6' },
+  { id: 6, name: 'space 7' },
+  { id: 7, name: 'space 8' },
+  { id: 8, name: 'space 9' },
+];
 
 const SpaceNavContainer = function (): JSX.Element {
   const { dark: isDark } = useStoreSelector((state) => state.dark);
+  const [curSpaceId, setCurSpaceId] = useState<number>(spaceMockup[0].id);
+
+  const onClickSpaceItem = (id: number): void => {
+    setCurSpaceId(id);
+  };
+
   const styles = {
     userImgWrapper:
       'w-[200px] h-[200px] border-2 border-grayscale-dark flex items-center justify-center rounded-full overflow-hidden',
   };
   return (
-    <div className="w-[250px] h-full pl-3 flex flex-col gap-3 py-3">
+    <div className="w-[20%] h-full pl-3 flex flex-col gap-3 py-3">
       <div className="h-[10%]">
         <Image src={UserImg} alt="logo" height={70} />
       </div>
@@ -33,12 +52,14 @@ const SpaceNavContainer = function (): JSX.Element {
           <CircleBtn btnType="plus" gray />
         </div>
         <ul className="overflow-scroll flex flex-col gap-3 flex-1 scrollbar-hide">
-          <SpaceNameItem />
-          <SpaceNameItem />
-          <SpaceNameItem />
-          <SpaceNameItem />
-          <SpaceNameItem />
-          <SpaceNameItem />
+          {spaceMockup.map((item, index) => (
+            <SpaceNameItem
+              key={item.id}
+              item={item}
+              curSpaceId={curSpaceId}
+              onClickSpaceItem={onClickSpaceItem}
+            />
+          ))}
         </ul>
         {/* toggle mode */}
         <div className="flex justify-center pt-5 ">
