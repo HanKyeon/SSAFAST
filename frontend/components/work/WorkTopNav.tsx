@@ -45,35 +45,42 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
       <div
         className={`sticky flex flex-row w-full h-[6.8%] items-center pl-[1%] pr-[2%] py-[8px]`}
       >
+        {/* 로고 */}
         <div
           className={`flex items-center justify-center basis-[6%] w-[6%] cursor-pointer hover:scale-[105%] duration-[0.33s] pt-3 pb-1`}
           onClick={() => router.push(`/`)}
         >
           <Image src={Logo} alt="SSAFAST" width={50} height={50} />
         </div>
+        {/* 네브 */}
         <div className={`flex items-center justify-center basis-[48%]`}>
           {children}
         </div>
+        {/* ?버튼? */}
         <div className={`flex items-center justify-center basis-[5%] w-[5%]`}>
           <CircleBtn onClick={modalOnHandler} />
         </div>
+        {/* 공동작업 토글 && 사용자뱃지 */}
         <div className={`flex items-center justify-center basis-[18%] w-[18%]`}>
           {
             <div
               onClick={dispatchPresenceHandler}
               className={`h-full w-[20%] mr-3 cursor-pointer hover:scale-[105%] duration-[0.33s]`}
             >
-              {presence ? '넘의마우스OFF' : '넘의마웅스ON'}
+              {presence ? 'OFF' : 'ON'}
             </div>
           }
           <HorizonBadgeList className="w-full" users={users} />
         </div>
+        {/* 다크모드 토글 */}
         <div className={`flex items-center justify-center basis-[8%] w-[8%]`}>
           <ToggleModeBtn />
         </div>
-        <div className={`flex items-center justify-center basis-[5%] w-[5%]`}>
+        {/* 설정 */}
+        <div className={`flex items-center justify-center basis-[4%] w-[4%]`}>
           <TbSettingsFilled className="h-full w-full p-[25%] text-gray-300 active:text-gray-500 hover:scale-[105%] duration-[0.33s] cursor-pointer" />
         </div>
+        {/* 나가기 */}
         <div
           className={`flex items-center justify-center basis-[10%] w-[10%] bg-theme-dark-normal py-3 px-1 cursor-pointer hover:scale-[107%] duration-[0.33s]`}
           onClick={exitHandler}
