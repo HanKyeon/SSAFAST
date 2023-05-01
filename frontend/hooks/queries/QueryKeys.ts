@@ -23,6 +23,7 @@ export const queryKeys = {
   space: (spaceId: string | number) => [queryKeys.user(), spaceId] as const,
   selectedFrames: (spaceId: string | number) =>
     [queryKeys.space(spaceId), `frames`] as const,
+  figmaTokens: () => [queryKeys.user(), `figma-tokens`] as const,
 
   ////////////
   /* figma */
@@ -35,6 +36,10 @@ export const queryKeys = {
   /////////////////////
   figmaAllDatas: (figmaId: string) =>
     [...queryKeys.figmaFiles(figmaId), `all`] as const,
-  figmaSections: (figmaId: string) =>
-    [...queryKeys.figmaFiles(figmaId), `sections`] as const,
+  figmaSections: (figmaId: string, ids: string) =>
+    [
+      ...queryKeys.figmaFiles(figmaId),
+      `sections`,
+      ids.slice(0, ids.length % 10),
+    ] as const,
 };

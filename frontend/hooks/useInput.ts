@@ -1,7 +1,7 @@
 import { RefObject, useCallback, useState } from 'react';
 
 const useInput = function (
-  ref: RefObject<HTMLInputElement>,
+  ref: RefObject<HTMLInputElement> | RefObject<HTMLTextAreaElement>,
   maxLength: number = 50
 ) {
   const [inputData, setInputData] = useState<string>(``);
