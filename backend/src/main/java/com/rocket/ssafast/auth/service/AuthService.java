@@ -1,9 +1,5 @@
 package com.rocket.ssafast.auth.service;
 
-import java.util.Date;
-import java.util.Optional;
-
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,13 +7,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rocket.ssafast.auth.dto.request.LoginReqUserDto;
 import com.rocket.ssafast.auth.dto.response.TokenDto;
 import com.rocket.ssafast.auth.jwt.JwtTokenProvider;
-import com.rocket.ssafast.exception.CustomException;
-import com.rocket.ssafast.exception.ErrorCode;
-import com.rocket.ssafast.user.domain.User;
-import com.rocket.ssafast.user.repository.UserRepository;
+import com.rocket.ssafast.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +24,7 @@ public class AuthService {
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
 	private final BCryptPasswordEncoder encoder;
 	private final RedisService redisService;
-	private final UserRepository userRepository;
+	private final MemberRepository memberRepository;
 
 	// 토큰 재발급: validate 메서드가 true 반환할 때만 사용 -> AT, RT 재발급
 	@Transactional

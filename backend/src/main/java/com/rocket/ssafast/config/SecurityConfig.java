@@ -16,10 +16,8 @@ import com.rocket.ssafast.auth.jwt.JwtAccessDeniedHandler;
 import com.rocket.ssafast.auth.jwt.JwtAuthenticationEntryPoint;
 import com.rocket.ssafast.auth.jwt.JwtAuthenticationFilter;
 import com.rocket.ssafast.auth.jwt.JwtTokenProvider;
-import com.rocket.ssafast.auth.service.AuthService;
 import com.rocket.ssafast.auth.service.PrincipalOauth2UserService;
 import com.rocket.ssafast.auth.service.RedisService;
-import com.rocket.ssafast.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 

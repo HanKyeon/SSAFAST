@@ -1,4 +1,4 @@
-package com.rocket.ssafast.user.domain;
+package com.rocket.ssafast.member.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -6,7 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import com.rocket.ssafast.user.dto.response.SignUpResUserDto;
+import com.rocket.ssafast.member.dto.response.ResMemberDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity(name = "member")
-public class User {
+public class Member {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +33,8 @@ public class User {
 	@Column(name = "profileImg")
 	String profileImg;
 
-	public SignUpResUserDto toSignUpUserDto() {
-		return SignUpResUserDto.builder()
+	public ResMemberDto toResMemberDto() {
+		return ResMemberDto.builder()
 			.id(id)
 			.name(name)
 			.email(email)

@@ -8,12 +8,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rocket.ssafast.auth.dto.response.TokenDto;
 import com.rocket.ssafast.auth.service.RedisService;
 import com.rocket.ssafast.auth.service.UserDetailsServiceImpl;
+import com.rocket.ssafast.exception.CustomException;
+import com.rocket.ssafast.exception.ErrorCode;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -94,9 +97,16 @@ public class JwtTokenProvider implements InitializingBean {
 	}
 
 	public Authentication getAuthentication(String token) {
-		String email = getClaims(token).get(EMAIL_KEY).toString();
-		UserDetails userDetailsImpl = userDetailsService.loadUserByUsername(email);
-		return new UsernamePasswordAuthenticationToken(userDetailsImpl, "", userDetailsImpl.getAuthorities());
+		try {
+			String email = getClaims(token).get(EMAIL_KEY).toString();
+			UserDetails userDetailsImpl = userDetailsService.loadUserByUsername(email);
+			return new UsernamePasswordAuthenticationToken(userDetailsImpl, "", userDetailsImpl.getAuthorities());
+		} catch (UsernameNotFoundException e) {
+			throw new CustomException(ErrorCode.USER_NOT_FOUND);
+		} catch (Exception e) {
+			log.error("error: ", e);
+			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	public long getTokenExpirationTime(String token) {
@@ -148,6 +158,7 @@ public class JwtTokenProvider implements InitializingBean {
 		} catch(ExpiredJwtException e) {
 			return true;
 		} catch (Exception e) {
+			log.error("error: ",e);
 			return false;
 		}
 	}

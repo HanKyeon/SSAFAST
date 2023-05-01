@@ -28,7 +28,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		// access token 추출
 		String accessToken = resolveToken(request);
-
 		// 토큰 유효성 검사
 		try {
 			if(accessToken != null && jwtTokenProvider.validateAccessToken(accessToken)) {
@@ -46,6 +45,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			log.debug("Can't find user");
 			response.setCharacterEncoding("utf-8");
 			response.sendError(403, "권한이 없습니다.");
+		} catch(Exception e) {
+			log.debug("error: ",e);
+			response.sendError(500, "서버 에러");
 		}
 
 		filterChain.doFilter(request, response);
