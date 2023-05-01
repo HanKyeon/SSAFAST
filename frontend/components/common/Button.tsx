@@ -20,17 +20,17 @@ const Button = function ({
   const styles = {
     small: `${
       isDark && !isEmpty
-        ? 'bg-mincho-strong text-white py-2 px-7 rounded-[20px]'
+        ? 'bg-mincho-strong text-theme-white-strong py-2 px-7 rounded-[20px]'
         : isDark && isEmpty
         ? 'border-mincho-strong text-mincho-strong py-2 px-7 border-[3px] rounded-[20px]'
         : !isDark && !isEmpty
-        ? 'bg-taro-strong text-white py-2 px-7 rounded-[20px]'
+        ? 'bg-taro-strong text-theme-white-strong py-2 px-7 rounded-[20px]'
         : 'border-taro-strong text-taro-strong py-2 px-7 border-[3px] rounded-[20px]'
     }`,
     full: `${
       isDark
-        ? 'bg-mincho-strong text-white py-4 px-7 rounded-[13px] w-full'
-        : 'bg-taro-strong text-white py-4 px-7 rounded-[13px] w-full'
+        ? 'bg-mincho-strong text-theme-white-strong py-4 px-7 rounded-[13px] w-full'
+        : 'bg-taro-strong text-theme-white-strong py-4 px-7 rounded-[13px] w-full'
     }`,
   };
 

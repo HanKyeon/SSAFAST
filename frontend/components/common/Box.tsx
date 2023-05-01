@@ -33,8 +33,8 @@ const Box = function ({
     }`,
   };
   const fontStyle = {
-    normal: `${'text-4xl'}`,
     header: `${'text-5xl'}`,
+    normal: `${'text-[16px]'}`,
     content: `${'text-sm'}`,
   };
 

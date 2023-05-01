@@ -98,6 +98,7 @@ module.exports = {
         taebaek: ['taebaek', 'ui-sans-serif'],
       },
       backgroundImage: {
+        preview: "url('../public/assets/images/preview-bg.jpg')",
         // "tale-nav-logo": "url('/src/assets/images/TaleNavLogo.png')",
         // "tale-nav-logo-container":
         //   "url('/src/assets/images/TaleNavLogoContainer.png')",
@@ -443,5 +444,8 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/typography')],
+  plugins: [
+    require('@tailwindcss/typography'),
+    require('tailwind-scrollbar-hide'),
+  ],
 };
