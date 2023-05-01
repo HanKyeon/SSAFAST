@@ -150,8 +150,8 @@ const SpaceCreatePage = function () {
   };
 
   return (
-    <div className="h-full w-full flex flex-row p-5">
-      <div className="h-full w-[20%]">사이드냅빠</div>
+    <div className="h-full w-full flex flex-row p-5 gap-5">
+      <SpaceNavContainer />
       <Box
         variant="two"
         className="h-full w-[80%] p-5 flex flex-col items-center justify-center"

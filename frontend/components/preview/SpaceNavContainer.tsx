@@ -34,7 +34,7 @@ const SpaceNavContainer = function (): JSX.Element {
       'w-[200px] h-[200px] border-2 border-grayscale-dark flex items-center justify-center rounded-full overflow-hidden',
   };
   return (
-    <div className="w-[20%] h-full pl-3 flex flex-col gap-3 py-3">
+    <div className="w-[20%] h-full flex flex-col gap-3">
       <div className="h-[10%]">
         <Image src={UserImg} alt="logo" height={70} />
       </div>
