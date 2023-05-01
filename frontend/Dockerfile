@@ -23,10 +23,10 @@ FROM nginx:alpine
 RUN rm /etc/nginx/conf.d/default.conf
 
 # copy nginx.conf in host to container
-COPY nginx.conf /etc/nginx/conf.d
+COPY nginx/nginx.conf /etc/nginx/conf.d
 
 # copy build files to nginx container
-COPY --from=build /app/out /usr/share/nginx/html
+COPY --from=build /app /usr/share/nginx/html
 
 EXPOSE 3000
 
