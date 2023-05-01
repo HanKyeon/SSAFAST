@@ -36,7 +36,7 @@ export const getServerSideProps: GetServerSideProps =
   wrapper.getServerSideProps(function (store) {
     return async function (context) {
       const queryClient = new QueryClient();
-      const { spaceId } = context.query as SpaceParams;
+      const { spaceId } = context.params as SpaceParams;
       const figmaId = `HIHVcGBjWhgE6sfaR6IKMj`; // figma ID 역시 user의 spacedetail에서 가져온 것으로 fetch 해야함.
       await queryClient.prefetchQuery({
         queryKey: queryKeys.user(), // 이 부분은 user의 spacedetail로 변경해야함.
