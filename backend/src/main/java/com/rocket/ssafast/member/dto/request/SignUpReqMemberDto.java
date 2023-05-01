@@ -1,9 +1,9 @@
-package com.rocket.ssafast.user.dto.request;
+package com.rocket.ssafast.member.dto.request;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-import com.rocket.ssafast.user.domain.User;
+import com.rocket.ssafast.member.domain.Member;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SignUpReqUserDto {
+public class SignUpReqMemberDto {
 
 	@NotEmpty
 	String name;
@@ -24,14 +24,14 @@ public class SignUpReqUserDto {
 	String profileImg;
 
 	@Builder
-	public SignUpReqUserDto(String name, String email, String password, String profileImg) {
+	public SignUpReqMemberDto(String name, String email, String password, String profileImg) {
 		this.name = name;
 		this.email = email;
 		this.profileImg = profileImg;
 	}
 
-	public User toEntity() {
-		return User.builder()
+	public Member toEntity() {
+		return Member.builder()
 			.name(name)
 			.email(email)
 			.profileImg(profileImg)

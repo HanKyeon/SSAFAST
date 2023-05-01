@@ -2,7 +2,6 @@ package com.rocket.ssafast.auth.service;
 
 import java.util.Optional;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -11,8 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rocket.ssafast.auth.domain.UserDetailsImpl;
-import com.rocket.ssafast.user.domain.User;
-import com.rocket.ssafast.user.repository.UserRepository;
+import com.rocket.ssafast.member.domain.Member;
+import com.rocket.ssafast.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
-	private final UserRepository userRepository;
+	private final MemberRepository userRepository;
 
 	// google에서 받은 userReqeust 후처리
 	@Override
@@ -34,21 +33,21 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 		String firstName = oAuth2User.getAttribute("given_name");
 		String profileImg = oAuth2User.getAttribute("picture");
 
-		Optional<User> findUser = userRepository.findByEmail(email);
-		User user = null;
+		Optional<Member> findUser = userRepository.findByEmail(email);
+		Member member = null;
 
 		// sign up
 		if(!findUser.isPresent()) {
-			user = User.builder()
+			member = Member.builder()
 				.email(email)
 				.name(firstName)
 				.profileImg(profileImg)
 				.build();
-			userRepository.save(user);
+			userRepository.save(member);
 		} else {
-			user = findUser.get();
+			member = findUser.get();
 		}
 
-		return new UserDetailsImpl(user, oAuth2User.getAttributes());
+		return new UserDetailsImpl(member, oAuth2User.getAttributes());
 	}
 }
