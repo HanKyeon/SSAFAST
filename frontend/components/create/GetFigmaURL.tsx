@@ -40,7 +40,7 @@ const GetFigmaURL = function ({
   const { data, isLoading, isFetching, isError } = useFigmaDatas(figmaId);
 
   return (
-    <div className="flex flex-col h-full w-full items-center justify-center gap-5 py-4">
+    <div className="flex flex-col h-full w-full items-center justify-center gap-5 py-4 text-[24px]">
       <div>피그마 url을 입력해주세요.</div>
 
       <div className="flex flex-row justify-center items-center w-full text-ellipsis whitespace-nowrap text-[23px]">

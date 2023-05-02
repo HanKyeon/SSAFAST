@@ -7,13 +7,13 @@ import store, { DispatchToast } from '@/store/index';
 */
 
 const interceptorRequest = axios.create({
-  baseURL: 'https://j8a601.p.ssafy.io', // 서버 주소
+  baseURL: `${process.env.NEXT_PUBLIC_HOSTNAME}`, // 서버 주소
   withCredentials: true,
   timeout: 10000, // 10초까지만 대기
 });
 
 const apiRequest = axios.create({
-  baseURL: 'https://j8a601.p.ssafy.io', // 서버 주소
+  baseURL: `${process.env.NEXT_PUBLIC_HOSTNAME}`, // 서버 주소
   withCredentials: true,
   timeout: 10000, // 10초까지만 대기
 });

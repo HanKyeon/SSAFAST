@@ -18,7 +18,7 @@ const SelectFigma = function ({
   figmaId,
 }: Props) {
   return (
-    <div className="h-full w-full flex flex-col justify-center items-center py-4">
+    <div className="h-full w-full flex flex-col justify-center items-center py-4 text-[24px]">
       <div className="h-[17%] w-full flex items-center justify-center">
         사용할 화면을 선택해주세요.
       </div>

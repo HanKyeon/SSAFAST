@@ -17,6 +17,7 @@ import * as Y from 'yjs';
 import WorkContainer from '@/components/work/WorkContainer';
 import { useSyncedStore } from '@syncedstore/react';
 import { PresenceUserData, workFigma } from '@/components/work/presence-type';
+import MetaHead from '@/components/common/MetaHead';
 
 const SpaceWorkPage = function (
   props: InferGetServerSidePropsType<typeof getServerSideProps>
@@ -63,20 +64,27 @@ const SpaceWorkPage = function (
   );
 
   return (
-    <div className="h-full w-full overflow-hidden">
-      {awareness && (
-        <RoomProvider<PresenceUserData>
-          awareness={awareness}
-          initialPresence={{
-            name: `나다이띱때끼야`,
-            color: `#${Math.round(Math.random() * 0xffffff).toString(16)}`,
-            step: 1,
-          }}
-        >
-          <WorkContainer store={store} serverSideStore={serverSideStore} />
-        </RoomProvider>
-      )}
-    </div>
+    <>
+      <MetaHead
+        title={`SSAFAST: ${props.spaceData.title}`}
+        description={`${props.spaceData.title}: ${props.spaceData.description}`}
+        url={`/space/${spaceId}/work`}
+      />
+      <div className="h-full w-full overflow-hidden">
+        {awareness && (
+          <RoomProvider<PresenceUserData>
+            awareness={awareness}
+            initialPresence={{
+              name: `나다이띱때끼야`,
+              color: `#${Math.round(Math.random() * 0xffffff).toString(16)}`,
+              step: 1,
+            }}
+          >
+            <WorkContainer store={store} serverSideStore={serverSideStore} />
+          </RoomProvider>
+        )}
+      </div>
+    </>
   );
 };
 
@@ -152,6 +160,10 @@ export const getServerSideProps = wrapper.getServerSideProps(function (store) {
     return {
       props: {
         serverSideStore: spaceData,
+        spaceData: {
+          title: `프으로제엑트으`,
+          description: `프로젝트 서얼며어엉`,
+        },
       },
     };
   };

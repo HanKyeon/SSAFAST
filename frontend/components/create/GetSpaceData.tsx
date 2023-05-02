@@ -182,9 +182,9 @@ const GetSpaceData = function ({
 
   return (
     <>
-      <div className="flex flex-col h-full w-full items-center justify-center gap-5 py-4">
+      <div className="flex flex-col h-full w-full items-center justify-center gap-5 py-4 text-[24px]">
         <div>팀 정보를 입력해주세요.</div>
-        <div className="h-[83%] w-full flex flex-col items-center justify-center overflow-y-scroll gap-3">
+        <div className="h-[83%] w-full flex flex-col items-center justify-start overflow-y-scroll gap-3">
           <div className="w-full px-[10%] text-[27px] flex flex-row gap-3">
             <label className="w-[33%]" htmlFor="create-input">
               프로젝트 이미지
@@ -290,7 +290,12 @@ const GetSpaceData = function ({
               >
                 {savedMember.length ? (
                   savedMember.map((member) => {
-                    return <SelectedMember member={member} />;
+                    return (
+                      <SelectedMember
+                        member={member}
+                        key={`${member.id}-${member.memberName}-selected`}
+                      />
+                    );
                   })
                 ) : (
                   <div>너 있음</div>
@@ -303,7 +308,11 @@ const GetSpaceData = function ({
               >
                 {searchList.length
                   ? searchList.map((member) => {
-                      return <div>하이루</div>;
+                      return (
+                        <div key={`${member.id}-${member.memberName}-search`}>
+                          하이루
+                        </div>
+                      );
                     })
                   : null}
               </Box>

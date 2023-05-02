@@ -7,6 +7,7 @@ import { useStoreDispatch, useStoreSelector } from '@/hooks/useStore';
 import { darkActions } from '@/store/dark-slice';
 import { FormEvent } from 'react';
 import ToggleModeBtn from '@/components/common/ToggleModeBtn';
+import MetaHead from '@/components/common/MetaHead';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,6 +23,7 @@ export default function Home() {
   };
   return (
     <main>
+      <MetaHead />
       <div>하이요ㅕ</div>
       <div onClick={pushHandler}>이동</div>
       <Box variant="one" fontType="header" className={`p-7 duration-[0.33s]`}>
