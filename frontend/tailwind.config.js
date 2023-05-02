@@ -79,10 +79,19 @@ module.exports = {
           pink: `#EC7E9A`,
         },
         grayscale: {
+          deepdarkdeep: `#3A3C3F`,
           deepdark: `#515457`,
+          deepdarklight: `#646464`,
           dark: `#9D9D9D`,
           light: `#D9D9D9`,
         },
+      },
+      fontSize: {
+        megaheader: '36px',
+        header: '24px',
+        normal: '18px',
+        content: '16px',
+        small: '14px',
       },
       fontFamily: {
         'black-hans': ['black-hans', 'ui-sans-serif'],

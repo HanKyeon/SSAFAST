@@ -3,7 +3,7 @@ import { PropsWithChildren, FC, AllHTMLAttributes } from 'react';
 
 interface BoxProps extends AllHTMLAttributes<HTMLDivElement> {
   variant?: `one` | `two` | `three`;
-  fontType?: `normal` | `header` | `content`;
+  fontType?: `megaheader` | `header` | `normal` | `content`;
   className?: string;
 }
 
@@ -33,9 +33,10 @@ const Box = function ({
     }`,
   };
   const fontStyle = {
-    header: `${'text-5xl'}`,
-    normal: `${'text-[16px]'}`,
-    content: `${'text-sm'}`,
+    megaheader: `text-megaheader`,
+    header: `text-header`,
+    normal: `text-normal`,
+    content: `text-content`,
   };
 
   return (

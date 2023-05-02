@@ -1,10 +1,12 @@
 export interface StatusBadgePropsType {
   status: '명세중' | '명세완료' | '개발중' | '개발완료';
+  small?: boolean;
   className?: string;
 }
 
 const StatusBadge = function ({
   status,
+  small = false,
   className,
 }: StatusBadgePropsType): JSX.Element {
   const styles = {
@@ -17,7 +19,15 @@ const StatusBadge = function ({
         ? 'text-jossbar-blue'
         : 'text-jossbar-blue',
   };
-  return <span className={`${className} ${styles.style}`}>{status}</span>;
+  return (
+    <span
+      className={`${className} ${styles.style} ${
+        small ? 'text-small' : 'text-normal'
+      }`}
+    >
+      {status}
+    </span>
+  );
 };
 
 export default StatusBadge;

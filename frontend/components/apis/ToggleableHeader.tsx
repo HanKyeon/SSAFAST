@@ -21,7 +21,8 @@ const ToggleableHeader = function ({
     wrapper: `${
       big &&
       `flex justify-between items-center py-2 px-5 cursor-pointer ${
-        isOpen && 'border-b-[1px] border-grayscale-dark'
+        isOpen &&
+        'sticky top-0 z-50 bg-theme-dark-normal rounded-t-[13px] border-b-[1px] border-grayscale-dark'
       }`
     } ${!big && `flex items-center py-2 px-5 cursor-pointer`}`,
   };
@@ -33,7 +34,7 @@ const ToggleableHeader = function ({
   return (
     <div className={`${styles['wrapper']}`} onClick={onToggleOpen}>
       <div className={`${!big && 'flex items-center w-[130px] mr-2'}`}>
-        <span className={`${!big && 'flex-1 mr-2'}`}>{title}</span>
+        <span className={`${!big && 'flex-1 mr-2'} text-normal`}>{title}</span>
         {!big && add && <CircleBtn btnType="plus" small />}
       </div>
       {isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
