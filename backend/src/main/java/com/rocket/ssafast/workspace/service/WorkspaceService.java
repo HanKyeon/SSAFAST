@@ -3,7 +3,7 @@ package com.rocket.ssafast.workspace.service;
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
 import com.rocket.ssafast.figma.repository.FigmaTokenRepository;
-import com.rocket.ssafast.member.domain.FigmaToken;
+import com.rocket.ssafast.figma.domain.FigmaToken;
 import com.rocket.ssafast.member.domain.Member;
 import com.rocket.ssafast.member.repository.MemberRepository;
 import com.rocket.ssafast.workspace.domain.Baseurl;

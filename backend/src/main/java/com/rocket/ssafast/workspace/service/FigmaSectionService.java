@@ -4,7 +4,7 @@ import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
 import com.rocket.ssafast.figma.dto.response.ResFigmaTokenDto;
 import com.rocket.ssafast.figma.repository.FigmaTokenRepository;
-import com.rocket.ssafast.member.domain.FigmaToken;
+import com.rocket.ssafast.figma.domain.FigmaToken;
 import com.rocket.ssafast.workspace.domain.FigmaSection;
 import com.rocket.ssafast.workspace.domain.Workspace;
 import com.rocket.ssafast.workspace.dto.request.CreateFigmaSectionDto;

@@ -1,4 +1,4 @@
-package com.rocket.ssafast.member.domain;
+package com.rocket.ssafast.figma.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

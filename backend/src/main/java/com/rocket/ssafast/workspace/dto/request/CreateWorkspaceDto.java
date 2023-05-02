@@ -1,6 +1,6 @@
 package com.rocket.ssafast.workspace.dto.request;
 
-import com.rocket.ssafast.member.domain.FigmaToken;
+import com.rocket.ssafast.figma.domain.FigmaToken;
 import com.rocket.ssafast.workspace.domain.Workspace;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

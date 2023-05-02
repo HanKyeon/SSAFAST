@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.rocket.ssafast.member.domain.FigmaToken;
+import com.rocket.ssafast.figma.domain.FigmaToken;
 
 public interface FigmaTokenRepository extends JpaRepository<FigmaToken, Long> {
 	Optional<FigmaToken> findByMemberId(long memberId);

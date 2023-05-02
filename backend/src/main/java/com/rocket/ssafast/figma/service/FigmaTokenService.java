@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
-import com.rocket.ssafast.member.domain.FigmaToken;
+import com.rocket.ssafast.figma.domain.FigmaToken;
 import com.rocket.ssafast.figma.dto.request.ReqFigmaTokenDto;
 import com.rocket.ssafast.figma.dto.response.ResFigmaTokenDto;
 import com.rocket.ssafast.figma.repository.FigmaTokenRepository;
