@@ -15,6 +15,7 @@ import com.rocket.ssafast.workspace.dto.response.*;
 import com.rocket.ssafast.workspace.repository.WorkspaceMemberRepository;
 import com.rocket.ssafast.workspace.repository.WorkspaceRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -24,6 +25,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class WorkspaceService {
 
     private final WorkspaceRepository workspaceRepository;
@@ -73,8 +75,6 @@ public class WorkspaceService {
             .build());
 
 
-
-
         return workspaceRepository.save(workspace).toCreatedDto();
     }
 
@@ -116,11 +116,18 @@ public class WorkspaceService {
         DetailWorkspaceDto detailWorkspaceDto = workspace.get().toDetailDto();
         detailWorkspaceDto.setBaseurls(baseurls);
 
+        Optional<WorkspaceMember> leader = workspaceMemberRepository.findByWorkspaceIdAndIsLeaderTrue(workspaceId);
+        if(!leader.isPresent()){
+            throw new CustomException(ErrorCode.WORKSPACE_NOT_FOUND);
+        }
+        detailWorkspaceDto.setLeaderId(leader.get().getMember().getId());
+        detailWorkspaceDto.setFigmaToken(figmaTokenRepository.findByMemberId(detailWorkspaceDto.getLeaderId()).get().toWorkspaceDto());
+
         return detailWorkspaceDto;
     }
 
     @Transactional
-    public DetailWorkspaceDto updateWorkspaceDto(UpdateWorkspaceDto updateWorkspaceDto) {
+    public void updateWorkspaceDto(UpdateWorkspaceDto updateWorkspaceDto) {
         //입력값 확인
         if (updateWorkspaceDto.getName() == null || updateWorkspaceDto.getFavicon() == null || updateWorkspaceDto.getDescription() == null || updateWorkspaceDto.getFigmaFileId() == null || updateWorkspaceDto.getFigmaFileName() == null) {
             throw new CustomException(ErrorCode.BAD_REQUEST);
@@ -135,18 +142,8 @@ public class WorkspaceService {
         //workspace 찾기
         Optional<Workspace> updatedWorkspace = workspaceRepository.findById(workspace.getId());
 
-        //baseurls 셋팅
-        List<String> baseurls = new ArrayList<>();
-        for(Baseurl baseurl : updatedWorkspace.get().getBaseurls()){
-            baseurls.add(baseurl.getUrl());
-        }
-
         // to Dto
         DetailWorkspaceDto detailWorkspaceDto = updatedWorkspace.get().toDetailDto();
-        detailWorkspaceDto.setBaseurls(baseurls);
-
-        return detailWorkspaceDto;
-
     }
 
     public void deleteWorkspace(Long workspaceId){
