@@ -33,16 +33,16 @@ const Box = function ({
     }`,
   };
   const fontStyle = {
-    header: `${'text-5xl'}`,
-    normal: `${'text-[16px]'}`,
-    content: `${'text-sm'}`,
+    header: `${'text-[36px]'}`,
+    normal: `${'text-[24px]'}`,
+    content: `${'text-[18px]'}`,
   };
 
   return (
     <div
       className={`${className} ${styles[`${variant}`]} ${
         fontStyle[`${fontType}`]
-      } rounded-[13px]`}
+      } rounded-[13px] duration-[0.33s]`}
       {...rest}
     >
       {children}

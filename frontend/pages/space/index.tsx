@@ -12,11 +12,7 @@ import { ParsedUrlQuery } from 'querystring';
 const SpacePage = function (): JSX.Element {
   return (
     <>
-      <MetaHead
-        title={`space 이름으로`}
-        description={`프로젝트 설명으로`}
-        url="/space"
-      />
+      <MetaHead title={`space`} description={`프로젝트`} url="/space" />
       <div className="flex h-full w-full gap-3 p-5">
         <SpaceNavContainer />
         <PreviewLeftContainer />

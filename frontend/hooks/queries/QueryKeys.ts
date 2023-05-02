@@ -29,7 +29,7 @@ user                                  // 로그인or로그아웃 시 invalidate
           ㄴcodeFE
 
 figma // 로그아웃 정도 초기화 고민할듯
-  ㄴtokens
+  ㄴtokens // 유저 로그아웃 시 없애줘야 함
   ㄴfile
     ㄴall
     ㄴsections

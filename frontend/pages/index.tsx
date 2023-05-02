@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { Inter } from 'next/font/google';
-import { wrapper } from '@/store';
+import { DispatchLogout, DispatchToast, wrapper } from '@/store';
 import { useRouter } from 'next/router';
 import { Box, Button, CircleBtn } from '@/components/common';
 import { useStoreDispatch, useStoreSelector } from '@/hooks/useStore';
@@ -16,6 +16,7 @@ export default function Home() {
   const pushHandler = function () {
     router.push(`/space/create`);
   };
+
   const dispatch = useStoreDispatch();
   const { dark } = useStoreSelector((state) => state.dark);
   const changeDark = function () {

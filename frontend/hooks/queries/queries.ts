@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './QueryKeys';
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import figmaAxios from '@/utils/figmaAxios';
 import apiRequest from '@/utils/axios';
 import { useStoreDispatch, useStoreSelector } from '../useStore';

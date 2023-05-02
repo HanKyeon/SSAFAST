@@ -125,9 +125,9 @@ const SpaceCreatePage = function () {
       url: `/api/workspace/project`,
       data: createConfig,
     })
-      .then((res) => {
+      .then(async (res) => {
         const spaceId = res.data.workspaceId;
-        apiRequest({
+        await apiRequest({
           method: `post`,
           url: `/api/workspace/figma-section`,
           data: {
@@ -139,12 +139,12 @@ const SpaceCreatePage = function () {
         });
         return res;
       })
-      .then((res) => {
-        apiRequest({
+      .then(async (res) => {
+        await apiRequest({
           method: `post`,
           url: `/api/workspace/member`,
           data: {
-            memberIds: [],
+            memberIds: pjtMemberList.map((member) => member.id),
           },
         });
       });
