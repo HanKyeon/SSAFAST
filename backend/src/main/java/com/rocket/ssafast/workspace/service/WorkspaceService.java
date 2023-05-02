@@ -93,7 +93,7 @@ public class WorkspaceService {
         if(!workspaceDtos.isEmpty()){
             for(WorkspaceMember workspaceMember : workspaceMembers) { // 팀정보 하나씩 돌면서 workspaceId랑 name 붙임
                 workspaceDtos.add(WorkspaceDto.builder()
-                        .workspaceId(workspaceMember.getWorkspace().getId())
+                        .id(workspaceMember.getWorkspace().getId())
                         .name(workspaceMember.getWorkspace().getName())
                         .build());
             }
