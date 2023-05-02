@@ -1,7 +1,5 @@
 package com.rocket.ssafast.workspace.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.rocket.ssafast.figma.dto.response.ResFigmaTokenDto;
 import com.rocket.ssafast.workspace.domain.Baseurl;
 import lombok.*;
 

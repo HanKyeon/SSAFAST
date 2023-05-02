@@ -5,6 +5,7 @@ import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
 import com.rocket.ssafast.workspace.dto.request.CreateWorkspaceDto;
 import com.rocket.ssafast.workspace.dto.request.UpdateWorkspaceDto;
+import com.rocket.ssafast.workspace.service.FigmaSectionService;
 import com.rocket.ssafast.workspace.service.WorkspaceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/workspace/project")
 public class WorkspaceController {
     private final WorkspaceService workspaceService;
-    private String SUCCESS;
+    private final FigmaSectionService figmaSectionService;
+    private String SUCCESS = "SUCCESS";
 
     @PostMapping
     ResponseEntity<?> createWorkspace(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody CreateWorkspaceDto createWorkspaceDto){
@@ -60,9 +62,11 @@ public class WorkspaceController {
     }
 
     @PutMapping("")
-    ResponseEntity<?> updateWorkspace(@RequestBody UpdateWorkspaceDto updateWorkspaceDto){
+    ResponseEntity<?> updateWorkspace(@RequestParam Long workspaceId, @RequestBody UpdateWorkspaceDto updateWorkspaceDto){
+        updateWorkspaceDto.setId(workspaceId);
         try {
-            return new ResponseEntity<>(workspaceService.updateWorkspaceDto(updateWorkspaceDto), HttpStatus.OK);
+            workspaceService.updateWorkspaceDto(updateWorkspaceDto);
+            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         } catch (CustomException e){
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
         } catch (Exception e) {
@@ -89,6 +93,18 @@ public class WorkspaceController {
     ResponseEntity<?> getComplete(@RequestParam Long workspaceId){
         try {
             return new ResponseEntity<>(workspaceService.getComplete(workspaceId), HttpStatus.OK);
+        } catch (CustomException e){
+            return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
+        } catch (Exception e) {
+            log.error("error: ", e);
+            return new ResponseEntity<>(ErrorCode.INTERNAL_SERVER_ERROR.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus());
+        }
+    }
+
+    @GetMapping("/token")
+    public ResponseEntity<?> getFigmaToken(@RequestParam Long leaderId){
+        try {
+            return new ResponseEntity<>(figmaSectionService.getFigmaToken(leaderId), HttpStatus.OK);
         } catch (CustomException e){
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
         } catch (Exception e) {
