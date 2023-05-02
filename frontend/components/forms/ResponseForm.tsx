@@ -73,7 +73,8 @@ const ResponseForm = function () {
   };
 
   return (
-    <form onSubmit={formHandleSubmit(onSubmit)}>
+    <>
+      {/* <form onSubmit={formHandleSubmit(onSubmit)}>
       <label>Headers:</label>
       <Button
         type="button"
@@ -107,7 +108,8 @@ const ResponseForm = function () {
       ))}
 
       <input type="submit" />
-    </form>
+    </form> */}
+    </>
   );
 };
 

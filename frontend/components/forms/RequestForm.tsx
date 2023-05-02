@@ -121,7 +121,7 @@ const RequestForm = function () {
       {/* method */}
       <label>
         urn:
-        <Input />
+        {/* <Input /> */}
       </label>
 
       <Button>저장</Button>
