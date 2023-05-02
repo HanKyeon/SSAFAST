@@ -1,3 +1,4 @@
+import MetaHead from '@/components/common/MetaHead';
 import PreviewLeftContainer from '@/components/preview/PreviewLeftContainer';
 import PreviewRightContainer from '@/components/preview/PreviewRightContainer';
 import SpaceNavContainer from '@/components/preview/SpaceNavContainer';
@@ -10,11 +11,18 @@ import { ParsedUrlQuery } from 'querystring';
 
 const SpacePage = function (): JSX.Element {
   return (
-    <div className="flex h-full w-full gap-3 p-5">
-      <SpaceNavContainer />
-      <PreviewLeftContainer />
-      <PreviewRightContainer />
-    </div>
+    <>
+      <MetaHead
+        title={`space 이름으로`}
+        description={`프로젝트 설명으로`}
+        url="/space"
+      />
+      <div className="flex h-full w-full gap-3 p-5">
+        <SpaceNavContainer />
+        <PreviewLeftContainer />
+        <PreviewRightContainer />
+      </div>
+    </>
   );
 };
 
