@@ -1,4 +1,4 @@
-package com.rocket.ssafast.apispec.domain;
+package com.rocket.ssafast.apispec.domain.Enum;
 
 import lombok.AllArgsConstructor;
 

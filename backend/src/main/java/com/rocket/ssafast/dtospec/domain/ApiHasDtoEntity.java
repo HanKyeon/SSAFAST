@@ -1,6 +1,6 @@
 package com.rocket.ssafast.dtospec.domain;
 
-import com.rocket.ssafast.apispec.domain.ApiSpecEntity;
+import com.rocket.ssafast.apispec.domain.Entity.ApiSpecEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

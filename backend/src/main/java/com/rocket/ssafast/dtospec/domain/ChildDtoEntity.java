@@ -24,6 +24,6 @@ public class ChildDtoEntity {
     private Long dtoId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_dto_id")
+    @JoinColumn(name = "child_dto_id")
     private DtoSpecEntity dtoSpecEntity;
 }
