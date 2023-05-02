@@ -81,6 +81,8 @@ export const queryKeys = {
   // space의 카테고리에 종속된 api 목록들
   spaceCategoryApis: (spaceId: string | number, categoryId: string | number) =>
     [...queryKeys.spaceApi(spaceId), `category`, `${categoryId}`] as const,
+  spaceApiCodeFE: (spaceId: string | number, apiId: string | number) =>
+    [...queryKeys.spaceApiDetail(spaceId, apiId), `front`] as const,
 
   // space의 dto
   spaceDto: (spaceId: string | number) =>
@@ -94,9 +96,7 @@ export const queryKeys = {
   // dto bE 코드
   spaceDtoCodeBE: (spaceId: string | number, dtoId: string | number) =>
     [...queryKeys.spaceDtoDetail(spaceId, dtoId), `back`] as const,
-  // dto FE 코드
-  spaceDtoCodeFE: (spaceId: string | number, dtoId: string | number) =>
-    [...queryKeys.spaceDtoDetail(spaceId, dtoId), `front`] as const,
+  // dto FE 코드 => API Axios 객체 코드
 
   // 포스트맨
   spaceResult: (spaceId: string | number, apiId: number | string) =>

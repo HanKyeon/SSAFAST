@@ -130,6 +130,195 @@ export interface SpaceFigmaToken {
   figmaRefreshToken: string;
 }
 
+export interface DtoListItem {
+  id: number | string;
+  name: string;
+  description: string;
+}
+
+export interface DtoAttr {
+  [key: number | string]: {
+    Type: string;
+    Desc: string;
+    itera: boolean;
+    Constraints: string[];
+  };
+}
+
+export interface DepthDto {
+  [key: number | string]: {
+    [key: number | string]: DtoAttr;
+  };
+}
+
+interface ApiResponse {
+  id: string | number;
+  name: string;
+  createdTime: any;
+  member: { name: string; profileImg: string };
+}
+
+interface ApiResponseDetail {
+  [key: string | number]: {
+    url: string;
+    request: AxiosRequestConfig;
+    response: any;
+  };
+}
+
+export const useApiResultResponseDtoCode = function (
+  spaceId: string | number,
+  apiId: string | number
+) {
+  return useQuery({
+    queryKey: queryKeys.spaceResultDtoClass(spaceId, apiId),
+    queryFn: function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/api/class`,
+        params: {
+          apiId,
+        },
+      });
+    },
+    enabled: !!spaceId && !!apiId,
+  });
+};
+
+// api 테스트 요청 코드
+export const useApiResultRequest = function (
+  spaceId: string | number,
+  apiId: string | number
+) {
+  return useQuery({
+    queryKey: queryKeys.spaceResultRequest(spaceId, apiId),
+    queryFn: function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/api/request`,
+        params: {
+          apiId: apiId,
+        },
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId && !!apiId,
+  });
+};
+
+// api 응답 상세
+export const useApiResultResponseDetail = function (
+  spaceId: string | number,
+  apiId: string | number,
+  responseId: string | number
+) {
+  return useQuery<ApiResponseDetail>({
+    queryKey: queryKeys.spaceResultDetail(spaceId, apiId, responseId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/api/response`,
+        params: {
+          resId: responseId,
+        },
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId && !!apiId && !!responseId,
+  });
+};
+
+// Api 응답 결과
+export const useApiResultResponseList = function (
+  spaceId: string | number,
+  apiId: string | number
+) {
+  return useQuery<ApiResponse[]>({
+    queryKey: queryKeys.spaceResultList(spaceId, apiId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/api/response/list`,
+        params: {
+          apiId: apiId,
+        },
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId && !!apiId,
+  });
+};
+
+// API axios config
+export const useDtoAxiosConfig = function (
+  spaceId: number | string,
+  apiId: number | string
+) {
+  return useQuery<AxiosRequestConfig>({
+    queryKey: queryKeys.spaceApiCodeFE(spaceId, apiId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/api/axios`,
+        params: {
+          apiId: apiId,
+        },
+      });
+    },
+    enabled: !!spaceId && !!apiId,
+  });
+};
+// Dto class 코드
+export const useDtoClasses = function (
+  spaceId: number | string,
+  dtoId: number | string
+) {
+  return useQuery({
+    queryKey: queryKeys.spaceDtoCodeBE(spaceId, dtoId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/dto/class`,
+        params: {
+          dtoId: dtoId,
+        },
+      });
+    },
+    enabled: !!spaceId && !!dtoId,
+  });
+};
+
+// Dto 디테일
+export const useDtoDetail = function (
+  spaceId: string | number,
+  dtoId: string | number
+) {
+  return useQuery<DtoAttr | DepthDto>({
+    queryKey: queryKeys.spaceDtoDetail(spaceId, dtoId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/dto/${dtoId}`,
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId && !!dtoId,
+  });
+};
+
+// Dto List
+export const useDtoList = function (spaceId: string | number) {
+  return useQuery<DtoListItem[]>({
+    queryKey: queryKeys.spaceDtoList(spaceId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/dto/list`,
+        params: {
+          workspaceId: spaceId,
+        },
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId,
+  });
+};
+
 // space 팀 리더의 figma의 access/refresh 토큰들
 export const useSpaceFigmaTokens = function (
   spaceId: string | number,
