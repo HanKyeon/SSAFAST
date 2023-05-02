@@ -19,11 +19,11 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
       {/* 왼쪽 화면 */}
       <Box className="h-full flex-1">!!</Box>
       {/* 오른쪽 화면 */}
-      <div className="h-full flex-1 flex flex-col items-center gap-3">
+      <div className="h-full flex-1 min-w-0 flex flex-col items-center gap-3">
         {/* api detail */}
         <Box className="w-full p-5">
           <div className="flex justify-between items-center">
-            <StatusBadge className="text-[14px]" status="개발중" />
+            <StatusBadge status="개발중" small />
             <div className="flex items-center gap-3 text-[20px]">
               <BsDownload />
               <HiOutlineFolderArrowDown />
@@ -31,8 +31,8 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
               <TbSend className="text-mincho-normal" />
             </div>
           </div>
-          <p className="mt-[12px]">게시글 목록 불러오기</p>
-          <p className="mt-1 text-[14px] text-grayscale-dark">
+          <p className="mt-[12px] text-header">게시글 목록 불러오기</p>
+          <p className="mt-1 text-content text-grayscale-dark">
             게시글 목록 쭈루리 불러오는 것
           </p>
           <div className="mt-[12px] flex gap-3 items-center">

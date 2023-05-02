@@ -5,7 +5,11 @@ import { useState } from 'react';
 const ResponseBox = function (): JSX.Element {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   return (
-    <Box className={`${isOpen && 'flex-1'} w-full duration-[0.33s]`}>
+    <Box
+      className={`${
+        isOpen && 'flex-1'
+      } w-full overflow-scroll scrollbar-hide duration-[0.33s]`}
+    >
       <ToggleableHeader
         title="Response"
         isOpen={isOpen}
