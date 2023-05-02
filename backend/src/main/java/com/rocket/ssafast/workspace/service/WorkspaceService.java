@@ -78,9 +78,11 @@ public class WorkspaceService {
 
 
     @Transactional
-    public WorkspaceListDto getWorkspaceListDto(Long memberId){
+    public WorkspaceListDto getWorkspaceListDto(String memberEmail){
+        Member member  = memberRepository.findByEmail(memberEmail).get();
+
         //memberid가 등록되어있는 모든 팀 조회
-        List<WorkspaceMember> workspaceMembers = workspaceMemberRepository.findAllByMemberId(memberId);
+        List<WorkspaceMember> workspaceMembers = workspaceMemberRepository.findAllByMemberId(member.getId());
 
         //workspace 목록
         List<WorkspaceDto> workspaceDtos = new ArrayList<>();
