@@ -137,7 +137,6 @@ public class JwtTokenProvider implements InitializingBean {
 		} catch (IllegalArgumentException e) {
 			log.error("JWT claims string is empty.");
 		} catch (NullPointerException e){
-			log.error("error: ",e);
 			log.error("JWT Token is empty.");
 		}
 		return false;
@@ -148,6 +147,7 @@ public class JwtTokenProvider implements InitializingBean {
 		try {
 			if (redisService.getValues(accessToken) != null // NPE 방지
 				&& redisService.getValues(accessToken).equals("logout")) { // 로그아웃 했을 경우
+				log.debug("logout token");
 				return false;
 			}
 			Jwts.parserBuilder()
@@ -155,24 +155,19 @@ public class JwtTokenProvider implements InitializingBean {
 				.build()
 				.parseClaimsJws(accessToken);
 			return true;
-		} catch(ExpiredJwtException e) {
-			return true;
-		} catch (Exception e) {
-			log.error("error: ",e);
-			return false;
+		} catch (SignatureException e) {
+			log.error("Invalid JWT signature.");
+		} catch (MalformedJwtException e) {
+			log.error("Invalid JWT token.");
+		} catch (ExpiredJwtException e) {
+			log.error("Expired JWT token.");
+		} catch (UnsupportedJwtException e) {
+			log.error("Unsupported JWT token.");
+		} catch (IllegalArgumentException e) {
+			log.error("JWT claims string is empty.");
+		} catch (NullPointerException e){
+			log.error("JWT Token is empty.");
 		}
-	}
-
-	// 재발급 검증 API에서 사용
-	public boolean validateAccessTokenOnlyExpired(String accessToken) {
-		try {
-			return getClaims(accessToken)
-				.getExpiration()
-				.before(new Date());
-		} catch(ExpiredJwtException e) {
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
+		return false;
 	}
 }
