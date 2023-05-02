@@ -80,23 +80,18 @@ public class WorkspaceService {
 
 
     @Transactional
-    public WorkspaceListDto getWorkspaceListDto(String memberEmail){
-        Member member  = memberRepository.findByEmail(memberEmail).get();
-
+    public WorkspaceListDto getWorkspaceListDto(Long memberId){
         //memberid가 등록되어있는 모든 팀 조회
-        List<WorkspaceMember> workspaceMembers = workspaceMemberRepository.findAllByMemberId(member.getId());
+        List<WorkspaceMember> workspaceMembers = workspaceMemberRepository.findAllByMemberId(memberId);
 
         //workspace 목록
         List<WorkspaceDto> workspaceDtos = new ArrayList<>();
 
-        //dto 결과 없으면
-        if(!workspaceDtos.isEmpty()){
-            for(WorkspaceMember workspaceMember : workspaceMembers) { // 팀정보 하나씩 돌면서 workspaceId랑 name 붙임
-                workspaceDtos.add(WorkspaceDto.builder()
-                        .id(workspaceMember.getWorkspace().getId())
-                        .name(workspaceMember.getWorkspace().getName())
-                        .build());
-            }
+        for(WorkspaceMember workspaceMember : workspaceMembers) { // 팀정보 하나씩 돌면서 workspaceId랑 name 붙임
+            workspaceDtos.add(WorkspaceDto.builder()
+                    .id(workspaceMember.getWorkspace().getId())
+                    .name(workspaceMember.getWorkspace().getName())
+                    .build());
         }
         return WorkspaceListDto.builder().workspaces(workspaceDtos).build();
     }
