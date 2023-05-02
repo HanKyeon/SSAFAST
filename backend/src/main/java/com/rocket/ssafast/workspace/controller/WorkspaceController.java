@@ -5,7 +5,7 @@ import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
 import com.rocket.ssafast.workspace.dto.request.CreateWorkspaceDto;
 import com.rocket.ssafast.workspace.dto.request.UpdateWorkspaceDto;
-import com.rocket.ssafast.workspace.service.FigmaSectionService;
+import com.rocket.ssafast.figma.service.FigmaSectionService;
 import com.rocket.ssafast.workspace.service.WorkspaceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

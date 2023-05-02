@@ -4,20 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="68c3ac46-3b5b-41fc-94b0-32029979774c" name="Changes" comment="[BE] FEAT : 기타 파일 추가">
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/dto/response/WorkspaceFigmaTokenDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/dto/response/WorkspaceMemberListDto.java" afterDir="false" />
+    <list default="true" id="68c3ac46-3b5b-41fc-94b0-32029979774c" name="Changes" comment="[BE] FIX : 포스트맨 테스트 + 노션 명세 대조">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/figma/domain/FigmaToken.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/figma/domain/FigmaToken.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/controller/FigmaSectionCrontroller.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/controller/FigmaSectionCrontroller.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/controller/WorkspaceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/controller/WorkspaceController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/controller/WorkspaceMemberContoller.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/controller/WorkspaceMemberContoller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/domain/Workspace.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/domain/Workspace.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/dto/request/UpdateWorkspaceDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/dto/request/UpdateWorkspaceDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/dto/response/DetailWorkspaceDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/dto/response/DetailWorkspaceDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/repository/WorkspaceMemberRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/repository/WorkspaceMemberRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/service/WorkspaceMemberService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/service/WorkspaceMemberService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/service/WorkspaceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/service/WorkspaceService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +50,7 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -83,6 +78,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
     "spring.configuration.checksum": "742fa03b1c00a0089a200ceedd52666e",
     "vue.rearranger.settings.migration": "true"
   }
@@ -105,6 +101,19 @@
     </configuration>
     <configuration name="generated-requests | #4" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" index="4" requestIdentifier="#4" runType="Run single request">
       <method v="2" />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="ssafast" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="ssafast" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
     <configuration name="BackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="ssafast.main" />
@@ -137,7 +146,7 @@
       <updated>1682557376763</updated>
       <workItem from="1682557379023" duration="277000" />
       <workItem from="1682583943591" duration="96000" />
-      <workItem from="1683027747493" duration="8018000" />
+      <workItem from="1683027747493" duration="9257000" />
     </task>
     <task id="LOCAL-00001" summary="[BE] FEAT : Entity 생성">
       <created>1682924530893</created>
@@ -216,7 +225,14 @@
       <option name="project" value="LOCAL" />
       <updated>1682986712479</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="[BE] FIX : 포스트맨 테스트 + 노션 명세 대조">
+      <created>1683046665753</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1683046665753</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -257,6 +273,7 @@
     <MESSAGE value="[BE] FEAT : FigmaTokenRepository추가" />
     <MESSAGE value="[BE] FEAT : Baseurl Entity 추가" />
     <MESSAGE value="[BE] FEAT : 기타 파일 추가" />
-    <option name="LAST_COMMIT_MESSAGE" value="[BE] FEAT : 기타 파일 추가" />
+    <MESSAGE value="[BE] FIX : 포스트맨 테스트 + 노션 명세 대조" />
+    <option name="LAST_COMMIT_MESSAGE" value="[BE] FIX : 포스트맨 테스트 + 노션 명세 대조" />
   </component>
 </project>
