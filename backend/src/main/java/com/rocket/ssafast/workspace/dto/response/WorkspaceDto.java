@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class WorkspaceDto {
-    private Long workspaceId;
+    private Long id;
     private String name;
 }

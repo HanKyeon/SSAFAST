@@ -1,6 +1,6 @@
-package com.rocket.ssafast.workspace.repository;
+package com.rocket.ssafast.figma.repository;
 
-import com.rocket.ssafast.workspace.domain.FigmaSection;
+import com.rocket.ssafast.figma.domain.FigmaSection;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

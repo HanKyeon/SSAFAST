@@ -4,15 +4,12 @@ import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
 import com.rocket.ssafast.workspace.dto.request.CreateFigmaSectionDto;
 import com.rocket.ssafast.workspace.dto.request.UpdateFigmaSectionDto;
-import com.rocket.ssafast.workspace.service.FigmaSectionService;
+import com.rocket.ssafast.figma.service.FigmaSectionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j//log 객체 자동으로 생성
 @RequiredArgsConstructor//final로 선언된 필드들에 대한 생성자를 자동으로 생성

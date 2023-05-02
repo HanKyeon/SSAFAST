@@ -38,7 +38,7 @@ public class WorkspaceController {
     @GetMapping("/list")
     ResponseEntity<?> getWorkspaceList(@AuthenticationPrincipal UserDetailsImpl userDetails){
         try {
-            return new ResponseEntity<>(workspaceService.getWorkspaceListDto(userDetails.getUsername()), HttpStatus.OK);
+            return new ResponseEntity<>(workspaceService.getWorkspaceListDto(userDetails.getMemberId()), HttpStatus.OK);
         } catch (CustomException e){
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
         } catch (Exception e) {
