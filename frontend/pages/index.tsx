@@ -5,7 +5,9 @@ import { useRouter } from 'next/router';
 import { Box, Button, CircleBtn } from '@/components/common';
 import { useStoreDispatch, useStoreSelector } from '@/hooks/useStore';
 import { darkActions } from '@/store/dark-slice';
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
+import { RequestForm, ResponseForm } from '@/components/forms';
+import { useForm } from 'react-hook-form';
 import ToggleModeBtn from '@/components/common/ToggleModeBtn';
 import MetaHead from '@/components/common/MetaHead';
 
@@ -21,6 +23,7 @@ export default function Home() {
   const changeDark = function () {
     dispatch(darkActions.toggleDark({}));
   };
+
   return (
     <main>
       <MetaHead />
@@ -46,6 +49,8 @@ export default function Home() {
       <CircleBtn isEmpty btnType="plus">
         +
       </CircleBtn>
+      {/* <RequestForm /> */}
+      <ResponseForm />
     </main>
   );
 }
