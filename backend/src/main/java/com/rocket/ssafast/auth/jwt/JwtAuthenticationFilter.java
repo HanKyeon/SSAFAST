@@ -12,6 +12,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.rocket.ssafast.exception.CustomException;
+import com.rocket.ssafast.exception.ErrorCode;
+
 import io.jsonwebtoken.IncorrectClaimException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +28,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 		FilterChain filterChain) throws ServletException, IOException {
-
 		// access token 추출
 		String accessToken = resolveToken(request);
+
 		// 토큰 유효성 검사
 		try {
 			if(accessToken != null && jwtTokenProvider.validateAccessToken(accessToken)) {
@@ -38,18 +41,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		} catch (IncorrectClaimException e) {
 			SecurityContextHolder.clearContext();
 			log.debug("Invalid JWT token");
-			response.setCharacterEncoding("utf-8");
-			response.sendError(403, "권한이 없습니다.");
+			response.sendError(401, "UNAUTHORIZED");
 		} catch (UsernameNotFoundException e) {
 			SecurityContextHolder.clearContext();
 			log.debug("Can't find user");
-			response.setCharacterEncoding("utf-8");
-			response.sendError(403, "권한이 없습니다.");
-		} catch(Exception e) {
-			log.debug("error: ",e);
-			response.sendError(500, "서버 에러");
+			response.sendError(401, "UNAUTHORIZED");
+		} catch (Exception e) {
+			log.debug("error: ", e);
+			response.sendError(500, "INTERNAL SERVER ERROR");
 		}
-
 		filterChain.doFilter(request, response);
 	}
 

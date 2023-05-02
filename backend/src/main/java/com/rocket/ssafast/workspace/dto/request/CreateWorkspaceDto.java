@@ -1,6 +1,6 @@
 package com.rocket.ssafast.workspace.dto.request;
 
-import com.rocket.ssafast.workspace.domain.FigmaToken;
+import com.rocket.ssafast.member.domain.FigmaToken;
 import com.rocket.ssafast.workspace.domain.Workspace;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -57,8 +57,8 @@ public class CreateWorkspaceDto {
 
 	public FigmaToken toFigmaTokenEntity(){
 		return FigmaToken.builder()
-				.accessToken(figmaAccessToken)
-				.refreshToken(figmaRefreshToken)
+				.figmaAccess(figmaAccessToken)
+				.figmaRefresh(figmaRefreshToken)
 				.build();
 	}
 }
