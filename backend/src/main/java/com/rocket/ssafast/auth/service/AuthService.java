@@ -1,5 +1,8 @@
 package com.rocket.ssafast.auth.service;
 
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,24 +24,28 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthService {
 
 	private final JwtTokenProvider jwtTokenProvider;
-	private final AuthenticationManagerBuilder authenticationManagerBuilder;
-	private final BCryptPasswordEncoder encoder;
 	private final RedisService redisService;
-	private final MemberRepository memberRepository;
+	@Value("${jwt.access-token-validity-in-milliseconds}")
+	private Long accessTokenValidityInMilliseconds;
 
 	// 토큰 재발급: validate 메서드가 true 반환할 때만 사용 -> AT, RT 재발급
 	@Transactional
 	public TokenDto reissue(String requestAccessTokenInHeader, String requestRefreshToken) {
 		String requestAccessToken = resolveToken(requestAccessTokenInHeader);
+		log.debug("AccessToken In Header: "+requestAccessTokenInHeader);
+		log.debug("RefreshToken : "+requestRefreshToken);
 		Authentication authentication = jwtTokenProvider.getAuthentication(requestAccessToken);
 		String principal = getPrincipal(requestAccessToken);
+		log.debug(principal);
 
 		String refreshTokenInRedis = redisService.getValues(principal);
+		log.debug("refreshTokenInRedis: "+refreshTokenInRedis);
 		if (refreshTokenInRedis == null) { // Redis에 저장되어 있는 RT가 없을 경우
 			return null; // -> 재로그인 요청
 		}
 
 		// 요청된 RT의 유효성 검사 & Redis에 저장되어 있는 RT와 같은지 비교
+		log.debug("refresh validation: "+jwtTokenProvider.validateRefreshToken(requestRefreshToken));
 		if(!jwtTokenProvider.validateRefreshToken(requestRefreshToken) || !refreshTokenInRedis.equals(requestRefreshToken)) {
 			return null; // -> 재로그인 요청
 		}
@@ -100,7 +107,8 @@ public class AuthService {
 		}
 
 		// Redis에 로그아웃 처리한 AT 저장
-		redisService.setValuesWithTimeout(requestAccessToken, "logout", 1);
+		redisService.setValuesWithTimeout(requestAccessToken, "logout",
+			System.currentTimeMillis() + accessTokenValidityInMilliseconds);
 	}
 
 }
