@@ -45,8 +45,8 @@ export default function Home() {
       <CircleBtn isEmpty btnType="plus">
         +
       </CircleBtn>
-      <RequestForm />
-      <ResponseForm/>
+      {/* <RequestForm /> */}
+      <ResponseForm />
     </main>
   );
 }

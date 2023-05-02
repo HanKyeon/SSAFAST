@@ -6,93 +6,108 @@ import {
   Control,
   Controller,
 } from 'react-hook-form';
-import { PropsWithChildren, FC, useState, useEffect } from 'react';
+import { PropsWithChildren, FC, useState, useEffect, FormEvent } from 'react';
 import { useStoreSelector } from '@/hooks/useStore';
 import { inputTheme } from '@/utils/styleClasses';
 import { Form, Input, Select } from './components';
-import { Button } from '../common';
+import { Button, Box } from '../common';
 import DtoForm from './DtoForm';
+
 interface FormValues {
-  cart: {
-    name: string;
-    price: number;
-    quantity: number;
-  }[];
-  data2: {
-    name: string;
-    price: number;
-    quantity: number;
+  response: {
+    code: number;
+    descriptions: string;
+    headers: {
+      key: object;
+      type: string;
+      description: string;
+    }[];
+    bodys: {
+      key: string;
+      type: string;
+      description: string;
+    }[];
   }[];
 }
 
-interface formProps {
-  category: string;
-  ApiName: string;
-  ApiDescription: string;
-  baeURL: any;
-  method: any;
-  urn: any;
-  headers: any;
-  body: any | {};
-  path: any | null;
-  params: any | null;
-}
-
-const Total = ({ control }: { control: Control<FormValues> }) => {
-  const formValues = useWatch({
-    name: ['cart'],
-    control,
-  });
-};
-
-const onSubmit: SubmitHandler<formProps> = function (data) {
-  // updateFuntion(data);
-  console.log(data);
+const EditHeaders = ({ update, index, value, control, register }: any) => {
+  console.log('리렌더링?');
+  return (
+    <div>
+      <input
+        onChange={() => update(index, value)}
+        placeholder="key"
+        {...register(`key`, { required: true })}
+      />
+      <input
+        onChange={() => update(index, value)}
+        placeholder="type"
+        {...register(`type`, { required: true })}
+      />
+      <input
+        onChange={() => update(index, value)}
+        placeholder="descriptions"
+        {...register(`descriptions`, { required: true })}
+      />
+    </div>
+  );
 };
 
 const ResponseForm = function () {
-  const { register, handleSubmit } = useForm();
-  const { dark } = useStoreSelector((state) => state.dark);
-  const [selectedValue, setSelectedValue] = useState('');
-  const handleSelectChange = (event: any) => {
-    setSelectedValue(event.target.value);
+  const {
+    control: headerControl,
+    handleSubmit: headerHandleSubmit,
+    register: headerRegister,
+  } = useForm();
+  const {
+    fields: headersFields,
+    append: appendHeaders,
+    update: updateHeaders,
+    remove: removeHeaders,
+  } = useFieldArray({
+    control: headerControl,
+    name: 'headers',
+  });
+  const onSubmit = (data: any) => {
+    console.log(data);
   };
-  useEffect(() => {
-    <DtoForm />;
-  }, [selectedValue]);
+
   return (
-    <Form
-      onSubmit={onSubmit}
-      className="flex flex-col items-center justify-center gap-3 "
-      defaultValues={'s'}
-      handleSubmit={handleSubmit}
-      register={register}
-    >
-      <Select
-        selectType={2}
-        onChange={handleSelectChange}
-        name="status"
-        className={`${
-          dark ? inputTheme['dark-underline'] : inputTheme['light-underline']
-        } w-48 text-center`}
+    <form onSubmit={formHandleSubmit(onSubmit)}>
+      <label>Headers:</label>
+      <Button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          appendHeaders({ key: '', type: '', description: '' });
+        }}
       >
-        <option value={''}>SELECT</option>
-        <option value={'DTO'}>DTO</option>
-        <option value={'하이'}>하이</option>
-        <option value={'안녕'}>안녕</option>
-      </Select>
-      <div>
-        {selectedValue === 'DTO' ? (
-          <>
-            <label>
-              DTO 폼 입니당.
-              <DtoForm />
-            </label>
-          </>
-        ) : null}
-      </div>
-      <Button>저장</Button>
-    </Form>
+        추가
+      </Button>
+      {headersFields?.map((field, index) => (
+        <fieldset key={field.id}>
+          <EditHeaders
+            register={headerRegister}
+            update={updateHeaders}
+            control={headerControl}
+            value={field}
+            index={index}
+          />
+          <Button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              removeHeaders(index);
+              console.log(index);
+            }}
+          >
+            삭제
+          </Button>
+        </fieldset>
+      ))}
+
+      <input type="submit" />
+    </form>
   );
 };
 
