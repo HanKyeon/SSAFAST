@@ -25,7 +25,7 @@ public class WorkspaceController {
     @PostMapping
     ResponseEntity<?> createWorkspace(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody CreateWorkspaceDto createWorkspaceDto){
         try {
-            return new ResponseEntity<>(workspaceService.createWorkspace(userDetails.getName(), createWorkspaceDto), HttpStatus.OK);
+            return new ResponseEntity<>(workspaceService.createWorkspace(userDetails.getUsername(), createWorkspaceDto), HttpStatus.OK);
         } catch (CustomException e){
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
         } catch (Exception e) {
@@ -35,10 +35,10 @@ public class WorkspaceController {
 
     }
 
-    @GetMapping("/list/{memberId}")
-    ResponseEntity<?> getWorkspaceList(@PathVariable("memberId") Long memberId){
+    @GetMapping("/list")
+    ResponseEntity<?> getWorkspaceList(@AuthenticationPrincipal UserDetailsImpl userDetails){
         try {
-            return new ResponseEntity<>(workspaceService.getWorkspaceListDto(memberId), HttpStatus.OK);
+            return new ResponseEntity<>(workspaceService.getWorkspaceListDto(userDetails.getMemberId()), HttpStatus.OK);
         } catch (CustomException e){
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
         } catch (Exception e) {

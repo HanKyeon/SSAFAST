@@ -1,5 +1,6 @@
-package com.rocket.ssafast.workspace.domain;
+package com.rocket.ssafast.figma.domain;
 
+import com.rocket.ssafast.workspace.domain.Workspace;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

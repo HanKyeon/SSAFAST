@@ -1,17 +1,17 @@
-package com.rocket.ssafast.workspace.service;
+package com.rocket.ssafast.figma.service;
 
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
-import com.rocket.ssafast.workspace.domain.FigmaSection;
-import com.rocket.ssafast.workspace.domain.FigmaToken;
+import com.rocket.ssafast.figma.dto.response.ResFigmaTokenDto;
+import com.rocket.ssafast.figma.repository.FigmaTokenRepository;
+import com.rocket.ssafast.figma.domain.FigmaToken;
+import com.rocket.ssafast.figma.domain.FigmaSection;
 import com.rocket.ssafast.workspace.domain.Workspace;
 import com.rocket.ssafast.workspace.dto.request.CreateFigmaSectionDto;
 import com.rocket.ssafast.workspace.dto.request.FigmaSectionDto;
 import com.rocket.ssafast.workspace.dto.request.UpdateFigmaSectionDto;
 import com.rocket.ssafast.workspace.dto.response.FigmaSectionListDto;
-import com.rocket.ssafast.workspace.dto.response.FigmaTokenDto;
-import com.rocket.ssafast.workspace.repository.FigmaSectionRepository;
-import com.rocket.ssafast.workspace.repository.FigmaTokenRepository;
+import com.rocket.ssafast.figma.repository.FigmaSectionRepository;
 import com.rocket.ssafast.workspace.repository.WorkspaceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -101,13 +101,11 @@ public class FigmaSectionService {
         figmaSectionRepository.deleteById(figmaSectionId);
     }
 
-    public FigmaTokenDto getFigmaToken(Long leaderId){
-        FigmaToken figmaToken = figmaTokenRepository.findByMemberId(leaderId);
-        if(figmaToken == null){
+    public ResFigmaTokenDto getFigmaToken(Long leaderId){
+        Optional<FigmaToken> figmaTokenOptional = figmaTokenRepository.findByMemberId(leaderId);
+        if(!figmaTokenOptional.isPresent()){
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
-        return FigmaTokenDto.builder()
-                .figmaAccessToken(figmaToken.getAccessToken())
-                .figmaRefreshToken(figmaToken.getRefreshToken()).build();
+        return figmaTokenOptional.get().toResDto();
     }
 }

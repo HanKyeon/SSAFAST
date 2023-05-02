@@ -26,14 +26,14 @@ public class MemberService {
 		if (!member.isPresent()) {
 			throw new CustomException(ErrorCode.USER_NOT_FOUND);
 		}
-		return member.get().toResMemberDto();
+		return member.get().toResDto();
 	}
 
 	public List<ResMemberDto> findAllByEmailContaining(String email) {
 		List<Member> memberEntitis = memberRepository.findByEmailContaining(email);
 		List<ResMemberDto> memberDtos = new ArrayList<>();
 		for(Member member : memberEntitis) {
-			memberDtos.add(member.toResMemberDto());
+			memberDtos.add(member.toResDto());
 		}
 		return memberDtos;
 	}

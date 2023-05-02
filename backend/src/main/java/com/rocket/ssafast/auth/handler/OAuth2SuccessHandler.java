@@ -6,6 +6,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -27,6 +29,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 	private final RedisService redisService;
 	private final JwtTokenProvider jwtTokenProvider;
 	private long COOKIE_EXPIRATION = 7776000; // 90일
+	private String serverUrl = "https://www.ssafast.com";
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -53,5 +56,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 		response.addHeader(HttpHeaders.SET_COOKIE, httpCookie.toString());
 		response.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken());
 		response.setContentType("application/json;charset=UTF-8");
+
+		response.sendRedirect(serverUrl+"/google-loading");
 	}
 }
