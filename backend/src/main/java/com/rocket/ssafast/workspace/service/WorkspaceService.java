@@ -2,16 +2,16 @@ package com.rocket.ssafast.workspace.service;
 
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
+import com.rocket.ssafast.figma.repository.FigmaTokenRepository;
+import com.rocket.ssafast.member.domain.FigmaToken;
 import com.rocket.ssafast.member.domain.Member;
 import com.rocket.ssafast.member.repository.MemberRepository;
 import com.rocket.ssafast.workspace.domain.Baseurl;
-import com.rocket.ssafast.workspace.domain.FigmaToken;
 import com.rocket.ssafast.workspace.domain.Workspace;
 import com.rocket.ssafast.workspace.domain.WorkspaceMember;
 import com.rocket.ssafast.workspace.dto.request.CreateWorkspaceDto;
 import com.rocket.ssafast.workspace.dto.request.UpdateWorkspaceDto;
 import com.rocket.ssafast.workspace.dto.response.*;
-import com.rocket.ssafast.workspace.repository.FigmaTokenRepository;
 import com.rocket.ssafast.workspace.repository.WorkspaceMemberRepository;
 import com.rocket.ssafast.workspace.repository.WorkspaceRepository;
 import lombok.RequiredArgsConstructor;
@@ -67,9 +67,11 @@ public class WorkspaceService {
         );
 
         figmaTokenRepository.save(FigmaToken.builder()
-                .refreshToken(createWorkspaceDto.getFigmaRefreshToken())
-                .accessToken(createWorkspaceDto.getFigmaAccessToken())
-                .member(leader).build());
+            .figmaRefresh(createWorkspaceDto.getFigmaRefreshToken())
+            .figmaAccess(createWorkspaceDto.getFigmaAccessToken())
+            .memberId(leader.getId())
+            .build());
+
 
 
 
