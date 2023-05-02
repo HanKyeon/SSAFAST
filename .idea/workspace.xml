@@ -4,9 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2d04786b-496e-45a9-8fd6-ecc281007a74" name="Changes" comment="[BE] Fix : workspaceDto workspaceId -&gt; id">
+    <list default="true" id="2d04786b-496e-45a9-8fd6-ecc281007a74" name="Changes" comment="[BE] Feat : security getId로 member 조회">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/controller/WorkspaceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/controller/WorkspaceController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/figma/repository/FigmaTokenRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/figma/repository/FigmaTokenRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/domain/Workspace.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/domain/Workspace.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/domain/WorkspaceMember.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/domain/WorkspaceMember.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/dto/response/DetailWorkspaceDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/dto/response/DetailWorkspaceDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/repository/WorkspaceMemberRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/repository/WorkspaceMemberRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/service/WorkspaceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/service/WorkspaceService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -91,7 +95,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1682991614513</updated>
-      <workItem from="1682991617735" duration="13698000" />
+      <workItem from="1682991617735" duration="17538000" />
     </task>
     <task id="LOCAL-00001" summary="[BE] Fix : workspace생성시 회원정보 식별 수정">
       <created>1683005108375</created>
@@ -121,7 +125,14 @@
       <option name="project" value="LOCAL" />
       <updated>1683014160774</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="[BE] Feat : security getId로 member 조회">
+      <created>1683014949929</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1683014949929</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -155,6 +166,7 @@
     <MESSAGE value="[BE] Fix : 회원정보 식별 id -&gt; email 수정" />
     <MESSAGE value="[BE] Feat : FigmaSection feature 폴더 이동" />
     <MESSAGE value="[BE] Fix : workspaceDto workspaceId -&gt; id" />
-    <option name="LAST_COMMIT_MESSAGE" value="[BE] Fix : workspaceDto workspaceId -&gt; id" />
+    <MESSAGE value="[BE] Feat : security getId로 member 조회" />
+    <option name="LAST_COMMIT_MESSAGE" value="[BE] Feat : security getId로 member 조회" />
   </component>
 </project>

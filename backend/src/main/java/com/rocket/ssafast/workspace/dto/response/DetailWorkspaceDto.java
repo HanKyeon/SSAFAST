@@ -1,5 +1,7 @@
 package com.rocket.ssafast.workspace.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.rocket.ssafast.figma.dto.response.ResFigmaTokenDto;
 import com.rocket.ssafast.workspace.domain.Baseurl;
 import lombok.*;
 
@@ -20,10 +22,15 @@ public class DetailWorkspaceDto {
     private int totalApiCount;
     private int completeApiCount;
     private String figmaImg;
+    @JsonFormat(pattern = "yyyy-MM-DD")
     private Date startDate;
+    @JsonFormat(pattern = "yyyy-MM-DD")
     private Date endDate;
     private String figmaFileId;
     private String figmaFileName;
     private List<String> baseurls;
+
+    private ResFigmaTokenDto figmaToken;
+
 
 }
