@@ -1,116 +1,236 @@
 import {
+  FormProvider,
   useForm,
-  SubmitHandler,
-  useFieldArray,
-  useWatch,
-  Control,
+  useFormContext,
   Controller,
+  useFieldArray,
 } from 'react-hook-form';
-import { PropsWithChildren, FC, useState, useEffect, FormEvent } from 'react';
-import { useStoreSelector } from '@/hooks/useStore';
-import { inputTheme } from '@/utils/styleClasses';
-import { Form, Input, Select } from './components';
-import { Button, Box } from '../common';
-import DtoForm from './DtoForm';
 
-interface FormValues {
-  response: {
-    code: number;
-    descriptions: string;
-    headers: {
-      key: object;
-      type: string;
-      description: string;
-    }[];
-    bodys: {
-      key: string;
-      type: string;
-      description: string;
-    }[];
-  }[];
+interface Header {
+  key: string;
+  type: string;
+  description: string;
 }
 
-const EditHeaders = ({ update, index, value, control, register }: any) => {
-  console.log('리렌더링?');
-  return (
-    <div>
-      <input
-        onChange={() => update(index, value)}
-        placeholder="key"
-        {...register(`key`, { required: true })}
-      />
-      <input
-        onChange={() => update(index, value)}
-        placeholder="type"
-        {...register(`type`, { required: true })}
-      />
-      <input
-        onChange={() => update(index, value)}
-        placeholder="descriptions"
-        {...register(`descriptions`, { required: true })}
-      />
-    </div>
-  );
-};
+interface Body {
+  key: string;
+  type: string;
+  description: string;
+}
 
-const ResponseForm = function () {
-  const {
-    control: headerControl,
-    handleSubmit: headerHandleSubmit,
-    register: headerRegister,
-  } = useForm();
-  const {
-    fields: headersFields,
-    append: appendHeaders,
-    update: updateHeaders,
-    remove: removeHeaders,
-  } = useFieldArray({
-    control: headerControl,
-    name: 'headers',
+interface Response {
+  code: number;
+  descriptions: string;
+  headers: Header[];
+  bodys: Body[];
+}
+
+interface FormData {
+  response: Response[];
+}
+
+function HeaderFields({ control, index }: { control: any; index: number }) {
+  const { fields } = useFieldArray({
+    name: `response.${index}.headers`,
+    control,
   });
-  const onSubmit = (data: any) => {
-    console.log(data);
-  };
 
   return (
     <>
-      {/* <form onSubmit={formHandleSubmit(onSubmit)}>
-      <label>Headers:</label>
-      <Button
-        type="button"
-        onClick={(e) => {
-          e.preventDefault();
-          appendHeaders({ key: '', type: '', description: '' });
-        }}
-      >
-        추가
-      </Button>
-      {headersFields?.map((field, index) => (
-        <fieldset key={field.id}>
-          <EditHeaders
-            register={headerRegister}
-            update={updateHeaders}
-            control={headerControl}
-            value={field}
-            index={index}
+      {fields.map((item, index) => (
+        <div key={item.id}>
+          <Controller
+            name={`response.${index}.headers[${index}].key`}
+            control={control}
+            rules={{ required: true }}
+            render={({ field, fieldState }) => (
+              <>
+                <label htmlFor={`headers[${index}].key`}>Key:</label>
+                <input type="text" id={`headers[${index}].key`} {...field} />
+                {fieldState?.invalid && <span>This field is required</span>}
+              </>
+            )}
           />
-          <Button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              removeHeaders(index);
-              console.log(index);
-            }}
-          >
-            삭제
-          </Button>
-        </fieldset>
+          <Controller
+            name={`response.${index}.headers[${index}].type`}
+            control={control}
+            rules={{ required: true }}
+            render={({ field, fieldState }) => (
+              <>
+                <label htmlFor={`headers[${index}].type`}>Type:</label>
+                <input type="text" id={`headers[${index}].type`} {...field} />
+                {fieldState?.invalid && <span>This field is required</span>}
+              </>
+            )}
+          />
+          <Controller
+            name={`response.${index}.headers[${index}].description`}
+            control={control}
+            rules={{ required: true }}
+            render={({ field, fieldState }) => (
+              <>
+                <label htmlFor={`headers[${index}].description`}>
+                  Description:
+                </label>
+                <input
+                  type="text"
+                  id={`headers[${index}].description`}
+                  {...field}
+                />
+                {fieldState?.invalid && <span>This field is required</span>}
+              </>
+            )}
+          />
+        </div>
       ))}
-
-      <input type="submit" />
-    </form> */}
     </>
   );
-};
+}
+
+function BodyFields({ control, index }: { control: any; index: number }) {
+  const { fields } = useFieldArray({
+    name: `response.${index}.bodys`,
+    control,
+  });
+
+  return (
+    <>
+      {fields.map((item, index) => (
+        <div key={item.id}>
+          <Controller
+            name={`response.${index}.bodys[${index}].key`}
+            control={control}
+            rules={{ required: true }}
+            render={({ field, fieldState }) => (
+              <>
+                <label htmlFor={`bodys[${index}].key`}>Key:</label>
+                <input type="text" id={`bodys[${index}].key`} {...field} />
+                {fieldState?.invalid && <span>This field is required</span>}
+              </>
+            )}
+          />
+          <Controller
+            name={`response.${index}.bodys[${index}].type`}
+            control={control}
+            rules={{ required: true }}
+            render={({ field, fieldState }) => (
+              <>
+                <label htmlFor={`bodys[${index}].type`}>Type:</label>
+                <input type="text" id={`bodys[${index}].type`} {...field} />
+                {fieldState?.invalid && <span>This field is required</span>}
+              </>
+            )}
+          />
+          <Controller
+            name={`response.${index}.bodys[${index}].description`}
+            control={control}
+            rules={{ required: true }}
+            render={({ field, fieldState }) => (
+              <>
+                <label htmlFor={`bodys[${index}].description`}>
+                  Description:
+                </label>
+                <input
+                  type="text"
+                  id={`bodys[${index}].description`}
+                  {...field}
+                />
+                {fieldState?.invalid && <span>This field is required</span>}
+              </>
+            )}
+          />
+        </div>
+      ))}
+    </>
+  );
+}
+function ResponseForm() {
+  const methods = useForm<FormData>({
+    defaultValues: {
+      response: [
+        {
+          code: 0,
+          descriptions: '',
+          headers: [{ key: '', type: '', description: '' }],
+          bodys: [{ key: '', type: '', description: '' }],
+        },
+      ],
+    },
+  });
+  const { control, handleSubmit } = methods;
+  const { fields, append } = useFieldArray({ name: 'response', control });
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={handleSubmit((data) => console.log(data))}>
+        <div className="text-black">
+          {fields.map((item, index) => (
+            <div key={item.id}>
+              <Controller
+                name={`response.${index}.code`}
+                control={control}
+                defaultValue={0}
+                rules={{ required: true }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <label htmlFor={`response.${index}.code`}>Code:</label>
+                    <input
+                      type="text"
+                      id={`response.${index}.code`}
+                      {...field}
+                    />
+                    {fieldState?.invalid && <span>This field is required</span>}
+                  </>
+                )}
+              />
+
+              <Controller
+                name={`response.${index}.descriptions`}
+                control={control}
+                defaultValue={''}
+                rules={{ required: true }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <label htmlFor={`response.${index}.descriptions`}>
+                      Description:
+                    </label>
+                    <input
+                      type="text"
+                      id={`response.${index}.descriptions`}
+                      {...field}
+                    />
+                    {fieldState?.invalid && <span>This field is required</span>}
+                  </>
+                )}
+              />
+
+              {!(errors.response && errors.response[index]?.code) &&
+                !(errors.response && errors.response[index]?.descriptions) && (
+                  <>
+                    <HeaderFields control={control} index={index} />
+                    <BodyFields control={control} index={index} />
+                  </>
+                )}
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={() =>
+              append({
+                code: 0,
+                descriptions: '',
+                headers: [{ key: '', type: '', description: '' }],
+                bodys: [{ key: '', type: '', description: '' }],
+              })
+            }
+          >
+            Add Response
+          </button>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+    </FormProvider>
+  );
+}
 
 export default ResponseForm;
