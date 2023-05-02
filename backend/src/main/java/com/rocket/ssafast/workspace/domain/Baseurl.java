@@ -1,37 +1,28 @@
 package com.rocket.ssafast.workspace.domain;
 
-import com.rocket.ssafast.member.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
-@Entity(name = "team")
+@Entity(name = "baseurl")
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Slf4j
-public class WorkspaceMember {
+public class Baseurl {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @Column(name = "url")
+    private String url;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workspace_id")
     private Workspace workspace;
-
-    @Column(name = "is_leader")
-    @ColumnDefault("0")
-    private Boolean isLeader;
-
-
 }
