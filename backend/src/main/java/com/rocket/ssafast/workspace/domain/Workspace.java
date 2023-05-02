@@ -1,7 +1,7 @@
 package com.rocket.ssafast.workspace.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.rocket.ssafast.workspace.dto.request.CreateWorkspaceDto;
+import com.rocket.ssafast.figma.domain.FigmaSection;
 import com.rocket.ssafast.workspace.dto.response.CreatedWorkspaceDto;
 import com.rocket.ssafast.workspace.dto.response.DetailWorkspaceDto;
 import lombok.AllArgsConstructor;
@@ -9,11 +9,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
