@@ -1,6 +1,6 @@
 package com.rocket.ssafast.workspace.domain;
 
-import com.rocket.ssafast.user.domain.User;
+import com.rocket.ssafast.member.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,7 +22,7 @@ public class FigmaToken {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private User member;
+    private Member member;
 
     @Column(name = "access_token")
     private String accessToken;

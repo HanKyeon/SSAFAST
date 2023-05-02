@@ -31,4 +31,8 @@ public class FigmaSection {
 
     @Column(name = "name")
     private String name;
+
+    public void updateWorkspace(Workspace workspace) {
+        this.workspace = workspace;
+    }
 }
