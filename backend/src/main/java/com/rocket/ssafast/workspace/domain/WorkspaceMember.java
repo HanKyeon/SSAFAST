@@ -1,6 +1,6 @@
 package com.rocket.ssafast.workspace.domain;
 
-import com.rocket.ssafast.user.domain.User;
+import com.rocket.ssafast.member.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +23,7 @@ public class WorkspaceMember {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private User member;
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workspace_id")
@@ -32,4 +32,6 @@ public class WorkspaceMember {
     @Column(name = "is_leader")
     @ColumnDefault("0")
     private Boolean isLeader;
+
+
 }
