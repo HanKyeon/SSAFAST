@@ -1,0 +1,39 @@
+server:
+  port: 8080
+
+spring:
+  redis:
+    host: localhost
+    port: 6379
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ssafast?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ssafast
+    password: 205205205
+
+  #  data:
+  #    mongodb:
+  #      host: localhost
+  #      port: 27017
+  #      username: ssafast
+  #      password: 502502502
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: True
+
+  # google oauth
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 614177507330-ik97fv3fa22p82gjticfb394ssf1hfe6.apps.googleusercontent.com
+            client-secret: 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
+            scope: profile, email
+
+jwt:
+  secret: q84RqM8cXca0CHwl8uAji7DBa0riKquYsquZCZ+hihiO3UwAoAZ9YsUqrCyALgBbbr7MBXaugWAdXKfVn4s7qQ==
+  refresh-token-validity-in-seconds: 1209600  # 14일
+  access-token-validity-in-seconds: 43200     # 12시간
