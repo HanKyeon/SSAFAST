@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/S08P31A502.iml" filepath="$PROJECT_DIR$/.idea/S08P31A502.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ssafast.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ssafast.main.iml" />
     </modules>
   </component>
 </project>

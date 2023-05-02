@@ -30,7 +30,7 @@ public class Member {
 	@Column(name = "email")
 	String email;
 
-	@Column(name = "profileImg")
+	@Column(name = "profile_img")
 	String profileImg;
 
 	public ResMemberDto toResMemberDto() {
