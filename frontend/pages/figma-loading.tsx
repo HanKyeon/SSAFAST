@@ -1,3 +1,5 @@
+import MetaHead from '@/components/common/MetaHead';
+import { SpinnerDots } from '@/components/common/Spinner';
 import { useStoreDispatch } from '@/hooks/useStore';
 import { DispatchToast } from '@/store';
 import { figmaTokenActions } from '@/store/figma-token-slice';
@@ -61,7 +63,10 @@ const FigmaCodeLoadingPage = function () {
   );
   return (
     <>
-      <div>하이요 피그마 토큰 받아오고 저장하고 있어용~</div>
+      <MetaHead />
+      <div className="h-full w-full flex items-center justify-center">
+        <SpinnerDots />
+      </div>
     </>
   );
 };

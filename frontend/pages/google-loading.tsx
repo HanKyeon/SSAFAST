@@ -1,7 +1,13 @@
+import MetaHead from '@/components/common/MetaHead';
+import { SpinnerDots } from '@/components/common/Spinner';
+
 const GoogleLoadingPage = function () {
   return (
     <>
-      <div>하이요 구글 로딩 라우팅</div>
+      <MetaHead />
+      <div className="h-full w-full flex items-center justify-center">
+        <SpinnerDots />
+      </div>
     </>
   );
 };

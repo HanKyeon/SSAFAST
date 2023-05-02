@@ -21,7 +21,7 @@ const MetaHead = function ({
       <meta property="og:type" content="website" />
       <meta
         property="og:url"
-        content={`${process.env.NEXT_PUBLIC_HOSTNAME}/${url}`}
+        content={`${process.env.NEXT_PUBLIC_HOSTNAME}${url}`}
       />
       <meta property="og:title" content={title} />
       <meta property="og:image" content={image} />

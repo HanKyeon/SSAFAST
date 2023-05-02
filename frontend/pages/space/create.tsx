@@ -108,26 +108,47 @@ const SpaceCreatePage = function () {
           name: val.name,
         };
       });
+    if (!sectionList.length) {
+      dispatch(DispatchToast('피그마 화면을 골라주세요!', false));
+      return;
+    } else if (!figmaUrl.trim().length) {
+      dispatch(DispatchToast('Figma url을 입력해주세요!', false));
+      return;
+    } else if (!figmaData?.name) {
+      dispatch(DispatchToast('Figma url이 유효하지 않습니다!', false));
+      return;
+    } else if (!pjtName.trim()) {
+      dispatch(DispatchToast('프로젝트 이름을 입력해주세요!', false));
+      return;
+    } else if (!baseUrlList.trim().length) {
+      dispatch(DispatchToast('프로젝트 url을 입력해주세요!', false));
+      return;
+    } else if (!pjtStartDate || !pjtEndDate) {
+      dispatch(DispatchToast('프로젝트 기간을 입력해주세요!', false));
+      return;
+    }
+    console.log(pjtStartDate, typeof pjtEndDate);
     const createConfig = {
       figmaUrl: figmaUrl,
       figmaFileId: figmaId,
       figmaFileName: figmaData?.name,
       figmaImg: figmaData?.thumbnails,
       name: pjtName,
-      favicon: pjtImgUrl,
-      description: pjtDes,
+      favicon: pjtImgUrl ? pjtImgUrl : '',
+      description: pjtDes ? pjtDes : `${pjtName}의 공간입니다.`,
       startDate: pjtStartDate,
       endDate: pjtEndDate,
       baseurls: baseUrlList.split(`\n`),
     };
+
     apiRequest({
       method: `post`,
       url: `/api/workspace/project`,
       data: createConfig,
     })
-      .then((res) => {
-        const spaceId = res.data.workspaceId;
-        apiRequest({
+      .then(async (res) => {
+        const spaceId = res.data.id;
+        await apiRequest({
           method: `post`,
           url: `/api/workspace/figma-section`,
           data: {
@@ -139,12 +160,12 @@ const SpaceCreatePage = function () {
         });
         return res;
       })
-      .then((res) => {
-        apiRequest({
+      .then(async (res) => {
+        await apiRequest({
           method: `post`,
           url: `/api/workspace/member`,
           data: {
-            memberIds: [],
+            memberIds: pjtMemberList.map((member) => member.id),
           },
         });
       });

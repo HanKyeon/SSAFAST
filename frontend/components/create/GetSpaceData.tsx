@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { Box } from '../common';
 import SelectedMember from './SelectedMember';
+import SearchedMember from './SearchedMember';
 
 interface Props {
   savedImgUrl: string;
@@ -309,9 +310,10 @@ const GetSpaceData = function ({
                 {searchList.length
                   ? searchList.map((member) => {
                       return (
-                        <div key={`${member.id}-${member.memberName}-search`}>
-                          하이루
-                        </div>
+                        <SearchedMember
+                          member={member}
+                          key={`${member.id}-${member.memberName}-search`}
+                        />
                       );
                     })
                   : null}

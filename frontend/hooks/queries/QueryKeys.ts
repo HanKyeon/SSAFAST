@@ -29,7 +29,7 @@ user                                  // 로그인or로그아웃 시 invalidate
           ㄴcodeFE
 
 figma // 로그아웃 정도 초기화 고민할듯
-  ㄴtokens
+  ㄴtokens // 유저 로그아웃, figmaToken변경 시
   ㄴfile
     ㄴall
     ㄴsections
@@ -48,13 +48,13 @@ export const queryKeys = {
   spaceList: () => [...queryKeys.space(), `list`] as const,
   // space 상세.
   spaceDetail: (spaceId: string | number) =>
-    [queryKeys.space(), `detail`, `${spaceId}`] as const,
+    [...queryKeys.space(), `detail`, `${spaceId}`] as const,
   // space에 멤버 조회
   spaceMembers: (spaceId: string | number) =>
-    [queryKeys.spaceDetail(spaceId), `member`] as const,
+    [...queryKeys.spaceDetail(spaceId), `member`] as const,
   // space에 선택된 figma Image List
   spaceFigmas: (spaceId: string | number) =>
-    [queryKeys.spaceDetail(spaceId), `frames`] as const,
+    [...queryKeys.spaceDetail(spaceId), `frames`] as const,
   // space의 api 완성도
   spaceApiComplete: (spaceId: string | number) =>
     [...queryKeys.spaceDetail(spaceId), `complete`] as const,
@@ -78,9 +78,14 @@ export const queryKeys = {
   // space의 section 하나에 귀속된 api들
   spaceSectionApis: (spaceId: string | number, sectionId: string | number) =>
     [...queryKeys.spaceApi(spaceId), `section`, `${sectionId}`] as const,
+  // space의 category 목록
+  spaceCategoryList: (spaceId: string | number) =>
+    [...queryKeys.spaceApi(spaceId), `list`] as const,
   // space의 카테고리에 종속된 api 목록들
   spaceCategoryApis: (spaceId: string | number, categoryId: string | number) =>
     [...queryKeys.spaceApi(spaceId), `category`, `${categoryId}`] as const,
+  spaceApiCodeFE: (spaceId: string | number, apiId: string | number) =>
+    [...queryKeys.spaceApiDetail(spaceId, apiId), `front`] as const,
 
   // space의 dto
   spaceDto: (spaceId: string | number) =>
@@ -94,9 +99,7 @@ export const queryKeys = {
   // dto bE 코드
   spaceDtoCodeBE: (spaceId: string | number, dtoId: string | number) =>
     [...queryKeys.spaceDtoDetail(spaceId, dtoId), `back`] as const,
-  // dto FE 코드
-  spaceDtoCodeFE: (spaceId: string | number, dtoId: string | number) =>
-    [...queryKeys.spaceDtoDetail(spaceId, dtoId), `front`] as const,
+  // dto FE 코드 => API Axios 객체 코드
 
   // 포스트맨
   spaceResult: (spaceId: string | number, apiId: number | string) =>

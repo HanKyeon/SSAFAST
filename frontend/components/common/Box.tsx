@@ -43,7 +43,7 @@ const Box = function ({
     <div
       className={`${className} ${styles[`${variant}`]} ${
         fontStyle[`${fontType}`]
-      } rounded-[13px]`}
+      } rounded-[13px] duration-[0.33s]`}
       {...rest}
     >
       {children}

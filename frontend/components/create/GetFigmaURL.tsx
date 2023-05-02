@@ -6,6 +6,8 @@ import AnimationBox from '../common/AnimationBox';
 import Description from '../../public/assets/images/Description.png';
 import Image from 'next/image';
 import { SpinnerDots } from '../common/Spinner';
+import { useStoreDispatch } from '@/hooks/useStore';
+import { DispatchToast } from '@/store';
 
 interface Props {
   setFigmaIdHandler: (id: string) => void;
@@ -20,6 +22,7 @@ const GetFigmaURL = function ({
   setFigmaIdHandler,
   setFigmaUrlHandler,
 }: Props) {
+  const dispatch = useStoreDispatch();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { onChangeHandler, inputData, setFstData } = useInput(inputRef, 2500);
@@ -34,6 +37,8 @@ const GetFigmaURL = function ({
     if (inputData.trim().length) {
       setFigmaUrlHandler(inputData);
       setFigmaIdHandler(inputData.split(`?`)[0].split(`/`)[4]);
+    } else {
+      dispatch(DispatchToast('url을 입력해주세요!', false));
     }
   };
 
