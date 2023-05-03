@@ -5,7 +5,8 @@ import {
   Controller,
   useFieldArray,
 } from 'react-hook-form';
-
+import { Box, Button, CircleBtn } from '../common';
+import { useState } from 'react';
 interface Header {
   key: string;
   type: string;
@@ -29,9 +30,15 @@ interface FormData {
   response: Response[];
 }
 
-function HeaderFields({ control, index }: { control: any; index: number }) {
+function HeaderFields({
+  control,
+  Keyindex,
+}: {
+  control: any;
+  Keyindex: number;
+}) {
   const { fields } = useFieldArray({
-    name: `response.${index}.headers`,
+    name: `response.${Keyindex}.headers`,
     control,
   });
 
@@ -40,31 +47,31 @@ function HeaderFields({ control, index }: { control: any; index: number }) {
       {fields.map((item, index) => (
         <div key={item.id}>
           <Controller
-            name={`response.${index}.headers[${index}].key`}
+            name={`response.${Keyindex}.headers[${index}].key`}
             control={control}
             rules={{ required: true }}
             render={({ field, fieldState }) => (
-              <>
+              <div className="flex">
                 <label htmlFor={`headers[${index}].key`}>Key:</label>
                 <input type="text" id={`headers[${index}].key`} {...field} />
                 {fieldState?.invalid && <span>This field is required</span>}
-              </>
+              </div>
             )}
           />
           <Controller
-            name={`response.${index}.headers[${index}].type`}
+            name={`response.${Keyindex}.headers[${index}].type`}
             control={control}
             rules={{ required: true }}
             render={({ field, fieldState }) => (
-              <>
+              <div className="flex">
                 <label htmlFor={`headers[${index}].type`}>Type:</label>
                 <input type="text" id={`headers[${index}].type`} {...field} />
                 {fieldState?.invalid && <span>This field is required</span>}
-              </>
+              </div>
             )}
           />
           <Controller
-            name={`response.${index}.headers[${index}].description`}
+            name={`response.${Keyindex}.headers[${index}].description`}
             control={control}
             rules={{ required: true }}
             render={({ field, fieldState }) => (
@@ -87,150 +94,67 @@ function HeaderFields({ control, index }: { control: any; index: number }) {
   );
 }
 
-function BodyFields({ control, index }: { control: any; index: number }) {
-  const { fields } = useFieldArray({
-    name: `response.${index}.bodys`,
-    control,
-  });
-
+const ResponseForm = function () {
+  const methods = useForm<Response>();
+  const { control, handleSubmit } = methods;
+  const addComponent = function () {};
+  const [item, setItem] = useState('');
   return (
     <>
-      {fields.map((item, index) => (
-        <div key={item.id}>
-          <Controller
-            name={`response.${index}.bodys[${index}].key`}
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState }) => (
-              <>
-                <label htmlFor={`bodys[${index}].key`}>Key:</label>
-                <input type="text" id={`bodys[${index}].key`} {...field} />
-                {fieldState?.invalid && <span>This field is required</span>}
-              </>
-            )}
-          />
-          <Controller
-            name={`response.${index}.bodys[${index}].type`}
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState }) => (
-              <>
-                <label htmlFor={`bodys[${index}].type`}>Type:</label>
-                <input type="text" id={`bodys[${index}].type`} {...field} />
-                {fieldState?.invalid && <span>This field is required</span>}
-              </>
-            )}
-          />
-          <Controller
-            name={`response.${index}.bodys[${index}].description`}
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState }) => (
-              <>
-                <label htmlFor={`bodys[${index}].description`}>
-                  Description:
-                </label>
-                <input
-                  type="text"
-                  id={`bodys[${index}].description`}
-                  {...field}
-                />
-                {fieldState?.invalid && <span>This field is required</span>}
-              </>
-            )}
-          />
-        </div>
-      ))}
+      <div className="flex flex-row gap-4">
+        <Controller
+          name={`code`}
+          control={control}
+          rules={{ required: true }}
+          render={({ field, fieldState }) => (
+            <div>
+              <label htmlFor={`code`}>Status Code:</label>
+              <input
+                type="text"
+                id={`code`}
+                {...field}
+                placeholder="Status Code"
+              />
+              {fieldState?.invalid && (
+                <span>
+                  상태코드를 입렵해주세요<div className=""></div>
+                </span>
+              )}
+            </div>
+          )}
+        />
+        <Controller
+          name={`descriptions`}
+          control={control}
+          rules={{ required: true }}
+          render={({ field, fieldState }) => (
+            <div>
+              <label htmlFor={`description`}>Description:</label>
+              <input
+                type="text"
+                id={`description`}
+                {...field}
+                placeholder="Description"
+              />
+              {fieldState?.invalid && (
+                <span>무슨 에러 코드인지 설명을 적어주세요.</span>
+              )}
+            </div>
+          )}
+        />
+        <Button
+          className="text-[1px]"
+          isEmpty
+          type="button"
+          onClick={addComponent}
+        >
+          add
+        </Button>
+      </div>
+      {}
+      <div></div>
     </>
   );
-}
-function ResponseForm() {
-  const methods = useForm<FormData>({
-    defaultValues: {
-      response: [
-        {
-          code: 0,
-          descriptions: '',
-          headers: [{ key: '', type: '', description: '' }],
-          bodys: [{ key: '', type: '', description: '' }],
-        },
-      ],
-    },
-  });
-  const { control, handleSubmit } = methods;
-  const { fields, append } = useFieldArray({ name: 'response', control });
-
-  return (
-    <FormProvider {...methods}>
-      <form onSubmit={handleSubmit((data) => console.log(data))}>
-        <div className="text-black">
-          {fields.map((item, index) => (
-            <div key={item.id}>
-              <Controller
-                name={`response.${index}.code`}
-                control={control}
-                defaultValue={0}
-                rules={{ required: true }}
-                render={({ field, fieldState }) => (
-                  <>
-                    <label htmlFor={`response.${index}.code`}>Code:</label>
-                    <input
-                      type="text"
-                      id={`response.${index}.code`}
-                      {...field}
-                    />
-                    {fieldState?.invalid && <span>This field is required</span>}
-                  </>
-                )}
-              />
-
-              <Controller
-                name={`response.${index}.descriptions`}
-                control={control}
-                defaultValue={''}
-                rules={{ required: true }}
-                render={({ field, fieldState }) => (
-                  <>
-                    <label htmlFor={`response.${index}.descriptions`}>
-                      Description:
-                    </label>
-                    <input
-                      type="text"
-                      id={`response.${index}.descriptions`}
-                      {...field}
-                    />
-                    {fieldState?.invalid && <span>This field is required</span>}
-                  </>
-                )}
-              />
-
-              {!(errors.response && errors.response[index]?.code) &&
-                !(errors.response && errors.response[index]?.descriptions) && (
-                  <>
-                    <HeaderFields control={control} index={index} />
-                    <BodyFields control={control} index={index} />
-                  </>
-                )}
-            </div>
-          ))}
-          <button
-            type="button"
-            onClick={() =>
-              append({
-                code: 0,
-                descriptions: '',
-                headers: [{ key: '', type: '', description: '' }],
-                bodys: [{ key: '', type: '', description: '' }],
-              })
-            }
-          >
-            Add Response
-          </button>
-        </div>
-        <button type="submit">Submit</button>
-      </form>
-    </FormProvider>
-  );
-}
+};
 
 export default ResponseForm;
