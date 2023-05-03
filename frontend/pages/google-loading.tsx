@@ -24,7 +24,7 @@ export default GoogleLoadingPage;
 export const getServerSideProps: GetServerSideProps =
   wrapper.getServerSideProps(function (store) {
     return async function (context) {
-      const access = context.req.headers['proxy-authorization'];
+      const access = context.req.headers.cookie;
 
       if (access) {
         store.dispatch(tokenActions.setAccessToken({ accessToken: access }));
