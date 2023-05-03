@@ -24,14 +24,14 @@ const MetaHead = function ({
         content={`${process.env.NEXT_PUBLIC_HOSTNAME}${url}`}
       />
       <meta property="og:title" content={title} />
+      <meta property="og:description" content={description} />
       <meta property="og:image" content={image} />
       <meta property="og:site_name" content="SSAFAST" />
       <meta property="og:locale" content="ko_KR" />
-      <meta name="description" content={description} />
-      <meta property="og:description" content={description} />
       <link rel="apple-touch-icon" href={image} />
       <link rel="shortcut icon" href={image} />
       <title>{title}</title>
+      <meta name="description" content={description} />
     </Head>
   );
 };

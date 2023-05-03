@@ -19,7 +19,7 @@ const SearchedMember = function ({ member }: Props) {
       <div className="whitespace-nowrap text-ellipsis w-full h-full">
         {member.memberName}
       </div>
-      <IoPersonAddSharp className="h-[45px] w-[45px] cursor-pointer hover:scale-[107%] duration-[0.33s]" />
+      <IoPersonAddSharp className="h-[45px] w-[45px] cursor-pointer duration-[0.33s]" />
     </div>
   );
 };

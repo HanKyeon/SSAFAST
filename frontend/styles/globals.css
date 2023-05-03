@@ -27,8 +27,8 @@ body {
   margin: 0;
 
   box-sizing: border-box;
-  background-color: #1a1e1b;
-  color: #efefef;
+  /* background-color: #1a1e1b;
+  color: #efefef; */
   outline: none;
 
   font-family: nx2-g-m;

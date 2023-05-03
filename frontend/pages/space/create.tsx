@@ -7,7 +7,7 @@ import {
   useFigmaSections,
   useUserFigmaTokens,
 } from '@/hooks/queries/queries';
-import { useStoreDispatch } from '@/hooks/useStore';
+import { useStoreDispatch, useStoreSelector } from '@/hooks/useStore';
 import { figmaTokenActions } from '@/store/figma-token-slice';
 import FigmaImageList from '@/components/FigmaImageList';
 import { SpinnerDots } from '@/components/common/Spinner';
@@ -25,18 +25,42 @@ import useInput from '@/hooks/useInput';
 import { queryKeys } from '@/hooks/queries/QueryKeys';
 import apiRequest from '@/utils/axios';
 import MetaHead from '@/components/common/MetaHead';
+import { toastActions } from '@/store/toast-slice';
+import figmaAxios from '@/utils/figmaAxios';
+import { InferGetServerSidePropsType } from 'next';
+import { exActions } from '@/store/ex-slice';
 
-const SpaceCreatePage = function () {
+// 상수 스타일
+const customStyles = (dark: boolean, selected: boolean) =>
+  `${
+    dark && selected
+      ? 'bg-mincho-strong active:bg-teal-600 scale-[110%]'
+      : dark && !selected
+      ? 'bg-theme-white-normal active:bg-grayscale-light hover:scale-[105%]'
+      : !dark && selected
+      ? 'bg-taro-strong active:bg-opacity-100 bg-opacity-80 scale-[110%]'
+      : 'bg-grayscale-dark active:bg-grayscale-deepdark hover:scale-[105%]'
+  }` as const;
+
+const SpaceCreatePage = function (
+  props: InferGetServerSidePropsType<typeof getServerSideProps>
+) {
+  const figmatokens = useStoreSelector((state) => state.figmatoken);
   const dispatch = useStoreDispatch();
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const router = useRouter();
+  const { dark } = useStoreSelector((state) => state.dark);
 
   // 1스텝
   // 서버에 던질 figmaUrl
   const [figmaUrl, setFigmaUrl] = useState<string>(``);
   // 서버에 던질 figmaId
   const [figmaId, setFigmaId] = useState<string>(``);
-  const { data, isLoading, isError } = useUserFigmaTokens();
+  const {
+    data: userFigmaTokens,
+    isLoading: userFigmaTokenLoading,
+    isError: userFigmaTokenError,
+  } = useUserFigmaTokens();
   const setFigmaUrlHandler = function (url: string) {
     setFigmaUrl(() => url);
   };
@@ -55,6 +79,7 @@ const SpaceCreatePage = function () {
   } = useFigmaOrigin(figmaId, `newSpace`, selectedIds);
 
   const setFigmaToken = function () {
+    // console.log(process.env.NEXT_PUBLIC_FIGMA_TEST_ACCESS_TOKEN);
     dispatch(
       figmaTokenActions.setTokens({
         figmaAccess: process.env.NEXT_PUBLIC_FIGMA_TEST_ACCESS_TOKEN,
@@ -186,33 +211,30 @@ const SpaceCreatePage = function () {
           {/* 스텝 */}
           <div className="flex flex-row h-[8%] basis-[8%] gap-[1%] w-full items-center justify-center">
             <div
-              className={`h-[50px] w-[50px] rounded-full flex items-center justify-center text-theme-dark-normal text-[22px] duration-[0.33s] cursor-pointer ${
+              className={`h-[50px] w-[50px] rounded-full flex items-center justify-center text-theme-dark-normal text-[22px] duration-[0.33s] cursor-pointer ${customStyles(
+                dark,
                 step === 1
-                  ? 'bg-mincho-strong active:bg-teal-600 scale-[110%]'
-                  : 'bg-theme-white-normal active:bg-theme-white-strong hover:scale-[105%]'
-              }`}
+              )}`}
               onClick={() => setStep(() => 1)}
             >
               1
             </div>
             <BsArrowRight className="w-[9%] h-[50px]" />
             <div
-              className={`h-[50px] w-[50px] rounded-full flex items-center justify-center text-theme-dark-normal text-[22px] duration-[0.33s] cursor-pointer ${
+              className={`h-[50px] w-[50px] rounded-full flex items-center justify-center text-theme-dark-normal text-[22px] duration-[0.33s] cursor-pointer ${customStyles(
+                dark,
                 step === 2
-                  ? 'bg-mincho-strong active:bg-teal-600 scale-[110%]'
-                  : 'bg-theme-white-normal active:bg-theme-white-strong hover:scale-[105%]'
-              }`}
+              )}`}
               onClick={() => setStep(() => 2)}
             >
               2
             </div>
             <BsArrowRight className="w-[9%] h-[50px]" />
             <div
-              className={`h-[50px] w-[50px] rounded-full flex items-center justify-center text-theme-dark-normal text-[22px] duration-[0.33s] cursor-pointer ${
+              className={`h-[50px] w-[50px] rounded-full flex items-center justify-center text-theme-dark-normal text-[22px] duration-[0.33s] cursor-pointer ${customStyles(
+                dark,
                 step === 3
-                  ? 'bg-mincho-strong active:bg-teal-600 scale-[110%]'
-                  : 'bg-theme-white-normal active:bg-theme-white-strong hover:scale-[105%]'
-              }`}
+              )}`}
               onClick={() => setStep(() => 3)}
             >
               3
@@ -268,9 +290,9 @@ const SpaceCreatePage = function () {
                 setSelectedIds={setSelectedIds}
                 figmaId={figmaId}
               />
-              <div onClick={setFigmaToken}>토큰세팅</div>
             </AnimationBox>
           </div>
+          <div onClick={setFigmaToken}>토큰세팅</div>
 
           {/* 아래 버튼 */}
           <div className="w-full h-[8%] flex items-center justify-center text-[24px]">
@@ -314,16 +336,36 @@ export default SpaceCreatePage;
 export const getServerSideProps = wrapper.getServerSideProps(function (store) {
   return async function (context) {
     const queryClient = new QueryClient(QueryClientOption);
-    queryClient.prefetchQuery({
-      queryKey: queryKeys.figmaTokens(),
+
+    await queryClient.prefetchQuery({
+      queryKey: queryKeys.user(),
       queryFn: async function () {
         return apiRequest({
           method: `get`,
-          baseURL: `${process.env.NEXT_PUBLIC_HOSTNAME}`,
-          url: `/api/figma`,
+          url: `/api/user`,
         }).then((res) => res.data);
       },
     });
+
+    // await queryClient.prefetchQuery({
+    //   queryKey: queryKeys.figmaTokens(),
+    //   queryFn: async function () {
+    //     return apiRequest({
+    //       method: `get`,
+    //       // baseURL: `${process.env.NEXT_PUBLIC_HOSTNAME}`,
+    //       url: `/api/user/figma-token`,
+    //     }).then((res) => {
+    //       store.dispatch(
+    //         figmaTokenActions.setTokens({
+    //           figmaAccess: res.data.figmaAccess,
+    //           figmaRefresh: res.data.figmaRefresh,
+    //         })
+    //       );
+    //       return res.data;
+    //     });
+    //   },
+    // });
+
     return {
       props: {
         dehydratedState: dehydrate(queryClient),

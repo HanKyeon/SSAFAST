@@ -1,7 +1,7 @@
 import { FormEvent, RefObject, useEffect, useRef } from 'react';
 import { Button } from '../common';
 import useInput from '@/hooks/useInput';
-import { useFigmaDatas } from '@/hooks/queries/queries';
+import { useFigmaDatas, useUserFigmaTokens } from '@/hooks/queries/queries';
 import AnimationBox from '../common/AnimationBox';
 import Description from '../../public/assets/images/Description.png';
 import Image from 'next/image';
@@ -24,6 +24,11 @@ const GetFigmaURL = function ({
 }: Props) {
   const dispatch = useStoreDispatch();
   const inputRef = useRef<HTMLInputElement>(null);
+  const {
+    data: userFigmaTokens,
+    isLoading: userFigmaTokenLoading,
+    isError: userFigmaTokenError,
+  } = useUserFigmaTokens();
 
   const { onChangeHandler, inputData, setFstData } = useInput(inputRef, 2500);
   useEffect(function () {
@@ -34,6 +39,17 @@ const GetFigmaURL = function ({
 
   const acceptFigmaUrlHandler = function (e: FormEvent) {
     e.preventDefault();
+    if (!userFigmaTokens) {
+      window.location.href = `https://www.figma.com/oauth?
+client_id=${process.env.NEXT_PUBLIC_FIGMA_ROCKET_APP_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_HOSTNAME}/figma-loading&scope=file_read&state=asdaa&response_type=code`;
+      dispatch(
+        DispatchToast(
+          '피그마 접근 권한 요청 부탁드립니다! 잠시 기다려주세요!',
+          true
+        )
+      );
+      return;
+    }
     if (inputData.trim().length) {
       setFigmaUrlHandler(inputData);
       setFigmaIdHandler(inputData.split(`?`)[0].split(`/`)[4]);
