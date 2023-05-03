@@ -1,5 +1,7 @@
 package com.rocket.ssafast.workspace.service;
 
+import com.rocket.ssafast.apispec.domain.Entity.CategoryEntity;
+import com.rocket.ssafast.apispec.repository.CategoryEntityRepository;
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
 import com.rocket.ssafast.figma.repository.FigmaTokenRepository;
@@ -32,6 +34,7 @@ public class WorkspaceService {
     private final WorkspaceMemberRepository workspaceMemberRepository;
     private final MemberRepository memberRepository;
     private final FigmaTokenRepository figmaTokenRepository;
+    private final CategoryEntityRepository categoryEntityRepository;
 
 
     @Transactional
@@ -74,6 +77,12 @@ public class WorkspaceService {
             .memberId(leader.getId())
             .build());
 
+        //루트 카테고리 추가
+        categoryEntityRepository.save(CategoryEntity.builder()
+                        .workspace(workspace)
+                        .name("/")
+                .build()
+        );
 
         return workspaceRepository.save(workspace).toCreatedDto();
     }
