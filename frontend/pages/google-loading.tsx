@@ -24,7 +24,7 @@ export default GoogleLoadingPage;
 export const getServerSideProps: GetServerSideProps =
   wrapper.getServerSideProps(function (store) {
     return async function (context) {
-      const access = context.req.headers.authorization;
+      const access = context.req.headers['www-authenticate'];
       if (access) {
         store.dispatch(tokenActions.setAccessToken({ accessToken: access }));
       }
@@ -32,7 +32,7 @@ export const getServerSideProps: GetServerSideProps =
       return {
         props: {
           asdf: `asdf`,
-          access: access,
+          access: access || '안되는데용?',
         },
       };
     };
