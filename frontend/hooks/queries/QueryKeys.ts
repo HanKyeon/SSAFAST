@@ -125,7 +125,7 @@ export const queryKeys = {
   /////////////////////
   figma: (figmaId: string) => [`figma`, figmaId] as const,
   // 유저 개인 피그마 토큰
-  figmaTokens: () => [queryKeys.user(), `figma-tokens`] as const,
+  figmaTokens: () => [...queryKeys.user(), `figma-tokens`] as const,
   // 피그마 파일 구분
   figmaFiles: (figmaId: string) =>
     [...queryKeys.figma(figmaId), `file`] as const,

@@ -136,18 +136,18 @@ export interface DtoListItem {
   description: string;
 }
 
-export interface DtoAttr {
-  [key: number | string]: {
-    Type: string;
-    Desc: string;
-    itera: boolean;
-    Constraints: string[];
-  };
+export interface WonsiAttr {
+  key: string;
+  type: string;
+  desc: string;
+  itera: boolean;
+  Constraints: string[];
 }
 
 export interface DepthDto {
-  [key: number | string]: {
-    [key: number | string]: DtoAttr;
+  [key: number]: {
+    fields: WonsiAttr[];
+    nestedDtos?: DepthDto;
   };
 }
 
@@ -290,7 +290,7 @@ export const useDtoDetail = function (
   spaceId: string | number,
   dtoId: string | number
 ) {
-  return useQuery<DtoAttr | DepthDto>({
+  return useQuery<WonsiAttr | DepthDto>({
     queryKey: queryKeys.spaceDtoDetail(spaceId, dtoId),
     queryFn: async function () {
       return apiRequest({
@@ -577,7 +577,7 @@ export const useUserFigmaTokens = function () {
     queryFn: async function () {
       return apiRequest({
         method: `get`,
-        url: `/api/figma`, // 여기 아직임
+        url: `/api/user/figma-token`,
       }).then((res) => res.data);
     },
     onSuccess: function (data) {
