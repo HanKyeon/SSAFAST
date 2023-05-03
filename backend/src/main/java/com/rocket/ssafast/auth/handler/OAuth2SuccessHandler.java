@@ -57,6 +57,12 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 		response.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken());
 		response.setContentType("application/json;charset=UTF-8");
 
-		response.sendRedirect(serverUrl+"/google-loading");
+		StringBuilder url = new StringBuilder();
+		url.append(serverUrl).append("/google-loading?refresh-token=")
+			.append(tokenDto.getRefreshToken())
+			.append("&access-token=")
+			.append(tokenDto.getAccessToken());
+
+		response.sendRedirect(url.toString());
 	}
 }
