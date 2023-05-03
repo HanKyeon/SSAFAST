@@ -6,11 +6,11 @@ import store, { DispatchToast } from '@/store/index';
 서버에 요청을 날리는 axios instance
 */
 
-const interceptorRequest = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_HOSTNAME}`, // 서버 주소
-  withCredentials: true,
-  timeout: 10000, // 10초까지만 대기
-});
+// const interceptorRequest = axios.create({
+//   baseURL: `${process.env.NEXT_PUBLIC_HOSTNAME}`, // 서버 주소
+//   withCredentials: true,
+//   timeout: 10000, // 10초까지만 대기
+// });
 
 const apiRequest = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_HOSTNAME}`, // 서버 주소
@@ -43,10 +43,7 @@ apiRequest.interceptors.response.use(
   (error) => {
     console.log(error);
     const response = error.response; // 에러 정보
-    if (
-      response.status === 401 &&
-      response.data.message === '만료된 JWT 토큰입니다.'
-    ) {
+    if (response.status === 401) {
       console.log('재요청');
       const originalConfig = error.config; // 기존 요청 정보 저장 (accessToken 재발급 후 재요청)
 
@@ -55,18 +52,15 @@ apiRequest.interceptors.response.use(
       const accessToken = state.token.accessToken; // 리덕스 accessToken 읽기
       const refreshToken = state.token.refreshToken; // 리덕스 refreshToken 읽기
 
-      interceptorRequest.defaults.headers.common[`accesstoken`] = accessToken;
-      interceptorRequest.defaults.headers.common[`refreshtoken`] = refreshToken;
-
       const config: AxiosRequestConfig = {
         method: 'post',
         url: `/api/auth/reissue`,
       };
 
-      return interceptorRequest(config)
+      return axios(config)
         .then((res) => {
           console.log('토큰 재발급 성공', res);
-          const newAccessToken = res.headers['accesstoken'];
+          const newAccessToken = res.headers.getAuthorization;
           store.dispatch(
             tokenActions.setAccessToken({ accessToken: newAccessToken })
           );

@@ -8,7 +8,7 @@ const BoxHeader = function ({
   className,
 }: BoxHeaderPropsType): JSX.Element {
   return (
-    <div className={`${className} pb-5 text-[14px] text-grayscale-dark`}>
+    <div className={`${className} pb-5 text-small text-grayscale-dark`}>
       {title}
     </div>
   );

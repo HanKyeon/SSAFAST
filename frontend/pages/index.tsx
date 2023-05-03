@@ -10,6 +10,7 @@ import { RequestForm, ResponseForm } from '@/components/forms';
 import { useForm } from 'react-hook-form';
 import ToggleModeBtn from '@/components/common/ToggleModeBtn';
 import MetaHead from '@/components/common/MetaHead';
+import googleAxios from '@/utils/googleAxios';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,6 +24,11 @@ export default function Home() {
   const { dark } = useStoreSelector((state) => state.dark);
   const changeDark = function () {
     dispatch(darkActions.toggleDark({}));
+  };
+
+  const onClickLogin = () => {
+    window.location.href =
+      'https://www.ssafast.com/oauth2/authorization/google';
   };
 
   return (
@@ -52,6 +58,7 @@ export default function Home() {
       </CircleBtn>
       {/* <RequestForm /> */}
       <ResponseForm />
+      <Button onClick={onClickLogin}>구글로그인</Button>
     </main>
   );
 }
