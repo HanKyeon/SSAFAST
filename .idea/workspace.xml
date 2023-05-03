@@ -4,14 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="68c3ac46-3b5b-41fc-94b0-32029979774c" name="Changes" comment="[BE] FIX : 포스트맨 테스트 + 노션 명세 대조">
+    <list default="true" id="803530f0-d594-4a2c-9e19-c7b2e29df307" name="Changes" comment="[BE] Feat : controller 폴더 생성">
+      <change afterPath="$PROJECT_DIR$/.idea/modules/com.rocket.ssafast.main.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/ssafast.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/dto/response/BaseurlsDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/service/ApiPreService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/dto/response/BaseurlDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/repository/BaseurlRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/controller/WorkspaceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/controller/WorkspaceController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/dto/response/DetailWorkspaceDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/dto/response/DetailWorkspaceDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/controller/ApiPreController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/controller/ApiPreController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,7 +34,12 @@
       <state>
         <projects_view>
           <tree_state>
-            <expand />
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="ssafast" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
             <select />
           </tree_state>
         </projects_view>
@@ -38,8 +49,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -50,12 +61,11 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectId" id="2OzJFxi50RAjgJcL8YFhFUGNeOl" />
+  <component name="ProjectId" id="2PGEzLTqn8Yj7yQDHJjt8FT8o03" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
@@ -69,54 +79,20 @@
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
     "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/Users/dolpong/Desktop/S08P31A502/backend/src/main",
     "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
-    "spring.configuration.checksum": "742fa03b1c00a0089a200ceedd52666e",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/backend/src/main" />
-      <recent name="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace" />
-    </key>
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="com.rocket.ssafast.workspace.dto.request" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.rocket.ssafast.workspace.dto" />
-    </key>
-  </component>
-  <component name="RunManager" selected="Spring Boot.BackendApplication">
-    <configuration name="generated-requests | #3" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" index="3" requestIdentifier="#3" runType="Run single request">
-      <method v="2" />
-    </configuration>
-    <configuration name="generated-requests | #4" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" index="4" requestIdentifier="#4" runType="Run single request">
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="ssafast" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="ssafast" />
-      <option name="filePath" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager">
     <configuration name="BackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
-      <module name="ssafast.main" />
+      <module name="com.rocket.ssafast.main" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.rocket.ssafast.BackendApplication" />
       <extension name="coverage">
         <pattern>
@@ -131,108 +107,27 @@
     <recent_temporary>
       <list>
         <item itemvalue="Spring Boot.BackendApplication" />
-        <item itemvalue="HTTP Request.generated-requests | #4" />
-        <item itemvalue="HTTP Request.generated-requests | #3" />
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="68c3ac46-3b5b-41fc-94b0-32029979774c" name="Changes" comment="[BE] FEAT : 기타 파일 추가" />
-      <created>1682557376763</created>
+      <changelist id="803530f0-d594-4a2c-9e19-c7b2e29df307" name="Changes" comment="" />
+      <created>1683075283908</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1682557376763</updated>
-      <workItem from="1682557379023" duration="277000" />
-      <workItem from="1682583943591" duration="96000" />
-      <workItem from="1683027747493" duration="9257000" />
+      <updated>1683075283908</updated>
+      <workItem from="1683075285262" duration="3831000" />
     </task>
-    <task id="LOCAL-00001" summary="[BE] FEAT : Entity 생성">
-      <created>1682924530893</created>
+    <task id="LOCAL-00001" summary="[BE] Feat : controller 폴더 생성">
+      <created>1683076246489</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1682924530893</updated>
+      <updated>1683076246489</updated>
     </task>
-    <task id="LOCAL-00002" summary="[BE] FIX : User -&gt; Member 변경">
-      <created>1682986067127</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1682986067127</updated>
-    </task>
-    <task id="LOCAL-00003" summary="[BE] FEAT : response, request DTO 생성">
-      <created>1682986181749</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1682986181749</updated>
-    </task>
-    <task id="LOCAL-00004" summary="[BE] FEAT : workspace API">
-      <created>1682986274536</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1682986274536</updated>
-    </task>
-    <task id="LOCAL-00005" summary="[BE] FEAT : figmaSection API">
-      <created>1682986297051</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1682986297051</updated>
-    </task>
-    <task id="LOCAL-00006" summary="[BE] FEAT : workspaceMember API">
-      <created>1682986328862</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1682986328862</updated>
-    </task>
-    <task id="LOCAL-00007" summary="[BE] FIX : 충돌 코드 수정">
-      <created>1682986534803</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1682986534803</updated>
-    </task>
-    <task id="LOCAL-00008" summary="[BE] FEAT : addMemberDTO 추가">
-      <created>1682986643681</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1682986643681</updated>
-    </task>
-    <task id="LOCAL-00009" summary="[BE] FEAT : FigmaTokenRepository추가">
-      <created>1682986662272</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1682986662272</updated>
-    </task>
-    <task id="LOCAL-00010" summary="[BE] FEAT : Baseurl Entity 추가">
-      <created>1682986689543</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1682986689543</updated>
-    </task>
-    <task id="LOCAL-00011" summary="[BE] FEAT : 기타 파일 추가">
-      <created>1682986712479</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1682986712479</updated>
-    </task>
-    <task id="LOCAL-00012" summary="[BE] FIX : 포스트맨 테스트 + 노션 명세 대조">
-      <created>1683046665753</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1683046665753</updated>
-    </task>
-    <option name="localTasksCounter" value="13" />
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -249,7 +144,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="feature/BE/workspace" />
+                        <option value="origin/develop/BE" />
                       </list>
                     </value>
                   </entry>
@@ -262,18 +157,7 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="[BE] FEAT : Entity 생성" />
-    <MESSAGE value="[BE] FIX : User -&gt; Member 변경" />
-    <MESSAGE value="[BE] FEAT : response, request DTO 생성" />
-    <MESSAGE value="[BE] FEAT : workspace API" />
-    <MESSAGE value="[BE] FEAT : figmaSection API" />
-    <MESSAGE value="[BE] FEAT : workspaceMember API" />
-    <MESSAGE value="[BE] FIX : 충돌 코드 수정" />
-    <MESSAGE value="[BE] FEAT : addMemberDTO 추가" />
-    <MESSAGE value="[BE] FEAT : FigmaTokenRepository추가" />
-    <MESSAGE value="[BE] FEAT : Baseurl Entity 추가" />
-    <MESSAGE value="[BE] FEAT : 기타 파일 추가" />
-    <MESSAGE value="[BE] FIX : 포스트맨 테스트 + 노션 명세 대조" />
-    <option name="LAST_COMMIT_MESSAGE" value="[BE] FIX : 포스트맨 테스트 + 노션 명세 대조" />
+    <MESSAGE value="[BE] Feat : controller 폴더 생성" />
+    <option name="LAST_COMMIT_MESSAGE" value="[BE] Feat : controller 폴더 생성" />
   </component>
 </project>
