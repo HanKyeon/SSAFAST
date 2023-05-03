@@ -12,6 +12,8 @@ import { useState } from 'react';
 
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { PersistGate } from 'redux-persist/integration/react';
+import { useStoreSelector } from '@/hooks/useStore';
+import Background from '@/components/common/Background';
 
 export const QueryClientOption = {
   defaultOptions: {
@@ -41,7 +43,9 @@ const App = function ({ Component, ...rest }: AppProps) {
         <Provider store={store}>
           <PersistGate persistor={persistor} loading={null}>
             <Toast />
-            <Component {...props.pageProps}></Component>
+            <Background>
+              <Component {...props.pageProps}></Component>
+            </Background>
           </PersistGate>
         </Provider>
       </Hydrate>

@@ -186,7 +186,7 @@ const GetSpaceData = function ({
       <div className="flex flex-col h-full w-full items-center justify-center gap-5 py-4 text-[24px]">
         <div>팀 정보를 입력해주세요.</div>
         <div className="h-[83%] w-full flex flex-col items-center justify-start overflow-y-scroll gap-3">
-          <div className="w-full px-[10%] text-[27px] flex flex-row gap-3">
+          <div className="w-full px-[10%] flex flex-row gap-3">
             <label className="w-[33%]" htmlFor="create-input">
               프로젝트 이미지
             </label>
@@ -202,7 +202,7 @@ const GetSpaceData = function ({
               }`}
             />
           </div>
-          <div className="w-full px-[10%] text-[27px] flex flex-row gap-3">
+          <div className="w-full px-[10%] flex flex-row gap-3">
             <label className="w-[33%]" htmlFor="create-input">
               프로젝트 이름
             </label>
@@ -218,7 +218,7 @@ const GetSpaceData = function ({
               }`}
             />
           </div>
-          <div className="w-full px-[10%] text-[27px] flex flex-row gap-3">
+          <div className="w-full px-[10%] flex flex-row gap-3">
             <label className="w-[33%]" htmlFor="create-des">
               프로젝트 설명
             </label>
@@ -235,7 +235,7 @@ const GetSpaceData = function ({
               }`}
             />
           </div>
-          <div className="w-full px-[10%] text-[27px] flex flex-row gap-3">
+          <div className="w-full px-[10%] flex flex-row gap-3">
             <label className="w-[25%]" htmlFor="create-start-date">
               프로젝트 시작
             </label>
@@ -265,7 +265,7 @@ const GetSpaceData = function ({
               }`}
             />
           </div>
-          <div className="w-full px-[10%] text-[27px] flex flex-row gap-3">
+          <div className="w-full px-[10%] flex flex-row gap-3">
             <label className="w-[33%]" htmlFor="create-search">
               프로젝트 초대
             </label>
@@ -281,7 +281,7 @@ const GetSpaceData = function ({
               }`}
             />
           </div>
-          <div className="w-full h-[20%] px-[10%] text-[27px] flex flex-row gap-3">
+          <div className="w-full h-[20%] px-[10%] flex flex-row gap-3">
             <div className="w-[33%]">프로젝트 초대된 인원들</div>
             <div className="w-[67%] h-full flex flex-row gap-[1%]">
               <Box
@@ -320,7 +320,7 @@ const GetSpaceData = function ({
               </Box>
             </div>
           </div>
-          <div className="w-full px-[10%] text-[27px] flex flex-row gap-3">
+          <div className="w-full px-[10%] flex flex-row gap-3">
             <label className="w-[33%]" htmlFor="create-baseUrl">
               프로젝트 사용 주소
             </label>
