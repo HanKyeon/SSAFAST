@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BodyDto {
 	String name;
-
 	List<FieldDto> fields;
+	List<FieldDto> nestedDtos;
 }

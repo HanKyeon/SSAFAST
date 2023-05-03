@@ -13,6 +13,5 @@ public class FieldDto {
 	private String key;
 	private String type;
 	private Boolean itera;
-	private Boolean isDto;
 	private List<String> constraints;
 }

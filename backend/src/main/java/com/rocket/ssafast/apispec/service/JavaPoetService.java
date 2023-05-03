@@ -36,24 +36,16 @@ public class JavaPoetService {
 			.addAnnotation(Getter.class)
 			.addAnnotation(NoArgsConstructor.class);
 
-		// 2. 필드 생성
+		// 2. Primitive 필드 생성
 		bodyDto.getFields().forEach( field -> {
 			String fieldName = field.getKey();
 			TypeName fieldType;
 
 			if(!field.getItera()) {
-				if(!field.getIsDto()) {
-					fieldType = JavaType.getClassByType(field.getType());
-				} else {
-					fieldType = ClassName.get(packageName, field.getType());
-				}
+				fieldType = JavaType.getClassByType(field.getType());
 			} else {
 				ClassName list = ClassName.get("java.util", "List");
-				if(!field.getIsDto()) {
-					fieldType = ParameterizedTypeName.get(list, JavaType.getClassByType(field.getType()));
-				} else {
-					fieldType = ParameterizedTypeName.get(list, ClassName.get(packageName, field.getType()));
-				}
+				fieldType = ParameterizedTypeName.get(list, JavaType.getClassByType(field.getType()));
 			}
 
 			FieldSpec.Builder fieldBuilder = FieldSpec.builder(fieldType, fieldName)
@@ -63,7 +55,26 @@ public class JavaPoetService {
 			classBuilder.addField(fieldBuilder.build());
 		});
 
-		// 3. Class 생성
+		// 3. Nested Dto 필드 생성
+		bodyDto.getNestedDtos().forEach( nestedDto -> {
+			String fieldName = nestedDto.getKey();
+			TypeName fieldType;
+
+			if(!nestedDto.getItera()) {
+				fieldType = ClassName.get(packageName, nestedDto.getType());
+			} else {
+				ClassName list = ClassName.get("java.util", "List");
+				fieldType = ParameterizedTypeName.get(list, ClassName.get(packageName, nestedDto.getType()));
+			}
+
+			FieldSpec.Builder fieldBuilder = FieldSpec.builder(fieldType, fieldName)
+				.addModifiers(Modifier.PRIVATE)
+				.addAnnotations(getConstraintAnnotations(nestedDto.getConstraints()));
+
+			classBuilder.addField(fieldBuilder.build());
+		});
+
+		// 4. Class 생성
 		return JavaFile.builder(packageName, classBuilder.build()).build().toString();
 	}
 
