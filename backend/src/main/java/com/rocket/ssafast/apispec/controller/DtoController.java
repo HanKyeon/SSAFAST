@@ -1,5 +1,8 @@
 package com.rocket.ssafast.apispec.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +29,10 @@ public class DtoController {
 	@GetMapping("/class")
 	public ResponseEntity<?> getDtoClassCode(@RequestBody BodyDto bodyDto) {
 		try {
-			return new ResponseEntity<>(javaPoetService.generateDtoClassCode(bodyDto), HttpStatus.OK);
+			String dtoClass = javaPoetService.generateDtoClassCode(bodyDto);
+			Map<String, String> result = new HashMap<>();
+			result.put("dtoClass", dtoClass);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error("error: ", e);
 			ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
