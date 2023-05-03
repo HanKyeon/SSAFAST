@@ -1,46 +1,106 @@
 package com.rocket.ssafast.apispec.service;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.lang.model.element.Modifier;
 
-import org.bson.json.JsonObject;
 import org.springframework.stereotype.Service;
 
+import com.rocket.ssafast.apispec.domain.Enum.ContraintType;
+import com.rocket.ssafast.apispec.domain.Enum.JavaType;
+import com.rocket.ssafast.apispec.dto.request.BodyDto;
+import com.squareup.javapoet.AnnotationSpec;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
 public class JavaPoetService {
 
-	public JavaFile generateDtoClassCode(String name, Map<String, JsonObject> body) {
-		// body.keySet().stream().forEach(key->{
-		// 	// DTO
-		// 	if (isLong(key)) {
-		// 		ParameterSpec pName = ParameterSpec.builder(String.class, )
-		// 	}
-		// 	// Primitive
-		// 	else {
-		//
-		// 	}
-		// });
-		TypeSpec dtoClass = TypeSpec.classBuilder(name)
-			.addModifiers(Modifier.PUBLIC)
-			.build();
+	public String generateDtoClassCode(BodyDto bodyDto) throws Exception {
+		String packageName = "com.example.dto";
 
-		JavaFile javaFile = JavaFile.builder("com.example." + name, dtoClass).build();
-		return null;
+		// 1. Class 생성
+		String className = bodyDto.getName();
+		TypeSpec.Builder classBuilder = TypeSpec.classBuilder(className)
+			.addModifiers(Modifier.PUBLIC)
+			.addAnnotation(Getter.class)
+			.addAnnotation(NoArgsConstructor.class);
+
+		// 2. 필드 생성
+		bodyDto.getFields().forEach( field -> {
+			String fieldName = field.getKey();
+			TypeName fieldType;
+
+			if(!field.getItera()) {
+				if(!field.getIsDto()) {
+					fieldType = JavaType.getClassByType(field.getType());
+				} else {
+					fieldType = ClassName.get(packageName, field.getType());
+				}
+			} else {
+				ClassName list = ClassName.get("java.util", "List");
+				if(!field.getIsDto()) {
+					fieldType = ParameterizedTypeName.get(list, JavaType.getClassByType(field.getType()));
+				} else {
+					fieldType = ParameterizedTypeName.get(list, ClassName.get(packageName, field.getType()));
+				}
+			}
+
+			FieldSpec.Builder fieldBuilder = FieldSpec.builder(fieldType, fieldName)
+				.addModifiers(Modifier.PRIVATE)
+				.addAnnotations(getConstraintAnnotations(field.getConstraints()));
+
+			classBuilder.addField(fieldBuilder.build());
+		});
+
+		// 3. Class 생성
+		return JavaFile.builder(packageName, classBuilder.build()).build().toString();
 	}
 
-	public boolean isLong(String key) {
+	private List<AnnotationSpec> getConstraintAnnotations(List<String> constraints) {
+		List<AnnotationSpec> annotations = new ArrayList<>();
+
+		for (String constraint : constraints) {
+			String[] tokens = constraint.split("\\(");
+
+			String annotationName = tokens[0];
+
+			AnnotationSpec.Builder annotationBuilder = AnnotationSpec.builder(ContraintType.getClassByType(annotationName));
+
+			if (tokens.length > 1) {
+				String[] keyValues = tokens[1].replace(")", "").split(",");
+
+				for (String keyValue : keyValues) {
+					String[] pair = keyValue.split("=");
+					String key = pair[0].trim();
+					String value = pair[1].trim();
+					if(isInteger(value)) {
+						annotationBuilder.addMember(key, "$L", Integer.parseInt(value));
+					} else {
+						annotationBuilder.addMember(key, "$L", value);
+					}
+				}
+			}
+			annotations.add(annotationBuilder.build());
+		}
+		return annotations;
+	}
+
+	public boolean isInteger(String value) {
 		try {
-			Long.parseLong(key);
+			Integer.parseInt(value);
 			return true;
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			return false;
 		}
 	}
