@@ -1,5 +1,6 @@
 package com.rocket.ssafast.workspace.controller;
 
+import com.rocket.ssafast.auth.domain.UserDetailsImpl;
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
 import com.rocket.ssafast.workspace.dto.request.AddMemberDto;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j//log 객체 자동으로 생성
@@ -21,6 +23,7 @@ public class WorkspaceMemberContoller {
     private String SUCCESS = "SUCCESS";
     @PostMapping("")
     ResponseEntity<?> addMember(@RequestParam Long workspaceId, @RequestBody AddMemberDto addMemberDto){
+        log.debug(addMemberDto.toString());
         try {
             workspaceMemberService.addMembers(workspaceId, addMemberDto);
             return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
@@ -46,9 +49,9 @@ public class WorkspaceMemberContoller {
     }
 
     @DeleteMapping("/{memberId}")
-    ResponseEntity<?> deleteWorkspaceMember(@PathVariable("memberId") Long memberId, @RequestParam Long workspaceId){
+    ResponseEntity<?> deleteWorkspaceMember(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable("memberId") Long memberId, @RequestParam Long workspaceId){
         try {
-            workspaceMemberService.deleteWorkspaceMember(memberId);
+            workspaceMemberService.deleteWorkspaceMember(workspaceId, userDetails.getMemberId(), memberId);
             return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         } catch (CustomException e){
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());

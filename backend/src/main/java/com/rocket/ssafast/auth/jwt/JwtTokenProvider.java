@@ -44,10 +44,10 @@ public class JwtTokenProvider implements InitializingBean {
 	@Value("${jwt.secret}")
 	private String secretKey;
 
-	@Value("${jwt.access-token-validity-in-seconds}")
+	@Value("${jwt.access-token-validity-in-milliseconds}")
 	private Long accessTokenValidityInMilliseconds;
 
-	@Value("${jwt.refresh-token-validity-in-seconds}")
+	@Value("${jwt.refresh-token-validity-in-milliseconds}")
 	private Long refreshTokenValidityInMilliseconds;
 
 	// 시크릿 키 설정

@@ -8,9 +8,11 @@ import com.rocket.ssafast.workspace.domain.Workspace;
 import com.rocket.ssafast.workspace.domain.WorkspaceMember;
 import com.rocket.ssafast.workspace.dto.request.AddMemberDto;
 import com.rocket.ssafast.workspace.dto.response.WorkspaceMemberDto;
+import com.rocket.ssafast.workspace.dto.response.WorkspaceMemberListDto;
 import com.rocket.ssafast.workspace.repository.WorkspaceMemberRepository;
 import com.rocket.ssafast.workspace.repository.WorkspaceRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -57,7 +59,7 @@ public class WorkspaceMemberService {
     }
 
     @Transactional
-    public List<WorkspaceMemberDto> getWorkspaceMembers(Long workspaceId){
+    public WorkspaceMemberListDto getWorkspaceMembers(Long workspaceId){
         List<WorkspaceMember> workspaceMembers = workspaceMemberRepository.findAllByWorkspaceId(workspaceId);
 
         List<WorkspaceMemberDto> resultMembers = new ArrayList<>();
@@ -69,11 +71,27 @@ public class WorkspaceMemberService {
                     .build()
             );
         }
-        return resultMembers;
+
+        return WorkspaceMemberListDto.builder()
+                .members(resultMembers).build();
     }
 
     @Transactional
-    public void deleteWorkspaceMember(Long memberId){
-        workspaceMemberRepository.deleteById(memberId);
+    public void deleteWorkspaceMember(Long workspaceId, Long readerId, Long memberId){
+        Optional<WorkspaceMember> workspaceMemberOptional = workspaceMemberRepository.findByWorkspaceIdAndMemberId(workspaceId, readerId);
+        if(!workspaceMemberOptional.isPresent()){
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        WorkspaceMember workspaceMember = workspaceMemberOptional.get();
+        if(!workspaceMember.getIsLeader()){
+            throw new CustomException(ErrorCode.INVALID_MEMBER);
+        }
+
+        try{
+            workspaceMemberRepository.deleteById(memberId);
+        }catch (EmptyResultDataAccessException e){
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
     }
 }

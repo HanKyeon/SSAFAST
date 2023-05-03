@@ -25,7 +25,7 @@ public class AuthService {
 
 	private final JwtTokenProvider jwtTokenProvider;
 	private final RedisService redisService;
-	@Value("${jwt.access-token-validity-in-seconds}")
+	@Value("${jwt.access-token-validity-in-milliseconds}")
 	private Long accessTokenValidityInMilliseconds;
 
 	// 토큰 재발급: validate 메서드가 true 반환할 때만 사용 -> AT, RT 재발급

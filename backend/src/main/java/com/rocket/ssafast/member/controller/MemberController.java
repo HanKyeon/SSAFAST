@@ -1,5 +1,9 @@
 package com.rocket.ssafast.member.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -46,7 +50,9 @@ public class MemberController {
 	@GetMapping("/list")
 	public ResponseEntity<?> getMemberList(@RequestParam String email) {
 		try {
-			return new ResponseEntity<>(memberService.findAllByEmailContaining(email), HttpStatus.OK);
+			Map<String, List> result = new HashMap<>();
+			result.put("users", memberService.findAllByEmailContaining(email));
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error("error: ", e);
 			ErrorCode ec = ErrorCode.INTERNAL_SERVER_ERROR;

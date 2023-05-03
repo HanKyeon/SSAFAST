@@ -15,7 +15,6 @@ import java.util.List;
 @ToString
 public class UpdateWorkspaceDto {
     private Long id;
-
     private String figmaUrl;
     private String name;
     private String favicon;

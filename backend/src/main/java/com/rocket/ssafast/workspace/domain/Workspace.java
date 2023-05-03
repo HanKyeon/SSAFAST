@@ -65,11 +65,11 @@ public class Workspace {
     @Nullable
     private List<Baseurl> baseurls;
 
-    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
     @Nullable
     private List<FigmaSection> figmaSections;
 
-    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
     private List<WorkspaceMember> teams;
 
     public void updateBaseurl(List<Baseurl> baseurls) {
@@ -98,5 +98,6 @@ public class Workspace {
                 .figmaFileName(figmaFileName)
                 .build();
     }
+
 
 }
