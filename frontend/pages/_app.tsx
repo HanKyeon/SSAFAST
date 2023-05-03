@@ -14,6 +14,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { PersistGate } from 'redux-persist/integration/react';
 import { useStoreSelector } from '@/hooks/useStore';
 import Background from '@/components/common/Background';
+import { CookiesProvider } from 'react-cookie';
 
 export const QueryClientOption = {
   defaultOptions: {
@@ -39,16 +40,18 @@ const App = function ({ Component, ...rest }: AppProps) {
       {process.env.NODE_ENV !== 'production' ? (
         <ReactQueryDevtools initialIsOpen={false} />
       ) : null}
-      <Hydrate state={rest.pageProps.dehydratedState}>
-        <Provider store={store}>
-          <PersistGate persistor={persistor} loading={null}>
-            <Toast />
-            <Background>
-              <Component {...props.pageProps}></Component>
-            </Background>
-          </PersistGate>
-        </Provider>
-      </Hydrate>
+      <CookiesProvider>
+        <Hydrate state={rest.pageProps.dehydratedState}>
+          <Provider store={store}>
+            <PersistGate persistor={persistor} loading={null}>
+              <Toast />
+              <Background>
+                <Component {...props.pageProps}></Component>
+              </Background>
+            </PersistGate>
+          </Provider>
+        </Hydrate>
+      </CookiesProvider>
     </QueryClientProvider>
   );
 };

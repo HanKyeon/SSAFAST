@@ -4,7 +4,6 @@ import {
   MockupDataItemType,
   MockupDataType,
 } from '../work/APIDocsContainer/RequestBox';
-import ObjDTOItem from './ObjDTOItem';
 
 interface ObjItemPropsType {
   item: MockupDataItemType;
