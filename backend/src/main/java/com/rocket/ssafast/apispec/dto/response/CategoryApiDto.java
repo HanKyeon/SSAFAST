@@ -1,4 +1,4 @@
-package com.rocket.ssafast.apispec.domain.Entity;
+package com.rocket.ssafast.apispec.dto.response;
 
 import lombok.*;
 
@@ -6,7 +6,6 @@ import lombok.*;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @ToString
 public class CategoryApiDto {
 }
