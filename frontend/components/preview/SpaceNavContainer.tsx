@@ -8,6 +8,7 @@ import ToggleModeBtn from '../common/ToggleModeBtn';
 import SpaceNameItem from './SpaceNameItem';
 import UserBadge from '../common/UserBadge';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 const spaceMockup = [
   { id: 0, name: 'spaceffffff1' },
@@ -22,11 +23,13 @@ const spaceMockup = [
 ];
 
 const SpaceNavContainer = function (): JSX.Element {
+  const router = useRouter();
   const { dark: isDark } = useStoreSelector((state) => state.dark);
   const [curSpaceId, setCurSpaceId] = useState<number>(spaceMockup[0].id);
 
   const onClickSpaceItem = (id: number): void => {
     setCurSpaceId(id);
+    router.push(`/space/${id}`);
   };
 
   const styles = {
@@ -49,7 +52,11 @@ const SpaceNavContainer = function (): JSX.Element {
         {/* space list */}
         <div className="flex justify-between items-center mb-5">
           <span className="text-[14px] text-grayscale-light">Team Space</span>
-          <CircleBtn btnType="plus" gray />
+          <CircleBtn
+            btnType="plus"
+            gray
+            onClick={() => router.push(`/space/create`)}
+          />
         </div>
         <ul className="overflow-scroll flex flex-col gap-3 flex-1 scrollbar-hide">
           {spaceMockup.map((item, index) => (

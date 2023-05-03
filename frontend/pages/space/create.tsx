@@ -25,6 +25,10 @@ import useInput from '@/hooks/useInput';
 import { queryKeys } from '@/hooks/queries/QueryKeys';
 import apiRequest from '@/utils/axios';
 import MetaHead from '@/components/common/MetaHead';
+import { toastActions } from '@/store/toast-slice';
+import figmaAxios from '@/utils/figmaAxios';
+import { InferGetServerSidePropsType } from 'next';
+import { exActions } from '@/store/ex-slice';
 
 // 상수 스타일
 const customStyles = (dark: boolean, selected: boolean) =>
@@ -38,7 +42,10 @@ const customStyles = (dark: boolean, selected: boolean) =>
       : 'bg-grayscale-dark active:bg-grayscale-deepdark hover:scale-[105%]'
   }` as const;
 
-const SpaceCreatePage = function () {
+const SpaceCreatePage = function (
+  props: InferGetServerSidePropsType<typeof getServerSideProps>
+) {
+  const figmatokens = useStoreSelector((state) => state.figmatoken);
   const dispatch = useStoreDispatch();
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const router = useRouter();
@@ -49,7 +56,11 @@ const SpaceCreatePage = function () {
   const [figmaUrl, setFigmaUrl] = useState<string>(``);
   // 서버에 던질 figmaId
   const [figmaId, setFigmaId] = useState<string>(``);
-  const { data, isLoading, isError } = useUserFigmaTokens();
+  const {
+    data: userFigmaTokens,
+    isLoading: userFigmaTokenLoading,
+    isError: userFigmaTokenError,
+  } = useUserFigmaTokens();
   const setFigmaUrlHandler = function (url: string) {
     setFigmaUrl(() => url);
   };
@@ -68,6 +79,7 @@ const SpaceCreatePage = function () {
   } = useFigmaOrigin(figmaId, `newSpace`, selectedIds);
 
   const setFigmaToken = function () {
+    // console.log(process.env.NEXT_PUBLIC_FIGMA_TEST_ACCESS_TOKEN);
     dispatch(
       figmaTokenActions.setTokens({
         figmaAccess: process.env.NEXT_PUBLIC_FIGMA_TEST_ACCESS_TOKEN,
@@ -278,9 +290,9 @@ const SpaceCreatePage = function () {
                 setSelectedIds={setSelectedIds}
                 figmaId={figmaId}
               />
-              <div onClick={setFigmaToken}>토큰세팅</div>
             </AnimationBox>
           </div>
+          <div onClick={setFigmaToken}>토큰세팅</div>
 
           {/* 아래 버튼 */}
           <div className="w-full h-[8%] flex items-center justify-center text-[24px]">
@@ -324,16 +336,36 @@ export default SpaceCreatePage;
 export const getServerSideProps = wrapper.getServerSideProps(function (store) {
   return async function (context) {
     const queryClient = new QueryClient(QueryClientOption);
-    queryClient.prefetchQuery({
-      queryKey: queryKeys.figmaTokens(),
+
+    await queryClient.prefetchQuery({
+      queryKey: queryKeys.user(),
       queryFn: async function () {
         return apiRequest({
           method: `get`,
-          // baseURL: `${process.env.NEXT_PUBLIC_HOSTNAME}`,
-          url: `/api/user/figma-token`,
+          url: `/api/user`,
         }).then((res) => res.data);
       },
     });
+
+    // await queryClient.prefetchQuery({
+    //   queryKey: queryKeys.figmaTokens(),
+    //   queryFn: async function () {
+    //     return apiRequest({
+    //       method: `get`,
+    //       // baseURL: `${process.env.NEXT_PUBLIC_HOSTNAME}`,
+    //       url: `/api/user/figma-token`,
+    //     }).then((res) => {
+    //       store.dispatch(
+    //         figmaTokenActions.setTokens({
+    //           figmaAccess: res.data.figmaAccess,
+    //           figmaRefresh: res.data.figmaRefresh,
+    //         })
+    //       );
+    //       return res.data;
+    //     });
+    //   },
+    // });
+
     return {
       props: {
         dehydratedState: dehydrate(queryClient),
