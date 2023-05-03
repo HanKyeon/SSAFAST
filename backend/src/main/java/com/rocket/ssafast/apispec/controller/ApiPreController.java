@@ -34,4 +34,17 @@ public class ApiPreController {
 
     }
 
+    @GetMapping("/list")
+    ResponseEntity<?> getApiPreList(@RequestParam Long workspaceId){
+        try {
+            return new ResponseEntity<>("", HttpStatus.OK);
+        } catch (CustomException e){
+            return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
+        } catch (Exception e) {
+            log.error("error: ", e);
+            return new ResponseEntity<>(ErrorCode.INTERNAL_SERVER_ERROR.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus());
+        }
+
+    }
+
 }
