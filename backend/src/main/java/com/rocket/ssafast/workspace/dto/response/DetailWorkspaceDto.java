@@ -2,7 +2,6 @@ package com.rocket.ssafast.workspace.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.rocket.ssafast.figma.dto.response.ResFigmaTokenDto;
-import com.rocket.ssafast.workspace.domain.Baseurl;
 import lombok.*;
 
 import java.util.Date;
@@ -30,7 +29,8 @@ public class DetailWorkspaceDto {
     private String figmaFileName;
     private List<String> baseurls;
 
-    private ResFigmaTokenDto figmaToken;
+    private Long leaderId;
+    private WorkspaceFigmaTokenDto figmaToken;
 
 
 }

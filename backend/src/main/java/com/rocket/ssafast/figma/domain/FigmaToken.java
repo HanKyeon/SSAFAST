@@ -8,6 +8,7 @@ import javax.persistence.Id;
 
 import com.rocket.ssafast.figma.dto.response.ResFigmaTokenDto;
 
+import com.rocket.ssafast.workspace.dto.response.WorkspaceFigmaTokenDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,5 +39,11 @@ public class FigmaToken {
 			.figmaAccess(figmaAccess)
 			.figmaRefresh(figmaRefresh)
 			.build();
+	}
+
+	public WorkspaceFigmaTokenDto toWorkspaceDto(){
+		return WorkspaceFigmaTokenDto.builder()
+				.figmaAccessToken(figmaAccess)
+				.figmaRefreshToken(figmaRefresh).build();
 	}
 }

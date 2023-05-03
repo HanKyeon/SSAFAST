@@ -70,16 +70,6 @@ public class FigmaSectionCrontroller {
         }
     }
 
-    @GetMapping("/token")
-    public ResponseEntity<?> getFigmaToken(@RequestParam Long leaderId){
-        try {
-            return new ResponseEntity<>(figmaSectionService.getFigmaToken(leaderId), HttpStatus.OK);
-        } catch (CustomException e){
-            return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
-        } catch (Exception e) {
-            log.error("error: ", e);
-            return new ResponseEntity<>(ErrorCode.INTERNAL_SERVER_ERROR.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus());
-        }
-    }
+
 
 }
