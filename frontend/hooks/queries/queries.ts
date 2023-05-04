@@ -591,12 +591,14 @@ export const useUserFigmaTokens = function () {
       }).then((res) => res.data);
     },
     onSuccess: function (data) {
-      dispatch(
-        figmaTokenActions.setAccessToken({ figmaAccess: data.figmaAccess })
-      );
-      dispatch(
-        figmaTokenActions.setRefreshToken({ figmaRefresh: data.figmaRefresh })
-      );
+      if (data) {
+        dispatch(
+          figmaTokenActions.setAccessToken({ figmaAccess: data.figmaAccess })
+        );
+        dispatch(
+          figmaTokenActions.setRefreshToken({ figmaRefresh: data.figmaRefresh })
+        );
+      }
     },
     enabled: !!accessToken,
   });
