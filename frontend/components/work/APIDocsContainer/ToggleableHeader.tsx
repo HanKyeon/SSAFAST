@@ -1,6 +1,6 @@
 import { SetStateAction } from 'react';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
-import { CircleBtn } from '../common';
+import { CircleBtn } from '../../common';
 
 interface ToggleableHeaderPropsType {
   big?: boolean;

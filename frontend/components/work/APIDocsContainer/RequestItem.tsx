@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { MockupDataItemType } from './RequestBox';
-import ToggleableHeader from '@/components/apis/ToggleableHeader';
-import ObjItem from '@/components/apis/ObjItem';
+import ToggleableHeader from '@/components/work/APIDocsContainer/ToggleableHeader';
+import ObjItem from '@/components/work/APIDocsContainer/ObjItem';
 
 type RequestItemPropsType = {
   name: string;
