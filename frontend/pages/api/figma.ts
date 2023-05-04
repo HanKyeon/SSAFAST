@@ -32,7 +32,7 @@ export default async function handler(
       params: { ...req.query },
     })
       .then((response) => {
-        return res.status(200).json(response.data);
+        return res.status(200).json(response);
       })
       .catch((err) => {
         return res
