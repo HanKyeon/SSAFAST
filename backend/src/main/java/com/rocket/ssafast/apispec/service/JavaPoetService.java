@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.rocket.ssafast.apispec.domain.Enum.ContraintType;
 import com.rocket.ssafast.apispec.domain.Enum.JavaType;
-import com.rocket.ssafast.apispec.dto.request.BodyDto;
+import com.rocket.ssafast.apispec.dto.request.JavaPoetBodyDto;
+import com.rocket.ssafast.exception.CustomException;
+import com.rocket.ssafast.exception.ErrorCode;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
@@ -26,20 +28,23 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class JavaPoetService {
 
-	public String generateDtoClassCode(BodyDto bodyDto) throws Exception {
+	public String generateDtoClassCode(JavaPoetBodyDto javaPoetBodyDto) throws Exception {
 		String packageName = "com.example.dto";
 
 		// 1. Class 생성
-		String className = bodyDto.getName();
+		String className = javaPoetBodyDto.getName();
 		TypeSpec.Builder classBuilder = TypeSpec.classBuilder(className)
 			.addModifiers(Modifier.PUBLIC)
 			.addAnnotation(Getter.class)
 			.addAnnotation(NoArgsConstructor.class);
 
 		// 2. Primitive 필드 생성
-		bodyDto.getFields().forEach( field -> {
+		javaPoetBodyDto.getFields().forEach( field -> {
 			String fieldName = field.getKey();
 			TypeName fieldType;
+
+			if(JavaType.getClassByType(field.getType()) == null)
+				throw new CustomException(ErrorCode.JAVATYPE_NOT_FOUND);
 
 			if(!field.getItera()) {
 				fieldType = JavaType.getClassByType(field.getType());
@@ -56,7 +61,7 @@ public class JavaPoetService {
 		});
 
 		// 3. Nested Dto 필드 생성
-		bodyDto.getNestedDtos().forEach( nestedDto -> {
+		javaPoetBodyDto.getNestedDtos().forEach( nestedDto -> {
 			String fieldName = nestedDto.getKey();
 			TypeName fieldType;
 
@@ -85,6 +90,9 @@ public class JavaPoetService {
 			String[] tokens = constraint.split("\\(");
 
 			String annotationName = tokens[0];
+
+			if(ContraintType.getClassByType(annotationName) == null)
+				throw new CustomException(ErrorCode.CONSTRAINT_NOT_FOUND);
 
 			AnnotationSpec.Builder annotationBuilder = AnnotationSpec.builder(ContraintType.getClassByType(annotationName));
 
