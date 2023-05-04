@@ -1,5 +1,5 @@
 import Toast from '@/components/common/Toast';
-import { persistor, wrapper } from '@/store';
+import store, { persistor } from '@/store';
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
 import { Provider } from 'react-redux';
@@ -12,7 +12,6 @@ import { useState } from 'react';
 
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { PersistGate } from 'redux-persist/integration/react';
-import { useStoreSelector } from '@/hooks/useStore';
 import Background from '@/components/common/Background';
 
 export const QueryClientOption = {
@@ -32,7 +31,6 @@ export const QueryClientOption = {
 };
 
 const App = function ({ Component, ...rest }: AppProps) {
-  const { store, props } = wrapper.useWrappedStore(rest);
   const [queryClient] = useState(() => new QueryClient(QueryClientOption));
   return (
     <QueryClientProvider client={queryClient}>
@@ -44,7 +42,7 @@ const App = function ({ Component, ...rest }: AppProps) {
           <PersistGate persistor={persistor} loading={null}>
             <Toast />
             <Background>
-              <Component {...props.pageProps}></Component>
+              <Component {...rest.pageProps}></Component>
             </Background>
           </PersistGate>
         </Provider>
@@ -53,5 +51,4 @@ const App = function ({ Component, ...rest }: AppProps) {
   );
 };
 
-// wrapper의 withRedux로 해도 되고, Provider로 감싸줘도 된다. 나는 감싸주려한다.
 export default App;
