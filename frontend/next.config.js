@@ -25,6 +25,10 @@ const nextConfig = {
         source: `/:path*`,
         destination: `https://www.ssafast.com/:path*`,
       },
+      {
+        source: `/:path*`,
+        destination: `http://localhost:3000/:path*`,
+      },
     ];
   },
 };
