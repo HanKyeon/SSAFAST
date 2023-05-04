@@ -22,6 +22,7 @@ const FigmaCodeLoadingPage = function () {
       }
       figmaAxios({
         method: `post`,
+        baseURL: `http://localhost`,
         url: `/api/figma`,
         params: {
           client_id: `${process.env.NEXT_PUBLIC_FIGMA_ROCKET_APP_CLIENT_ID}`,
