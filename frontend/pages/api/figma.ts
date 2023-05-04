@@ -8,7 +8,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   console.log(req.query);
-  if (req.method === 'get') {
+  if (req.method === 'get' || req.method === `GET`) {
     return axios({
       method: `get`,
       baseURL: `https://api.figma.com`,
@@ -24,7 +24,7 @@ export default async function handler(
       .catch((err) => {
         return res.status(400).json({ message: '400에러임' });
       });
-  } else if (req.method === 'post') {
+  } else if (req.method === 'post' || req.method === 'POST') {
     return axios({
       method: `post`,
       baseURL: `https://www.figma.com`,
