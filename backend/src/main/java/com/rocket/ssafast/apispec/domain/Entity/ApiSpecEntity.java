@@ -1,13 +1,14 @@
 package com.rocket.ssafast.apispec.domain.Entity;
 
+import com.rocket.ssafast.apispec.domain.Enum.APIStatus;
+import com.rocket.ssafast.apispec.domain.Enum.HTTPMethod;
+import com.rocket.ssafast.apispec.dto.response.ApiInfoDto;
 import com.rocket.ssafast.member.domain.Member;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "api_info")
+@ToString
 public class ApiSpecEntity {
 /*
 * Enum value list
@@ -43,8 +45,9 @@ public class ApiSpecEntity {
     @Column(name = "baseurl_id")
     private Long baseurlId;
 
-    @Column(name = "category_id")
-    private Long categoryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private CategoryEntity category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -54,4 +57,18 @@ public class ApiSpecEntity {
     @CreationTimestamp
     private LocalDateTime createdTime;
 
+    public void updateCategory(CategoryEntity categoryEntity){
+        this.category = categoryEntity;
+    }
+
+    public ApiInfoDto toDto(){
+        return ApiInfoDto.builder()
+                .id(id)
+                .name(name)
+                .description(description)
+                .method(HTTPMethod.getStatusByNumber(method))
+                .status(APIStatus.getStatusByNumber(status))
+                .writter(member.toResDto())
+                .build();
+    }
 }
