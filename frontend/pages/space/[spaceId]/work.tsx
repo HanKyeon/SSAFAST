@@ -17,6 +17,7 @@ import WorkContainer from '@/components/work/WorkContainer';
 import { useSyncedStore } from '@syncedstore/react';
 import { PresenceUserData, workFigma } from '@/components/work/presence-type';
 import MetaHead from '@/components/common/MetaHead';
+import { useUserFigmaTokens } from '@/hooks/queries/queries';
 
 const SpaceWorkPage = function (
   props: InferGetServerSidePropsType<typeof getServerSideProps>
@@ -24,6 +25,7 @@ const SpaceWorkPage = function (
   const router = useRouter();
   const { serverSideStore } = props;
   const { spaceId } = router.query;
+  const { data } = useUserFigmaTokens();
 
   const newStore = syncedStore({
     space: {} as RTCSpaceData,

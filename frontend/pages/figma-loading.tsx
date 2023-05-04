@@ -34,7 +34,6 @@ const FigmaCodeLoadingPage = function () {
         .then((res) => {
           const access = res.data[`access_token` as keyof AxiosResponse];
           const refresh = res.data[`refresh_token` as keyof AxiosResponse];
-          console.log(access, refresh, '<<<<<<<<<<<<<<<<<<<<<');
           if (access && refresh) {
             dispatch(figmaTokenActions.setAccessToken({ figmaAccess: access }));
             dispatch(

@@ -591,6 +591,8 @@ export const useUserFigmaTokens = function () {
       }).then((res) => res.data);
     },
     onSuccess: function (data) {
+      console.log('피그마 액세스 onSuccess', data.figmaAccess);
+      console.log('피그마 액세스 onSuccess', data.figmaRefresh);
       if (data) {
         dispatch(
           figmaTokenActions.setAccessToken({ figmaAccess: data.figmaAccess })
