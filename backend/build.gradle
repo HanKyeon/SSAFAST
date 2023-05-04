@@ -46,6 +46,10 @@ dependencies {
 
 	// java poet
 	implementation 'com.squareup:javapoet:1.13.0'
+
+	// httpclient
+	implementation 'org.apache.httpcomponents:httpclient'
+
 }
 
 tasks.named('test') {

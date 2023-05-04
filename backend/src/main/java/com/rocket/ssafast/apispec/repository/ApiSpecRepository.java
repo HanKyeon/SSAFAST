@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface ApiSpecRepository extends JpaRepository<ApiSpecEntity, Long> {
     List<ApiSpecEntity> findAllByCategoryId(Long rootCategoryId);
+    void deleteAllByCategoryId(Long CategoryId);
 }

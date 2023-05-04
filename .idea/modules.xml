@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/.idea/S08P31A502.iml" filepath="$PROJECT_DIR$/.idea/S08P31A502.iml" />
+=======
+>>>>>>> fbcc55f7db4ad3acb37a8c2d3f2668f2ab8b28a5
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.rocket.ssafast.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.rocket.ssafast.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ssafast.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ssafast.main.iml" />
     </modules>

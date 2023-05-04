@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 @ToString
-public class FieldDto {
+public class JavaPoetFieldDto {
 	private String key;
 	private String type;
 	private Boolean itera;
