@@ -7,6 +7,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  console.log(req.query);
   if (req.method === 'get') {
     return axios({
       method: `get`,
@@ -28,7 +29,15 @@ export default async function handler(
       method: `post`,
       baseURL: `https://www.figma.com`,
       url: `/api/oauth/token`,
-      params: req.query,
-    });
+      params: { ...req.query },
+    })
+      .then((response) => {
+        return res.status(200).json(response.data);
+      })
+      .catch((err) => {
+        return res
+          .status(err?.status)
+          .json({ message: '너한테 피그마 토큰 안줄거야' });
+      });
   }
 }
