@@ -1,27 +1,27 @@
 import { RefObject, useCallback, useState } from 'react';
 
-const useInput = function (
-  ref: RefObject<HTMLInputElement> | RefObject<HTMLTextAreaElement>,
+const useInputNumber = function (
+  ref: RefObject<HTMLInputElement>,
   maxLength: number = 500
 ) {
-  const [inputData, setInputData] = useState<string>(``);
+  const [inputData, setInputData] = useState<number | 0>(0);
 
   const onChangeHandler = useCallback(function () {
     if (ref.current && ref.current?.value.length <= maxLength) {
-      setInputData(() => ref.current?.value || ``);
+      setInputData(() => parseInt(ref.current?.value as string) || 0);
     }
   }, []);
 
   const onResetHandler = useCallback(function () {
     if (ref.current) {
       ref.current.value = ``;
-      setInputData(() => ``);
+      setInputData(() => 0);
     }
   }, []);
 
-  const setFstData = useCallback(function (fstData: string) {
+  const setFstData = useCallback(function (fstData: number | 0) {
     if (ref.current) {
-      ref.current.value = fstData;
+      ref.current.value = fstData?.toString() || ``;
       setInputData(() => fstData);
     }
   }, []);
@@ -34,4 +34,4 @@ const useInput = function (
   };
 };
 
-export default useInput;
+export default useInputNumber;
