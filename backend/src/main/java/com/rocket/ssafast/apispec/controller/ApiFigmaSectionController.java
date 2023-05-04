@@ -1,9 +1,8 @@
 package com.rocket.ssafast.apispec.controller;
 
-import com.rocket.ssafast.apispec.service.ApiFigmaSectionService;
+import com.rocket.ssafast.apispec.service.FigmaSectionApiService;
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
-import com.rocket.ssafast.workspace.dto.request.CreateFigmaSectionDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,13 +18,13 @@ import java.util.List;
 @RequestMapping("/api/api-pre/figma-section")
 public class ApiFigmaSectionController {
 
-    private ApiFigmaSectionService apiFigmaSectionService;
+    private FigmaSectionApiService figmaSectionApiService;
     private String SUCCESS = "SUCCESS";
     @PostMapping("")
     public ResponseEntity<?> createApiFigmaSection(@RequestParam Long figmaSectionId, @RequestBody HashMap<String, List<Long>> apiIds){
         try {
-
-            return new ResponseEntity<>(apiFigmaSectionService.createApiFigmaSection(figmaSectionId, apiIds), HttpStatus.OK);
+            figmaSectionApiService.createApiFigmaSection(figmaSectionId, apiIds);
+            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         } catch (CustomException e){
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
         } catch (Exception e) {

@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Getter
@@ -56,6 +57,9 @@ public class ApiSpecEntity {
     @Column(name = "created_time")
     @CreationTimestamp
     private LocalDateTime createdTime;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "apiSpecEntity")
+    private List<FigmaSectionApiEntity> figmaSectionApiEntities;
 
     public void updateCategory(CategoryEntity categoryEntity){
         this.category = categoryEntity;

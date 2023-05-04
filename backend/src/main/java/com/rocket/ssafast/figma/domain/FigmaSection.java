@@ -1,5 +1,6 @@
 package com.rocket.ssafast.figma.domain;
 
+import com.rocket.ssafast.apispec.domain.Entity.FigmaSectionApiEntity;
 import com.rocket.ssafast.workspace.domain.Workspace;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity(name = "figma_section")
 @Getter
@@ -32,6 +34,9 @@ public class FigmaSection {
 
     @Column(name = "name")
     private String name;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<FigmaSectionApiEntity> figmaSectionApiEntities;
 
     public void updateWorkspace(Workspace workspace) {
         this.workspace = workspace;
