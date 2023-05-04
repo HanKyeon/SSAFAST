@@ -1,10 +1,11 @@
 package com.rocket.ssafast.apispec.service;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Map;
 
-import org.bson.json.JsonObject;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -14,12 +15,9 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import net.minidev.json.JSONObject;
 
 import com.rocket.ssafast.apispec.domain.Enum.HTTPMethod;
 import com.rocket.ssafast.apispec.dto.request.ExecReqMessageDto;
@@ -30,7 +28,7 @@ import com.rocket.ssafast.exception.ErrorCode;
 public class ApiExecService {
 	private static final RestTemplate restTemplate;
 
-	public ResponseEntity<?> requestAPI(ExecReqMessageDto execReqMessageDto) {
+	public ResponseEntity<?> requestAPI(ExecReqMessageDto execReqMessageDto) throws ParseException {
 
 		if(HTTPMethod.getMethodByStatus(execReqMessageDto.getMethod()) == null) {
 			throw new CustomException(ErrorCode.HTTPMETHOD_NOT_FOUND);
@@ -80,18 +78,17 @@ public class ApiExecService {
 			.queryParams(params)
 			.build();
 
-		System.out.println("UUUUUUUUUUUUUUUUUUUUUUU: "+uri.toUriString());
 		// 5. header, body를 entity에 담기
-		JSONObject body = new JSONObject(execReqMessageDto.getBody());
-		HttpEntity entity;
-		if(body == null) {
+		HttpEntity<?> entity;
+		if (execReqMessageDto.getBody() == null) {
 			entity = new HttpEntity<>(headers);
 		} else {
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse( execReqMessageDto.getBody() );
+			JSONObject body = (JSONObject) obj;
 			entity = new HttpEntity<>(body, headers);
 		}
 
-		System.out.println("entity: "+entity);
-		System.out.println("body: "+entity.getBody().getClass().getName());
 		// 6. API 요청
 		try {
 			return restTemplate.exchange(
