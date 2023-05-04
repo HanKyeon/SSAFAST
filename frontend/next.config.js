@@ -15,6 +15,14 @@ const nextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: `/:path*`,
+        destination: `https://www.figma.com/:path*`,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
