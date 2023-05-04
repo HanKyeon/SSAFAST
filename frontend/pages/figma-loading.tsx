@@ -22,8 +22,9 @@ const FigmaCodeLoadingPage = function () {
       }
       figmaAxios({
         method: `post`,
-        baseURL: `http://localhost:3000`,
-        url: `/api/figma`,
+        // baseURL: `https://www.figma.com`,
+        url: `/api/figma-token`,
+        // url: `/api/oauth/token`,
         params: {
           client_id: `${process.env.NEXT_PUBLIC_FIGMA_ROCKET_APP_CLIENT_ID}`,
           client_secret: `${process.env.NEXT_PUBLIC_FIGMA_ROCKET_APP_CLIENT_SECRET}`,
@@ -33,8 +34,8 @@ const FigmaCodeLoadingPage = function () {
         },
       })
         .then((res) => {
-          const access = res[`access_token` as keyof AxiosResponse];
-          const refresh = res[`refresh_token` as keyof AxiosResponse];
+          const access = res.data[`access_token` as keyof AxiosResponse];
+          const refresh = res.data[`refresh_token` as keyof AxiosResponse];
           console.log(access, refresh, '<<<<<<<<<<<<<<<<<<<<<');
           if (access && refresh) {
             dispatch(figmaTokenActions.setAccessToken({ figmaAccess: access }));
@@ -54,11 +55,11 @@ const FigmaCodeLoadingPage = function () {
         })
         .then((res) => {
           dispatch(DispatchToast('생성 완료!', true));
-          router.push(`/space`);
+          // router.push(`/space`);
         })
         .catch((err) => {
           dispatch(DispatchToast('에러가 발생했습니다!', false));
-          router.push(`/space`);
+          // router.push(`/space`);
         });
     },
     [code]
