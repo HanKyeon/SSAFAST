@@ -10,6 +10,7 @@ import { RequestForm, ResponseForm } from '@/components/forms';
 import { useForm } from 'react-hook-form';
 import ToggleModeBtn from '@/components/common/ToggleModeBtn';
 import MetaHead from '@/components/common/MetaHead';
+import ApiCreateForm from '@/components/forms/ApiCreateForm';
 import googleAxios from '@/utils/googleAxios';
 import { GetServerSideProps, GetStaticProps } from 'next';
 
@@ -37,7 +38,7 @@ export default function Home() {
       <MetaHead />
       <div>하이요ㅕ</div>
       <div onClick={pushHandler}>이동</div>
-      <Box variant="one" fontType="header" className={`p-7 duration-[0.33s]`}>
+      {/* <Box variant="one" fontType="header" className={`p-7 duration-[0.33s]`}>
         ONE
         <Box variant="two" fontType="normal" className={`p-7 duration-[0.33s]`}>
           Two
@@ -49,17 +50,17 @@ export default function Home() {
             Three
           </Box>
         </Box>
-      </Box>
-      <Button isEmpty onClick={changeDark}>
+      </Box> */}
+      {/* <Button isEmpty onClick={changeDark}>
         toggle
-      </Button>
+      </Button> */}
       <ToggleModeBtn />
       <CircleBtn isEmpty btnType="plus">
         +
       </CircleBtn>
       {/* <RequestForm /> */}
-      <ResponseForm />
       <Button onClick={onClickLogin}>구글로그인</Button>
+      <ApiCreateForm />
     </main>
   );
 }

@@ -1,10 +1,10 @@
 import { useStoreSelector } from '@/hooks/useStore';
 import { PropsWithChildren, FC, ButtonHTMLAttributes } from 'react';
 import { RxQuestionMark } from 'react-icons/rx';
-import { AiOutlinePlus } from 'react-icons/ai';
+import { AiOutlinePlus, AiOutlineClose } from 'react-icons/ai';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  btnType?: 'question' | 'plus';
+  btnType?: 'question' | 'plus' | 'delete';
   isEmpty?: boolean;
   gray?: boolean;
   small?: boolean;
@@ -38,6 +38,11 @@ const CircleBtn = function ({
         ? 'bg-taro-strong text-theme-white-strong'
         : 'bg-mincho-strong text-theme-white-strong'
     }`,
+    delete: `${
+      isDark
+        ? `bg-grayscale-deepdark text-theme-white-strong`
+        : `bg-theme-white-light text-theme-dark-strong`
+    }`,
   };
 
   return (
@@ -49,7 +54,13 @@ const CircleBtn = function ({
       }`}
       {...rest}
     >
-      {btnType === 'question' ? <RxQuestionMark /> : <AiOutlinePlus />}
+      {btnType === 'question' ? (
+        <RxQuestionMark />
+      ) : btnType === 'plus' ? (
+        <AiOutlinePlus />
+      ) : (
+        <AiOutlineClose />
+      )}
     </button>
   );
 };
