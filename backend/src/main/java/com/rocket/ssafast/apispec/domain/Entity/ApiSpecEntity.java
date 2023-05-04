@@ -66,8 +66,8 @@ public class ApiSpecEntity {
                 .id(id)
                 .name(name)
                 .description(description)
-                .method(HTTPMethod.getStatusByNumber(method))
-                .status(APIStatus.getStatusByNumber(status))
+                .method(method)
+                .status(status)
                 .writter(member.toResDto())
                 .build();
     }

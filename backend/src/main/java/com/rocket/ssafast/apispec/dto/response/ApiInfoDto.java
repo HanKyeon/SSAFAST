@@ -12,7 +12,7 @@ public class ApiInfoDto {
     private Long id;
     private String name;
     private String description;
-    private String method;
-    private String status;
+    private int method;
+    private int status;
     private ResMemberDto writter;
 }
