@@ -8,4 +8,5 @@ import com.rocket.ssafast.figma.domain.FigmaToken;
 
 public interface FigmaTokenRepository extends JpaRepository<FigmaToken, Long> {
 	Optional<FigmaToken> findByMemberId(long memberId);
+	Boolean existsByMemberId(Long memberId);
 }

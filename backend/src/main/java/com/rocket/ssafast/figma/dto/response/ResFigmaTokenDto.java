@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ResFigmaTokenDto {
 	Long id;
-	String figmaRefresh;
-	String figmaAccess;
+	String figmaRefreshToken;
+	String figmaAccessToken;
 }
