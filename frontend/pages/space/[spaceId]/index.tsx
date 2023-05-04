@@ -1,4 +1,3 @@
-import { wrapper } from '@/store';
 import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { InferGetServerSidePropsType, GetServerSideProps } from 'next';
@@ -32,29 +31,26 @@ const SpacePreviewPage = function (
 export default SpacePreviewPage;
 
 // GetServerSideProps 타입은 제네릭을 받는다. props 내의 값에 대한 제네릭.
-export const getServerSideProps: GetServerSideProps =
-  wrapper.getServerSideProps(function (store) {
-    return async function (context) {
-      const queryClient = new QueryClient();
-      const { spaceId } = context.params as SpaceParams;
-      const figmaId = `HIHVcGBjWhgE6sfaR6IKMj`; // figma ID 역시 user의 spacedetail에서 가져온 것으로 fetch 해야함.
-      await queryClient.prefetchQuery({
-        queryKey: queryKeys.user(), // 이 부분은 user의 spacedetail로 변경해야함.
-        queryFn: async function () {
-          return apiRequest({
-            // 이 부분은 spaceId로 우리 db의 space Info를 가져오는 것.
-            method: `get`,
-          }).then((res) => {
-            // 여기서 store의 figmaToken을 팀의 토큰으로 dispatch 해주기.
-            // 여기서 figma ID 가져와두기.
-          });
-        },
+export const getServerSideProps: GetServerSideProps = async function (context) {
+  const queryClient = new QueryClient();
+  const { spaceId } = context.params as SpaceParams;
+  const figmaId = `HIHVcGBjWhgE6sfaR6IKMj`; // figma ID 역시 user의 spacedetail에서 가져온 것으로 fetch 해야함.
+  await queryClient.prefetchQuery({
+    queryKey: queryKeys.user(), // 이 부분은 user의 spacedetail로 변경해야함.
+    queryFn: async function () {
+      return apiRequest({
+        // 이 부분은 spaceId로 우리 db의 space Info를 가져오는 것.
+        method: `get`,
+      }).then((res) => {
+        // 여기서 store의 figmaToken을 팀의 토큰으로 dispatch 해주기.
+        // 여기서 figma ID 가져와두기.
       });
-
-      return {
-        props: {
-          dehydratedState: dehydrate(queryClient),
-        },
-      };
-    };
+    },
   });
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};

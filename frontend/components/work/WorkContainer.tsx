@@ -11,16 +11,27 @@ import APIConnectContainer from './APIConnectContainer';
 import APIDocsContainer from './APIDocsContainer';
 import APITestContainer from './APITestContainer';
 import { RTCSpaceData } from '@/pages/space/[spaceId]/work';
+import { Box } from '../common';
+import { useStoreSelector } from '@/hooks/useStore';
 
 interface Props {
   serverSideStore?: RTCSpaceData;
   store: any;
 }
 
+// 상수 스타일
+const selectedStyle = (dark: boolean) =>
+  `${
+    dark
+      ? 'border-[3px] border-mincho-strong active:border-teal-600 text-mincho-strong active:bg-theme-dark-normal active:bg-opacity-70 active:border-mincho-normal active:border-[3px] active:text-mincho-normal'
+      : 'border-[3px] border-taro-strong active:border-opacity-100 border-opacity-80 text-taro-strong active:bg-grayscale-light active:bg-opacity-70 active:border-taro-normal active:border-[3px] active:text-taro-normal'
+  }` as const;
+
 const WorkContainer = function ({ serverSideStore, store }: Props) {
   const [step, setStep] = useState<number>(1);
   const router = useRouter();
   const { spaceId } = router.query;
+  const { dark } = useStoreSelector((state) => state.dark);
   const updatePresence = useUpdatePresence<PresenceUserData>();
 
   const APIEditHandler = function () {
@@ -51,52 +62,45 @@ const WorkContainer = function ({ serverSideStore, store }: Props) {
   return (
     <>
       <WorkTopNav>
-        <div
-          className={`flex flex-row items-center h-full justify-around w-full bg-theme-dark-light box-border rounded-[13px] text-[1rem]`}
+        <Box
+          fontType="content"
+          className={`flex flex-row items-center h-full justify-around w-full box-border rounded-[13px]`}
         >
           <div
             className={`${
-              step === 1
-                ? 'border-mincho-strong text-mincho-strong border-[3px]'
-                : ''
-            } box-border h-full w-full flex items-center justify-center rounded-[13px] py-[1.1%] duration-[0.1s] active:bg-theme-dark-normal active:bg-opacity-70 active:border-mincho-normal active:border-[3px] active:text-mincho-normal cursor-pointer`}
+              step === 1 ? selectedStyle(dark) : ''
+            } box-border h-full w-full flex items-center justify-center rounded-[13px] py-[1.1%] duration-[0.1s] cursor-pointer`}
             onClick={APIEditHandler}
           >
             API 명세서 작성
           </div>
           <div
             className={`${
-              step === 2
-                ? 'border-mincho-strong text-mincho-strong border-[3px]'
-                : ''
-            } box-border h-full w-full flex items-center justify-center rounded-[13px] py-[1.1%] duration-[0.1s] active:bg-theme-dark-normal active:bg-opacity-70 active:border-mincho-normal active:border-[3px] active:text-mincho-normal cursor-pointer`}
+              step === 2 ? selectedStyle(dark) : ''
+            } box-border h-full w-full flex items-center justify-center rounded-[13px] py-[1.1%] duration-[0.1s] cursor-pointer`}
             onClick={APIConnectHandler}
           >
             화면 별 API 연결
           </div>
           <div
             className={`${
-              step === 3
-                ? 'border-mincho-strong text-mincho-strong border-[3px]'
-                : ''
-            } box-border h-full w-full flex items-center justify-center rounded-[13px] py-[1.1%] duration-[0.1s] active:bg-theme-dark-normal active:bg-opacity-70 active:border-mincho-normal active:border-[3px] active:text-mincho-normal cursor-pointer`}
+              step === 3 ? selectedStyle(dark) : ''
+            } box-border h-full w-full flex items-center justify-center rounded-[13px] py-[1.1%] duration-[0.1s] cursor-pointer`}
             onClick={APIDocsHandler}
           >
             API 명세 및 요청
           </div>
           <div
             className={`${
-              step === 4
-                ? 'border-mincho-strong text-mincho-strong border-[3px]'
-                : ''
-            } box-border h-full w-full flex items-center justify-center rounded-[13px] py-[1.1%] duration-[0.1s] active:bg-theme-dark-normal active:bg-opacity-70 cursor-pointer`}
+              step === 4 ? selectedStyle(dark) : ''
+            } box-border h-full w-full flex items-center justify-center rounded-[13px] py-[1.1%] duration-[0.1s] cursor-pointer`}
             onClick={APITestHandler}
           >
             Testings
           </div>
-        </div>
+        </Box>
       </WorkTopNav>
-      <div className="h-[93.2%] w-full p-3">
+      <div className="h-[93.2%] w-full p-[1.12%]">
         {step === 1 ? (
           <APIEditContainer store={store} />
         ) : step === 2 ? (

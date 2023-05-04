@@ -12,12 +12,12 @@ const APIContainer = function ({ store }: Props) {
     <Box
       variant="one"
       fontType="header"
-      className="h-full w-full flex flex-row gap-[1.6%]"
+      className="h-full w-full flex flex-row gap-[1.12%]"
     >
       <Box
         variant="two"
         fontType="normal"
-        className="basis-[50%] w-[50%] flex-1 items-center justify-center overflow-scroll"
+        className="basis-[50%] w-[50%] flex-1 items-center justify-center overflow-y-scroll"
       >
         <FigmaList store={store} />
       </Box>

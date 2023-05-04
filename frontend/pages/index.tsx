@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { Inter } from 'next/font/google';
-import { DispatchLogout, DispatchToast, wrapper } from '@/store';
+import { DispatchLogout, DispatchToast } from '@/store';
 import { useRouter } from 'next/router';
 import { Box, Button, CircleBtn } from '@/components/common';
 import { useStoreDispatch, useStoreSelector } from '@/hooks/useStore';
@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form';
 import ToggleModeBtn from '@/components/common/ToggleModeBtn';
 import MetaHead from '@/components/common/MetaHead';
 import googleAxios from '@/utils/googleAxios';
+import { GetServerSideProps, GetStaticProps } from 'next';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -63,22 +64,18 @@ export default function Home() {
   );
 }
 
-// export const getStaticProps = wrapper.getStaticProps(function (store) {
-//   return async function (context) {
-//     return {
-//       props: {
-//         asdf: `asd`,
-//       },
-//     };
+// export const getStaticProps: GetStaticProps = async function (context) {
+//   return {
+//     props: {
+//       asdf: `asd`,
+//     },
 //   };
-// });
+// };
 
-// export const getServerSideProps = wrapper.getServerSideProps(function (store) {
-//   return async function (context) {
-//     return {
-//       props: {
-//         asdf: `asd`,
-//       },
-//     };
+// export const getServerSideProps: GetServerSideProps = async function (context) {
+//   return {
+//     props: {
+//       asdf: `asd`,
+//     },
 //   };
-// });
+// };

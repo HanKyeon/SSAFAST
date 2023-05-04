@@ -7,8 +7,10 @@ import Modal from '../common/Modal';
 import { HorizonBadgeList } from '../common/BadgeList';
 import { useUsers } from '@y-presence/react';
 import { PresenceUserData } from './presence-type';
-import { CircleBtn } from '../common';
+import { Box, CircleBtn } from '../common';
 import Logo from '/public/assets/images/Logo.png';
+import LightLogo from '/public/assets/images/LightLogo.png';
+import DarkLogo from '/public/assets/images/DarkLogo.png';
 import Image from 'next/image';
 import { useStoreDispatch, useStoreSelector } from '@/hooks/useStore';
 import { darkActions } from '@/store/dark-slice';
@@ -50,12 +52,17 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
           className={`flex items-center justify-center basis-[6%] w-[6%] cursor-pointer hover:scale-[105%] duration-[0.33s] pt-3 pb-1`}
           onClick={() => router.push(`/`)}
         >
-          <Image src={Logo} alt="SSAFAST" width={50} height={50} />
+          <Image
+            src={dark ? DarkLogo : LightLogo}
+            alt="SSAFAST"
+            width={50}
+            height={50}
+          />
         </div>
         {/* 네브 */}
-        <div className={`flex items-center justify-center basis-[48%]`}>
+        <Box className={`flex items-center justify-center basis-[48%]`}>
           {children}
-        </div>
+        </Box>
         {/* ?버튼? */}
         <div className={`flex items-center justify-center basis-[5%] w-[5%]`}>
           <CircleBtn onClick={modalOnHandler} />
@@ -81,12 +88,12 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
           <TbSettingsFilled className="h-full w-full p-[25%] text-gray-300 active:text-gray-500 hover:scale-[105%] duration-[0.33s] cursor-pointer" />
         </div>
         {/* 나가기 */}
-        <div
-          className={`flex items-center justify-center basis-[10%] w-[10%] bg-theme-dark-normal py-3 px-1 cursor-pointer hover:scale-[107%] duration-[0.33s]`}
+        <Box
+          className={`flex items-center justify-center basis-[10%] w-[10%] py-3 px-1 cursor-pointer hover:scale-[107%] duration-[0.33s]`}
           onClick={exitHandler}
         >
           나가기
-        </div>
+        </Box>
       </div>
     </>
   );

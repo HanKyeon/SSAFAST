@@ -1,5 +1,4 @@
-import { wrapper } from '@/store';
-import { InferGetServerSidePropsType } from 'next';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import {
   MouseEvent,
   PointerEvent,
@@ -66,8 +65,8 @@ const SpaceWorkPage = function (
   return (
     <>
       <MetaHead
-        title={`SSAFAST: ${props.spaceData.title}`}
-        description={`${props.spaceData.title}: ${props.spaceData.description}`}
+        title={`SSAFAST: 작업 공간`}
+        description={`SSAFAST: 작업하는 공간입니다.`}
         url={`/space/${spaceId}/work`}
       />
       <div className="h-full w-full overflow-hidden">
@@ -101,70 +100,68 @@ export interface RTCSpaceData {
   inputData: string;
 }
 
-export const getServerSideProps = wrapper.getServerSideProps(function (store) {
-  return async function (context) {
-    const { spaceId } = context.params as SpaceParams;
-    let spaceData = {
-      figmaList: [
-        {
-          figmaSectionId: `1`,
-          sectionUrl:
-            'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e56c89a6-34b7-4c8b-9e49-22c7fd82c48a',
-          refreshId: `4:14`,
-          name: `홈 페이지 1`,
-        },
-        {
-          figmaSectionId: `2`,
-          sectionUrl:
-            'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/fbcc8976-b92d-4454-8e61-0050b7a42f95',
-          refreshId: `115:522`,
-          name: `space - space메인 - Dark`,
-        },
-        {
-          figmaSectionId: `3`,
-          sectionUrl:
-            'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/6d3ac41b-03ec-4491-9c63-1f4744d45650',
-          refreshId: `101:417`,
-          name: `space - space메인 - Light`,
-        },
-        {
-          figmaSectionId: `4`,
-          sectionUrl:
-            'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/dba880b8-18c0-4835-ac27-b5af934d5806',
-          refreshId: `232:1897`,
-          name: `Figma화면에 api 연결 - 편집`,
-        },
-        {
-          figmaSectionId: `5`,
-          sectionUrl:
-            'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/35599cc7-27ff-4584-834a-e53af3849446',
-          refreshId: `232:2481,232:2759`,
-          name: `api명세 작성 - postman - dark`,
-        },
-      ],
-      apiConnectList: [],
-      apiList: [],
-      useCaseList: [],
-      overloadList: [],
-      baseURLList: [],
-      testingValue: `asdf`,
-      inputData: `testtest`,
-    };
-    // await apiRequest({
-    //   method: `get`,
-    //   url: `/`,
-    // }).then((res) => {
-    //   // sapceData에 space 정보 넣어주기.
-    // });
-
-    return {
-      props: {
-        serverSideStore: spaceData,
-        spaceData: {
-          title: `프으로제엑트으`,
-          description: `프로젝트 서얼며어엉`,
-        },
+export const getServerSideProps: GetServerSideProps = async function (context) {
+  const { spaceId } = context.params as SpaceParams;
+  let spaceData = {
+    figmaList: [
+      {
+        figmaSectionId: `1`,
+        sectionUrl:
+          'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e56c89a6-34b7-4c8b-9e49-22c7fd82c48a',
+        refreshId: `4:14`,
+        name: `홈 페이지 1`,
       },
-    };
+      {
+        figmaSectionId: `2`,
+        sectionUrl:
+          'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/fbcc8976-b92d-4454-8e61-0050b7a42f95',
+        refreshId: `115:522`,
+        name: `space - space메인 - Dark`,
+      },
+      {
+        figmaSectionId: `3`,
+        sectionUrl:
+          'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/6d3ac41b-03ec-4491-9c63-1f4744d45650',
+        refreshId: `101:417`,
+        name: `space - space메인 - Light`,
+      },
+      {
+        figmaSectionId: `4`,
+        sectionUrl:
+          'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/dba880b8-18c0-4835-ac27-b5af934d5806',
+        refreshId: `232:1897`,
+        name: `Figma화면에 api 연결 - 편집`,
+      },
+      {
+        figmaSectionId: `5`,
+        sectionUrl:
+          'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/35599cc7-27ff-4584-834a-e53af3849446',
+        refreshId: `232:2481,232:2759`,
+        name: `api명세 작성 - postman - dark`,
+      },
+    ],
+    apiConnectList: [],
+    apiList: [],
+    useCaseList: [],
+    overloadList: [],
+    baseURLList: [],
+    testingValue: `asdf`,
+    inputData: `testtest`,
   };
-});
+  // await apiRequest({
+  //   method: `get`,
+  //   url: `/`,
+  // }).then((res) => {
+  //   // sapceData에 space 정보 넣어주기.
+  // });
+
+  return {
+    props: {
+      serverSideStore: spaceData,
+      spaceData: {
+        title: `프로젝트 작업 공간`,
+        description: `프로젝트 서얼며어엉`,
+      },
+    },
+  };
+};

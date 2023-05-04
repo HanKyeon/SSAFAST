@@ -1,6 +1,5 @@
 import MetaHead from '@/components/common/MetaHead';
 import { SpinnerDots } from '@/components/common/Spinner';
-import { wrapper } from '@/store';
 import { tokenActions } from '@/store/token-slice';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
@@ -49,20 +48,8 @@ const GoogleLoadingPage = function (
 
 export default GoogleLoadingPage;
 
-export const getServerSideProps: GetServerSideProps =
-  wrapper.getServerSideProps(function (store) {
-    return async function (context) {
-      const access = context.req.headers.cookie;
-
-      if (access) {
-        store.dispatch(tokenActions.setAccessToken({ accessToken: access }));
-      }
-
-      return {
-        props: {
-          asdf: `asdf`,
-          access: access || '안되는데용?',
-        },
-      };
-    };
-  });
+export const getServerSideProps: GetServerSideProps = async function (context) {
+  return {
+    props: {},
+  };
+};

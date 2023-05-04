@@ -8,7 +8,7 @@ const Background = function ({ children }: PropsWithChildren) {
       className={`h-full w-full duration-[0.33s] ${
         dark
           ? 'bg-theme-dark-strong text-basic-white'
-          : 'bg-[#efefef] text-basic-black'
+          : 'bg-theme-white-strong text-basic-black'
       }`}
     >
       {children}
