@@ -40,7 +40,7 @@ public class ApiPreController {
     @GetMapping("/list")
     ResponseEntity<?> getApiPreList(@RequestParam Long workspaceId){
         try {
-            return new ResponseEntity<>("", HttpStatus.OK);
+            return new ResponseEntity<>(apiPreService.getApiCategoryList(workspaceId), HttpStatus.OK);
         } catch (CustomException e){
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
         } catch (Exception e) {
@@ -53,6 +53,7 @@ public class ApiPreController {
     @PostMapping("/category")
     public ResponseEntity<?> createCategory(@RequestParam Long workspaceId, @RequestBody HashMap<String,String> category){
         try {
+            log.info(category.get("name"));
             return new ResponseEntity<>(apiPreService.createCategory(workspaceId, category.get("name")), HttpStatus.OK);
         } catch (CustomException e){
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
@@ -63,7 +64,7 @@ public class ApiPreController {
     }
 
     @PutMapping("/category/{categoryId}")
-    public ResponseEntity<?> updateCategory(@PathVariable Long categoryId, @RequestParam Long workspaceId, @RequestBody HashMap<String,String> category){
+    public ResponseEntity<?> updateCategory(@PathVariable("categoryId") Long categoryId, @RequestParam Long workspaceId, @RequestBody HashMap<String,String> category){
         try {
             return new ResponseEntity<>(apiPreService.updateCategory(workspaceId, categoryId, category.get("name")), HttpStatus.OK);
         } catch (CustomException e){
@@ -86,6 +87,21 @@ public class ApiPreController {
         }
 
     }
+
+    @DeleteMapping("/category/{categoryId}")
+    ResponseEntity<?> deleteCategory(@PathVariable("categoryId") Long categoryId, @RequestParam Long workspaceId){
+        try {
+            return new ResponseEntity<>(apiPreService.deleteCategory(workspaceId, categoryId), HttpStatus.OK);
+        } catch (CustomException e){
+            return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
+        } catch (Exception e) {
+            log.error("error: ", e);
+            return new ResponseEntity<>(ErrorCode.INTERNAL_SERVER_ERROR.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus());
+        }
+
+    }
+
+
 
 
 

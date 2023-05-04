@@ -1,9 +1,9 @@
 package com.rocket.ssafast.apispec.service;
 
+import com.rocket.ssafast.apispec.domain.Entity.ApiSpecEntity;
 import com.rocket.ssafast.apispec.domain.Entity.CategoryEntity;
-import com.rocket.ssafast.apispec.dto.response.BaseurlsDto;
-import com.rocket.ssafast.apispec.dto.response.CategoryDto;
-import com.rocket.ssafast.apispec.dto.response.CategoryListDto;
+import com.rocket.ssafast.apispec.dto.response.*;
+import com.rocket.ssafast.apispec.repository.ApiSpecRepository;
 import com.rocket.ssafast.apispec.repository.CategoryEntityRepository;
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
@@ -28,6 +28,7 @@ public class ApiPreService {
     private final BaseurlRepository baseurlRepository;
     private final CategoryEntityRepository categoryEntityRepository;
     private final WorkspaceRepository workspaceRepository;
+    private final ApiSpecRepository apiSpecRepository;
     @Transactional
     public BaseurlsDto getBaseurls(Long workspaceId){
         //workspaceid로 baseurl가져오기
@@ -48,7 +49,9 @@ public class ApiPreService {
     }
 
     public CategoryDto createCategory(Long workspaceId, String name) {
-        if(!categoryEntityRepository.findByWorkspaceIdAndName(workspaceId, name).isPresent()){
+        if(categoryEntityRepository.findByWorkspaceIdAndName(workspaceId, name).isPresent()){
+            log.info(categoryEntityRepository.findByWorkspaceIdAndName(workspaceId, name).toString());
+            log.info("1");
             throw new CustomException(ErrorCode.DUPLICATE);
         }
 
@@ -78,7 +81,7 @@ public class ApiPreService {
 
         //조회 결과 없으면 bad request
         if(!updateCategoryOptional.isPresent()){
-            throw new CustomException(ErrorCode.BAD_REQUEST);
+            throw new CustomException(ErrorCode.CATEGORY_NOT_FOUND);
         }
 
         CategoryEntity updateCategory = updateCategoryOptional.get();
@@ -99,5 +102,51 @@ public class ApiPreService {
 
         return CategoryListDto.builder()
                 .categorys(categoryDtos).build();
+    }
+
+    public ApiCategoryListDto getApiCategoryList(Long workspaceId) {
+        //모든 카테고리 조회
+        List<CategoryEntity> categoryEntities = categoryEntityRepository.findAllByWorkspaceId(workspaceId);
+
+        List<ApiCategoryDto> categoryDtos = new ArrayList<>();
+        for(CategoryEntity categoryEntity : categoryEntities){
+            ApiCategoryDto apiCategoryDto = ApiCategoryDto.builder()
+                    .categoryId(categoryEntity.getId())
+                    .categoryName(categoryEntity.getName()).build();
+
+            List<ApiInfoDto> apiSpecDto = new ArrayList<>();
+            log.info(categoryEntity.getApiSpecEntityList().toString());
+            for(ApiSpecEntity apiSpecEntity : categoryEntity.getApiSpecEntityList()){
+                //apiDto를 add
+                apiSpecDto.add(apiSpecEntity.toDto());
+            }
+            apiCategoryDto.setApis(apiSpecDto);
+            categoryDtos.add(apiCategoryDto);
+        }
+
+        return ApiCategoryListDto.builder()
+                .apiCategories(categoryDtos).build();
+    }
+
+    public ApiCategoryListDto deleteCategory(Long workspaceId, Long categoryId) {
+        //root category
+        CategoryEntity rootCategory = categoryEntityRepository.findByWorkspaceIdAndName(workspaceId, "/").get();
+
+        if(rootCategory.getId() == categoryId){
+            throw new CustomException(ErrorCode.BAD_REQUEST);
+        }
+
+        //삭제하려는 카테고리
+        //workspaceId로 api 목록 조회
+        List<ApiSpecEntity> apis = apiSpecRepository.findAllByCategoryId(categoryId);
+        for(ApiSpecEntity apiSpecEntity : apis){
+            apiSpecEntity.updateCategory(rootCategory);
+            apiSpecRepository.save(apiSpecEntity).toDto();
+            log.info(apiSpecRepository.findById(apiSpecEntity.getId()).get().getCategory().getId().toString());
+        }
+
+        categoryEntityRepository.deleteById(categoryId);
+
+        return getApiCategoryList(workspaceId);
     }
 }

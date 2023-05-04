@@ -39,8 +39,7 @@ public class CategoryEntity {
     private LocalDateTime createdTime;
 
     //ref : https://ict-nroo.tistory.com/125
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @OneToMany(mappedBy = "category")
     List<ApiSpecEntity> apiSpecEntityList;
 
     public void updateName(String name){
