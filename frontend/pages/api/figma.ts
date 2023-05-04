@@ -36,8 +36,8 @@ export default async function handler(
       })
       .catch((err) => {
         return res
-          .status(err?.status || 400)
-          .json({ message: '너한테 피그마 토큰 안줄거야' });
+          .status(err?.status || 412)
+          .json({ message: '너한테 피그마 토큰 안줄거야', err: err });
       });
   }
   return res.status(400).json({ message: '킹받지?' });
