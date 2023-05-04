@@ -3,9 +3,10 @@ import { IoEnterOutline } from 'react-icons/io5';
 import BoxHeader from '../common/BoxHeader';
 import UserBadge from '../common/UserBadge';
 import { TbCrown } from 'react-icons/tb';
-import { useEffect, useRef } from 'react';
+import { FormEvent, useEffect, useRef } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart } from 'chart.js';
+import { useRouter } from 'next/router';
 
 // const chartData = [
 //   { year: 2010, count: 10 },
@@ -18,6 +19,12 @@ import { Chart } from 'chart.js';
 // ];
 
 const PreviewRightContainer = function (): JSX.Element {
+  const router = useRouter();
+  const { spaceId } = router.query;
+  const pushWorkHandler = function (e: FormEvent) {
+    e.preventDefault();
+    router.push(`/space/${spaceId}/work`);
+  };
   // const chartEl = useRef<HTMLCanvasElement>(null);
 
   //   const drawChart = (): void => {
@@ -61,9 +68,9 @@ const PreviewRightContainer = function (): JSX.Element {
   //   ],
   // };
 
-  useEffect(() => {
-    // drawChart();
-  }, []);
+  // useEffect(() => {
+  //   // drawChart();
+  // }, []);
   return (
     <div className="h-full min-h-0 min-w-0 flex-1 py-3 pr-3 flex flex-col gap-3">
       <Box className="p-5 flex-1">
@@ -117,7 +124,10 @@ const PreviewRightContainer = function (): JSX.Element {
           </li>
         </ul>
       </Box>
-      <Button className="flex gap-2 items-center justify-center">
+      <Button
+        className="flex gap-2 items-center justify-center"
+        onClick={pushWorkHandler}
+      >
         Enter
         <IoEnterOutline />
       </Button>

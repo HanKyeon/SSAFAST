@@ -9,6 +9,7 @@ import SpaceNameItem from './SpaceNameItem';
 import UserBadge from '../common/UserBadge';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { useSpaceList } from '@/hooks/queries/queries';
 
 const spaceMockup = [
   { id: 0, name: 'spaceffffff1' },
@@ -25,10 +26,16 @@ const spaceMockup = [
 const SpaceNavContainer = function (): JSX.Element {
   const router = useRouter();
   const { dark: isDark } = useStoreSelector((state) => state.dark);
-  const [curSpaceId, setCurSpaceId] = useState<number>(spaceMockup[0].id);
+  // const [curSpaceId, setCurSpaceId] = useState<number>(spaceMockup[0].id);
+  const {
+    data: spaceList,
+    isLoading: spaceListLoading,
+    isError: spaceListError,
+  } = useSpaceList();
+  const { spaceId } = router.query;
 
   const onClickSpaceItem = (id: number): void => {
-    setCurSpaceId(id);
+    // setCurSpaceId(id);
     router.push(`/space/${id}`);
   };
 
@@ -59,14 +66,23 @@ const SpaceNavContainer = function (): JSX.Element {
           />
         </div>
         <ul className="overflow-scroll flex flex-col gap-3 flex-1 scrollbar-hide">
-          {spaceMockup.map((item, index) => (
-            <SpaceNameItem
-              key={item.id}
-              item={item}
-              curSpaceId={curSpaceId}
-              onClickSpaceItem={onClickSpaceItem}
-            />
-          ))}
+          {!spaceList?.length
+            ? spaceMockup.map((item, index) => (
+                <SpaceNameItem
+                  key={item.id}
+                  item={item}
+                  // curSpaceId={curSpaceId}
+                  onClickSpaceItem={onClickSpaceItem}
+                />
+              ))
+            : spaceList.map((item, index) => (
+                <SpaceNameItem
+                  key={item.id}
+                  item={item}
+                  // curSpaceId={curSpaceId}
+                  onClickSpaceItem={onClickSpaceItem}
+                />
+              ))}
         </ul>
         {/* toggle mode */}
         <div className="flex justify-center pt-5 ">
