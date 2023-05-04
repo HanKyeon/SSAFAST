@@ -23,7 +23,7 @@ const FigmaCodeLoadingPage = function () {
       figmaAxios({
         method: `post`,
         // baseURL: `https://www.figma.com`,
-        url: `/api/figma-token`,
+        url: `/api/figma-token-gen`,
         // url: `/api/oauth/token`,
         params: {
           client_id: `${process.env.NEXT_PUBLIC_FIGMA_ROCKET_APP_CLIENT_ID}`,
