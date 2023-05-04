@@ -1,6 +1,7 @@
 package com.rocket.ssafast.apispec.domain.Entity;
 
 import com.rocket.ssafast.apispec.domain.Entity.ApiSpecEntity;
+import com.rocket.ssafast.apispec.dto.response.CategoryDto;
 import com.rocket.ssafast.workspace.domain.Workspace;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +27,7 @@ public class CategoryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(targetEntity = Workspace.class, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(targetEntity = Workspace.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "workspace_id")
     private Workspace workspace;
 
@@ -42,4 +43,14 @@ public class CategoryEntity {
     @JoinColumn(name = "category_id")
     List<ApiSpecEntity> apiSpecEntityList;
 
+    public void updateName(String name){
+        this.name = name;
+    }
+
+    public CategoryDto toDto(){
+        return CategoryDto.builder()
+                .id(id)
+                .name(name)
+                .build();
+    }
 }

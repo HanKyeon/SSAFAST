@@ -4,11 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="68c3ac46-3b5b-41fc-94b0-32029979774c" name="Changes" comment="[BE] Feat : ApiPre목록 조회">
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/repository/CategoryEntityRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+    <list default="true" id="68c3ac46-3b5b-41fc-94b0-32029979774c" name="Changes" comment="[BE] Feat : 워크스페이스 생성시 루트 카테고리 추가">
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/dto/response/CategoryDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/dto/response/CategoryListDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/service/WorkspaceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/service/WorkspaceService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/controller/ApiPreController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/controller/ApiPreController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/domain/Entity/CategoryApiDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/dto/response/CategoryApiDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/domain/Entity/CategoryEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/domain/Entity/CategoryEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/repository/CategoryEntityRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/repository/CategoryEntityRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/service/ApiPreService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/service/ApiPreService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/exception/ErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/exception/ErrorCode.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,15 +46,15 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop/BE" />
+        <entry key="$PROJECT_DIR$" value="feature/BE/workspace" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -105,7 +111,7 @@
       <method v="2" />
     </configuration>
     <configuration name="BackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
-      <module name="ssafast.main" />
+      <module name="com.rocket.ssafast.main" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.rocket.ssafast.BackendApplication" />
       <extension name="coverage">
         <pattern>
@@ -119,6 +125,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Spring Boot.BackendApplication" />
         <item itemvalue="Spring Boot.BackendApplication" />
         <item itemvalue="HTTP Request.generated-requests | #4" />
         <item itemvalue="HTTP Request.generated-requests | #3" />
@@ -221,7 +228,14 @@
       <option name="project" value="LOCAL" />
       <updated>1683046665753</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="[BE] Feat : 워크스페이스 생성시 루트 카테고리 추가">
+      <created>1683091942750</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1683091942750</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -263,6 +277,7 @@
     <MESSAGE value="[BE] FEAT : Baseurl Entity 추가" />
     <MESSAGE value="[BE] FEAT : 기타 파일 추가" />
     <MESSAGE value="[BE] FIX : 포스트맨 테스트 + 노션 명세 대조" />
-    <option name="LAST_COMMIT_MESSAGE" value="[BE] FIX : 포스트맨 테스트 + 노션 명세 대조" />
+    <MESSAGE value="[BE] Feat : 워크스페이스 생성시 루트 카테고리 추가" />
+    <option name="LAST_COMMIT_MESSAGE" value="[BE] Feat : 워크스페이스 생성시 루트 카테고리 추가" />
   </component>
 </project>

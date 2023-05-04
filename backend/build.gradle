@@ -43,6 +43,9 @@ dependencies {
 
 	// oauth2 google
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.6.2'
+
+	// java poet
+	implementation 'com.squareup:javapoet:1.13.0'
 }
 
 tasks.named('test') {

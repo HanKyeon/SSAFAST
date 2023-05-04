@@ -32,7 +32,7 @@ public enum APIStatus {
     public int number() { return number; }
     public String status() { return status; }
 
-    public static String numberOfStatus(int number) { return BY_NUMBER.get(number); }
-    public static int statusOfNumber(String status) { return BY_STATUS.get(status); }
+    public static String getStatusByNumber(int number) { return BY_NUMBER.get(number); }
+    public static int getNumberByStatus(String status) { return BY_STATUS.get(status); }
 
 }
