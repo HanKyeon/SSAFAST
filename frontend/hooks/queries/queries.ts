@@ -73,8 +73,8 @@ export interface FigmaRefineData {
 }
 
 export interface FigmaTokenData {
-  figmaAccess: string;
-  figmaRefresh: string;
+  figmaAccessToken: string;
+  figmaRefreshToken: string;
 }
 
 export interface SearchUserResult {
@@ -591,14 +591,18 @@ export const useUserFigmaTokens = function () {
       }).then((res) => res.data);
     },
     onSuccess: function (data) {
-      console.log('피그마 액세스 onSuccess', data.figmaAccess);
-      console.log('피그마 액세스 onSuccess', data.figmaRefresh);
+      console.log('피그마 액세스 onSuccess', data.figmaAccessToken);
+      console.log('피그마 액세스 onSuccess', data.figmaRefreshToken);
       if (data) {
         dispatch(
-          figmaTokenActions.setAccessToken({ figmaAccess: data.figmaAccess })
+          figmaTokenActions.setAccessToken({
+            figmaAccess: data.figmaAccessToken,
+          })
         );
         dispatch(
-          figmaTokenActions.setRefreshToken({ figmaRefresh: data.figmaRefresh })
+          figmaTokenActions.setRefreshToken({
+            figmaRefresh: data.figmaRefreshToken,
+          })
         );
       }
     },

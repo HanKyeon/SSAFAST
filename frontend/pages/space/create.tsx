@@ -165,8 +165,8 @@ const SpaceCreatePage =
         startDate: pjtStartDate,
         endDate: pjtEndDate,
         baseurls: baseUrlList.split(`\n`),
-        figmaAccessToken: userFigmaTokens?.figmaAccess,
-        figmaRefreshToken: userFigmaTokens?.figmaRefresh,
+        figmaAccessToken: userFigmaTokens?.figmaAccessToken,
+        figmaRefreshToken: userFigmaTokens?.figmaRefreshToken,
       };
 
       await apiRequest({
