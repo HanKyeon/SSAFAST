@@ -27,7 +27,7 @@ public class WorkspaceController {
     @PostMapping
     ResponseEntity<?> createWorkspace(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody CreateWorkspaceDto createWorkspaceDto){
         try {
-            return new ResponseEntity<>(workspaceService.createWorkspace(userDetails.getUsername(), createWorkspaceDto), HttpStatus.OK);
+            return new ResponseEntity<>(workspaceService.createWorkspace(userDetails.getMemberId(), createWorkspaceDto), HttpStatus.OK);
         } catch (CustomException e){
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
         } catch (Exception e) {

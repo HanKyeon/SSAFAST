@@ -36,8 +36,8 @@ public class FigmaToken {
 	public ResFigmaTokenDto toResDto() {
 		return ResFigmaTokenDto.builder()
 			.id(id)
-			.figmaAccess(figmaAccess)
-			.figmaRefresh(figmaRefresh)
+			.figmaAccessToken(figmaAccess)
+			.figmaRefreshToken(figmaRefresh)
 			.build();
 	}
 
