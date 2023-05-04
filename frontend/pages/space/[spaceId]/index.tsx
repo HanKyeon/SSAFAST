@@ -4,19 +4,30 @@ import { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import apiRequest from '@/utils/axios';
 import { queryKeys } from '@/hooks/queries/QueryKeys';
-import { useFigmaDatas } from '@/hooks/queries/queries';
+import {
+  useFigmaDatas,
+  useSpaceDetail,
+  useUserFigmaTokens,
+} from '@/hooks/queries/queries';
 import MetaHead from '@/components/common/MetaHead';
 import SpaceNavContainer from '@/components/preview/SpaceNavContainer';
 import PreviewLeftContainer from '@/components/preview/PreviewLeftContainer';
 import PreviewRightContainer from '@/components/preview/PreviewRightContainer';
+import { SpaceParams } from '..';
 
 const SpacePreviewPage =
   // props: InferGetServerSidePropsType<typeof getServerSideProps>
   function () {
     const router = useRouter();
-    const { spaceId } = router.query;
-    const { data, isLoading, isFetching, isInitialLoading } = useFigmaDatas(``);
-    console.log(data);
+    const { spaceId } = router.query as SpaceParams;
+    const {
+      data: spaceDetail,
+      isLoading: spaceDetailLoading,
+      isError: spaceDetailError,
+    } = useSpaceDetail(spaceId);
+    const { data: figmaTokens } = useUserFigmaTokens();
+    const { data, isLoading, isFetching, isInitialLoading } =
+      useFigmaDatas(spaceId);
     return (
       <>
         <MetaHead title="SSAFAST : space" description="프로젝트" url="/space" />

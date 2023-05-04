@@ -604,6 +604,9 @@ export const useUserFigmaTokens = function () {
 
 // figma 데이터 받아오기
 export const useFigmaDatas = function (figmaId: string) {
+  const { figmaAccess, figmaRefresh } = useStoreSelector(
+    (state) => state.figmatoken
+  );
   return useQuery<FigmaRefineData>({
     queryKey: queryKeys.figmaAllDatas(figmaId),
     queryFn: async function () {
@@ -644,7 +647,7 @@ export const useFigmaDatas = function (figmaId: string) {
         };
       });
     },
-    enabled: !!figmaId,
+    enabled: !!figmaId && !!figmaAccess,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     staleTime: Infinity,

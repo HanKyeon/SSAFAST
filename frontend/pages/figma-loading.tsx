@@ -26,9 +26,8 @@ const FigmaCodeLoadingPage = function () {
         url: `/api/oauth/token`,
         params: {
           client_id: `${process.env.NEXT_PUBLIC_FIGMA_ROCKET_APP_CLIENT_ID}`,
-          response_type: `code`,
-          redirect_uri: `${process.env.NEXT_PUBLIC_HOSTNAME}/figma-loading`,
           client_secret: `${process.env.NEXT_PUBLIC_FIGMA_ROCKET_APP_CLIENT_SECRET}`,
+          redirect_uri: `${process.env.NEXT_PUBLIC_HOSTNAME}/figma-loading`,
           code: code,
           grant_type: `authorization_code`,
         },

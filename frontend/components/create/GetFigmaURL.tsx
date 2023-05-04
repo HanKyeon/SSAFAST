@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { SpinnerDots } from '../common/Spinner';
 import { useStoreDispatch } from '@/hooks/useStore';
 import { DispatchToast } from '@/store';
+import { toastActions } from '@/store/toast-slice';
 
 interface Props {
   setFigmaIdHandler: (id: string) => void;
@@ -59,6 +60,10 @@ client_id=${process.env.NEXT_PUBLIC_FIGMA_ROCKET_APP_CLIENT_ID}&redirect_uri=${p
   };
 
   const { data, isLoading, isFetching, isError } = useFigmaDatas(figmaId);
+
+  useEffect(function () {
+    dispatch(toastActions.toastOff({}));
+  }, []);
 
   return (
     <div className="flex flex-col h-full w-full items-center justify-center gap-5 py-4 text-[24px]">

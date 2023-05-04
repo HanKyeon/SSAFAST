@@ -45,6 +45,7 @@ const customStyles = (dark: boolean, selected: boolean) =>
 const SpaceCreatePage =
   function () // props: InferGetServerSidePropsType<typeof getServerSideProps>
   {
+    const queryClient = useQueryClient();
     const figmatokens = useStoreSelector((state) => state.figmatoken);
     const dispatch = useStoreDispatch();
     const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -121,7 +122,7 @@ const SpaceCreatePage =
     // pjtMemberList.map((member) => member.id) // 아이디 리스트
     const [baseUrlList, setBaseUrlList] = useState<string>(``);
     // step 3
-    const createHandler = function () {
+    const createHandler = async function () {
       const sectionList = figmaRefineData
         .filter((figmaData) => {
           return figmaData.selected;
@@ -152,8 +153,8 @@ const SpaceCreatePage =
         dispatch(DispatchToast('프로젝트 기간을 입력해주세요!', false));
         return;
       }
-      console.log(pjtStartDate, typeof pjtEndDate);
-      const createConfig = {
+
+      const createConfigData = {
         figmaUrl: figmaUrl,
         figmaFileId: figmaId,
         figmaFileName: figmaData?.name,
@@ -164,16 +165,18 @@ const SpaceCreatePage =
         startDate: pjtStartDate,
         endDate: pjtEndDate,
         baseurls: baseUrlList.split(`\n`),
+        figmaAccessToken: userFigmaTokens?.figmaAccess,
+        figmaRefreshToken: userFigmaTokens?.figmaRefresh,
       };
 
-      apiRequest({
+      await apiRequest({
         method: `post`,
         url: `/api/workspace/project`,
-        data: createConfig,
+        data: createConfigData,
       })
-        .then(async (res) => {
+        .then((res) => {
           const spaceId = res.data.id;
-          await apiRequest({
+          apiRequest({
             method: `post`,
             url: `/api/workspace/figma-section`,
             data: {
@@ -185,14 +188,17 @@ const SpaceCreatePage =
           });
           return res;
         })
-        .then(async (res) => {
-          await apiRequest({
+        .then((res) => {
+          apiRequest({
             method: `post`,
             url: `/api/workspace/member`,
             data: {
               memberIds: pjtMemberList.map((member) => member.id),
             },
           });
+        })
+        .then((res) => {
+          queryClient.invalidateQueries(queryKeys.space());
         });
     };
 
@@ -292,7 +298,7 @@ const SpaceCreatePage =
                 />
               </AnimationBox>
             </div>
-            <div onClick={setFigmaToken}>토큰세팅</div>
+            {/* <div onClick={setFigmaToken}>토큰세팅</div> */}
 
             {/* 아래 버튼 */}
             <div className="w-full h-[8%] flex items-center justify-center text-[24px]">
