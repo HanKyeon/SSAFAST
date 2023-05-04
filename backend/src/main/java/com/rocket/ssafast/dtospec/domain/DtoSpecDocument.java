@@ -1,5 +1,6 @@
 package com.rocket.ssafast.dtospec.domain;
 
+import com.rocket.ssafast.dtospec.domain.element.DtoInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
+import java.util.Map;
 
 @Slf4j
 @Getter
@@ -18,5 +20,11 @@ import javax.persistence.Id;
 public class DtoSpecDocument {
 
     @Id
-    private Long test;
+    private String id;
+
+    private Map<Long, DtoInfo> dtos;
+
+    public DtoSpecDocument toDto(){
+        return DtoSpecDocument.builder().id(id).build();
+    }
 }
