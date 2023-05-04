@@ -40,4 +40,5 @@ export default async function handler(
           .json({ message: '너한테 피그마 토큰 안줄거야' });
       });
   }
+  return res.status(400).json({ message: '킹받지?' });
 }
