@@ -22,8 +22,7 @@ const FigmaCodeLoadingPage = function () {
       }
       figmaAxios({
         method: `post`,
-        baseURL: `https://www.figma.com`,
-        url: `/api/oauth/token`,
+        url: `/api/figma`,
         params: {
           client_id: `${process.env.NEXT_PUBLIC_FIGMA_ROCKET_APP_CLIENT_ID}`,
           client_secret: `${process.env.NEXT_PUBLIC_FIGMA_ROCKET_APP_CLIENT_SECRET}`,
@@ -35,6 +34,7 @@ const FigmaCodeLoadingPage = function () {
         .then((res) => {
           const access = res[`access_token` as keyof AxiosResponse];
           const refresh = res[`refresh_token` as keyof AxiosResponse];
+          console.log(access, refresh, '<<<<<<<<<<<<<<<<<<<<<');
           if (access && refresh) {
             dispatch(figmaTokenActions.setAccessToken({ figmaAccess: access }));
             dispatch(

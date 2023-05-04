@@ -7,19 +7,28 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  return axios({
-    method: `get`,
-    baseURL: `https://api.figma.com`,
-    url: `/v1/files/${req.query.figmaId}`, // figmaId 입력해야함.
-    params: {
-      depth: 3,
-    },
-    headers: { Authorization: req.headers.authorization },
-  })
-    .then((response) => {
-      return res.status(200).json(response.data);
+  if (req.method === 'get') {
+    return axios({
+      method: `get`,
+      baseURL: `https://api.figma.com`,
+      url: `/v1/files/${req.query.figmaId}`, // figmaId 입력해야함.
+      params: {
+        depth: 3,
+      },
+      headers: { Authorization: req.headers.authorization },
     })
-    .catch((err) => {
-      return res.status(400).json({ message: '400에러임' });
+      .then((response) => {
+        return res.status(200).json(response.data);
+      })
+      .catch((err) => {
+        return res.status(400).json({ message: '400에러임' });
+      });
+  } else if (req.method === 'post') {
+    return axios({
+      method: `post`,
+      baseURL: `https://www.figma.com`,
+      url: `/api/oauth/token`,
+      params: req.query,
     });
+  }
 }
