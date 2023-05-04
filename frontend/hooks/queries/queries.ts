@@ -93,6 +93,7 @@ export interface SpaceShortcut {
 }
 
 export interface SpaceDetail {
+  id: number | string;
   figmaUrl: string;
   figmaFileId: string;
   figmaFileName: string;
@@ -104,13 +105,22 @@ export interface SpaceDetail {
   endDate: any;
   totalApiCount: number;
   completeApiCount: number;
+  baseurls: string[];
   leaderId: string | number;
+  figmaToken: {
+    figmaAccessToken: string;
+    figmaRefreshToken: string;
+  };
 }
 
 export interface TeamMember {
   id: string | number;
-  memberProfileImg: string;
-  memberName: string;
+  profileImg: string;
+  name: string;
+}
+
+export interface TeamMemberList {
+  members: TeamMember[];
 }
 
 export interface SpaceFigma {
@@ -437,7 +447,7 @@ export const useSpaceFigmaTokens = function (
     queryFn: async function () {
       return apiRequest({
         method: `get`,
-        url: `/api/workspace/figma-section/token`,
+        url: `/api/workspace/project/token`,
         params: {
           leaderId: leaderId,
         },
@@ -483,7 +493,7 @@ export const useSpaceFrames = function (spaceId: string | number = ``) {
 
 // space 멤버 확인
 export const useSpaceMembers = function (spaceId: string | number) {
-  return useQuery<TeamMember[]>({
+  return useQuery<TeamMemberList>({
     queryKey: queryKeys.spaceMembers(spaceId),
     queryFn: async function () {
       return apiRequest({

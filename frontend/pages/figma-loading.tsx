@@ -43,9 +43,11 @@ const FigmaCodeLoadingPage = function () {
             );
             // user의 figma token을 저장하는 요청.
             apiRequest({
-              method: `post`,
+              method: `put`,
+              url: `/api/user/figma-token`,
               data: {
-                // 토큰 두개 넣어서 post
+                figmaAccess: access,
+                figmaRefresh: refresh,
               },
             });
           }
