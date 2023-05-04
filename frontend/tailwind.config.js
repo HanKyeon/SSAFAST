@@ -79,11 +79,13 @@ module.exports = {
           pink: `#EC7E9A`,
         },
         grayscale: {
-          deepdarkdeep: `#3A3C3F`,
-          deepdark: `#515457`,
-          deepdarklight: `#646464`,
-          dark: `#9D9D9D`,
           light: `#D9D9D9`,
+          deeplightlight: `#c6c6c6`,
+          deeplight: `#B6B6B6`,
+          dark: `#9D9D9D`,
+          deepdarklight: `#646464`,
+          deepdark: `#515457`,
+          deepdarkdeep: `#3A3C3F`,
         },
       },
       fontSize: {
