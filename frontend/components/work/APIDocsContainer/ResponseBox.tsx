@@ -1,4 +1,4 @@
-import ToggleableHeader from '@/components/apis/ToggleableHeader';
+import ToggleableHeader from '@/components/work/APIDocsContainer/ToggleableHeader';
 import { Box } from '@/components/common';
 import { useState } from 'react';
 

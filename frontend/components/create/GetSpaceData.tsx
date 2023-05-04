@@ -187,13 +187,13 @@ const GetSpaceData = function ({
         <div>팀 정보를 입력해주세요.</div>
         <div className="h-[83%] w-full flex flex-col items-center justify-start overflow-y-scroll gap-3">
           <div className="w-full px-[10%] flex flex-row gap-3">
-            <label className="w-[33%]" htmlFor="create-input">
+            <label className="w-[33%]" htmlFor="create-input1">
               프로젝트 이미지
             </label>
             <input
               ref={imgurlRef}
               onChange={imgUrlChange}
-              id="create-input"
+              id="create-input1"
               placeholder="이미지 주소를 입력해주세요."
               className={`px-[3.3px] py-[3px] w-[67%] bg-opacity-0 border-b-[3px] box-border ${
                 dark
@@ -250,7 +250,7 @@ const GetSpaceData = function ({
                   : 'bg-theme-dark-normal text-theme-dark-normal border-b-theme-dark-strong'
               }`}
             />
-            <label className="w-[25%]" htmlFor="create-end-setPjtEndDate">
+            <label className="w-[25%]" htmlFor="create-end-date">
               프로젝트 종료
             </label>
             <input
