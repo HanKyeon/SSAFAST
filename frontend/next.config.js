@@ -15,14 +15,18 @@ const nextConfig = {
       },
     ],
   },
-  // async rewrites() {
-  //   return [
-  //     {
-  //       source: `/:path*`,
-  //       destination: `https://www.figma.com/:path*`,
-  //     },
-  //   ];
-  // },
+  async rewrites() {
+    return [
+      {
+        source: `/:path*`,
+        destination: `https://www.figma.com/:path*`,
+      },
+      {
+        source: `/:path*`,
+        destination: `https://www.ssafast.com/:path*`,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
