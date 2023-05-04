@@ -10,7 +10,7 @@ interface HeadProps {
 const MetaHead = function ({
   title = `SSAFAST`,
   description = `SSAFAST, 빠른 프로젝트 개발 도우미`,
-  image = `/assets/images/Logo.png`,
+  image = `/assets/images/LightLogo.png`,
   url = ``,
 }: HeadProps) {
   return (
