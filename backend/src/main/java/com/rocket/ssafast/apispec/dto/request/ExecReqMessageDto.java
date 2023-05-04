@@ -27,5 +27,5 @@ public class ExecReqMessageDto {
 
 	Map<String, String> params;
 
-	Map<String, Object> body;
+	String body;
 }

@@ -50,6 +50,8 @@ dependencies {
 	// httpclient
 	implementation 'org.apache.httpcomponents:httpclient'
 
+	implementation 'com.googlecode.json-simple:json-simple:1.1'
+
 }
 
 tasks.named('test') {

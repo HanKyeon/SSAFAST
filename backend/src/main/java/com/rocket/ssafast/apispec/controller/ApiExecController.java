@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.bson.json.JsonObject;
 import org.springframework.data.mongodb.repository.DeleteQuery;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +52,7 @@ public class ApiExecController {
 	}
 
 	@PostMapping("/{id}/test/{user_id}")
-	ResponseEntity<?>  testpost(@RequestBody Map<String, String> body, @PathVariable("id") Long id, @PathVariable("user_id") String userId, @RequestParam Long longParam, @RequestParam String stringParam ) {
+	ResponseEntity<?>  testpost(@RequestBody HashMap<String, HashMap<String, String>> body, @PathVariable("id") Long id, @PathVariable("user_id") String userId, @RequestParam Long longParam, @RequestParam String stringParam ) {
 		String result = "post 성공: "+"id: "+id+", userId: "+userId+", longParams: "+longParam+", strParams:"+stringParam+", body:"+body.get("test");
 		Map<String, String> rr = new HashMap<>();
 		rr.put("result", result);
