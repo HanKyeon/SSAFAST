@@ -1,8 +1,6 @@
 package com.rocket.ssafast.dtospec.domain.element;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 import java.util.Map;
@@ -10,6 +8,8 @@ import java.util.Map;
 @Getter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class DtoInfo {
 
     private List<FieldInfo> fields;

@@ -30,11 +30,9 @@ public class DtoSpecDocumentService {
         return dtoInfo;
     }
 
-    public DtoSpecDocument createDtoDocs(DtoInfo dtoInfo){
-        //mysql insert and get pk
-        Long keys = 5L;
+    public DtoSpecDocument createDtoDocs(Long dtoEntityId, DtoInfo dtoInfo){
         DtoSpecDocument document = createOrFindDtosIfExists();
-        document.getDtos().put(keys, dtoInfo);
+        document.getDtos().put(dtoEntityId, dtoInfo);
         return dtoSpecDocumentRepository.save(document).toDto();
     }
 
