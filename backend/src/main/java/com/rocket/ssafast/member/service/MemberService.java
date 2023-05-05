@@ -29,8 +29,8 @@ public class MemberService {
 		return member.get().toResDto();
 	}
 
-	public List<ResMemberDto> findAllByEmailContaining(String email) {
-		List<Member> memberEntitis = memberRepository.findByEmailContaining(email);
+	public List<ResMemberDto> findAllByEmailContaining(Long memberId, String email) {
+		List<Member> memberEntitis = memberRepository.findByIdNotAndEmailContaining(memberId, email);
 		List<ResMemberDto> memberDtos = new ArrayList<>();
 		for(Member member : memberEntitis) {
 			memberDtos.add(member.toResDto());
