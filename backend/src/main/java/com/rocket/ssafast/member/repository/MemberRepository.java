@@ -9,5 +9,5 @@ import com.rocket.ssafast.member.domain.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 	Optional<Member> findByEmail(String email);
-	List<Member> findByEmailContaining(String email);
+	List<Member> findByIdNotAndEmailContaining(Long id, String email);
 }
