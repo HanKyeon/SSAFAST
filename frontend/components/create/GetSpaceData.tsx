@@ -6,7 +6,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { Box } from '../common';
 import SelectedMember from './SelectedMember';
 import SearchedMember from './SearchedMember';
-import { useSearchUser } from '@/hooks/queries/queries';
+import { useSearchUser, useUserData } from '@/hooks/queries/queries';
 
 interface Props {
   savedImgUrl: string;
@@ -200,6 +200,7 @@ const GetSpaceData = function ({
       setSavedMember((oldList) => [...oldList, member]);
     }
   };
+  const { data: userData } = useUserData();
 
   return (
     <>
@@ -287,7 +288,7 @@ const GetSpaceData = function ({
           </div>
           <div className="w-full px-[10%] flex flex-row gap-3">
             <label className="w-[33%]" htmlFor="create-search">
-              프로젝트 초대
+              프로젝트 멤버 검색
             </label>
             <input
               ref={searchRef}
@@ -302,7 +303,7 @@ const GetSpaceData = function ({
             />
           </div>
           <div className="w-full h-[20%] px-[10%] flex flex-row gap-3">
-            <div className="w-[33%]">프로젝트 초대된 인원들</div>
+            <div className="w-[33%]">프로젝트 인원</div>
             <div className="w-[67%] h-full flex flex-row gap-[1%]">
               <Box
                 variant="three"
@@ -320,7 +321,7 @@ const GetSpaceData = function ({
                     );
                   })
                 ) : (
-                  <div>너 있음</div>
+                  <div>자기 자신은 자동으로 들어갑니다!</div>
                 )}
               </Box>
               <Box
@@ -336,7 +337,9 @@ const GetSpaceData = function ({
                           key={`${member.id}-${member.name}-search`}
                           selected={
                             !!savedMember.find(
-                              (oldmem) => oldmem.id === member.id
+                              (oldmem) =>
+                                oldmem.id === member.id ||
+                                oldmem.id === userData?.id
                             )
                           }
                           addHandler={memberSelectHandler}

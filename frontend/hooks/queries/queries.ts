@@ -562,11 +562,9 @@ export const useUserData = function () {
 
 // 검색
 export const useSearchUser = function (email: string) {
-  console.log(email);
   return useQuery<SearchUserResult>({
     queryKey: queryKeys.search(email),
     queryFn: async function () {
-      console.log('작동은 함');
       return apiRequest({
         method: `get`,
         url: `/api/user/list`,
@@ -594,8 +592,6 @@ export const useUserFigmaTokens = function () {
       }).then((res) => res.data);
     },
     onSuccess: function (data) {
-      console.log('피그마 액세스 onSuccess', data.figmaAccessToken);
-      console.log('피그마 액세스 onSuccess', data.figmaRefreshToken);
       if (data) {
         dispatch(
           figmaTokenActions.setAccessToken({

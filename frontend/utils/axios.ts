@@ -73,7 +73,7 @@ apiRequest.interceptors.response.use(
           console.log('토큰 재발급 에러 : ', err);
           store.dispatch(tokenActions.resetTokens({}));
           store.dispatch(DispatchToast('다시 로그인해주세요.', false));
-          window.location.href = 'https://j8a601.p.ssafy.io/member/login';
+          // window.location.href = 'https://www.ssafast.com';
           return Promise.reject(err);
         });
     } else if (response.status === 403) {
