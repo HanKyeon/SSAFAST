@@ -36,7 +36,7 @@ public class ApiFigmaSectionController {
     @GetMapping("")
     public ResponseEntity<?> getApiFigmaSection(@RequestParam Long figmaSectionId, @RequestParam int method, @RequestParam String name){
         try {
-            return new ResponseEntity<>(figmaSectionApiService.getApiFigmaSecton(figmaSectionId, method, name), HttpStatus.OK);
+            return new ResponseEntity<>(figmaSectionApiService.getApiFigmaSection(figmaSectionId, method, name), HttpStatus.OK);
         } catch (CustomException e){
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
         } catch (Exception e) {
