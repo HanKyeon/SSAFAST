@@ -35,7 +35,7 @@ public class FigmaSection {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = FigmaSectionApiEntity.class)
     private List<FigmaSectionApiEntity> figmaSectionApiEntities;
 
     public void updateWorkspace(Workspace workspace) {
