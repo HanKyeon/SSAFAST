@@ -1,10 +1,16 @@
 import { useStoreSelector } from '@/hooks/useStore';
+import { PropsWithChildren, FC, InputHTMLAttributes, RefObject } from 'react';
 
-interface InputPropsType {
+interface InputPropsType extends InputHTMLAttributes<HTMLInputElement> {
   className?: string;
+  inputref?: RefObject<HTMLInputElement>;
 }
 
-const Input = function ({ className }: InputPropsType): JSX.Element {
+const Input = function ({
+  className,
+  inputref,
+  ...rest
+}: PropsWithChildren<InputPropsType>): JSX.Element {
   const { dark: isDark } = useStoreSelector((state) => state.dark);
   const styles = {
     input: `bg-transparent border-b-[1px] outline-none ${
@@ -15,10 +21,12 @@ const Input = function ({ className }: InputPropsType): JSX.Element {
   };
   return (
     <input
-      type="text"
-      title="value"
-      placeholder="value"
+      // type={rest.type}
+      // title="value"
+      // placeholder="value"
+      ref={inputref}
       className={`${className} ${styles['input']}`}
+      {...rest}
     />
   );
 };
