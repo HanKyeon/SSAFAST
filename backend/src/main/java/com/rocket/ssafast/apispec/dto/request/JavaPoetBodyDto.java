@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class BodyDto {
+public class JavaPoetBodyDto {
 	String name;
-	List<FieldDto> fields;
-	List<FieldDto> nestedDtos;
+	List<JavaPoetFieldDto> fields;
+	List<JavaPoetFieldDto> nestedDtos;
 }

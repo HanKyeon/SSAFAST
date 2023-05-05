@@ -10,4 +10,5 @@ public interface CategoryEntityRepository extends JpaRepository<CategoryEntity, 
     Optional<CategoryEntity> findByWorkspaceIdAndName(Long workspaceId, String name);
     List<CategoryEntity> findAllByWorkspaceIdAndName(Long workspaceId, String name);
     List<CategoryEntity> findAllByWorkspaceId(Long workspaceId);
+    void deleteAllByWorkspaceId(Long workspaceId);
 }

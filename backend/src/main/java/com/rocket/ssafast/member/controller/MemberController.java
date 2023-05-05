@@ -48,10 +48,10 @@ public class MemberController {
 	}
 
 	@GetMapping("/list")
-	public ResponseEntity<?> getMemberList(@RequestParam String email) {
+	public ResponseEntity<?> getMemberList(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam String email) {
 		try {
 			Map<String, List> result = new HashMap<>();
-			result.put("users", memberService.findAllByEmailContaining(email));
+			result.put("users", memberService.findAllByEmailContaining(userDetails.getMemberId(), email));
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error("error: ", e);

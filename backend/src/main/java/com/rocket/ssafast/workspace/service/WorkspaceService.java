@@ -1,6 +1,8 @@
 package com.rocket.ssafast.workspace.service;
 
+import com.rocket.ssafast.apispec.domain.Entity.ApiSpecEntity;
 import com.rocket.ssafast.apispec.domain.Entity.CategoryEntity;
+import com.rocket.ssafast.apispec.repository.ApiSpecRepository;
 import com.rocket.ssafast.apispec.repository.CategoryEntityRepository;
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
@@ -35,10 +37,11 @@ public class WorkspaceService {
     private final MemberRepository memberRepository;
     private final FigmaTokenRepository figmaTokenRepository;
     private final CategoryEntityRepository categoryEntityRepository;
+    private final ApiSpecRepository apiSpecRepository;
 
 
     @Transactional
-    public CreatedWorkspaceDto createWorkspace(String userName, CreateWorkspaceDto createWorkspaceDto) {
+    public CreatedWorkspaceDto createWorkspace(Long memberId, CreateWorkspaceDto createWorkspaceDto) {
         //입력값 null 검사
         if (createWorkspaceDto.getName() == null || createWorkspaceDto.getFavicon() == null || createWorkspaceDto.getDescription() == null || createWorkspaceDto.getFigmaFileId() == null || createWorkspaceDto.getFigmaFileName() == null
         || createWorkspaceDto.getFigmaAccessToken() == null || createWorkspaceDto.getFigmaRefreshToken() == null) {
@@ -57,7 +60,10 @@ public class WorkspaceService {
         //baseurl workspace entity에 추가
         workspace.updateBaseurl(baseurls);
 
-        Optional<Member> leaderOptional = memberRepository.findByEmail(userName);
+        //workspace 저장
+        workspaceRepository.save(workspace);
+
+        Optional<Member> leaderOptional = memberRepository.findById(memberId);
         //member 없으면 400
         if(!leaderOptional.isPresent()){
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
@@ -71,11 +77,15 @@ public class WorkspaceService {
                 .build()
         );
 
-        figmaTokenRepository.save(FigmaToken.builder()
-            .figmaRefresh(createWorkspaceDto.getFigmaRefreshToken())
-            .figmaAccess(createWorkspaceDto.getFigmaAccessToken())
-            .memberId(leader.getId())
-            .build());
+        //피그마 토큰 중복 확인
+        if(!figmaTokenRepository.existsByMemberId(memberId)){
+            figmaTokenRepository.save(FigmaToken.builder()
+                    .figmaRefresh(createWorkspaceDto.getFigmaRefreshToken())
+                    .figmaAccess(createWorkspaceDto.getFigmaAccessToken())
+                    .memberId(leader.getId())
+                    .build());
+        }
+
 
         //루트 카테고리 추가
         categoryEntityRepository.save(CategoryEntity.builder()
@@ -84,7 +94,7 @@ public class WorkspaceService {
                 .build()
         );
 
-        return workspaceRepository.save(workspace).toCreatedDto();
+        return workspace.toCreatedDto();
     }
 
 
@@ -100,6 +110,7 @@ public class WorkspaceService {
             workspaceDtos.add(WorkspaceDto.builder()
                     .id(workspaceMember.getWorkspace().getId())
                     .name(workspaceMember.getWorkspace().getName())
+                            .favicon(workspaceMember.getWorkspace().getFavicon())
                     .build());
         }
         return WorkspaceListDto.builder().workspaces(workspaceDtos).build();
@@ -155,10 +166,21 @@ public class WorkspaceService {
         DetailWorkspaceDto detailWorkspaceDto = updatedWorkspace.get().toDetailDto();
     }
 
+    @Transactional
     public void deleteWorkspace(Long workspaceId){
+        //api 목록 먼저 삭제
+        List<CategoryEntity> categoryEntities = categoryEntityRepository.findAllByWorkspaceId(workspaceId);
+        for(CategoryEntity categoryEntity : categoryEntities){
+            apiSpecRepository.deleteAllByCategoryId(categoryEntity.getId());
+        }
+        //카테고리 삭제
+        categoryEntityRepository.deleteAllByWorkspaceId(workspaceId);
+        
+        //워크스페이스 삭제
         workspaceRepository.deleteById(workspaceId);
     }
 
+    @Transactional
     public CompleteDto getComplete(Long workspaceId){
         Optional<Workspace> workspaceOptional = workspaceRepository.findById(workspaceId);
 
