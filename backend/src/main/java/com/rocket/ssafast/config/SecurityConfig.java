@@ -10,6 +10,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.rocket.ssafast.auth.handler.OAuth2SuccessHandler;
 import com.rocket.ssafast.auth.jwt.JwtAccessDeniedHandler;
@@ -62,6 +65,10 @@ public class SecurityConfig {
 			.headers()
 			.frameOptions().sameOrigin()
 
+			// cors 설정 적용
+			.and()
+			.cors().configurationSource(corsConfigurationSource())
+
 			// OAuth2
 			.and()
 			.oauth2Login()
@@ -70,6 +77,18 @@ public class SecurityConfig {
 			.userService(principalOauth2UserService);	// user 정보 처리
 
 		return http.build();
+	}
+
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource(){
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		CorsConfiguration config = new CorsConfiguration();
+		config.setAllowCredentials(true);       // 서버의 json 응답을 JS로 처리가능하게 함
+		config.addAllowedOriginPattern("*");    // springboot cors 설정 시, allowCredentials(true)와 allowedOrigin("*") 같이 사용 불가하게 업뎃
+		config.addAllowedHeader("*");
+		config.addAllowedMethod("*");
+		source.registerCorsConfiguration("/**", config);
+		return source;
 	}
 
 	@Bean
