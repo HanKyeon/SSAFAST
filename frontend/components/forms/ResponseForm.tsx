@@ -4,10 +4,12 @@ import {
   Controller,
   useFieldArray,
 } from 'react-hook-form';
-import { Box, Button, CircleBtn } from '../common';
+import { Box, Button, CircleBtn, Input } from '../common';
 import { useRef, useState } from 'react';
 import useInput from '@/hooks/useInput';
 import useInputNumber from '@/hooks/useInputNumber';
+import { useStoreDispatch } from '@/hooks/useStore';
+import { DispatchToast } from '@/store';
 
 interface Headers {
   key: string;
@@ -15,7 +17,7 @@ interface Headers {
   desc: string;
 }
 
-interface Field {
+interface Fields {
   key: string;
   type: string;
   desc: string;
@@ -25,7 +27,7 @@ interface Field {
 }
 
 interface Body {
-  fields: Field[];
+  fields: Fields[];
   // dtos: Dto;
 }
 
@@ -36,7 +38,7 @@ interface Response {
   body: Body;
 }
 
-interface FormData {
+interface ResponseFormData {
   response: Response[];
 }
 
@@ -206,13 +208,12 @@ function BodyFields({ control, Keyindex }: { control: any; Keyindex: number }) {
   );
 }
 
-interface PropsEx {
-  data1getter?: (data: any) => void;
+interface ResponseProps {
+  responseGetter?: (data: any) => void;
 }
 
-const ResponseForm = function ({ data1getter }: PropsEx) {
-  // const [code, setCode] = useState<number>(0);
-  // const [description, setDescription] = useState<string>('');
+const ResponseForm = function ({ responseGetter }: ResponseProps) {
+  const dispatch = useStoreDispatch();
   const [codeRef, descRef] = [
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
@@ -228,7 +229,7 @@ const ResponseForm = function ({ data1getter }: PropsEx) {
     onResetHandler: descReset,
   } = useInput(descRef);
 
-  const methods = useForm<FormData>({
+  const methods = useForm<ResponseFormData>({
     defaultValues: undefined,
     // {
     //   response: [
@@ -276,18 +277,49 @@ const ResponseForm = function ({ data1getter }: PropsEx) {
   };
   const submitHandler = function (data: any) {
     console.log('이건 리스폰스에서 찍힌 콘솔', data);
-    if (data1getter) {
-      data1getter(data);
+
+    if (responseGetter) {
+      responseGetter(data);
     }
   };
+
+  const addComponentHandler = function () {
+    if (codeRef?.current?.value.length !== 3) {
+      dispatch(DispatchToast('상태 코드의 길이는 3자리여야 합니다!', false));
+    } else if (descRef?.current?.value === '') {
+      dispatch(DispatchToast('상태코드에 대한 설명을 입력해 주세요!', false));
+    } else {
+      addComponent();
+    }
+  };
+
   return (
     <FormProvider {...methods}>
-      <Box>
-        <input type="number" ref={codeRef} onChange={codeChange} />
-        <input type="text" ref={descRef} onChange={descChange} />
-        <Button type="button" isEmpty onClick={addComponent}>
-          add
-        </Button>
+      <Box className="overflow-y-scroll pt-5 w-full h-full">
+        <form onSubmit={handleSubmit(addComponentHandler)}>
+          <div className="flex flex-row gap-4 items-center justify-center">
+            <Input
+              type="number"
+              inputref={codeRef}
+              onChange={codeChange}
+              placeholder="Code"
+              min={0}
+              maxLength={3}
+              pattern="^[0-9]*$"
+            />
+            <Input
+              type="text"
+              inputref={descRef}
+              onChange={descChange}
+              placeholder="description"
+              maxLength={300}
+            />
+
+            <Button type="submit" isEmpty>
+              add
+            </Button>
+          </div>
+        </form>
         <form onSubmit={handleSubmit((data) => submitHandler(data))}>
           <>
             {responseFields.map((item, index) => (
