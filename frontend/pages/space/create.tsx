@@ -25,10 +25,6 @@ import useInput from '@/hooks/useInput';
 import { queryKeys } from '@/hooks/queries/QueryKeys';
 import apiRequest from '@/utils/axios';
 import MetaHead from '@/components/common/MetaHead';
-import { toastActions } from '@/store/toast-slice';
-import figmaAxios from '@/utils/figmaAxios';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { exActions } from '@/store/ex-slice';
 
 // 상수 스타일
 const customStyles = (dark: boolean, selected: boolean) =>
@@ -96,29 +92,8 @@ const SpaceCreatePage =
     const [pjtStartDate, setPjtStartDate] = useState<any>();
     const [pjtEndDate, setPjtEndDate] = useState<any>();
     const [pjtMemberList, setPjtMemberList] = useState<
-      { id: number | string; memberName: string; memberProfileImg: string }[]
-    >([
-      {
-        id: 12,
-        memberName: `gd1`,
-        memberProfileImg: `https://w7.pngwing.com/pngs/9/929/png-transparent-pokemon-charmander-pikachu-pokemon-x-and-y-charmander-charizard-charmander-food-orange-vertebrate-thumbnail.png`,
-      },
-      {
-        id: 123,
-        memberName: `gd2`,
-        memberProfileImg: `https://w7.pngwing.com/pngs/9/929/png-transparent-pokemon-charmander-pikachu-pokemon-x-and-y-charmander-charizard-charmander-food-orange-vertebrate-thumbnail.png`,
-      },
-      {
-        id: 124,
-        memberName: `gd3`,
-        memberProfileImg: `https://w7.pngwing.com/pngs/9/929/png-transparent-pokemon-charmander-pikachu-pokemon-x-and-y-charmander-charizard-charmander-food-orange-vertebrate-thumbnail.png`,
-      },
-      {
-        id: 1233,
-        memberName: `gd4`,
-        memberProfileImg: `https://w7.pngwing.com/pngs/9/929/png-transparent-pokemon-charmander-pikachu-pokemon-x-and-y-charmander-charizard-charmander-food-orange-vertebrate-thumbnail.png`,
-      },
-    ]);
+      { id: number | string; name: string; profileImg: string }[]
+    >([]);
     // pjtMemberList.map((member) => member.id) // 아이디 리스트
     const [baseUrlList, setBaseUrlList] = useState<string>(``);
     // step 3

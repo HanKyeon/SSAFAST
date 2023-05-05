@@ -36,7 +36,7 @@ figma // 로그아웃 정도 초기화 고민할듯
 `;
 export const queryKeys = {
   // 검색 기능
-  search: () => [`search`] as const,
+  search: (email: string) => [`search`, { email }] as const,
 
   // 유저 개인 기능
   user: () => [`user`] as const,

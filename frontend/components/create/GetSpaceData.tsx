@@ -6,6 +6,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { Box } from '../common';
 import SelectedMember from './SelectedMember';
 import SearchedMember from './SearchedMember';
+import { useSearchUser } from '@/hooks/queries/queries';
 
 interface Props {
   savedImgUrl: string;
@@ -20,13 +21,11 @@ interface Props {
   setEndDate: Dispatch<SetStateAction<any>>;
   savedMember: {
     id: number | string;
-    memberName: string;
-    memberProfileImg: string;
+    name: string;
+    profileImg: string;
   }[];
   setSavedMember: Dispatch<
-    SetStateAction<
-      { id: number | string; memberName: string; memberProfileImg: string }[]
-    >
+    SetStateAction<{ id: number | string; name: string; profileImg: string }[]>
   >;
   savedBaseUrlList: string;
   setBaseUrlList: Dispatch<SetStateAction<string>>;
@@ -49,9 +48,6 @@ const GetSpaceData = function ({
   setBaseUrlList,
 }: Props) {
   const { dark } = useStoreSelector((state) => state.dark);
-  const [searchList, setSearchList] = useState<
-    { id: number | string; memberName: string; memberProfileImg: string }[]
-  >([]);
   const [
     imgurlRef,
     nameRef,
@@ -95,7 +91,7 @@ const GetSpaceData = function ({
     setFstData: endDateSet,
   } = useInput(endDateRef);
   const {
-    inputData: searchInput,
+    debouncedData: searchInput,
     onChangeHandler: searchChange,
     setFstData: searchSet,
   } = useInput(searchRef);
@@ -104,6 +100,15 @@ const GetSpaceData = function ({
     onChangeHandler: baseUrlInputChange,
     setFstData: baseUrlInputSet,
   } = useInput(baseUrlInputRef, 6000);
+  // const [searchList, setSearchList] = useState<
+  //   { id: number | string; name: string; profileImg: string }[]
+  // >([]);
+  const {
+    data: searchList,
+    isLoading,
+    isError,
+  } = useSearchUser(searchInput || ``);
+  // console.log(searchInput, searchEmailKey);
 
   // 이전에 저장 된 값 넣기
   useEffect(function () {
@@ -153,33 +158,48 @@ const GetSpaceData = function ({
     [baseUrlInput]
   );
 
-  useEffect(
-    function () {
-      if (searchInput.trim().length === 0) {
-        return;
-      }
-      const cancelToken = axios.CancelToken;
-      const source = cancelToken.source();
-      const id = setTimeout(function () {
-        apiRequest({
-          method: `get`,
-          url: `/api/user/list`,
-          params: {
-            email: searchInput,
-          },
-          cancelToken: source.token,
-        }).then((res) => {
-          console.log(res);
-          setSearchList(() => res.data.users);
-        });
-      }, 500);
-      return function () {
-        source.cancel();
-        clearTimeout(id);
-      };
-    },
-    [searchInput]
-  );
+  // 아래는 직접 검색 날리려 했던 것.
+  // useEffect(
+  //   function () {
+  //     if (searchInput.trim().length === 0) {
+  //       return;
+  //     }
+  //     const cancelToken = axios.CancelToken;
+  //     const source = cancelToken.source();
+  //     const id = setTimeout(function () {
+  //       apiRequest({
+  //         method: `get`,
+  //         url: `/api/user/list`,
+  //         params: {
+  //           email: searchInput,
+  //         },
+  //         cancelToken: source.token,
+  //       }).then((res) => {
+  //         console.log(res);
+  //         setSearchList(() => res.data.users);
+  //       });
+  //     }, 500);
+  //     return function () {
+  //       source.cancel();
+  //       clearTimeout(id);
+  //     };
+  //   },
+  //   [searchInput]
+  // );
+
+  const memberSelectHandler = function (member: {
+    id: string | number;
+    name: string;
+    profileImg: string;
+  }) {
+    if (!!savedMember.find((sMember) => sMember.id === member.id)) {
+      setSavedMember((oldList) =>
+        oldList.filter((oldmember) => oldmember.id !== member.id)
+      );
+    } else {
+      setSavedMember((oldList) => [...oldList, member]);
+    }
+  };
 
   return (
     <>
@@ -294,7 +314,8 @@ const GetSpaceData = function ({
                     return (
                       <SelectedMember
                         member={member}
-                        key={`${member.id}-${member.memberName}-selected`}
+                        key={`${member.id}-${member.name}-selected`}
+                        addHandler={memberSelectHandler}
                       />
                     );
                   })
@@ -307,12 +328,18 @@ const GetSpaceData = function ({
                 fontType="normal"
                 className="w-[49%] text-[24px] px-3 py-2 h-full overflow-y-scroll flex flex-col gap-3"
               >
-                {searchList.length
+                {searchList && searchList.length
                   ? searchList.map((member) => {
                       return (
                         <SearchedMember
                           member={member}
-                          key={`${member.id}-${member.memberName}-search`}
+                          key={`${member.id}-${member.name}-search`}
+                          selected={
+                            !!savedMember.find(
+                              (oldmem) => oldmem.id === member.id
+                            )
+                          }
+                          addHandler={memberSelectHandler}
                         />
                       );
                     })
