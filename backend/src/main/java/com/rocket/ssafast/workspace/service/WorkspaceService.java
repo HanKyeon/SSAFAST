@@ -110,6 +110,7 @@ public class WorkspaceService {
             workspaceDtos.add(WorkspaceDto.builder()
                     .id(workspaceMember.getWorkspace().getId())
                     .name(workspaceMember.getWorkspace().getName())
+                            .favicon(workspaceMember.getWorkspace().getFavicon())
                     .build());
         }
         return WorkspaceListDto.builder().workspaces(workspaceDtos).build();
