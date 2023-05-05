@@ -531,7 +531,7 @@ export const useSpaceList = function () {
   const { accessToken, refreshToken } = useStoreSelector(
     (state) => state.token
   );
-  return useQuery<SpaceShortcut[]>({
+  return useQuery<{ workspaces: SpaceShortcut[] }>({
     queryKey: queryKeys.spaceList(),
     queryFn: async function () {
       return apiRequest({
