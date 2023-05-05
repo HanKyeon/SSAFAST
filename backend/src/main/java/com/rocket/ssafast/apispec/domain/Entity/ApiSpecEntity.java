@@ -1,14 +1,10 @@
 package com.rocket.ssafast.apispec.domain.Entity;
 
-import com.rocket.ssafast.apispec.domain.Enum.APIStatus;
-import com.rocket.ssafast.apispec.domain.Enum.HTTPMethod;
 import com.rocket.ssafast.apispec.dto.response.ApiInfoDto;
 import com.rocket.ssafast.member.domain.Member;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -58,8 +54,9 @@ public class ApiSpecEntity {
     @CreationTimestamp
     private LocalDateTime createdTime;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "apiSpecEntity")
-    private List<FigmaSectionApiEntity> figmaSectionApiEntities;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "api_info_id")
+    private List<FigmaSectionApi> figmaSectionApiEntities;
 
     public void updateCategory(CategoryEntity categoryEntity){
         this.category = categoryEntity;

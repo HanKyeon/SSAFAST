@@ -1,7 +1,7 @@
 package com.rocket.ssafast.apispec.service;
 
 import com.rocket.ssafast.apispec.domain.Entity.ApiSpecEntity;
-import com.rocket.ssafast.apispec.domain.Entity.FigmaSectionApiEntity;
+import com.rocket.ssafast.apispec.domain.Entity.FigmaSectionApi;
 import com.rocket.ssafast.apispec.repository.ApiSpecRepository;
 import com.rocket.ssafast.apispec.repository.FigmaSectionApiRepository;
 import com.rocket.ssafast.exception.CustomException;
@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,14 +38,14 @@ public class FigmaSectionApiService {
                 throw new CustomException(ErrorCode.API_NOT_FOUND);
             }
 
-            figmaSectionApiRepository.save(FigmaSectionApiEntity.builder()
-                    .apiSpecEntity(apiSpecEntityOptional.get())
+            figmaSectionApiRepository.save(FigmaSectionApi.builder()
+                    .apiInfoId(apiId)
                     .figmaSectionId(figmaSectionId).build());
         }
     }
 
     @Transactional
-    public Object getApiFigmaSecton(Long figmaSectionId, int method, String name) {
+    public Object getApiFigmaSection(Long figmaSectionId, int method, String name) {
         return "";
     }
 
