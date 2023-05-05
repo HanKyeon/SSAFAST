@@ -20,7 +20,6 @@ const GoogleLoadingPage = function (
 
   const login = () => {
     const data = router.query;
-    console.log(data);
     const refresh = data[`refresh-token`];
     const access = data[`access-token`];
 
@@ -28,6 +27,7 @@ const GoogleLoadingPage = function (
     if (refresh) {
       setCookie('refresh', refresh);
       dispatch(tokenActions.setAccessToken({ accessToken: access }));
+      dispatch(tokenActions.setRefreshToken({ refreshToken: refresh }));
     }
     router.push(`/space`);
   };

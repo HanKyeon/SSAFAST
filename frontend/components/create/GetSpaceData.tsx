@@ -328,8 +328,8 @@ const GetSpaceData = function ({
                 fontType="normal"
                 className="w-[49%] text-[24px] px-3 py-2 h-full overflow-y-scroll flex flex-col gap-3"
               >
-                {searchList && searchList.length
-                  ? searchList.map((member) => {
+                {searchList?.users && searchList.users.length
+                  ? searchList.users.map((member) => {
                       return (
                         <SearchedMember
                           member={member}

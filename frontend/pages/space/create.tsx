@@ -164,13 +164,15 @@ const SpaceCreatePage =
           return res;
         })
         .then((res) => {
-          apiRequest({
-            method: `post`,
-            url: `/api/workspace/member`,
-            data: {
-              memberIds: pjtMemberList.map((member) => member.id),
-            },
-          });
+          if (pjtMemberList.length) {
+            apiRequest({
+              method: `post`,
+              url: `/api/workspace/member`,
+              data: {
+                memberIds: pjtMemberList.map((member) => member.id),
+              },
+            });
+          }
         })
         .then((res) => {
           queryClient.invalidateQueries(queryKeys.space());
