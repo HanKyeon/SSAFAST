@@ -29,6 +29,7 @@ public class FigmaSectionService {
     private final FigmaSectionRepository figmaSectionRepository;
     private final WorkspaceRepository workspaceRepository;
     private final FigmaTokenRepository figmaTokenRepository;
+
     @Transactional
     public void createFigmaSection(Long workspaceId, CreateFigmaSectionDto createFigmaSectionDto) {
         Optional<Workspace> workspaceOptional = workspaceRepository.findById(workspaceId);

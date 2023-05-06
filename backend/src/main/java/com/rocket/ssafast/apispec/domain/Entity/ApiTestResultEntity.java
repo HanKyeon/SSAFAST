@@ -31,9 +31,8 @@ public class ApiTestResultEntity {
     @CreationTimestamp
     private LocalDateTime createdTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @Column(name = "member_id")
+    private Long memberId;
 
     @Column(name = "api_info_id")
     private Long apiInfoId;
