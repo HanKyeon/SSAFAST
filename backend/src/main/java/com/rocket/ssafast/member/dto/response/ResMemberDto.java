@@ -1,5 +1,7 @@
 package com.rocket.ssafast.member.dto.response;
 
+import com.rocket.ssafast.member.domain.Member;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,5 +20,11 @@ public class ResMemberDto {
 		this.name = name;
 		this.email = email;
 		this.profileImg = profileImg;
+	}
+
+	public Member toEntity() {
+		return Member.builder()
+			.id(id)
+			.build();
 	}
 }

@@ -27,6 +27,10 @@ public class UserDetailsImpl implements UserDetails, OAuth2User {
 		return null;
 	}
 
+	public Member getMember() {
+		return this.member;
+	}
+
 	public Long getMemberId() {
 		return member.getId();
 	}
