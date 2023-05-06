@@ -3,6 +3,33 @@ import { Box } from '@/components/common';
 import { useState } from 'react';
 import ResponseJSON from './ResponseJSON';
 
+const resDocMockup = {
+  headers: [
+    {
+      key: 'Content-type',
+      type: 'string',
+      desc: 'content-type 입력. application/json 해라',
+    },
+  ],
+  body: [
+    {
+      key: 'userid',
+      type: 'string',
+      desc: '이건 userid임',
+    },
+    {
+      key: 'user',
+      type: 'userDTO',
+      desc: 'user에 대한 DTO',
+      obj: [
+        { key: 'userid', type: 'int', desc: '이건 userid임' },
+        { key: 'username', type: 'string', desc: 'username 입니당' },
+        { key: 'age', type: 'ing', desc: 'age 입력. null일 수도 있음' },
+      ],
+    },
+  ],
+};
+
 const ResponseBox = function (): JSX.Element {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [isOpenJSON, setIsOpenJSON] = useState<boolean>(true);

@@ -6,7 +6,7 @@ import { TbSend } from 'react-icons/tb';
 import { HiOutlineFolderArrowDown } from 'react-icons/hi2';
 import { IoSaveOutline } from 'react-icons/io5';
 import MethodBadge from '@/components/apis/MethodBadge';
-import RequestBox from './RequestBox';
+import RequestBox from './ReqBox';
 import ResponseBox from './ResponseBox';
 
 interface Props {

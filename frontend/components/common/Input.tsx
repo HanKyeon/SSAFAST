@@ -10,7 +10,7 @@ const Input = function ({ className }: InputPropsType): JSX.Element {
     input: `bg-transparent border-b-[1px] outline-none ${
       isDark
         ? `border-theme-white-normal placeholder:text-grayscale-deepdarklight`
-        : `border-theme-dark-normal placeholder:text-grayscale-dark`
+        : `border-theme-dark-normal placeholder:text-grayscale-deepdarklight`
     }`,
   };
   return (

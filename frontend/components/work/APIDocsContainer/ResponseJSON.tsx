@@ -32,10 +32,10 @@ const ResponseJSON = function (): JSX.Element {
   }, []);
   return (
     <div
-      className={`border-[1px] border-grayscale-dark rounded-[8px] p-2 min-h-[30px] flex gap-2`}
+      className={`border-[1px] border-grayscale-dark rounded-[8px] p-2 min-h-[30px] flex gap-2 text-content`}
     >
       <div className={`w-[20px] h-full text-right`}>1</div>
-      <div className={`flex-1 h-full`}>{jsonData}</div>
+      <pre className={`flex-1 h-full overflow-scroll`}>{jsonData}</pre>
     </div>
   );
 };
