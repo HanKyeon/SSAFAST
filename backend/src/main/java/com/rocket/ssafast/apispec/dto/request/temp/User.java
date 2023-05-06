@@ -1,4 +1,4 @@
-package com.rocket.ssafast.apispec.service;
+package com.rocket.ssafast.apispec.dto.request.temp;
 
 import java.util.List;
 

@@ -19,6 +19,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import com.rocket.ssafast.apispec.domain.Document.element.ApiTestResultInfo;
 import com.rocket.ssafast.apispec.domain.Entity.ApiTestResultEntity;
 import com.rocket.ssafast.member.domain.Member;
+import com.rocket.ssafast.member.dto.response.ResMemberDto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,7 +35,7 @@ public class ApiTestResultDto {
 	@NotEmpty
 	private String name;
 
-	private Long memberId;
+	private ResMemberDto member;
 
 	@NotNull
 	private Long apiInfoId;
@@ -57,7 +58,7 @@ public class ApiTestResultDto {
 	public ApiTestResultEntity toEntity() {
 		return ApiTestResultEntity.builder()
 			.name(name)
-			.memberId(memberId)
+			.member(member.toEntity())
 			.apiInfoId(apiInfoId)
 			.build();
 	}

@@ -1,7 +1,9 @@
 package com.rocket.ssafast.apispec.service;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -24,9 +26,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rocket.ssafast.apispec.domain.Document.ApiTestResultDocument;
+import com.rocket.ssafast.apispec.domain.Entity.ApiTestResultEntity;
 import com.rocket.ssafast.apispec.domain.Enum.HTTPMethod;
 import com.rocket.ssafast.apispec.dto.request.ApiExecReqMessageDto;
 import com.rocket.ssafast.apispec.dto.request.ApiTestResultDto;
+import com.rocket.ssafast.apispec.dto.response.ApiTestResultSummaryDto;
+import com.rocket.ssafast.apispec.repository.ApiSpecRepository;
 import com.rocket.ssafast.apispec.repository.ApiTestResultDocsRepository;
 import com.rocket.ssafast.apispec.repository.ApiTestResultEntityRepository;
 import com.rocket.ssafast.exception.CustomException;
@@ -43,6 +48,7 @@ public class ApiExecService {
 	private static final RestTemplate restTemplate;
 	private final ApiTestResultDocsRepository apiTestResultDocsRepository;
 	private final ApiTestResultEntityRepository apiTestResultEntityRepository;
+	private final ApiSpecRepository apiSpecRepository;
 
 	public ResponseEntity<?> requestAPI(ApiExecReqMessageDto apiExecReqMessageDto) throws JsonProcessingException {
 
@@ -119,7 +125,7 @@ public class ApiExecService {
 
 	@Transactional
 	public void saveApiTestResult(ApiTestResultDto apiTestResultDto) {
-		if(apiTestResultDto.getName() == null || apiTestResultDto.getMemberId() == null || apiTestResultDto.getApiInfoId() == null) {
+		if(apiTestResultDto.getName() == null || apiTestResultDto.getMember() == null || apiTestResultDto.getApiInfoId() == null) {
 			throw new CustomException(ErrorCode.BAD_REQUEST);
 		}
 
@@ -131,12 +137,27 @@ public class ApiExecService {
 		apiTestResultDocsRepository.save(document);
 	}
 
+
 	public ApiTestResultDocument createOrFinResultsIfExists(){
 		Optional<ApiTestResultDocument> document = apiTestResultDocsRepository.findById(SSAFAST_TEST_ID);
 
 		if(document.isPresent()) { return document.get(); }
 
 		return new ApiTestResultDocument(SSAFAST_TEST_ID, new HashMap<>());
+	}
+
+	public List<ApiTestResultSummaryDto> getAPIExecResults(long apiId) {
+		if(!apiSpecRepository.findById(apiId).isPresent()) {
+			throw new CustomException(ErrorCode.API_NOT_FOUND);
+		}
+
+		List<ApiTestResultSummaryDto> results = new ArrayList<>();
+
+		List<ApiTestResultEntity> entities = apiTestResultEntityRepository.findAllByApiInfoId(apiId);
+		for(ApiTestResultEntity entity : entities) {
+			results.add(entity.toSummaryDto());
+		}
+		return results;
 	}
 
 	static {

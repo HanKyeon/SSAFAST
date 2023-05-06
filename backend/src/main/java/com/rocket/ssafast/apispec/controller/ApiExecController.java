@@ -8,10 +8,9 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rocket.ssafast.apispec.dto.request.ApiExecReqMessageDto;
 import com.rocket.ssafast.apispec.dto.request.ApiTestResultDto;
 import com.rocket.ssafast.apispec.service.ApiExecService;
-import com.rocket.ssafast.apispec.service.User;
+import com.rocket.ssafast.apispec.dto.request.temp.User;
 import com.rocket.ssafast.auth.domain.UserDetailsImpl;
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
@@ -56,9 +55,22 @@ public class ApiExecController {
 	@PostMapping("/response")
 	ResponseEntity<?> saveAPIExecResult(@AuthenticationPrincipal UserDetailsImpl userDetails, @Valid @RequestBody ApiTestResultDto apiTestResultDto) {
 		try {
-			apiTestResultDto.setMemberId(userDetails.getMemberId());
+			apiTestResultDto.setMember(userDetails.getMember().toResDto());
 			apiExecService.saveApiTestResult(apiTestResultDto);
 			return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+		} catch (CustomException e) {
+			return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
+		} catch (Exception e) {
+			log.error("error: ", e);
+			ErrorCode error = ErrorCode.INTERNAL_SERVER_ERROR;
+			return new ResponseEntity<>(error.getMessage(), error.getHttpStatus());
+		}
+	}
+
+	@GetMapping("/response/list")
+	ResponseEntity<?> getAPIExecResults(@RequestParam Long apiId) {
+		try {
+			return new ResponseEntity<>(apiExecService.getAPIExecResults(apiId), HttpStatus.OK);
 		} catch (CustomException e) {
 			return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
 		} catch (Exception e) {

@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import com.rocket.ssafast.member.dto.response.ResMemberDto;
+import com.rocket.ssafast.member.dto.response.ResMemberSummaryDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,8 +37,12 @@ public class Member {
 	public ResMemberDto toResDto() {
 		return ResMemberDto.builder()
 			.id(id)
+			.build();
+	}
+
+	public ResMemberSummaryDto toResSummaryDto() {
+		return ResMemberSummaryDto.builder()
 			.name(name)
-			.email(email)
 			.profileImg(profileImg)
 			.build();
 	}

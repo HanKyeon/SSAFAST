@@ -1,6 +1,4 @@
-package com.rocket.ssafast.apispec.service;
-
-import java.util.List;
+package com.rocket.ssafast.apispec.dto.request.temp;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,9 +7,10 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 @ToString
-public class Order {
-	private int id;
-	private List<Item> items;
+public class Address {
+	private String street;
+	private String city;
+	private String state;
 
 	// getters and setters
 }
