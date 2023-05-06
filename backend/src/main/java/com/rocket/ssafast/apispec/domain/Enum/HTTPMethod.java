@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,10 +32,10 @@ public enum HTTPMethod {
             Collectors.collectingAndThen(
                 Collectors.toMap(HTTPMethod::number, HTTPMethod::status), Collections::unmodifiableMap));
 
-    private static final Map<String, HttpMethod> METHOD_BY_STATUS =
+    private static final Map<Integer, HttpMethod> METHOD_BY_NUMBER =
         Stream.of(values()).collect(
             Collectors.collectingAndThen(
-                Collectors.toMap(HTTPMethod::status, HTTPMethod::method), Collections::unmodifiableMap));
+                Collectors.toMap(HTTPMethod::number, HTTPMethod::method), Collections::unmodifiableMap));
 
 
     public int number(){ return number; }
@@ -45,6 +44,6 @@ public enum HTTPMethod {
 
     public static String getStatusByNumber(int number){ return BY_NUMBER.get(number).toString(); }
     public static int getNumberByStatus(String status) { return BY_STATUS.get(status); }
-    public static HttpMethod getMethodByStatus(String status) { return METHOD_BY_STATUS.get(status); }
+    public static HttpMethod getMethodByNumber(int number) { return METHOD_BY_NUMBER.get(number); }
 }
 
