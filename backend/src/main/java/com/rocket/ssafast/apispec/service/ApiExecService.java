@@ -26,6 +26,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rocket.ssafast.apispec.domain.Document.ApiTestResultDocument;
+import com.rocket.ssafast.apispec.domain.Document.element.ApiTestResultInfo;
 import com.rocket.ssafast.apispec.domain.Entity.ApiTestResultEntity;
 import com.rocket.ssafast.apispec.domain.Enum.HTTPMethod;
 import com.rocket.ssafast.apispec.dto.request.ApiExecReqMessageDto;
@@ -158,6 +159,18 @@ public class ApiExecService {
 			results.add(entity.toSummaryDto());
 		}
 		return results;
+	}
+
+	public Map<String, Object> getAPIExecDetailResult(long resId) {
+		if(!apiTestResultEntityRepository.findById(resId).isPresent()) {
+			throw new CustomException(ErrorCode.API_NOT_FOUND);
+		}
+
+		Map<String, Object> detailResult = apiTestResultDocsRepository.findResultsByIdAndKey(SSAFAST_TEST_ID, resId);
+		if(detailResult == null) {
+			throw new CustomException(ErrorCode.DETAIL_RESULT_NOT_FOUND);
+		}
+		return detailResult;
 	}
 
 	static {

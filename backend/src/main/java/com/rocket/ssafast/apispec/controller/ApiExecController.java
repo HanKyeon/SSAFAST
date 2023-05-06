@@ -80,6 +80,19 @@ public class ApiExecController {
 		}
 	}
 
+	@GetMapping("/response")
+	ResponseEntity<?> getAPIExecDetailResult(@RequestParam Long resId) {
+		try {
+			return new ResponseEntity<>(apiExecService.getAPIExecDetailResult(resId), HttpStatus.OK);
+		} catch (CustomException e) {
+			return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
+		} catch (Exception e) {
+			log.error("error: ", e);
+			ErrorCode error = ErrorCode.INTERNAL_SERVER_ERROR;
+			return new ResponseEntity<>(error.getMessage(), error.getHttpStatus());
+		}
+	}
+
 	@PostMapping("/{id}/test/{user_id}")
 	ResponseEntity<?>  testpost(@RequestBody User body, @PathVariable("id") Long id, @PathVariable("user_id") String userId, @RequestParam Long longParam, @RequestParam String stringParam ) {
 		String result = "post 성공: "+"id: "+id+", userId: "+userId+", longParams: "+longParam+", strParams:"+stringParam+", body:"+body;
