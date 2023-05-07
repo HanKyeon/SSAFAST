@@ -37,6 +37,9 @@ public class Member {
 	public ResMemberDto toResDto() {
 		return ResMemberDto.builder()
 			.id(id)
+			.name(name)
+			.email(email)
+			.profileImg(profileImg)
 			.build();
 	}
 
