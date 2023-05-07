@@ -78,7 +78,7 @@ export interface FigmaTokenData {
 }
 
 export interface SearchUserResult {
-  users: { id: string | number; name: string; profileImg: string }[];
+  users: { id: number; name: string; profileImg: string }[];
 }
 
 export interface User {
@@ -91,6 +91,7 @@ export interface User {
 export interface SpaceShortcut {
   id: string | number;
   name: string;
+  favicon: string;
 }
 
 export interface SpaceDetail {
@@ -115,7 +116,7 @@ export interface SpaceDetail {
 }
 
 export interface TeamMember {
-  id: string | number;
+  id: number;
   profileImg: string;
   name: string;
 }
@@ -127,7 +128,7 @@ export interface TeamMemberList {
 export interface SpaceFigma {
   id: string | number;
   sectionUrl: string | null;
-  sectionId: string;
+  refreshId: string;
   name: string;
 }
 
@@ -186,7 +187,7 @@ export const useApiResultResponseDtoCode = function (
     queryFn: function () {
       return apiRequest({
         method: `get`,
-        url: `/api/api/class`,
+        url: `/api/api-pre/class`,
         params: {
           apiId,
         },
@@ -206,7 +207,7 @@ export const useApiResultRequest = function (
     queryFn: function () {
       return apiRequest({
         method: `get`,
-        url: `/api/api/request`,
+        url: `/api/api-pre/request`,
         params: {
           apiId: apiId,
         },
@@ -227,7 +228,7 @@ export const useApiResultResponseDetail = function (
     queryFn: async function () {
       return apiRequest({
         method: `get`,
-        url: `/api/api/response`,
+        url: `/api/api-pre/response`,
         params: {
           resId: responseId,
         },
@@ -247,7 +248,7 @@ export const useApiResultResponseList = function (
     queryFn: async function () {
       return apiRequest({
         method: `get`,
-        url: `/api/api/response/list`,
+        url: `/api/api-pre/response/list`,
         params: {
           apiId: apiId,
         },
@@ -267,7 +268,7 @@ export const useDtoAxiosConfig = function (
     queryFn: async function () {
       return apiRequest({
         method: `get`,
-        url: `/api/api/axios`,
+        url: `/api/api-pre/axios`,
         params: {
           apiId: apiId,
         },
@@ -330,14 +331,18 @@ export const useDtoList = function (spaceId: string | number) {
   });
 };
 
+interface CategoryList {
+  categoryList: { id: number | string; name: string }[];
+}
+
 // 카테고리 조회
 export const useSpaceCategory = function (spaceId: string | number) {
-  return useQuery({
+  return useQuery<CategoryList>({
     queryKey: queryKeys.spaceCategoryList(spaceId),
     queryFn: function () {
       return apiRequest({
         method: `get`,
-        url: `/api/api/category`,
+        url: `/api/api-pre/category/list`,
         params: {
           workspaceId: spaceId,
         },
@@ -346,21 +351,39 @@ export const useSpaceCategory = function (spaceId: string | number) {
   });
 };
 
-// api 목록 조회
+interface sectionsApi {
+  filteredApiList: {
+    category: {
+      id: number;
+      name: string;
+      apiList: {
+        id: number;
+        name: string;
+        description: string;
+        method: string;
+        status: number | string;
+      }[];
+    };
+  }[];
+}
+
+// 섹션 별 api 목록 조회
 export const useSectionsApi = function (
   spaceId: string | number,
-  sectionId: string | number
+  sectionId: string | number,
+  method?: string | number,
+  name?: string
 ) {
-  return useQuery<any>({
+  return useQuery<sectionsApi>({
     queryKey: queryKeys.spaceSectionApis(spaceId, sectionId),
     queryFn: async function () {
       return apiRequest({
         method: `get`,
-        url: `/api/figma-section/api-list`,
+        url: `/api/api-pre/figma-section`,
         params: {
           figmaSectionId: sectionId,
-          method: null,
-          name: null,
+          method: method || 0,
+          name: name || '',
         },
       }).then((res) => res.data);
     },
@@ -397,21 +420,35 @@ export const useSectionsApiSearch = function (
   });
 };
 
+interface EachCate {
+  categoryId: number;
+  categoryName: string;
+  apis: {
+    id: number;
+    name: string;
+    description: string;
+    method: string | number;
+    status: number | string;
+    writter: {
+      id: number;
+      name: string;
+      email: string;
+      profileImg: string;
+    };
+  }[];
+}
+interface SpaceApiList {
+  apiCategories: EachCate[];
+}
+
 // space api 목록
 export const useSpaceApis = function (spaceId: string | number) {
-  return useQuery<
-    {
-      id: string | number;
-      name: string;
-      method: string;
-      status: string | number;
-    }[]
-  >({
+  return useQuery<SpaceApiList>({
     queryKey: queryKeys.spaceApiList(spaceId),
     queryFn: async function () {
       return apiRequest({
         method: `get`,
-        url: `/api/api/list`,
+        url: `/api/api-pre/list`,
         params: {
           workspaceId: spaceId,
         },
@@ -423,12 +460,12 @@ export const useSpaceApis = function (spaceId: string | number) {
 
 // space baseUrl 목록
 export const useBaseUrl = function (spaceId: string | number) {
-  return useQuery<{ id: string | number; url: string }[]>({
+  return useQuery<{ baseurls: { id: string | number; url: string }[] }>({
     queryKey: queryKeys.spaceBaseUrl(spaceId),
     queryFn: async function () {
       return apiRequest({
         method: `get`,
-        url: `/api/api/baseurl`,
+        url: `/api/api-pre/baseurl`,
         params: {
           workspaceId: spaceId,
         },
@@ -475,14 +512,18 @@ export const useSpaceApiComplete = function (spaceId: string | number) {
   });
 };
 
+interface SelectedSpaceFrames {
+  figmaSections: SpaceFigma[];
+}
+
 // space가 가진 figma sections
 export const useSpaceFrames = function (spaceId: string | number = ``) {
-  return useQuery<SpaceFigma[]>({
+  return useQuery<SelectedSpaceFrames>({
     queryKey: queryKeys.spaceFigmas(spaceId),
     queryFn: async function () {
       return apiRequest({
         method: `get`,
-        url: `/api/workspace/figma-section/list`, // 여기에 spaceID를 같이 보내야 함. 아니면 params
+        url: `/api/workspace/figma-section/list`,
         params: {
           workspaceId: spaceId,
         },

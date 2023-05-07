@@ -1,53 +1,43 @@
 import { Box } from '@/components/common';
-import axios from 'axios';
+import ToggleModeBtn from '@/components/common/ToggleModeBtn';
+import {
+  useForm,
+  useFieldArray,
+  useFormContext,
+  useFormState,
+  Controller,
+  FormProvider,
+} from 'react-hook-form';
 
 const TestingPage = function () {
-  const clickHandler = function () {
-    const ress = axios({
-      method: `post`,
-      url: `/api/figma`,
-      params: {
-        client_id: `${process.env.NEXT_PUBLIC_FIGMA_ROCKET_APP_CLIENT_ID}`,
-        client_secret: `${process.env.NEXT_PUBLIC_FIGMA_ROCKET_APP_CLIENT_SECRET}`,
-        redirect_uri: `${process.env.NEXT_PUBLIC_HOSTNAME}/figma-loading`,
-        code: 'ueIdquasM8bIIEUrVWlsZLjYY',
-        grant_type: `authorization_code`,
-      },
-    }).then((res) => {
-      console.log(res.data);
-    });
-  };
-  const clickHandler2 = function () {
-    const ress = axios({
-      method: `post`,
-      baseURL: `https://www.figma.com`,
-      url: `/api/oauth/token`,
-      params: {
-        client_id: `${process.env.NEXT_PUBLIC_FIGMA_ROCKET_APP_CLIENT_ID}`,
-        client_secret: `${process.env.NEXT_PUBLIC_FIGMA_ROCKET_APP_CLIENT_SECRET}`,
-        redirect_uri: `${process.env.NEXT_PUBLIC_HOSTNAME}/figma-loading`,
-        code: 'ueIdquasM8bIIEUrVWlsZLjYY',
-        grant_type: `authorization_code`,
-      },
-      // method: `get`,
-      // baseURL: `https://api.figma.com`,
-      // url: `/v1/files/GTrnPhdA7vjujMiA54I2QI`, // figmaId 입력해야함.
-      // params: {
-      //   depth: 3,
-      // },
-      // headers: { Authorization: `` },
-    }).then((res) => {
-      console.log(res.data);
-    });
-  };
+  const userData = { id: 1, name: `견`, profileImg: `` };
+  const methods = useForm({ defaultValues: { ...userData } });
+  const {
+    control,
+    register,
+    clearErrors,
+    formState,
+    getFieldState,
+    getValues, // 사용시 개발자가 원하는 시점에 특정 값을 뽑아 쓸 때 사용.
+    handleSubmit,
+    reset,
+    resetField,
+    setError,
+    setFocus,
+    setValue,
+    trigger,
+    unregister,
+    watch, // 사용 시 form 전체 재 렌더링. 따라서 useWatch 등 사용.
+  } = methods;
+
   return (
     <div>
-      <Box variant="three" onClick={clickHandler}>
-        API Route로 보내보기
-      </Box>
-      <Box variant="three" onClick={clickHandler2}>
-        직접 쏴보기
-      </Box>
+      <ToggleModeBtn />
+      <div>ㅎㅇㅎㅇ</div>
+      {/* <Box onClick={addHandler}>추가하기</Box> */}
+      <FormProvider {...methods}>
+        <div>하이요</div>
+      </FormProvider>
     </div>
   );
 };

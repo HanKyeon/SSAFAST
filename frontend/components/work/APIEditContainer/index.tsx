@@ -45,23 +45,6 @@ const APIEditContainer = function ({ store, serverSideStore }: Props) {
   };
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const { inputData, onChangeHandler, setFstData } = useInput(inputRef);
-  useEffect(
-    function () {
-      if (store.space.inputData) {
-        setFstData(store.space.inputData);
-      }
-    },
-    [store.space.inputData]
-  );
-  useEffect(
-    function () {
-      if (store.space.inputData != undefined) {
-        store.space.inputData = inputData;
-      }
-    },
-    [inputData]
-  );
 
   return (
     <>

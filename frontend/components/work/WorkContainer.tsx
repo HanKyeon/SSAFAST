@@ -13,9 +13,9 @@ import APITestContainer from './APITestContainer';
 import { RTCSpaceData } from '@/pages/space/[spaceId]/work';
 import { Box } from '../common';
 import { useStoreSelector } from '@/hooks/useStore';
+import { yjsStore } from '@/utils/syncedStore';
 
 interface Props {
-  serverSideStore?: RTCSpaceData;
   store: any;
 }
 
@@ -27,7 +27,7 @@ const selectedStyle = (dark: boolean) =>
       : 'border-[3px] border-taro-strong active:border-opacity-100 border-opacity-80 text-taro-strong active:bg-grayscale-light active:bg-opacity-70 active:border-taro-normal active:border-[3px] active:text-taro-normal'
   }` as const;
 
-const WorkContainer = function ({ serverSideStore, store }: Props) {
+const WorkContainer = function ({ store }: Props) {
   const [step, setStep] = useState<number>(1);
   const router = useRouter();
   const { spaceId } = router.query;

@@ -3,6 +3,8 @@ import { Box } from '../common';
 import FigmaListItem from './FigmaListItem';
 import { workFigma } from './presence-type';
 import { useSyncedStore } from '@syncedstore/react';
+import { yjsStore } from '@/utils/syncedStore';
+import { SpaceFigma } from '@/hooks/queries/queries';
 
 const mok = [
   {
@@ -48,6 +50,7 @@ interface Props {
 }
 
 const FigmaList = function ({ figmaList = mok, store }: Props) {
+  const state = useSyncedStore(yjsStore);
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
   const changeIdxHandler = function (idx: number | null) {
     setActiveIdx(() => idx);
@@ -55,14 +58,14 @@ const FigmaList = function ({ figmaList = mok, store }: Props) {
 
   const addSyncedStoreFigmaItem = function () {
     const addItem = {
-      figmaSectionId: `6`,
+      id: `6`,
       sectionUrl:
         'https://thumbnail6.coupangcdn.com/thumbnails/remote/230x230ex/image/vendor_inventory/4dd4/f0211895f2765bf6459771ed1bc6b5c4e53ea4cc6024d291c8aee115445c.jpg',
       refreshId: `232:2759`,
       name: `무야호`,
     };
-    if (store.space.figmaList) {
-      store.space.figmaList.push(addItem);
+    if (store.figmaList) {
+      store.figmaList.push(addItem);
     }
   };
 
@@ -80,15 +83,15 @@ const FigmaList = function ({ figmaList = mok, store }: Props) {
         );
       })} */}
       <Box onClick={addSyncedStoreFigmaItem}>store 관련 테스트 해봅시다.</Box>
-      {store?.space?.figmaList
-        ? store.space.figmaList.map((figmaData: workFigma, idx: number) => {
+      {state?.figmaList
+        ? state.figmaList.map((figmaData: SpaceFigma, idx: number) => {
             return (
               <FigmaListItem
                 figmaData={figmaData}
                 idx={idx}
                 activeIdx={activeIdx}
                 setActive={changeIdxHandler}
-                key={`${figmaData.name}-${idx}-${figmaData.figmaSectionId}`}
+                key={`${figmaData.name}-${idx}-${figmaData.id}`}
               />
             );
           })

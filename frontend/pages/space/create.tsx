@@ -176,6 +176,7 @@ const SpaceCreatePage =
         })
         .then((res) => {
           queryClient.invalidateQueries(queryKeys.space());
+          router.push(`/space`);
         });
     };
 

@@ -27,9 +27,12 @@ const SelectedMember = function ({ member, addHandler }: Props) {
       <img
         src={member.profileImg}
         alt="p"
-        className="h-[50px] w-[50px] object-contain rounded-full"
+        className="h-[50px] w-[50px] object-contain rounded-full p-[6px]"
       />
-      <div className="whitespace-nowrap text-ellipsis w-full h-full overflow-hidden text-[16px] flex items-center">
+      <div
+        title={member.name}
+        className="whitespace-nowrap text-ellipsis w-full h-full overflow-hidden text-[16px] flex items-center"
+      >
         {member.name}
       </div>
       <RiDeleteBinFill
