@@ -1,6 +1,7 @@
 package com.rocket.ssafast.dtospec.controller;
 
 import com.rocket.ssafast.auth.domain.UserDetailsImpl;
+import com.rocket.ssafast.dtospec.domain.DtoSpecEntity;
 import com.rocket.ssafast.dtospec.domain.element.DtoInfo;
 import com.rocket.ssafast.dtospec.dto.request.AddDtoSpecDto;
 import com.rocket.ssafast.dtospec.dto.request.UpdateDtoSpecDto;
@@ -28,32 +29,11 @@ public class DtoSpecController {
     @PostMapping
     public ResponseEntity<?> insertDto(@RequestBody AddDtoSpecDto addDtoSpecDto){
 
-        //check dto depth over 2
-        Map<Long, DtoInfo> nestedDtoExists = addDtoSpecDto.getDocument().getNestedDtos();
-        boolean hasChild = nestedDtoExists!=null || nestedDtoExists.size()>0;
-
-        if(hasChild){
-            for(Map.Entry<Long, DtoInfo> entries : nestedDtoExists.entrySet()){
-                Long key = entries.getKey();
-                DtoInfo dto = entries.getValue();
-                //nested dto has children
-                if(dtoSpecEntityService.childDtoIsExist(key) || dto.getNestedDtos()!=null){
-                    return new ResponseEntity<>(ErrorCode.DTO_DEPTH_OVER.getMessage(), ErrorCode.DTO_DEPTH_OVER.getHttpStatus());
-                }
-            }
-        }
-
         try{
-            //1. mysql input data
-            Long dtoEntityId = dtoSpecEntityService.createDtoEntity(addDtoSpecDto, hasChild);
-
-            //2. make dto document object
-            DtoInfo dtoInfo =
-                    DtoInfo.builder().
-                            fields(addDtoSpecDto.getDocument().getFields()).
-                            nestedDtos(addDtoSpecDto.getDocument().getNestedDtos()).
-                            build();
-            return new ResponseEntity<>(dtoSpecDocumentService.createDtoDocs(dtoEntityId, dtoInfo), HttpStatus.OK);
+            return new ResponseEntity<>(dtoSpecEntityService.createDtoEntity(addDtoSpecDto), HttpStatus.OK);
+        }
+        catch (CustomException customException){
+            return new ResponseEntity<>(customException.getMessage(), customException.getHttpStatus());
         }
         catch (IllegalArgumentException illegalArgumentException){
             return new ResponseEntity<>(ErrorCode.BAD_REQUEST.getMessage(), ErrorCode.BAD_REQUEST.getHttpStatus());
@@ -79,8 +59,38 @@ public class DtoSpecController {
 
     @PutMapping(value = "/{dtoId}")
     public ResponseEntity<?> updateDtoInfo(@PathVariable Long dtoId, @RequestBody UpdateDtoSpecDto updateDtoSpecDto){
-        //dto depth 가 2를 벗어나는지 확인하는 로직 필요 - mysql
+        try{
+            boolean hasParent = false;
+            boolean hasChild = false;
+            //1. get entity for check relation for other dtos(parent, child info)
+            DtoSpecEntity dtoSpecEntity = dtoSpecEntityService.getDtoSpecEntityById(dtoId);
 
+            Map<Long, DtoInfo> childDto = updateDtoSpecDto.getDocument().getNestedDtos();
+            hasParent = dtoSpecEntity.isHasParent();
+            hasChild = childDto!=null || childDto.size() > 0;
+
+            //child has child
+            for(Long childKey : childDto.keySet()){
+                if(dtoSpecEntityService.childDtoIsExist(childKey)){
+                    return new ResponseEntity<>(ErrorCode.DTO_DEPTH_OVER.getMessage(), ErrorCode.DTO_DEPTH_OVER.getHttpStatus());
+                }
+            }
+
+            //current dto has parent and child
+            if(hasChild && hasParent){
+                return new ResponseEntity<>(ErrorCode.DTO_DEPTH_OVER.getMessage(), ErrorCode.DTO_DEPTH_OVER.getHttpStatus());
+            }
+
+            dtoSpecEntityService.updateDtoEntity(dtoId, updateDtoSpecDto);
+
+        }
+        catch (CustomException customException){
+            return new ResponseEntity<>(customException.getMessage(), customException.getHttpStatus());
+        }
+
+        //dto depth 가 2를 벗어나는지 확인하는 로직 필요 - mysql
+        //3. update entity
+        //4. update document
         return new ResponseEntity<>(updateDtoSpecDto, HttpStatus.OK);
     }
 
