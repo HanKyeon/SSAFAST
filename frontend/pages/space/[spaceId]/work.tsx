@@ -64,11 +64,10 @@ const SpaceWorkPage =
         // if (!state.figmaList.length) {
         //   testData.forEach((section) => state.figmaList.push(section));
         // }
-        if (spaceFrameData && state.figmaList.length) {
+        if (spaceFrameData?.figmaSections.length && state.figmaList.length) {
           while (state.figmaList.length) {
             state.figmaList.pop();
           }
-
           spaceFrameData.figmaSections.forEach((section) =>
             state.figmaList.push(section)
           );
@@ -79,7 +78,7 @@ const SpaceWorkPage =
         // state.useCaseList = [];
         // state.overloadList = [];
       },
-      [awareness, spaceFrameData]
+      [awareness, spaceFrameDataLoading]
     );
 
     return (
