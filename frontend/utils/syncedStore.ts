@@ -28,7 +28,6 @@ export const yjsStore = syncedStore({
   baseUrlList: [] as string[],
   fragment: 'xml',
 });
-
 // Create a document that syncs automatically using Y-WebRTC
 // const doc = getYjsDoc(yjsStore);
 // export const webrtcProvider = new WebrtcProvider('syncedstore-todos', doc);
