@@ -5,12 +5,14 @@ import { workFigma } from './presence-type';
 import { useSyncedStore } from '@syncedstore/react';
 import { SpaceFigma } from '@/hooks/queries/queries';
 import { useYjsState } from './YjsProvider';
-
+import BoxHeader from '../common/BoxHeader';
+import { APIInfoType } from './APIEditContainer/APIList';
 interface Props {
   figmaList?: workFigma[];
+  apiData?: APIInfoType[];
 }
 
-const FigmaList = function ({ figmaList = [] }: Props) {
+const FigmaList = function ({ apiData, figmaList = [] }: Props) {
   const { state: yjsStore, figmaY } = useYjsState();
   const store = useSyncedStore(yjsStore);
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
@@ -35,8 +37,11 @@ const FigmaList = function ({ figmaList = [] }: Props) {
   };
 
   return (
-    <div className="h-full w-full p-[3%] flex flex-col gap-[2%]">
+    <>
+      {/* <div className="h-full w-full p-5"> */}
+      {/* <div className="h-full w-full p-[3%] flex flex-col gap-[2%]"> */}
       {/* {figmaY.map((figmaData, idx) => {
+      {/* {figmaList.map((figmaData, idx) => {
         return (
           <FigmaListItem
             figmaData={figmaData}
@@ -49,18 +54,21 @@ const FigmaList = function ({ figmaList = [] }: Props) {
       })} */}
       <Box onClick={addSyncedStoreFigmaItem}>store 관련 테스트 해봅시다.</Box>
       <Box onClick={deleteFigmaYArr}>삭제 테스트</Box>
-      {figmaY.map((figmaData: SpaceFigma, idx: number) => {
-        return (
-          <FigmaListItem
-            figmaData={figmaData}
-            idx={idx}
-            activeIdx={activeIdx}
-            setActive={changeIdxHandler}
-            key={`${figmaData.name}-${idx}-${figmaData.id}`}
-          />
-        );
-      })}
-    </div>
+      <div className={`flex flex-col gap-2`}>
+        {figmaY.map((figmaData: SpaceFigma, idx: number) => {
+          return (
+            <FigmaListItem
+              apiData={apiData}
+              figmaData={figmaData}
+              idx={idx}
+              activeIdx={activeIdx}
+              setActive={changeIdxHandler}
+              key={`${figmaData.name}-${idx}-${figmaData.id}`}
+            />
+          );
+        })}
+      </div>
+    </>
   );
 };
 

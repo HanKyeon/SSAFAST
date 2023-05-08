@@ -1,5 +1,6 @@
 export interface StatusBadgePropsType {
-  status: '명세중' | '명세완료' | '개발중' | '개발완료';
+  // status: '명세중' | '명세완료' | '개발중' | '개발완료';
+  status: string;
   small?: boolean;
   className?: string;
 }

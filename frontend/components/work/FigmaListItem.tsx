@@ -4,8 +4,12 @@ import { workFigma } from './presence-type';
 import AnimationBox from '../common/AnimationBox';
 import { SpaceFigma } from '@/hooks/queries/queries';
 import Modal from '../common/Modal';
+import { HiOutlineTrash } from 'react-icons/hi';
+import { APIInfoType } from './APIEditContainer/APIList';
+import APIlistItem from '../apis/APIlistItem';
 
 interface Props {
+  apiData?: APIInfoType[];
   figmaData: SpaceFigma;
   activeIdx: number | null;
   idx: number;
@@ -13,6 +17,7 @@ interface Props {
 }
 
 const FigmaListItem = function ({
+  apiData,
   figmaData,
   activeIdx,
   idx,
@@ -80,25 +85,44 @@ const FigmaListItem = function ({
             className="w-full text-ellipsis overflow-hidden"
             onClick={expandHandler}
           >
-            {figmaData.name}
+            #{idx + 1} {figmaData.name}
           </div>
-          <Button className="text-[1.2rem]" onClick={deleteHandler}>
+          {/* <Button className="text-[1.2rem]" onClick={deleteHandler}>
             삭제
-          </Button>
+          </Button> */}
+          {activeIdx === idx && (
+            <HiOutlineTrash
+              className={`text-grayscale-dark hover:text-mammoth-normal text-[24px]`}
+              onClick={deleteHandler}
+            />
+          )}
         </div>
 
-        <AnimationBox
-          isOpened={isExpand}
-          appearClassName="animate-[appear-opacity-softly_0.22s_both]"
-          disappearClassName="animate-[disappear-opacity-softly_0.22s_both] relative"
-          className="w-full"
-        >
-          <img
-            className="object-contain rounded-[8px] w-full"
-            src={figmaData.sectionUrl!}
-            alt={`${figmaData.name}`}
-          />
-        </AnimationBox>
+        {isExpand && (
+          <>
+            <AnimationBox
+              isOpened={isExpand}
+              appearClassName="animate-[appear-opacity-softly_0.22s_both]"
+              disappearClassName="animate-[disappear-opacity-softly_0.22s_both] relative"
+              className="w-full"
+            >
+              <img
+                className="object-contain rounded-[8px] w-full"
+                src={figmaData.sectionUrl!}
+                alt={`${figmaData.name}`}
+              />
+            </AnimationBox>
+            {apiData?.length !== 0 && (
+              <ul
+                className={`w-[95%] my-0 mx-auto flex flex-col gap-1 duration-[0.33s]`}
+              >
+                {apiData?.map((api) => (
+                  <APIlistItem key={api.id} item={api} />
+                ))}
+              </ul>
+            )}
+          </>
+        )}
       </Box>
     </>
   );
