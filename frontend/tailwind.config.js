@@ -86,6 +86,7 @@ module.exports = {
           deepdarklight: `#646464`,
           deepdark: `#515457`,
           deepdarkdeep: `#3A3C3F`,
+          deepdarkdeepdeep: `#36383C`,
         },
       },
       fontSize: {

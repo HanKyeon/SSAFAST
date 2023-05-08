@@ -3,12 +3,12 @@ export interface MethodBadgePropsType {
     | 'PUT'
     | 'GET'
     | 'POST'
-    | 'DELETE'
+    | 'DEL'
     | 'PATCH'
     | `put`
     | `get`
     | `post`
-    | `delete`
+    | `del`
     | `patch`;
   className?: string;
   small?: boolean;
@@ -27,7 +27,7 @@ const MethodBadge = function ({
         ? 'bg-taro-normal'
         : method === 'GET' || method === 'get'
         ? 'bg-mincho-normal'
-        : method === 'DELETE' || method === 'delete'
+        : method === 'DEL' || method === 'del'
         ? 'bg-mammoth-normal'
         : 'bg-milktea-strong',
     size: small

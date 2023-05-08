@@ -3,12 +3,55 @@ import { Box } from '../common';
 import SpaceIcon from '/public/assets/images/Ggo.png';
 import BoxHeader from '../common/BoxHeader';
 import APIlistItem from '../apis/APIlistItem';
+import { APIInfoType } from '../work/APIEditContainer/APIList';
 import { useRouter } from 'next/router';
 import { useSpaceApis, useSpaceDetail } from '@/hooks/queries/queries';
 import { SpaceParams } from '@/pages/space';
 import { useMemo } from 'react';
 
 const statusLsit = [``, `명세중`, `명세완료`, `개발중`, `개발완료`];
+
+const apiListMockup: APIInfoType[] = [
+  {
+    id: 1,
+    name: '전체 회원 목록',
+    description: '아무튼 다 가져오는거',
+    method: 'GET',
+    status: '명세중',
+    writter: {
+      id: 1,
+      name: '로사짱',
+      email: 'a@naver.com',
+      profileImg: 'anjanj.png',
+    },
+  },
+  {
+    id: 2,
+    name: '회원 한명 조회',
+    description: '한명 가져오는거',
+    method: 'GET',
+    status: '명세중',
+    writter: {
+      id: 1,
+      name: '로사짱',
+      email: 'a@naver.com',
+      profileImg: 'anjanj.png',
+    },
+  },
+  {
+    id: 3,
+    name: '회원가입',
+    description: '아무튼 가입',
+    method: 'POST',
+    status: '명세중',
+    writter: {
+      id: 1,
+      name: '로사짱',
+      email: 'a@naver.com',
+      profileImg: 'anjanj.png',
+    },
+  },
+];
 
 const PreviewLeftContainer = function (): JSX.Element {
   const router = useRouter();
@@ -33,12 +76,12 @@ const PreviewLeftContainer = function (): JSX.Element {
           | 'PUT'
           | 'GET'
           | 'POST'
-          | 'DELETE'
+          | 'DEL'
           | 'PATCH'
           | `put`
           | `get`
           | `post`
-          | `delete`
+          | `del`
           | `patch`;
         status: number | string;
         writter: {
@@ -118,39 +161,28 @@ const PreviewLeftContainer = function (): JSX.Element {
           {apiList.map((api) => {
             return (
               <APIlistItem
-                method={api.method}
-                desc={api.description}
-                status={
-                  statusLsit[api.status as 1 | 2 | 3 | 4] as
+                key={`${api.id}-api-preview-item`}
+                item={{
+                  ...api,
+                  status: statusLsit[api.status as 1 | 2 | 3 | 4] as
                     | `명세중`
                     | `명세완료`
                     | `개발중`
-                    | `개발완료`
-                }
+                    | `개발완료`,
+                }}
+                writter={false}
               />
             );
           })}
-          <APIlistItem
-            method="POST"
-            desc="목록 수정하기인데 이제 여기서 뭔가를 더 받으면 뭐 어쩌고 되는건가"
-            status="명세중"
-          />
-          <APIlistItem
-            method="GET"
-            desc="목록 수정하기인데 이제 여기서 뭔가를 더 받으면 뭐 어쩌고 되는건가"
-            status="명세완료"
-          />
-          <APIlistItem
-            method="POST"
-            desc="목록 수정하기인데 이제"
-            status="명세중"
-          />
-          <APIlistItem
-            method="GET"
-            desc="목록 수정하기인데 이제 여기서 뭔가를 더 받으면 뭐 어쩌고 되는건가"
-            status="개발중"
-          />
-          <APIlistItem method="DELETE" desc="목록 수정" status="개발완료" />
+          {apiListMockup.map((api) => {
+            return (
+              <APIlistItem
+                key={`${api.id}-api-preview-item`}
+                item={api}
+                writter={false}
+              />
+            );
+          })}
         </ul>
       </Box>
     </div>

@@ -364,12 +364,12 @@ interface sectionsApi {
           | 'PUT'
           | 'GET'
           | 'POST'
-          | 'DELETE'
+          | 'DEL'
           | 'PATCH'
           | `put`
           | `get`
           | `post`
-          | `delete`
+          | `del`
           | `patch`;
         status: number | string;
       }[];
@@ -441,12 +441,12 @@ interface EachCate {
       | 'PUT'
       | 'GET'
       | 'POST'
-      | 'DELETE'
+      | 'DEL'
       | 'PATCH'
       | `put`
       | `get`
       | `post`
-      | `delete`
+      | `del`
       | `patch`;
     status: 1 | 2 | 3 | 4; // 1 명세중 2명세완료 3개발중 4개발완료
 

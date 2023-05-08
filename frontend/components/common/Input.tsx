@@ -16,14 +16,13 @@ const Input = function ({
     input: `bg-transparent border-b-[1px] outline-none ${
       isDark
         ? `border-theme-white-normal placeholder:text-grayscale-deepdarklight`
-        : `border-theme-dark-normal placeholder:text-grayscale-dark`
+        : `border-theme-dark-normal placeholder:text-grayscale-deepdarklight`
     }`,
   };
   return (
     <input
-      // type={rest.type}
+      // type="text"
       // title="value"
-      // placeholder="value"
       ref={inputref}
       className={`${className} ${styles['input']}`}
       {...rest}

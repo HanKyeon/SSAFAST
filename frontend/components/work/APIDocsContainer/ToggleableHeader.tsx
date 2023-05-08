@@ -1,6 +1,7 @@
 import { SetStateAction } from 'react';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { CircleBtn } from '../../common';
+import { useStoreSelector } from '@/hooks/useStore';
 
 interface ToggleableHeaderPropsType {
   big?: boolean;
@@ -17,12 +18,15 @@ const ToggleableHeader = function ({
   setIsOpen,
   add,
 }: ToggleableHeaderPropsType): JSX.Element {
+  const { dark: isDark } = useStoreSelector((state) => state.dark);
   const styles = {
     wrapper: `${
       big &&
-      `flex justify-between items-center py-2 px-5 cursor-pointer ${
+      `flex justify-between items-center py-2 px-5 duration-[0.33s] cursor-pointer ${
         isOpen &&
-        'sticky top-0 z-50 bg-theme-dark-normal rounded-t-[13px] border-b-[1px] border-grayscale-dark'
+        `sticky top-0 z-50 ${
+          isDark ? `bg-theme-dark-normal` : `bg-theme-white-normal`
+        } rounded-t-[13px] border-b-[1px] border-grayscale-dark`
       }`
     } ${!big && `flex items-center py-2 px-5 cursor-pointer`}`,
   };
