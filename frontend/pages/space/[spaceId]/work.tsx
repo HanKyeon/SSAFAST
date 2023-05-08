@@ -57,28 +57,18 @@ const SpaceWorkPage =
               setAwareness(() => innerAwareness);
               return provider;
             });
-            // rtcProvider = new WebrtcProvider(
-            //   `ssafast${spaceId}`,
-            //   getYjsValue(state) as any
-            // );
-            // if (rtcProvider) {
-            //   console.log('커넥트!');
-            //   rtcProvider.connect();
-            //   const { awareness: innerAwareness } = rtcProvider;
-            //   setAwareness(() => innerAwareness);
-            // }
           }
         };
         rtcOpener();
-        return function () {
-          if (rtcProvider) {
-            console.log('디스커넥트!');
-            rtcProvider.disconnect();
-          }
-        };
       },
       [spaceId]
     );
+    useEffect(function () {
+      return function () {
+        console.log('디스커넥트');
+        rtcProvider?.disconnect();
+      };
+    }, []);
 
     useEffect(
       function () {
