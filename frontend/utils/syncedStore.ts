@@ -1,6 +1,6 @@
 import { workFigma } from '@/components/work/presence-type';
 import { SpaceFigma } from '@/hooks/queries/queries';
-import { syncedStore, getYjsDoc } from '@syncedstore/core';
+import { syncedStore, getYjsDoc, getYjsValue } from '@syncedstore/core';
 import { MappedTypeDescription } from '@syncedstore/core/types/doc';
 import { Awareness } from '@y-presence/client';
 import { WebrtcProvider } from 'y-webrtc';
