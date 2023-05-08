@@ -43,7 +43,7 @@ const SpaceWorkPage =
       function () {
         if (state && spaceId?.length) {
           const rtcProvider = new WebrtcProvider(
-            `${spaceId}:ssaffast`,
+            `ssafast:${spaceId}`,
             getYjsValue(state) as any
           );
           const { awareness: innerAwareness } = rtcProvider;
@@ -53,7 +53,7 @@ const SpaceWorkPage =
           };
         }
       },
-      [spaceId]
+      [spaceId, state]
     );
 
     useEffect(
