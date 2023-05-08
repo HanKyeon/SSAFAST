@@ -25,7 +25,8 @@ const PreviewRightContainer = function (): JSX.Element {
   const { spaceId } = router.query as SpaceParams;
   const pushWorkHandler = function (e: FormEvent) {
     e.preventDefault();
-    router.push(`/space/${spaceId}/work`);
+    window.location.href = `${process.env.NEXT_PUBLIC_HOSTNAME}/space/${spaceId}/work`;
+    // router.push(`/space/${spaceId}/work`);
   };
   const {
     data: memberList,

@@ -3,8 +3,8 @@ import { Box } from '../common';
 import FigmaListItem from './FigmaListItem';
 import { workFigma } from './presence-type';
 import { useSyncedStore } from '@syncedstore/react';
-import { yjsStore } from '@/utils/syncedStore';
 import { SpaceFigma } from '@/hooks/queries/queries';
+import { useYjsState } from './YjsProvider';
 
 interface Props {
   figmaList?: workFigma[];
@@ -12,6 +12,7 @@ interface Props {
 }
 
 const FigmaList = function ({ figmaList = [], store }: Props) {
+  const { state: yjsStore } = useYjsState();
   const state = useSyncedStore(yjsStore);
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
   const changeIdxHandler = function (idx: number | null) {

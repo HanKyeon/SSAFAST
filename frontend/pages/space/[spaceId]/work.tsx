@@ -22,13 +22,16 @@ import {
   useUserData,
   useUserFigmaTokens,
 } from '@/hooks/queries/queries';
-import { yjsStore } from '@/utils/syncedStore';
+// import { yjsStore } from '@/utils/syncedStore';
+import YjsProvider, { useYjsState } from '@/components/work/YjsProvider';
 
 const SpaceWorkPage =
   function () // props: InferGetServerSidePropsType<typeof getServerSideProps>
   {
     const router = useRouter();
     const { spaceId } = router.query as SpaceParams;
+    const { state } = useYjsState();
+
     const { data: userFigmaTokenData } = useUserFigmaTokens();
     const { data: spaceDetailData } = useSpaceDetail(parseInt(spaceId));
     const {
@@ -39,7 +42,7 @@ const SpaceWorkPage =
     const { data: userData, isLoading } = useUserData();
 
     // const [store, setStore] = useState<any>(useSyncedStore(yjsStore));
-    const state = useSyncedStore(yjsStore);
+    const store = useSyncedStore(state);
     const [rtcProvider, setRtcProvider] = useState<WebrtcProvider>();
     const [awareness, setAwareness] = useState<any>(null);
     useEffect(
@@ -75,7 +78,7 @@ const SpaceWorkPage =
 
     useEffect(
       function () {
-        if (!awareness && !spaceFrameDataLoading) {
+        if (!awareness && spaceFrameDataLoading) {
           return;
         }
         // if (!state.figmaList.length) {
@@ -89,9 +92,9 @@ const SpaceWorkPage =
         //     state.figmaList.push(section)
         //   );
         // }
-        if (!state.figmaList.length && spaceFrameData) {
+        if (!store.figmaList.length && spaceFrameData) {
           spaceFrameData.figmaSections.forEach((section) =>
-            state.figmaList.push(section)
+            store.figmaList.push(section)
           );
         }
 
@@ -111,18 +114,22 @@ const SpaceWorkPage =
           url={`/space/${spaceId}/work`}
         />
         <div className="h-full w-full overflow-hidden">
-          {awareness && (
-            <RoomProvider<PresenceUserData>
-              awareness={awareness}
-              initialPresence={{
-                name: `${userData?.name || `나다이띱때끼야`}`,
-                color: `#${Math.round(Math.random() * 0xffffff).toString(16)}`,
-                step: 1,
-              }}
-            >
-              <WorkContainer store={state} />
-            </RoomProvider>
-          )}
+          <YjsProvider>
+            {awareness && (
+              <RoomProvider<PresenceUserData>
+                awareness={awareness}
+                initialPresence={{
+                  name: `${userData?.name || `나다이띱때끼야`}`,
+                  color: `#${Math.round(Math.random() * 0xffffff).toString(
+                    16
+                  )}`,
+                  step: 1,
+                }}
+              >
+                <WorkContainer store={state} />
+              </RoomProvider>
+            )}
+          </YjsProvider>
         </div>
       </>
     );

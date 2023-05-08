@@ -23,7 +23,8 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
   const users = useUsers<PresenceUserData>();
   const { spaceId } = router.query;
   const exitHandler = function () {
-    router.push(`/space/${spaceId}`);
+    window.location.href = `${process.env.NEXT_PUBLIC_HOSTNAME}/space/${spaceId}`
+    // router.push(`/space/${spaceId}`);
   };
   const [isTutorial, setIsTutorial] = useState<boolean>(false);
   const modalOffHandler = function () {

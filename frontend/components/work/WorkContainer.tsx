@@ -13,7 +13,6 @@ import APITestContainer from './APITestContainer';
 import { RTCSpaceData } from '@/pages/space/[spaceId]/work';
 import { Box } from '../common';
 import { useStoreSelector } from '@/hooks/useStore';
-import { yjsStore } from '@/utils/syncedStore';
 
 interface Props {
   store: any;
