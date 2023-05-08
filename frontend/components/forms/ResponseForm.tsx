@@ -1,22 +1,32 @@
 import {
-  FormProvider,
+  useFormContext,
   Controller,
   useFieldArray,
   UseFormReturn,
 } from 'react-hook-form';
 import { Box, Button, CircleBtn, Input } from '../common';
-import { useRef } from 'react';
+import { FormEvent, useRef } from 'react';
 import useInput from '@/hooks/useInput';
 import useInputNumber from '@/hooks/useInputNumber';
 import { useStoreDispatch, useStoreSelector } from '@/hooks/useStore';
 import { DispatchToast } from '@/store';
+import { ApiCreateForm } from './ApiCreateForm';
 
+export interface ResponseFormData {
+  status_code: number;
+  desc: string;
+  headers: Headers[];
+  body: Body;
+}
 interface Headers {
   key: string;
   type: string;
   desc: string;
 }
-
+interface Body {
+  fields: Fields[];
+  // dtos: Dto;
+}
 interface Fields {
   key: string;
   type: string;
@@ -26,206 +36,7 @@ interface Fields {
   value: string | null;
 }
 
-interface Body {
-  fields: Fields[];
-  // dtos: Dto;
-}
-
-export interface Response {
-  status_code: number;
-  desc: string;
-  headers: Headers[];
-  body: Body;
-}
-
-export interface ResponseFormData {
-  response: Response[];
-}
-
-function HeaderFields({
-  control,
-  Keyindex,
-}: {
-  control: any;
-  Keyindex: number;
-}) {
-  const {
-    fields: headerFields,
-    append,
-    remove,
-  } = useFieldArray({
-    name: `response.${Keyindex}.headers`,
-    control,
-  });
-  const appendHeaderInput = function () {
-    append({
-      key: '',
-      type: '',
-      desc: '',
-    });
-  };
-  return (
-    <>
-      <div className="flex justify-between w-40">
-        <div>Header</div>
-        <CircleBtn btnType="plus" onClick={appendHeaderInput}></CircleBtn>
-      </div>
-      {headerFields.map((item, index) => (
-        <div key={item.id} className="">
-          <CircleBtn
-            btnType="delete"
-            type="button"
-            onClick={() => remove(index)}
-          ></CircleBtn>
-          <Controller
-            name={`response.${Keyindex}.headers[${index}].key`}
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState }) => (
-              <div className="flex">
-                <label htmlFor={`headers[${index}].key`}>Key:</label>
-                <input type="text" id={`headers[${index}].key`} {...field} />
-                {fieldState?.invalid && <span>This field is required</span>}
-              </div>
-            )}
-          />
-          <Controller
-            name={`response.${Keyindex}.headers[${index}].type`}
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState }) => (
-              <div className="flex">
-                <label htmlFor={`headers[${index}].type`}>Type:</label>
-                <input type="text" id={`headers[${index}].type`} {...field} />
-                {fieldState?.invalid && <span>This field is required</span>}
-              </div>
-            )}
-          />
-          <Controller
-            name={`response.${Keyindex}.headers[${index}].desc`}
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState }) => (
-              <>
-                <label htmlFor={`headers[${index}].desc`}>Description:</label>
-                <input type="text" id={`headers[${index}].desc`} {...field} />
-                {fieldState?.invalid && <span>This field is required</span>}
-              </>
-            )}
-          />
-        </div>
-      ))}
-    </>
-  );
-}
-
-function BodyFields({ control, Keyindex }: { control: any; Keyindex: number }) {
-  const {
-    fields: bodyFields,
-    append,
-    remove,
-  } = useFieldArray({
-    name: `response.${Keyindex}.body.fields`,
-    control,
-  });
-
-  const appendBodyInput = function () {
-    append({
-      key: '',
-      type: '',
-      desc: '',
-      itera: false,
-    });
-  };
-
-  return (
-    <>
-      <div className="flex justify-between w-40">
-        <div>body</div>
-        <CircleBtn
-          btnType="plus"
-          type="button"
-          onClick={appendBodyInput}
-        ></CircleBtn>
-      </div>
-      {bodyFields.map((item, index) => (
-        <div key={item.id}>
-          <CircleBtn btnType="delete" onClick={() => remove(index)}></CircleBtn>
-          <Controller
-            name={`response.${Keyindex}.body.fields[${index}].key`}
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState }) => (
-              <div className="flex">
-                <label htmlFor={`bodys[${index}].key`}>Key:</label>
-                <input type="text" id={`bodys[${index}].key`} {...field} />
-                {fieldState?.invalid && <span>This field is required</span>}
-              </div>
-            )}
-          />
-          <Controller
-            name={`response.${Keyindex}.body.fields[${index}].type`}
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState }) => (
-              <div className="flex">
-                <label htmlFor={`body.fields[${index}].type`}>Type:</label>
-                <input
-                  type="text"
-                  id={`body.fields[${index}].type`}
-                  {...field}
-                />
-                {fieldState?.invalid && <span>This field is required</span>}
-              </div>
-            )}
-          />
-          <Controller
-            name={`response.${Keyindex}.body.fields[${index}].desc`}
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState }) => (
-              <>
-                <div className="flex">
-                  <label htmlFor={`body.fields[${index}].desc`}>
-                    Description:
-                  </label>
-                  <input
-                    type="text"
-                    id={`body.fields[${index}].desc`}
-                    {...field}
-                  />
-                  {fieldState?.invalid && <span>This field is required</span>}
-                </div>
-              </>
-            )}
-          />
-          <Controller
-            name={`response.${Keyindex}.body.fields[${index}].itera`}
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <>
-                <label htmlFor={`body.fields[${index}].itera`}>Is List?:</label>
-                <input
-                  type="checkbox"
-                  id={`body.fields[${index}].itera`}
-                  {...field}
-                />
-              </>
-            )}
-          />
-        </div>
-      ))}
-    </>
-  );
-}
-
-interface ResponseProps {
-  responseGetter?: (data: any) => void;
-  methods: UseFormReturn<ResponseFormData>;
-}
-
-const ResponseForm = function ({ responseGetter, methods }: ResponseProps) {
+const ResponseForm = function () {
   const dispatch = useStoreDispatch();
   const selectedStyle = (dark: boolean) =>
     `${dark ? 'text-mincho-strong' : 'text-taro-strong'}` as const;
@@ -246,13 +57,14 @@ const ResponseForm = function ({ responseGetter, methods }: ResponseProps) {
     onResetHandler: descReset,
   } = useInput(descRef);
 
-  const { control, handleSubmit, getValues } = methods;
+  // const { control } = methods;
+  const { control } = useFormContext<ApiCreateForm>();
   const {
     fields: responseFields,
     append,
     remove,
   } = useFieldArray({
-    name: 'response',
+    name: 'document.response',
     control,
   });
 
@@ -280,80 +92,259 @@ const ResponseForm = function ({ responseGetter, methods }: ResponseProps) {
   };
 
   return (
-    <FormProvider {...methods}>
-      <Box className="overflow-y-scroll pt-5 w-full h-full">
-        <form onSubmit={handleSubmit(addComponentHandler)}>
-          <div className="flex flex-row gap-4 items-center justify-center">
-            <Input
-              type="number"
-              inputref={codeRef}
-              onChange={codeChange}
-              placeholder="Code"
-              min={0}
-              maxLength={3}
-              pattern="^[0-9]*$"
-            />
-            <Input
-              type="text"
-              inputref={descRef}
-              onChange={descChange}
-              placeholder="description"
-              maxLength={300}
-            />
-            <Button type="submit" isEmpty>
-              add
-            </Button>
-          </div>
-          <br />
-        </form>
-        <form>
-          <>
-            {responseFields.map((item, index) => (
-              <div key={item.id} className="p-5">
-                <div className="flex items-center justify-between">
-                  <div className="flex gap-3">
-                    <div className="">
-                      <div
-                        id={`${item.status_code}`}
-                        className={`${selectedStyle(
-                          dark
-                        )} font-extrabold text-2xl`}
-                      >
-                        {item.status_code}
-                      </div>
-
-                      <div
-                        id={`${item.desc}`}
-                        className="text-grayscale-light text-sm"
-                      >
-                        {item.desc}
-                      </div>
+    <Box className="overflow-y-scroll pt-5 w-full h-full">
+      <div>
+        <div className="flex flex-row gap-4 items-center justify-center">
+          <Input
+            type="number"
+            inputref={codeRef}
+            onChange={codeChange}
+            placeholder="Code"
+            min={0}
+            maxLength={3}
+            pattern="^[0-9]*$"
+          />
+          <Input
+            type="text"
+            inputref={descRef}
+            onChange={descChange}
+            placeholder="description"
+            maxLength={300}
+          />
+          <Button
+            type="button"
+            onClick={() => {
+              addComponentHandler();
+            }}
+            isEmpty
+          >
+            add
+          </Button>
+        </div>
+        <br />
+      </div>
+      <>
+        <>
+          {responseFields.map((item, index) => (
+            <div key={item.id} className="p-5">
+              <div className="flex items-center justify-between">
+                <div className="flex gap-3">
+                  <div className="">
+                    <div
+                      id={`${item.id}-hukg`}
+                      className={`${selectedStyle(
+                        dark
+                      )} font-extrabold text-2xl`}
+                    >
+                      {item.status_code}
                     </div>
-                    <div>토글아이콘</div>
+
+                    <div
+                      id={`${item.desc}`}
+                      className="text-grayscale-light text-sm"
+                    >
+                      {item.desc}
+                    </div>
                   </div>
-                  <CircleBtn
-                    className=""
-                    type="button"
-                    btnType="delete"
-                    onClick={() => remove(index)}
-                  ></CircleBtn>
+                  <div>토글아이콘</div>
                 </div>
-                <HeaderFields control={control} Keyindex={index} />
-                <BodyFields control={control} Keyindex={index} />
-                {/* {!(errors.response && errors.response[index]?.code) &&
-                !(errors.response && errors.response[index]?.descriptions) && (
-                  <>
-                    <HeaderFields control={control} index={index} />
-                    <BodyFields control={control} index={index} />
-                  </>
-                )} */}
+                <CircleBtn
+                  className=""
+                  type="button"
+                  btnType="delete"
+                  onClick={() => remove(index)}
+                ></CircleBtn>
               </div>
-            ))}
-          </>
-        </form>
-      </Box>
-    </FormProvider>
+              <HeaderFields control={control} Keyindex={index} />
+              <BodyFields control={control} Keyindex={index} />
+            </div>
+          ))}
+        </>
+      </>
+    </Box>
   );
 };
+
+function HeaderFields({
+  control,
+  Keyindex,
+}: {
+  control: any;
+  Keyindex: number;
+}) {
+  const {
+    fields: headerFields,
+    append,
+    remove,
+  } = useFieldArray({
+    name: `document.response.${Keyindex}.headers`,
+    control,
+  });
+  const appendHeaderInput = function (e: FormEvent) {
+    e.preventDefault();
+    append({
+      key: '',
+      type: '',
+      desc: '',
+    });
+  };
+  return (
+    <>
+      <div className="flex justify-between w-40">
+        <div>Header</div>
+        <CircleBtn btnType="plus" onClick={appendHeaderInput}></CircleBtn>
+      </div>
+      {headerFields.map((item, index) => (
+        <div key={item.id} className="">
+          <CircleBtn
+            btnType="delete"
+            type="button"
+            onClick={() => remove(index)}
+          ></CircleBtn>
+          <Controller
+            name={`document.response.${Keyindex}.headers[${index}].key`}
+            control={control}
+            rules={{ required: true }}
+            render={({ field, fieldState }) => (
+              <div className="flex">
+                <label htmlFor={`headers[${index}].key`}>Key:</label>
+                <input type="text" id={`headers[${index}].key`} {...field} />
+                {fieldState?.invalid && <span>This field is required</span>}
+              </div>
+            )}
+          />
+          <Controller
+            name={`document.response.${Keyindex}.headers[${index}].type`}
+            control={control}
+            rules={{ required: true }}
+            render={({ field, fieldState }) => (
+              <div className="flex">
+                <label htmlFor={`headers[${index}].type`}>Type:</label>
+                <input type="text" id={`headers[${index}].type`} {...field} />
+                {fieldState?.invalid && <span>This field is required</span>}
+              </div>
+            )}
+          />
+          <Controller
+            name={`document.response.${Keyindex}.headers[${index}].desc`}
+            control={control}
+            rules={{ required: true }}
+            render={({ field, fieldState }) => (
+              <>
+                <label htmlFor={`headers[${index}].desc`}>Description:</label>
+                <input type="text" id={`headers[${index}].desc`} {...field} />
+                {fieldState?.invalid && <span>This field is required</span>}
+              </>
+            )}
+          />
+        </div>
+      ))}
+    </>
+  );
+}
+
+function BodyFields({ control, Keyindex }: { control: any; Keyindex: number }) {
+  const {
+    fields: bodyFields,
+    append,
+    remove,
+  } = useFieldArray({
+    name: `document.response.${Keyindex}.body.fields`,
+    control,
+  });
+
+  const appendBodyInput = function (e: FormEvent) {
+    e.preventDefault();
+    append({
+      key: '',
+      type: '',
+      desc: '',
+      itera: false,
+      constraints: [],
+      value: null,
+    });
+  };
+
+  return (
+    <>
+      <div className="flex justify-between w-40">
+        <div>body</div>
+        <CircleBtn
+          btnType="plus"
+          type="button"
+          onClick={appendBodyInput}
+        ></CircleBtn>
+      </div>
+      {bodyFields.map((item, index) => (
+        <div key={item.id}>
+          <CircleBtn btnType="delete" onClick={() => remove(index)}></CircleBtn>
+          <Controller
+            name={`document.response.${Keyindex}.body.fields[${index}].key`}
+            control={control}
+            rules={{ required: true }}
+            render={({ field, fieldState }) => (
+              <div className="flex">
+                <label htmlFor={`bodys[${index}].key`}>Key:</label>
+                <input type="text" id={`bodys[${index}].key`} {...field} />
+                {fieldState?.invalid && <span>This field is required</span>}
+              </div>
+            )}
+          />
+          <Controller
+            name={`document.response.${Keyindex}.body.fields[${index}].type`}
+            control={control}
+            rules={{ required: true }}
+            render={({ field, fieldState }) => (
+              <div className="flex">
+                <label htmlFor={`body.fields[${index}].type`}>Type:</label>
+                <input
+                  type="text"
+                  id={`body.fields[${index}].type`}
+                  {...field}
+                />
+                {fieldState?.invalid && <span>This field is required</span>}
+              </div>
+            )}
+          />
+          <Controller
+            name={`document.response.${Keyindex}.body.fields[${index}].desc`}
+            control={control}
+            rules={{ required: true }}
+            render={({ field, fieldState }) => (
+              <>
+                <div className="flex">
+                  <label htmlFor={`body.fields[${index}].desc`}>
+                    Description:
+                  </label>
+                  <input
+                    type="text"
+                    id={`body.fields[${index}].desc`}
+                    {...field}
+                  />
+                  {fieldState?.invalid && <span>This field is required</span>}
+                </div>
+              </>
+            )}
+          />
+          <Controller
+            name={`document.response.${Keyindex}.body.fields[${index}].itera`}
+            control={control}
+            // rules={{ required: true }}
+            render={({ field }) => (
+              <>
+                <label htmlFor={`body.fields[${index}].itera`}>Is List?:</label>
+                <input
+                  type="checkbox"
+                  id={`body.fields[${index}].itera`}
+                  {...field}
+                />
+              </>
+            )}
+          />
+        </div>
+      ))}
+    </>
+  );
+}
 
 export default ResponseForm;

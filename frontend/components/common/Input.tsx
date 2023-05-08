@@ -4,11 +4,13 @@ import { PropsWithChildren, FC, InputHTMLAttributes, RefObject } from 'react';
 interface InputPropsType extends InputHTMLAttributes<HTMLInputElement> {
   className?: string;
   inputref?: RefObject<HTMLInputElement>;
+  name?: string;
 }
 
 const Input = function ({
   className,
   inputref,
+  name,
   ...rest
 }: PropsWithChildren<InputPropsType>): JSX.Element {
   const { dark: isDark } = useStoreSelector((state) => state.dark);
@@ -24,6 +26,7 @@ const Input = function ({
       // type={rest.type}
       // title="value"
       // placeholder="value"
+      name={name}
       ref={inputref}
       className={`${className} ${styles['input']}`}
       {...rest}
