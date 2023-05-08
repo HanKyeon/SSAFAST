@@ -128,7 +128,7 @@ export interface TeamMemberList {
 export interface SpaceFigma {
   id: string | number;
   sectionUrl: string | null;
-  refreshId: string;
+  sectionId: string;
   name: string;
 }
 
