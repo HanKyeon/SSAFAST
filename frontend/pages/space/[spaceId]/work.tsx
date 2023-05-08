@@ -45,6 +45,7 @@ const SpaceWorkPage =
       function () {
         let rtcProvider: any;
         const rtcOpener = async function () {
+          let rtcProvider: any;
           if (state && spaceId?.length) {
             rtcProvider = new WebrtcProvider(
               `ssafast${spaceId}`,
@@ -53,6 +54,11 @@ const SpaceWorkPage =
             const { awareness: innerAwareness } = rtcProvider;
             setAwareness(() => innerAwareness);
           }
+          return function () {
+            if (rtcProvider) {
+              rtcProvider.destroy();
+            }
+          };
         };
         rtcOpener();
         return function () {
