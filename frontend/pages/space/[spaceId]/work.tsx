@@ -46,23 +46,27 @@ const SpaceWorkPage =
       function () {
         const rtcOpener = async function () {
           if (state && spaceId?.length) {
-            setRtcProvider(
-              () =>
-                new WebrtcProvider(
-                  `ssafast${spaceId}`,
-                  getYjsValue(state) as any
-                )
-            );
+            setRtcProvider(function () {
+              const provider = new WebrtcProvider(
+                `ssafast${spaceId}`,
+                getYjsValue(state) as any
+              );
+              console.log('커넥트');
+              provider.connect();
+              const { awareness: innerAwareness } = provider;
+              setAwareness(() => innerAwareness);
+              return provider;
+            });
             // rtcProvider = new WebrtcProvider(
             //   `ssafast${spaceId}`,
             //   getYjsValue(state) as any
             // );
-            if (rtcProvider) {
-              console.log('커넥트!');
-              rtcProvider.connect();
-              const { awareness: innerAwareness } = rtcProvider;
-              setAwareness(() => innerAwareness);
-            }
+            // if (rtcProvider) {
+            //   console.log('커넥트!');
+            //   rtcProvider.connect();
+            //   const { awareness: innerAwareness } = rtcProvider;
+            //   setAwareness(() => innerAwareness);
+            // }
           }
         };
         rtcOpener();
