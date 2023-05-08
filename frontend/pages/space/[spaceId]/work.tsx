@@ -44,17 +44,20 @@ const SpaceWorkPage =
     useEffect(
       function () {
         const rtcOpener = async function () {
+          let rtcProvider: any;
           if (state && spaceId?.length) {
-            const rtcProvider = new WebrtcProvider(
+            rtcProvider = new WebrtcProvider(
               `ssafast${spaceId}`,
               getYjsValue(state) as any
             );
             const { awareness: innerAwareness } = rtcProvider;
             setAwareness(() => innerAwareness);
-            return function () {
-              rtcProvider.destroy();
-            };
           }
+          return function () {
+            if (rtcProvider) {
+              rtcProvider.destroy();
+            }
+          };
         };
         rtcOpener();
       },

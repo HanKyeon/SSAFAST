@@ -111,7 +111,14 @@ const PreviewRightContainer = function (): JSX.Element {
                 className="flex justify-center items-center gap-3 h-[30px] w-full"
               >
                 <UserBadge imgSrc={member.profileImg} />
-                <span className="w-[80%] truncate" title={member.name}>
+                <span
+                  className={`${
+                    member.id === spaceDetailData?.leaderId
+                      ? 'w-[66%]'
+                      : 'w-[80%]'
+                  } truncate`}
+                  title={member.name}
+                >
                   {member.name}
                 </span>
                 {member.id === spaceDetailData?.leaderId && (
