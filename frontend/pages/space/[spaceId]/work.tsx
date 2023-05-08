@@ -51,12 +51,13 @@ const SpaceWorkPage =
               `ssafast${spaceId}`,
               getYjsValue(state) as any
             );
+            rtcProvider.connect();
             const { awareness: innerAwareness } = rtcProvider;
             setAwareness(() => innerAwareness);
           }
           return function () {
             if (rtcProvider) {
-              rtcProvider.destroy();
+              rtcProvider.disconnect();
             }
           };
         };
