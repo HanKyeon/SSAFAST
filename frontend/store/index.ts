@@ -17,6 +17,7 @@ import figmaTokenSlice, {
 } from './figma-token-slice';
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';
+import yjsSlice from './yjs-slice';
 
 // useSotre 에서 useStoreSelector와 useStoreDispatch를 일반적으로 사용하기 위한 타입
 export type AppDispatch = typeof store.dispatch;
@@ -34,6 +35,7 @@ const rootReducers = combineReducers({
   toast: toastSlice,
   figmatoken: figmaTokenSlice,
   dark: darkSlice,
+  yjsStore: yjsSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducers);
