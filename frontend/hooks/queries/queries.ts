@@ -360,7 +360,17 @@ interface sectionsApi {
         id: number;
         name: string;
         description: string;
-        method: string;
+        method:
+          | 'PUT'
+          | 'GET'
+          | 'POST'
+          | 'DELETE'
+          | 'PATCH'
+          | `put`
+          | `get`
+          | `post`
+          | `delete`
+          | `patch`;
         status: number | string;
       }[];
     };
@@ -427,8 +437,19 @@ interface EachCate {
     id: number;
     name: string;
     description: string;
-    method: string | number;
-    status: number | string;
+    method:
+      | 'PUT'
+      | 'GET'
+      | 'POST'
+      | 'DELETE'
+      | 'PATCH'
+      | `put`
+      | `get`
+      | `post`
+      | `delete`
+      | `patch`;
+    status: 1 | 2 | 3 | 4; // 1 명세중 2명세완료 3개발중 4개발완료
+
     writter: {
       id: number;
       name: string;

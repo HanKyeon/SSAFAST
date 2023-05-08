@@ -65,9 +65,10 @@ const SpaceWorkPage =
         //   testData.forEach((section) => state.figmaList.push(section));
         // }
         if (spaceFrameData && state.figmaList.length) {
-          while (state.figmaList) {
+          while (state.figmaList.length) {
             state.figmaList.pop();
           }
+
           spaceFrameData.figmaSections.forEach((section) =>
             state.figmaList.push(section)
           );

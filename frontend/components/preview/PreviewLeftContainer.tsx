@@ -8,6 +8,8 @@ import { useSpaceApis, useSpaceDetail } from '@/hooks/queries/queries';
 import { SpaceParams } from '@/pages/space';
 import { useMemo } from 'react';
 
+const statusLsit = [``, `명세중`, `명세완료`, `개발중`, `개발완료`];
+
 const PreviewLeftContainer = function (): JSX.Element {
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
@@ -27,7 +29,17 @@ const PreviewLeftContainer = function (): JSX.Element {
         id: number;
         name: string;
         description: string;
-        method: string | number;
+        method:
+          | 'PUT'
+          | 'GET'
+          | 'POST'
+          | 'DELETE'
+          | 'PATCH'
+          | `put`
+          | `get`
+          | `post`
+          | `delete`
+          | `patch`;
         status: number | string;
         writter: {
           id: number;
@@ -103,52 +115,42 @@ const PreviewLeftContainer = function (): JSX.Element {
           <span className="w-[70px] text-center">status</span>
         </div>
         <ul className="flex-1 flex flex-col overflow-scroll scrollbar-hide">
+          {apiList.map((api) => {
+            return (
+              <APIlistItem
+                method={api.method}
+                desc={api.description}
+                status={
+                  statusLsit[api.status as 1 | 2 | 3 | 4] as
+                    | `명세중`
+                    | `명세완료`
+                    | `개발중`
+                    | `개발완료`
+                }
+              />
+            );
+          })}
           <APIlistItem
-            type="POST"
+            method="POST"
             desc="목록 수정하기인데 이제 여기서 뭔가를 더 받으면 뭐 어쩌고 되는건가"
             status="명세중"
           />
           <APIlistItem
-            type="GET"
+            method="GET"
             desc="목록 수정하기인데 이제 여기서 뭔가를 더 받으면 뭐 어쩌고 되는건가"
             status="명세완료"
           />
           <APIlistItem
-            type="POST"
+            method="POST"
             desc="목록 수정하기인데 이제"
             status="명세중"
           />
           <APIlistItem
-            type="GET"
+            method="GET"
             desc="목록 수정하기인데 이제 여기서 뭔가를 더 받으면 뭐 어쩌고 되는건가"
             status="개발중"
           />
-          <APIlistItem type="DEL" desc="목록 수정" status="개발완료" />
-          <APIlistItem
-            type="PATCH"
-            desc="회원 관리를 하다가 배가고픔"
-            status="명세중"
-          />
-          <APIlistItem
-            type="GET"
-            desc="회원 관리를 하다가 배가고픔"
-            status="명세중"
-          />
-          <APIlistItem
-            type="GET"
-            desc="회원 관리를 하다가 배가고픔"
-            status="명세중"
-          />
-          <APIlistItem
-            type="POST"
-            desc="회원 관리를 하다가 배가고픔"
-            status="명세중"
-          />
-          <APIlistItem
-            type="GET"
-            desc="회원 관리를 하다가 배가고픔"
-            status="명세중"
-          />
+          <APIlistItem method="DELETE" desc="목록 수정" status="개발완료" />
         </ul>
       </Box>
     </div>

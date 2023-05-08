@@ -9,14 +9,14 @@ interface APIlistItemPropsType
 }
 
 const APIlistItem = function ({
-  type,
+  method,
   desc,
   status,
   by,
 }: APIlistItemPropsType): JSX.Element {
   return (
     <li className="flex items-center gap-3 h-[40px] min-h-[40px]">
-      <MethodBadge className="" type={type} />
+      <MethodBadge className="" method={method} />
       <p className="flex-1 truncate hover:text-clip">{desc}</p>
       <StatusBadge className="w-[70px] text-center" status={status} />
       {by && <i>usericon</i>}

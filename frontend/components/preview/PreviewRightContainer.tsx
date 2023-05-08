@@ -95,6 +95,8 @@ const PreviewRightContainer = function (): JSX.Element {
           <BoxHeader title="API 진행률?" />
           <div>
             <canvas id="myChart"></canvas>
+            {<div>전체 api 갯수 : {spaceDetailData?.totalApiCount}</div>}
+            {<div>완료된 api 갯수 : {spaceDetailData?.completeApiCount}</div>}
             {/* <Doughnut data={data} /> */}
           </div>
         </div>
@@ -109,7 +111,7 @@ const PreviewRightContainer = function (): JSX.Element {
                 className="flex justify-center items-center gap-3 h-[30px] w-full"
               >
                 <UserBadge imgSrc={member.profileImg} />
-                <span className="w-[50px] truncate" title={member.name}>
+                <span className="w-[80%] truncate" title={member.name}>
                   {member.name}
                 </span>
                 {member.id === spaceDetailData?.leaderId && (
