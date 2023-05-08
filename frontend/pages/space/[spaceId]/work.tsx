@@ -58,6 +58,7 @@ const SpaceWorkPage =
             //   getYjsValue(state) as any
             // );
             if (rtcProvider) {
+              console.log('커넥트!');
               rtcProvider.connect();
               const { awareness: innerAwareness } = rtcProvider;
               setAwareness(() => innerAwareness);
@@ -67,11 +68,12 @@ const SpaceWorkPage =
         rtcOpener();
         return function () {
           if (rtcProvider) {
+            console.log('디스커넥트!');
             rtcProvider.disconnect();
           }
         };
       },
-      [spaceId, state]
+      [spaceId]
     );
 
     useEffect(
