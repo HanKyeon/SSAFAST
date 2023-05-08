@@ -97,20 +97,25 @@ const SpaceWorkPage =
 
     useEffect(
       function () {
-        if (!awareness) {
+        if (!awareness && !spaceFrameData) {
           return;
         }
-        if (!state.figmaList.length) {
-          testData.forEach((section) => state.figmaList.push(section));
+        // if (!state.figmaList.length) {
+        //   testData.forEach((section) => state.figmaList.push(section));
+        // }
+        if (spaceFrameData) {
+          while (state.figmaList) {
+            state.figmaList.pop();
+          }
+          spaceFrameData.figmaSections.forEach((section) =>
+            state.figmaList.push(section)
+          );
         }
 
-        // spaceFrameData.figmaSections.forEach((section) =>
-        //   store.figmaList.push(section)
-        // );
-        // store.figmaList = [...spaceFrameData.figmaSections] as Array<any>;
+        // state.figmaList = [...spaceFrameData.figmaSections] as Array<any>;
 
-        // store.useCaseList = [];
-        // store.overloadList = [];
+        // state.useCaseList = [];
+        // state.overloadList = [];
       },
       [awareness, spaceFrameData]
     );
