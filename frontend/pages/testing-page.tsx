@@ -1,4 +1,5 @@
 import { Box } from '@/components/common';
+import { DtoForm } from '@/components/forms';
 import axios from 'axios';
 
 const TestingPage = function () {
@@ -42,12 +43,7 @@ const TestingPage = function () {
   };
   return (
     <div>
-      <Box variant="three" onClick={clickHandler}>
-        API Route로 보내보기
-      </Box>
-      <Box variant="three" onClick={clickHandler2}>
-        직접 쏴보기
-      </Box>
+      <DtoForm />
     </div>
   );
 };
