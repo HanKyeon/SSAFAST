@@ -118,7 +118,7 @@ const PreviewRightContainer = function (): JSX.Element {
               </li>
             );
           })}
-          <li className="flex justify-center items-center gap-3 h-[30px]">
+          {/* <li className="flex justify-center items-center gap-3 h-[30px]">
             <UserBadge />
             <span className="w-[50px] truncate">폴라맨</span>
             <div className="flex justify-center items-center gap-1 w-[40px]">
@@ -150,7 +150,7 @@ const PreviewRightContainer = function (): JSX.Element {
             <UserBadge />
             <span className="w-[50px] truncate">폴라맨</span>
             <div className="flex justify-center items-center gap-1 w-[40px]"></div>
-          </li>
+          </li> */}
         </ul>
       </Box>
       <Button

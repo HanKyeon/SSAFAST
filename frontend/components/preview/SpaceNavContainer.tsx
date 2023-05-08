@@ -12,18 +12,6 @@ import { useRouter } from 'next/router';
 import { useSpaceList, useUserData } from '@/hooks/queries/queries';
 import { SpinnerDots } from '../common/Spinner';
 
-const spaceMockup = [
-  { id: 0, name: 'spaceffffff1' },
-  { id: 1, name: 'space 2' },
-  { id: 2, name: 'space 3' },
-  { id: 3, name: 'space 4' },
-  { id: 4, name: 'space 5' },
-  { id: 5, name: 'space 6' },
-  { id: 6, name: 'space 7' },
-  { id: 7, name: 'space 8' },
-  { id: 8, name: 'space 9' },
-];
-
 const SpaceNavContainer = function (): JSX.Element {
   const router = useRouter();
   const { spaceId } = router.query;

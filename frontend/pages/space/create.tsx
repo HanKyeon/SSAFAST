@@ -105,7 +105,7 @@ const SpaceCreatePage =
         .map((val) => {
           return {
             sectionUrl: val.image,
-            refreshId: val.figmaId,
+            sectionId: val.figmaId,
             name: val.name,
           };
         });
@@ -164,12 +164,16 @@ const SpaceCreatePage =
           return res;
         })
         .then((res) => {
+          const spaceId = res.data.id;
           if (pjtMemberList.length) {
             apiRequest({
               method: `post`,
               url: `/api/workspace/member`,
               data: {
                 memberIds: pjtMemberList.map((member) => member.id),
+              },
+              params: {
+                workspaceId: spaceId,
               },
             });
           }

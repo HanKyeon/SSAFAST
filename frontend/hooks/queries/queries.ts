@@ -191,7 +191,7 @@ export const useApiResultResponseDtoCode = function (
         params: {
           apiId,
         },
-      });
+      }).then((res) => res.data);
     },
     enabled: !!spaceId && !!apiId,
   });
@@ -272,7 +272,7 @@ export const useDtoAxiosConfig = function (
         params: {
           apiId: apiId,
         },
-      });
+      }).then((res) => res.data);
     },
     enabled: !!spaceId && !!apiId,
   });
@@ -452,7 +452,7 @@ export const useSpaceApis = function (spaceId: string | number) {
         params: {
           workspaceId: spaceId,
         },
-      });
+      }).then((res) => res.data);
     },
     enabled: !!spaceId,
   });
@@ -469,7 +469,7 @@ export const useBaseUrl = function (spaceId: string | number) {
         params: {
           workspaceId: spaceId,
         },
-      });
+      }).then((res) => res.data);
     },
     enabled: !!spaceId,
   });

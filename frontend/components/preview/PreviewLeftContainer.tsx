@@ -6,6 +6,7 @@ import APIlistItem from '../apis/APIlistItem';
 import { useRouter } from 'next/router';
 import { useSpaceApis, useSpaceDetail } from '@/hooks/queries/queries';
 import { SpaceParams } from '@/pages/space';
+import { useMemo } from 'react';
 
 const PreviewLeftContainer = function (): JSX.Element {
   const router = useRouter();
@@ -20,7 +21,33 @@ const PreviewLeftContainer = function (): JSX.Element {
     isLoading: spaceApiLoading,
     isError: spaceApiError,
   } = useSpaceApis(parseInt(spaceId));
-
+  const apiList = useMemo(
+    function () {
+      let ret: {
+        id: number;
+        name: string;
+        description: string;
+        method: string | number;
+        status: number | string;
+        writter: {
+          id: number;
+          name: string;
+          email: string;
+          profileImg: string;
+        };
+      }[] = [];
+      if (!spaceApiData) {
+        return [];
+      }
+      spaceApiData?.apiCategories.forEach((cate, idx) => {
+        cate.apis.forEach((api) => {
+          ret.push(api);
+        });
+      });
+      return ret;
+    },
+    [spaceApiData]
+  );
   return (
     <div className="h-full flex-[2] py-3 flex flex-col gap-3 min-w-0">
       <Box className="flex-[3] bg-preview bg-no-repeat bg-cover bg-center">
