@@ -40,31 +40,34 @@ const SpaceWorkPage =
 
     // const [store, setStore] = useState<any>(useSyncedStore(yjsStore));
     const state = useSyncedStore(yjsStore);
+    const [rtcProvider, setRtcProvider] = useState<WebrtcProvider>();
     const [awareness, setAwareness] = useState<any>(null);
     useEffect(
       function () {
-        let rtcProvider: any;
         const rtcOpener = async function () {
-          let rtcProvider: any;
           if (state && spaceId?.length) {
-            rtcProvider = new WebrtcProvider(
-              `ssafast${spaceId}`,
-              getYjsValue(state) as any
+            setRtcProvider(
+              () =>
+                new WebrtcProvider(
+                  `ssafast${spaceId}`,
+                  getYjsValue(state) as any
+                )
             );
-            rtcProvider.connect();
-            const { awareness: innerAwareness } = rtcProvider;
-            setAwareness(() => innerAwareness);
-          }
-          return function () {
+            // rtcProvider = new WebrtcProvider(
+            //   `ssafast${spaceId}`,
+            //   getYjsValue(state) as any
+            // );
             if (rtcProvider) {
-              rtcProvider.disconnect();
+              rtcProvider.connect();
+              const { awareness: innerAwareness } = rtcProvider;
+              setAwareness(() => innerAwareness);
             }
-          };
+          }
         };
         rtcOpener();
         return function () {
           if (rtcProvider) {
-            rtcProvider.destroy();
+            rtcProvider.disconnect();
           }
         };
       },
