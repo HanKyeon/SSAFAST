@@ -104,7 +104,10 @@ const PreviewRightContainer = function (): JSX.Element {
         <ul className="flex-1 flex flex-col gap-3 min-h-0 overflow-scroll scrollbar-hide">
           {memberList?.members.map((member) => {
             return (
-              <li className="flex justify-center items-center gap-3 h-[30px]">
+              <li
+                key={`${member.id}-preview-member`}
+                className="flex justify-center items-center gap-3 h-[30px]"
+              >
                 <UserBadge imgSrc={member.profileImg} />
                 <span className="w-[50px] truncate">{member.name}</span>
                 {member.id === spaceDetailData?.leaderId && (
