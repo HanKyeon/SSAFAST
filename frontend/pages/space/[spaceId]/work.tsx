@@ -85,9 +85,6 @@ const SpaceWorkPage =
     useEffect(function () {
       return function () {
         console.log('디스커넥트');
-        while (state.figmaList.length) {
-          state.figmaList.pop();
-        }
         rtcProvider?.disconnect();
       };
     }, []);
