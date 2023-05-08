@@ -3,10 +3,12 @@ import UserImg from '/public/assets/images/Ggo.png';
 
 interface UserBadgePropsType {
   size?: 'small' | 'medium' | 'large';
+  imgSrc?: string;
 }
 
 const UserBadge = function ({
   size = 'small',
+  imgSrc,
 }: UserBadgePropsType): JSX.Element {
   const styles = {
     userImgWrapper:
@@ -21,7 +23,7 @@ const UserBadge = function ({
   return (
     <div className={`${styles['userImgWrapper']} ${styles['size']}`}>
       <Image
-        src={UserImg}
+        src={imgSrc as string}
         alt="user image"
         className="min-w-full min-h-full object-cover"
       />
