@@ -26,8 +26,7 @@ const SpacePreviewPage =
       isError: spaceDetailError,
     } = useSpaceDetail(spaceId);
     const { data: figmaTokens } = useUserFigmaTokens();
-    const { data, isLoading, isFetching, isInitialLoading } =
-      useFigmaDatas(spaceId);
+
     return (
       <>
         <MetaHead title="SSAFAST : space" description="프로젝트" url="/space" />

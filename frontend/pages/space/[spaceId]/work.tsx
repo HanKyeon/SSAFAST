@@ -58,7 +58,7 @@ const SpaceWorkPage =
 
     useEffect(
       function () {
-        if (!awareness && !spaceFrameData) {
+        if (!awareness && !spaceFrameDataLoading) {
           return;
         }
         // if (!state.figmaList.length) {
