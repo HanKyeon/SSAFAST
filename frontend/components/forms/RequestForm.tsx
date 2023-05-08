@@ -14,7 +14,8 @@ import { useStoreDispatch } from '@/hooks/useStore';
 import { DispatchToast } from '@/store';
 import { inputTheme } from '@/utils/styleClasses';
 import { ApiCreateForm } from './ApiCreateForm';
-
+import ToggleableHeader from '../work/APIDocsContainer/ToggleableHeader';
+import ReqItemInner from '../work/APIDocsContainer/ReqItemInner';
 export interface RequestFormData {
   additional_url: string;
   headers: Headers[];
@@ -73,6 +74,7 @@ const RequestForm = function () {
       <div className="flex flex-col items-center justify-center gap-3 ">
         <Input type="text" placeholder="urn" />
       </div>
+
       <PathVariableFields control={control} />
       <ParamsFields control={control} />
       <HeaderFields control={control} />
@@ -82,6 +84,7 @@ const RequestForm = function () {
 };
 
 function PathVariableFields({ control }: { control: any }) {
+  const [isOpen, setisOpen] = useState<boolean>(true);
   const {
     fields: pathVariableFields,
     append,
@@ -104,90 +107,98 @@ function PathVariableFields({ control }: { control: any }) {
 
   return (
     <>
-      <div className="flex justify-between w-40">
-        <div>PathVariable</div>
+      <div className="flex items-center w-96">
+        <ToggleableHeader
+          title="PathVariable"
+          isOpen={isOpen}
+          setIsOpen={setisOpen}
+        />
         <CircleBtn
           btnType="plus"
           type="button"
           onClick={appendPathVariableInput}
         ></CircleBtn>
       </div>
-      {pathVariableFields.map((item, index) => (
-        <div key={item.id}>
-          <CircleBtn btnType="delete" onClick={() => remove(index)}></CircleBtn>
-          <Controller
-            name={`document.request.path_variable.[${index}].key`}
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState }) => (
-              <div className="flex">
-                <label htmlFor={`path_variable.[${index}].key`}>Key:</label>
-                <input
-                  type="text"
-                  id={`path_variable.[${index}].key`}
-                  {...field}
-                />
-                {fieldState?.invalid && <span>This field is required</span>}
-              </div>
-            )}
-          />
-          <Controller
-            name={`document.request.path_variable.[${index}].type`}
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState }) => (
-              <div className="flex">
-                <label htmlFor={`path_variable.[${index}].type`}>Type:</label>
-                <input
-                  type="text"
-                  id={`path_variable.[${index}].type`}
-                  {...field}
-                />
-                {fieldState?.invalid && <span>This field is required</span>}
-              </div>
-            )}
-          />
-          <Controller
-            name={`document.request.path_variable.[${index}].desc`}
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState }) => (
-              <>
+      {isOpen &&
+        pathVariableFields.map((item, index) => (
+          <div key={item.id}>
+            <CircleBtn
+              btnType="delete"
+              onClick={() => remove(index)}
+            ></CircleBtn>
+            <Controller
+              name={`document.request.path_variable.[${index}].key`}
+              control={control}
+              rules={{ required: true }}
+              render={({ field, fieldState }) => (
                 <div className="flex">
-                  <label htmlFor={`path_variable.[${index}].desc`}>
-                    Description:
-                  </label>
+                  <label htmlFor={`path_variable.[${index}].key`}>Key:</label>
                   <input
                     type="text"
-                    id={`path_variable.[${index}].desc`}
+                    id={`path_variable.[${index}].key`}
                     {...field}
                   />
                   {fieldState?.invalid && <span>This field is required</span>}
                 </div>
-              </>
-            )}
-          />
-          <Controller
-            name={`document.request.path_variable.[${index}].constraints`}
-            control={control}
-            render={({ field, fieldState }) => (
-              <>
+              )}
+            />
+            <Controller
+              name={`document.request.path_variable.[${index}].type`}
+              control={control}
+              rules={{ required: true }}
+              render={({ field, fieldState }) => (
                 <div className="flex">
-                  <label htmlFor={`path_variable.[${index}].constraints`}>
-                    Contstraints:
-                  </label>
+                  <label htmlFor={`path_variable.[${index}].type`}>Type:</label>
                   <input
                     type="text"
-                    id={`path_variable.[${index}].constraints`}
+                    id={`path_variable.[${index}].type`}
                     {...field}
                   />
                   {fieldState?.invalid && <span>This field is required</span>}
                 </div>
-              </>
-            )}
-          />
-        </div>
-      ))}
+              )}
+            />
+            <Controller
+              name={`document.request.path_variable.[${index}].desc`}
+              control={control}
+              rules={{ required: true }}
+              render={({ field, fieldState }) => (
+                <>
+                  <div className="flex">
+                    <label htmlFor={`path_variable.[${index}].desc`}>
+                      Description:
+                    </label>
+                    <input
+                      type="text"
+                      id={`path_variable.[${index}].desc`}
+                      {...field}
+                    />
+                    {fieldState?.invalid && <span>This field is required</span>}
+                  </div>
+                </>
+              )}
+            />
+            <Controller
+              name={`document.request.path_variable.[${index}].constraints`}
+              control={control}
+              render={({ field, fieldState }) => (
+                <>
+                  <div className="flex">
+                    <label htmlFor={`path_variable.[${index}].constraints`}>
+                      Contstraints:
+                    </label>
+                    <input
+                      type="text"
+                      id={`path_variable.[${index}].constraints`}
+                      {...field}
+                    />
+                    {fieldState?.invalid && <span>This field is required</span>}
+                  </div>
+                </>
+              )}
+            />
+          </div>
+        ))}
     </>
   );
 }

@@ -118,7 +118,7 @@ const SpaceWorkPage =
           url={`/space/${spaceId}/work`}
         />
         <div className="h-full w-full overflow-hidden">
-          {awareness && userData && (
+          {awareness && (
             <RoomProvider<PresenceUserData>
               awareness={awareness}
               initialPresence={{
