@@ -3,6 +3,7 @@ import {
   useForm,
   Controller,
   useFieldArray,
+  UseFormReturn,
 } from 'react-hook-form';
 import { Box, Button, CircleBtn, Input, Select } from '../common';
 import { useRef, useState } from 'react';
@@ -14,6 +15,7 @@ import { inputTheme } from '@/utils/styleClasses';
 
 interface RequestProps {
   requestGetter?: (data: any) => void;
+  methods: UseFormReturn<RequestFormData>;
 }
 
 interface Headers {
@@ -50,14 +52,11 @@ interface Request {
   body: Body;
 }
 
-interface RequestFormData {
+export interface RequestFormData {
   request: Request;
 }
 
-const RequestForm = function ({ requestGetter }: RequestProps) {
-  const methods = useForm<RequestFormData>({
-    defaultValues: undefined,
-  });
+const RequestForm = function ({ requestGetter, methods }: RequestProps) {
   const { control, handleSubmit, reset } = methods;
   // const {
   //   fields: requestFields,
@@ -68,7 +67,7 @@ const RequestForm = function ({ requestGetter }: RequestProps) {
   //   control,
   // });
 
-  const onSubmit = function (data: any) {
+  const onSubmit = function (data: RequestFormData) {
     if (requestGetter) {
       requestGetter(data);
     }
@@ -83,8 +82,12 @@ const RequestForm = function ({ requestGetter }: RequestProps) {
         className="flex flex-col items-center justify-center gap-3 "
       >
         <label>
-          Category:
-          <Select name="category" className={`w-48 text-center`}></Select>
+          Category: 1
+          <Select name="category" className={`w-48 text-center`}>
+            <ul>
+              <li value={1}>hi</li>
+            </ul>
+          </Select>
         </label>
         <label>
           Category:

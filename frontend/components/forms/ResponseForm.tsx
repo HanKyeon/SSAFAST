@@ -1,14 +1,14 @@
 import {
   FormProvider,
-  useForm,
   Controller,
   useFieldArray,
+  UseFormReturn,
 } from 'react-hook-form';
 import { Box, Button, CircleBtn, Input } from '../common';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import useInput from '@/hooks/useInput';
 import useInputNumber from '@/hooks/useInputNumber';
-import { useStoreDispatch } from '@/hooks/useStore';
+import { useStoreDispatch, useStoreSelector } from '@/hooks/useStore';
 import { DispatchToast } from '@/store';
 
 interface Headers {
@@ -31,14 +31,14 @@ interface Body {
   // dtos: Dto;
 }
 
-interface Response {
+export interface Response {
   status_code: number;
   desc: string;
   headers: Headers[];
   body: Body;
 }
 
-interface ResponseFormData {
+export interface ResponseFormData {
   response: Response[];
 }
 
@@ -66,11 +66,17 @@ function HeaderFields({
   };
   return (
     <>
-      <div>Header</div>
-      <CircleBtn btnType="plus" onClick={appendHeaderInput}></CircleBtn>
+      <div className="flex justify-between w-40">
+        <div>Header</div>
+        <CircleBtn btnType="plus" onClick={appendHeaderInput}></CircleBtn>
+      </div>
       {headerFields.map((item, index) => (
-        <div key={item.id}>
-          <CircleBtn btnType="delete" onClick={() => remove(index)}></CircleBtn>
+        <div key={item.id} className="">
+          <CircleBtn
+            btnType="delete"
+            type="button"
+            onClick={() => remove(index)}
+          ></CircleBtn>
           <Controller
             name={`response.${Keyindex}.headers[${index}].key`}
             control={control}
@@ -134,8 +140,14 @@ function BodyFields({ control, Keyindex }: { control: any; Keyindex: number }) {
 
   return (
     <>
-      <div>body</div>
-      <CircleBtn btnType="plus" onClick={appendBodyInput}></CircleBtn>
+      <div className="flex justify-between w-40">
+        <div>body</div>
+        <CircleBtn
+          btnType="plus"
+          type="button"
+          onClick={appendBodyInput}
+        ></CircleBtn>
+      </div>
       {bodyFields.map((item, index) => (
         <div key={item.id}>
           <CircleBtn btnType="delete" onClick={() => remove(index)}></CircleBtn>
@@ -210,10 +222,15 @@ function BodyFields({ control, Keyindex }: { control: any; Keyindex: number }) {
 
 interface ResponseProps {
   responseGetter?: (data: any) => void;
+  methods: UseFormReturn<ResponseFormData>;
 }
 
-const ResponseForm = function ({ responseGetter }: ResponseProps) {
+const ResponseForm = function ({ responseGetter, methods }: ResponseProps) {
   const dispatch = useStoreDispatch();
+  const selectedStyle = (dark: boolean) =>
+    `${dark ? 'text-mincho-strong' : 'text-taro-strong'}` as const;
+
+  const { dark } = useStoreSelector((state) => state.dark);
   const [codeRef, descRef] = [
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
@@ -229,31 +246,7 @@ const ResponseForm = function ({ responseGetter }: ResponseProps) {
     onResetHandler: descReset,
   } = useInput(descRef);
 
-  const methods = useForm<ResponseFormData>({
-    defaultValues: undefined,
-    // {
-    //   response: [
-    //     {
-    //       status_code: 404,
-    //       desc: '낫파운드',
-    //       body: {
-    //         fields: [
-    //           {
-    //             key: 'a',
-    //             desc: 'b',
-    //             type: 'c',
-    //             constraints: ['d'],
-    //             itera: true,
-    //             value: null,
-    //           },
-    //         ],
-    //       },
-    //       headers: [{ key: 'a', desc: 'b', type: 'c' }],
-    //     },
-    //   ],
-    // },
-  });
-  const { control, handleSubmit, reset } = methods;
+  const { control, handleSubmit, getValues } = methods;
   const {
     fields: responseFields,
     append,
@@ -274,13 +267,6 @@ const ResponseForm = function ({ responseGetter }: ResponseProps) {
     });
     codeReset();
     descReset();
-  };
-  const submitHandler = function (data: any) {
-    console.log('이건 리스폰스에서 찍힌 콘솔', data);
-
-    if (responseGetter) {
-      responseGetter(data);
-    }
   };
 
   const addComponentHandler = function () {
@@ -314,25 +300,44 @@ const ResponseForm = function ({ responseGetter }: ResponseProps) {
               placeholder="description"
               maxLength={300}
             />
-
             <Button type="submit" isEmpty>
               add
             </Button>
           </div>
+          <br />
         </form>
-        <form onSubmit={handleSubmit((data) => submitHandler(data))}>
+        <form>
           <>
             {responseFields.map((item, index) => (
-              <div key={item.id}>
-                <label htmlFor={`${item.status_code}`}>Status Code:</label>
-                <div id={`${item.status_code}`}>{item.status_code}</div>
-                <label htmlFor={`${item.desc}`}>Descriptions:</label>
-                <div id={`${item.desc}`}>{item.desc}</div>
-                <CircleBtn
-                  type="button"
-                  btnType="delete"
-                  onClick={() => remove(index)}
-                ></CircleBtn>
+              <div key={item.id} className="p-5">
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-3">
+                    <div className="">
+                      <div
+                        id={`${item.status_code}`}
+                        className={`${selectedStyle(
+                          dark
+                        )} font-extrabold text-2xl`}
+                      >
+                        {item.status_code}
+                      </div>
+
+                      <div
+                        id={`${item.desc}`}
+                        className="text-grayscale-light text-sm"
+                      >
+                        {item.desc}
+                      </div>
+                    </div>
+                    <div>토글아이콘</div>
+                  </div>
+                  <CircleBtn
+                    className=""
+                    type="button"
+                    btnType="delete"
+                    onClick={() => remove(index)}
+                  ></CircleBtn>
+                </div>
                 <HeaderFields control={control} Keyindex={index} />
                 <BodyFields control={control} Keyindex={index} />
                 {/* {!(errors.response && errors.response[index]?.code) &&
@@ -345,7 +350,6 @@ const ResponseForm = function ({ responseGetter }: ResponseProps) {
               </div>
             ))}
           </>
-          <button type="submit">Submit</button>
         </form>
       </Box>
     </FormProvider>
