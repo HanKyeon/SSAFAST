@@ -106,10 +106,12 @@ const PreviewRightContainer = function (): JSX.Element {
             return (
               <li
                 key={`${member.id}-preview-member`}
-                className="flex justify-center items-center gap-3 h-[30px]"
+                className="flex justify-center items-center gap-3 h-[30px] w-full"
               >
                 <UserBadge imgSrc={member.profileImg} />
-                <span className="w-[50px] truncate">{member.name}</span>
+                <span className="w-[50px] truncate" title={member.name}>
+                  {member.name}
+                </span>
                 {member.id === spaceDetailData?.leaderId && (
                   <div className="flex justify-center items-center gap-1 w-[40px]">
                     <span className="text-[11px] text-grayscale-dark">
