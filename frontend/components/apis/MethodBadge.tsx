@@ -1,23 +1,23 @@
 export interface MethodBadgePropsType {
-  type: 'PUT' | 'GET' | 'POST' | 'DEL' | 'PATCH';
+  method: 'PUT' | 'GET' | 'POST' | 'DEL' | 'PATCH';
   className?: string;
   small?: boolean;
 }
 
 const MethodBadge = function ({
-  type,
+  method,
   className,
   small = false,
 }: MethodBadgePropsType): JSX.Element {
   const styles = {
     color:
-      type === 'POST'
+      method === 'POST'
         ? 'bg-mega-normal'
-        : type === 'PUT'
+        : method === 'PUT'
         ? 'bg-taro-normal'
-        : type === 'GET'
+        : method === 'GET'
         ? 'bg-mincho-normal'
-        : type === 'DEL'
+        : method === 'DEL'
         ? 'bg-mammoth-normal'
         : 'bg-milktea-strong',
     size: small
@@ -28,7 +28,7 @@ const MethodBadge = function ({
     <div
       className={`${className} ${styles.color} ${styles.size} flex items-center justify-center rounded-[5px] `}
     >
-      <span className={`text-theme-dark-strong`}>{type}</span>
+      <span className={`text-theme-dark-strong`}>{method}</span>
     </div>
   );
 };

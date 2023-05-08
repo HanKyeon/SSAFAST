@@ -4,33 +4,31 @@ import { PropsWithChildren, FC, ButtonHTMLAttributes } from 'react';
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: `small` | 'full';
   isEmpty?: boolean;
-  btnType?: string;
+  // btnType?: string;
   className?: string;
 }
 
 const Button = function ({
   variant = 'small',
   isEmpty = false,
-  btnType,
+  // btnType,
   children,
   className,
   ...rest
 }: PropsWithChildren<ButtonProps>) {
   const { dark: isDark } = useStoreSelector((state) => state.dark);
   const styles = {
-    small: `${
+    small: ` py-2 px-7 rounded-[20px] ${
       isDark && !isEmpty
-        ? 'bg-mincho-strong text-theme-white-strong py-2 px-7 rounded-[20px]'
+        ? 'bg-mincho-strong text-theme-white-strong'
         : isDark && isEmpty
-        ? 'border-mincho-strong text-mincho-strong py-2 px-7 border-[3px] rounded-[20px]'
+        ? 'border-mincho-strong text-mincho-strong border-[3px]'
         : !isDark && !isEmpty
-        ? 'bg-taro-strong text-theme-white-strong py-2 px-7 rounded-[20px]'
-        : 'border-taro-strong text-taro-strong py-2 px-7 border-[3px] rounded-[20px]'
+        ? 'bg-taro-strong text-theme-white-strong'
+        : 'border-taro-strong text-taro-strong border-[3px]'
     }`,
-    full: `${
-      isDark
-        ? 'bg-mincho-strong text-theme-white-strong py-4 px-7 rounded-[13px] w-full'
-        : 'bg-taro-strong text-theme-white-strong py-4 px-7 rounded-[13px] w-full'
+    full: `text-theme-white-strong py-4 px-7 rounded-[13px] w-full ${
+      isDark ? 'bg-mincho-strong' : 'bg-taro-strong'
     }`,
   };
 

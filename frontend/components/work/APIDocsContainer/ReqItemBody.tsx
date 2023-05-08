@@ -37,7 +37,7 @@ const ReqItemBody = function ({
     wrapper: `overflow-hidden mt-0 mx-auto text-content`,
   };
 
-  const makeDtosArr = () => {
+  const makeDtosArr = (): void => {
     const arr: RefinedDtosType[] = [];
     for (const eachDtoID in item.dtos) {
       const eachDto: DtoType = item.dtos[eachDtoID] as DtoType;

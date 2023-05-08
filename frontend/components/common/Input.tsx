@@ -1,10 +1,14 @@
 import { useStoreSelector } from '@/hooks/useStore';
 
 interface InputPropsType {
+  placeholder?: string;
   className?: string;
 }
 
-const Input = function ({ className }: InputPropsType): JSX.Element {
+const Input = function ({
+  placeholder = 'value',
+  className,
+}: InputPropsType): JSX.Element {
   const { dark: isDark } = useStoreSelector((state) => state.dark);
   const styles = {
     input: `bg-transparent border-b-[1px] outline-none ${
@@ -17,7 +21,7 @@ const Input = function ({ className }: InputPropsType): JSX.Element {
     <input
       type="text"
       title="value"
-      placeholder="value"
+      placeholder={placeholder}
       className={`${className} ${styles['input']}`}
     />
   );

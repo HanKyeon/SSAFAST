@@ -6,8 +6,9 @@ import { TbSend } from 'react-icons/tb';
 import { HiOutlineFolderArrowDown } from 'react-icons/hi2';
 import { IoSaveOutline } from 'react-icons/io5';
 import MethodBadge from '@/components/apis/MethodBadge';
-import RequestBox from './ReqBox';
-import ResponseBox from './ResponseBox';
+import ReqBox from './ReqBox';
+import ResBox from './ResBox';
+import LeftContainer from './LeftContainer';
 
 interface Props {
   serverSideStore?: RTCSpaceData;
@@ -17,7 +18,9 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
   return (
     <div className="h-full flex justify-center items-center gap-3">
       {/* 왼쪽 화면 */}
-      <Box className="h-full flex-1">!!</Box>
+      <Box className="h-full p-5 flex-1">
+        <LeftContainer />
+      </Box>
       {/* 오른쪽 화면 */}
       <div className="h-full flex-1 min-w-0 flex flex-col items-center gap-3">
         {/* api detail */}
@@ -36,16 +39,16 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
             게시글 목록 쭈루리 불러오는 것
           </p>
           <div className="mt-[12px] flex gap-3 items-center">
-            <MethodBadge type="GET" small />
+            <MethodBadge method="GET" small />
             <p className="text-[14px] text-grayscale-light">
               https://localhost:8080/user/:userid
             </p>
           </div>
         </Box>
         {/* Request */}
-        <RequestBox />
+        <ReqBox />
         {/* Response */}
-        <ResponseBox />
+        <ResBox />
       </div>
     </div>
   );

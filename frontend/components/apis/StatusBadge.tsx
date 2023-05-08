@@ -22,7 +22,7 @@ const StatusBadge = function ({
   return (
     <span
       className={`${className} ${styles.style} ${
-        small ? 'text-small' : 'text-normal'
+        small ? 'text-small' : 'text-content'
       }`}
     >
       {status}

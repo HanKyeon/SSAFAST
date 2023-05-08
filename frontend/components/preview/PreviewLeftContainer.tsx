@@ -3,6 +3,49 @@ import { Box } from '../common';
 import SpaceIcon from '/public/assets/images/Ggo.png';
 import BoxHeader from '../common/BoxHeader';
 import APIlistItem from '../apis/APIlistItem';
+import { APIInfoType } from '../work/APIEditContainer/APIList';
+
+const apiListMockup: APIInfoType[] = [
+  {
+    id: 1,
+    name: '전체 회원 목록',
+    description: '아무튼 다 가져오는거',
+    method: 'GET',
+    status: '명세중',
+    writter: {
+      id: 1,
+      name: '로사짱',
+      email: 'a@naver.com',
+      profileImg: 'anjanj.png',
+    },
+  },
+  {
+    id: 2,
+    name: '회원 한명 조회',
+    description: '한명 가져오는거',
+    method: 'GET',
+    status: '명세중',
+    writter: {
+      id: 1,
+      name: '로사짱',
+      email: 'a@naver.com',
+      profileImg: 'anjanj.png',
+    },
+  },
+  {
+    id: 3,
+    name: '회원가입',
+    description: '아무튼 가입',
+    method: 'POST',
+    status: '명세중',
+    writter: {
+      id: 1,
+      name: '로사짱',
+      email: 'a@naver.com',
+      profileImg: 'anjanj.png',
+    },
+  },
+];
 
 const PreviewLeftContainer = function (): JSX.Element {
   return (
@@ -52,52 +95,9 @@ const PreviewLeftContainer = function (): JSX.Element {
           <span className="w-[70px] text-center">status</span>
         </div>
         <ul className="flex-1 flex flex-col overflow-scroll scrollbar-hide">
-          <APIlistItem
-            type="POST"
-            desc="목록 수정하기인데 이제 여기서 뭔가를 더 받으면 뭐 어쩌고 되는건가"
-            status="명세중"
-          />
-          <APIlistItem
-            type="GET"
-            desc="목록 수정하기인데 이제 여기서 뭔가를 더 받으면 뭐 어쩌고 되는건가"
-            status="명세완료"
-          />
-          <APIlistItem
-            type="POST"
-            desc="목록 수정하기인데 이제"
-            status="명세중"
-          />
-          <APIlistItem
-            type="GET"
-            desc="목록 수정하기인데 이제 여기서 뭔가를 더 받으면 뭐 어쩌고 되는건가"
-            status="개발중"
-          />
-          <APIlistItem type="DEL" desc="목록 수정" status="개발완료" />
-          <APIlistItem
-            type="PATCH"
-            desc="회원 관리를 하다가 배가고픔"
-            status="명세중"
-          />
-          <APIlistItem
-            type="GET"
-            desc="회원 관리를 하다가 배가고픔"
-            status="명세중"
-          />
-          <APIlistItem
-            type="GET"
-            desc="회원 관리를 하다가 배가고픔"
-            status="명세중"
-          />
-          <APIlistItem
-            type="POST"
-            desc="회원 관리를 하다가 배가고픔"
-            status="명세중"
-          />
-          <APIlistItem
-            type="GET"
-            desc="회원 관리를 하다가 배가고픔"
-            status="명세중"
-          />
+          {apiListMockup.map((item) => (
+            <APIlistItem key={item.id} item={item} writter={false} />
+          ))}
         </ul>
       </Box>
     </div>
