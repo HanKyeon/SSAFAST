@@ -1,7 +1,10 @@
 import { workFigma } from '@/components/work/presence-type';
 import { SpaceFigma } from '@/hooks/queries/queries';
 import { syncedStore, getYjsDoc, getYjsValue } from '@syncedstore/core';
-import { MappedTypeDescription } from '@syncedstore/core/types/doc';
+import {
+  DocTypeDescription,
+  MappedTypeDescription,
+} from '@syncedstore/core/types/doc';
 import { Awareness } from '@y-presence/client';
 import { WebrtcProvider } from 'y-webrtc';
 import { Doc } from 'yjs';
@@ -33,16 +36,30 @@ export const yjsStore = syncedStore({
 // export const disconnect = () => webrtcProvider.disconnect();
 // export const connect = () => webrtcProvider.connect();
 
-// export class YjsClasses {
-//   yjsStore: typeof yjsStore;
-//   doc: Doc;
-//   rtcProvider: WebrtcProvider;
-//   awareness: Awareness;
+export class YjsClasses {
+  state: MappedTypeDescription<DocTypeDescription>;
+  store: any;
+  rtcProvider: WebrtcProvider;
+  awareness: Awareness;
 
-//   constructor(spaceId: string | number) {
-//     this.yjsStore = yjsStore;
-//     this.doc = doc;
-//     this.rtcProvider = new WebrtcProvider(`${spaceId}:ssafast`, this.doc);
-//     this.awareness = this.rtcProvider.awareness;
-//   }
-// }
+  constructor(spaceId: string | number) {
+    this.state = syncedStore({
+      figmaList: [] as SpaceFigma[],
+      apiConnectList: [] as any[],
+      apiList: [] as any[],
+      useCaseList: [] as any[],
+      overloadList: [] as any[],
+      baseUrlList: [] as string[],
+      fragment: 'xml',
+    });
+    this.store = getYjsValue(this.state);
+    this.rtcProvider = new WebrtcProvider(`ssafast${spaceId}`, this.store);
+    this.awareness = this.rtcProvider.awareness;
+  }
+  connect() {
+    this.rtcProvider.connect();
+  }
+  disconnect() {
+    this.rtcProvider.disconnect();
+  }
+}

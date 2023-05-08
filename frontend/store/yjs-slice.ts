@@ -9,7 +9,7 @@ import {
 
 // 1. state의 타입 선언
 export interface yjsState {
-  [key: number | string]: MappedTypeDescription<DocTypeDescription>;
+  [key: string]: MappedTypeDescription<DocTypeDescription>;
 }
 
 // 2. state의 initialState 지정
@@ -21,10 +21,7 @@ const yjsSlice = createSlice({
   initialState,
   reducers: {
     addYjsStore(state, action) {
-      const spaceId: number | string = action.payload.spaceId as
-        | number
-        | string;
-      state[`space${spaceId}`] = syncedStore({
+      state[`space${action.payload.spaceId}`] = syncedStore({
         figmaList: [] as SpaceFigma[],
         apiConnectList: [] as any[],
         apiList: [] as any[],
@@ -35,8 +32,7 @@ const yjsSlice = createSlice({
       });
     },
     removeYjsStore(state, action) {
-      const spaceId = action.payload.spaceId;
-      delete state.spaceId;
+      delete state[`space${action.payload.spaceId}`];
     },
   },
 });

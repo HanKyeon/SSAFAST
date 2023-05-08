@@ -17,20 +17,16 @@ import { useSyncedStore } from '@syncedstore/react';
 import { PresenceUserData, workFigma } from '@/components/work/presence-type';
 import MetaHead from '@/components/common/MetaHead';
 import {
-  SpaceFigma,
   useSpaceDetail,
   useSpaceFrames,
   useUserData,
   useUserFigmaTokens,
 } from '@/hooks/queries/queries';
 import { yjsStore } from '@/utils/syncedStore';
-import { useStoreDispatch, useStoreSelector } from '@/hooks/useStore';
-import { yjsActions } from '@/store/yjs-slice';
 
 const SpaceWorkPage =
   function () // props: InferGetServerSidePropsType<typeof getServerSideProps>
   {
-    const dispatch = useStoreDispatch();
     const router = useRouter();
     const { spaceId } = router.query as SpaceParams;
     const { data: userFigmaTokenData } = useUserFigmaTokens();
@@ -43,22 +39,7 @@ const SpaceWorkPage =
     const { data: userData, isLoading } = useUserData();
 
     // const [store, setStore] = useState<any>(useSyncedStore(yjsStore));
-    const yjsStores = useStoreSelector((state) => state.yjsStore);
-    if (!yjsStores[`space${spaceId}`]) {
-      dispatch(yjsActions.addYjsStore({ spaceId: spaceId }));
-    }
-    const state = yjsStores[`space${spaceId}`]
-      ? yjsStores[`space${spaceId}`]
-      : syncedStore({
-          figmaList: [] as SpaceFigma[],
-          apiConnectList: [] as any[],
-          apiList: [] as any[],
-          useCaseList: [] as any[],
-          overloadList: [] as any[],
-          baseUrlList: [] as string[],
-          fragment: 'xml',
-        });
-
+    const state = useSyncedStore(yjsStore);
     const [rtcProvider, setRtcProvider] = useState<WebrtcProvider>();
     const [awareness, setAwareness] = useState<any>(null);
     useEffect(
@@ -68,7 +49,7 @@ const SpaceWorkPage =
             setRtcProvider(function () {
               const provider = new WebrtcProvider(
                 `ssafast${spaceId}`,
-                getYjsValue(state) as any
+                getYjsDoc(state) as any
               );
               console.log('커넥트');
               provider.connect();
@@ -85,6 +66,9 @@ const SpaceWorkPage =
     useEffect(function () {
       return function () {
         console.log('디스커넥트');
+        while (state.figmaList.length) {
+          state.figmaList.pop();
+        }
         rtcProvider?.disconnect();
       };
     }, []);
@@ -127,7 +111,7 @@ const SpaceWorkPage =
           url={`/space/${spaceId}/work`}
         />
         <div className="h-full w-full overflow-hidden">
-          {awareness && userData && (
+          {awareness && (
             <RoomProvider<PresenceUserData>
               awareness={awareness}
               initialPresence={{
