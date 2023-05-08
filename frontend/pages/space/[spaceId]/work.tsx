@@ -19,6 +19,7 @@ import MetaHead from '@/components/common/MetaHead';
 import {
   useSpaceDetail,
   useSpaceFrames,
+  useUserData,
   useUserFigmaTokens,
 } from '@/hooks/queries/queries';
 import { yjsStore } from '@/utils/syncedStore';
@@ -35,6 +36,7 @@ const SpaceWorkPage =
       isLoading: spaceFrameDataLoading,
       isError: spaceFrameDataError,
     } = useSpaceFrames(parseInt(spaceId));
+    const { data: userData, isLoading } = useUserData();
 
     // const [store, setStore] = useState<any>(useSyncedStore(yjsStore));
     const state = useSyncedStore(yjsStore);
@@ -64,10 +66,15 @@ const SpaceWorkPage =
         // if (!state.figmaList.length) {
         //   testData.forEach((section) => state.figmaList.push(section));
         // }
-        if (spaceFrameData?.figmaSections.length) {
-          while (state.figmaList.length) {
-            state.figmaList.pop();
-          }
+        // if (spaceFrameData?.figmaSections.length) {
+        //   while (state.figmaList.length) {
+        //     state.figmaList.pop();
+        //   }
+        //   spaceFrameData.figmaSections.forEach((section) =>
+        //     state.figmaList.push(section)
+        //   );
+        // }
+        if (!state.figmaList.length && spaceFrameData) {
           spaceFrameData.figmaSections.forEach((section) =>
             state.figmaList.push(section)
           );
@@ -89,11 +96,11 @@ const SpaceWorkPage =
           url={`/space/${spaceId}/work`}
         />
         <div className="h-full w-full overflow-hidden">
-          {awareness && (
+          {awareness && userData && (
             <RoomProvider<PresenceUserData>
               awareness={awareness}
               initialPresence={{
-                name: `나다이띱때끼야`,
+                name: `${userData?.name || `나다이띱때끼야`}`,
                 color: `#${Math.round(Math.random() * 0xffffff).toString(16)}`,
                 step: 1,
               }}
