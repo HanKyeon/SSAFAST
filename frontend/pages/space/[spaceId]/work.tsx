@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import { SpaceParams } from '..';
 import apiRequest from '@/utils/axios';
 import { WebrtcProvider } from 'y-webrtc';
-import { getYjsValue, syncedStore } from '@syncedstore/core';
+import { getYjsDoc, getYjsValue, syncedStore } from '@syncedstore/core';
 import WorkContainer from '@/components/work/WorkContainer';
 import { useSyncedStore } from '@syncedstore/react';
 import { PresenceUserData, workFigma } from '@/components/work/presence-type';
@@ -49,7 +49,7 @@ const SpaceWorkPage =
             setRtcProvider(function () {
               const provider = new WebrtcProvider(
                 `ssafast${spaceId}`,
-                getYjsValue(state) as any
+                getYjsDoc(state) as any
               );
               console.log('커넥트');
               provider.connect();
