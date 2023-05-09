@@ -25,7 +25,7 @@ const APIContainer = function ({ store }: Props) {
         fontType="normal"
         className="basis-[50%] w-[50%] flex-1 items-center justify-center overflow-y-scroll scrollbar-hide"
       >
-        <FigmaList store={store} />
+        <FigmaList />
       </Box>
       {/* 오른쪽 */}
       <Box

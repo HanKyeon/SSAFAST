@@ -24,6 +24,7 @@ import {
 } from '@/hooks/queries/queries';
 // import { yjsStore } from '@/utils/syncedStore';
 import YjsProvider, { useYjsState } from '@/components/work/YjsProvider';
+import { Awareness } from '@y-presence/client';
 
 const SpaceWorkPage =
   function () // props: InferGetServerSidePropsType<typeof getServerSideProps>
@@ -44,7 +45,7 @@ const SpaceWorkPage =
     // const [store, setStore] = useState<any>(useSyncedStore(yjsStore));
     const store = useSyncedStore(state);
     const [rtcProvider, setRtcProvider] = useState<WebrtcProvider>();
-    const [awareness, setAwareness] = useState<any>(null);
+    const [awareness, setAwareness] = useState<Awareness>();
     useEffect(
       function () {
         const rtcOpener = async function () {
@@ -52,12 +53,17 @@ const SpaceWorkPage =
             setRtcProvider(function () {
               const provider = new WebrtcProvider(
                 `ssafast${spaceId}`,
-                getYjsDoc(state) as any
+                getYjsValue(state) as any
               );
               console.log('커넥트');
-              provider.connect();
+              // provider.connect();
               const { awareness: innerAwareness } = provider;
               setAwareness(() => innerAwareness);
+              console.log('rtc 시그널링', provider.signalingUrls);
+              console.log('rtc 방이름', provider.roomName);
+              console.log('rtc 방', provider.room);
+              console.log('rtc 연결 여부', provider.connected);
+              console.log('rtc', provider);
               return provider;
             });
           }
@@ -92,6 +98,13 @@ const SpaceWorkPage =
         //     state.figmaList.push(section)
         //   );
         // }
+        if (!store.editors.find((v) => v.name === userData?.name)) {
+          store.editors.push({
+            name: `${userData?.name || `나다이띱때끼야`}`,
+            color: `#${Math.round(Math.random() * 0xffffff).toString(16)}`,
+            step: 1,
+          });
+        }
         if (!store.figmaList.length && spaceFrameData) {
           spaceFrameData.figmaSections.forEach((section) =>
             store.figmaList.push(section)

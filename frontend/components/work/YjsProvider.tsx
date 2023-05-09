@@ -1,22 +1,8 @@
 import { SpaceFigma } from '@/hooks/queries/queries';
-import { SpaceParams } from '@/pages/space';
-import syncedStore, { getYjsDoc, getYjsValue } from '@syncedstore/core';
-import { useRouter } from 'next/router';
-import {
-  PropsWithChildren,
-  useContext,
-  createContext,
-  useEffect,
-  useState,
-} from 'react';
-import { WebrtcProvider } from 'y-webrtc';
-import {
-  DocTypeDescription,
-  MappedTypeDescription,
-} from '@syncedstore/core/types/doc';
-import { Awareness } from '@y-presence/client';
-import { SpinnerDots } from '../common/Spinner';
-import Modal from '../common/Modal';
+import syncedStore from '@syncedstore/core';
+import { PropsWithChildren, useContext, createContext } from 'react';
+import { MappedTypeDescription } from '@syncedstore/core/types/doc';
+import { PresenceUserData } from './presence-type';
 
 interface YjsInterface {
   state: MappedTypeDescription<{
@@ -26,12 +12,9 @@ interface YjsInterface {
     useCaseList: any[];
     overloadList: any[];
     baseUrlList: string[];
+    editors: PresenceUserData[];
     fragment: 'xml';
   }>;
-  // rtcProvider?: WebrtcProvider | undefined;
-  // awareness?: Awareness | undefined;
-  // connect?: (() => void) | undefined;
-  // disconnect?: (() => void) | undefined;
 }
 
 const YjsContext = createContext<YjsInterface>({
@@ -42,49 +25,14 @@ const YjsContext = createContext<YjsInterface>({
     useCaseList: [] as any[],
     overloadList: [] as any[],
     baseUrlList: [] as string[],
+    editors: [] as PresenceUserData[],
     fragment: 'xml',
   }),
-  // rtcProvider: undefined,
-  // awareness: undefined,
-  // connect: undefined,
-  // disconnect: undefined,
 });
 
 const YjsProvider = function ({ children }: PropsWithChildren) {
-  const router = useRouter();
-  const { spaceId } = router.query as SpaceParams;
   const { Provider } = YjsContext;
   const { state } = useContext(YjsContext);
-  const [rtcProvider, setRtcProvider] = useState<WebrtcProvider>();
-  const [awareness, setAwareness] = useState<Awareness>();
-  const [connect, setConnect] = useState<() => void>();
-  const [disconnect, setDisconnect] = useState<() => void>();
-
-  useEffect(
-    function () {
-      if (spaceId && state) {
-        setRtcProvider(function () {
-          const innerProvider = new WebrtcProvider(
-            `ssafast:${spaceId}`,
-            getYjsDoc(state)
-          );
-          const {
-            awareness: innerAwareness,
-            connect: innerConnect,
-            disconnect: innerDisconnect,
-          } = innerProvider;
-          setAwareness(() => innerAwareness);
-          setConnect(() => innerConnect);
-          setDisconnect(() => innerDisconnect);
-          return innerProvider;
-        });
-      }
-    },
-    [spaceId]
-  );
-  if (!spaceId) {
-    return <Modal closeModal={() => null}>잠시 기다려주세요...</Modal>;
-  }
   return <Provider value={{ state }}>{children}</Provider>;
 };
 

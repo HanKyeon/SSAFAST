@@ -101,7 +101,7 @@ const WorkContainer = function ({ store }: Props) {
       </WorkTopNav>
       <div className="h-[93.2%] w-full p-[1.12%]">
         {step === 1 ? (
-          <APIEditContainer store={store} />
+          <APIEditContainer />
         ) : step === 2 ? (
           <APIConnectContainer store={store} />
         ) : step === 3 ? (

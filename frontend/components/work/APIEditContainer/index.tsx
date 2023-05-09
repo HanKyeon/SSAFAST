@@ -11,17 +11,14 @@ import { RTCSpaceData } from '@/pages/space/[spaceId]/work';
 import APIContainer from './APIContainer';
 import DTOContainer from './DTOContainer';
 import { useStoreSelector } from '@/hooks/useStore';
+import { useYjsState } from '../YjsProvider';
 
-interface Props {
-  serverSideStore?: RTCSpaceData;
-  store: any;
-}
-
-const APIEditContainer = function ({ store, serverSideStore }: Props) {
+const APIEditContainer = function () {
   const others = useOthers<PresenceUserData>();
   const users = useUsers();
+  const { state: yjsStore } = useYjsState();
   //  프리센스커서 이동 관련 이벤트
-  const state = useSyncedStore(store);
+  const state = useSyncedStore(yjsStore);
   const updatePresence = useUpdatePresence<PresenceUserData>();
   const pointerMoveHandler = useCallback(
     function (e: PointerEvent) {
@@ -53,7 +50,7 @@ const APIEditContainer = function ({ store, serverSideStore }: Props) {
         onPointerMove={pointerMoveHandler}
       >
         <EditTab goAPI={goAPI} goDTO={goDTO} isActive={API1DTO2} />
-        {API1DTO2 % 2 ? <APIContainer store={store} /> : <DTOContainer />}
+        {API1DTO2 % 2 ? <APIContainer /> : <DTOContainer />}
       </div>
       {isPresence &&
         others

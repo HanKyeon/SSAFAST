@@ -2,7 +2,6 @@ import Image from 'next/image';
 // import UserImg from '@/assets/images/Ggo.png';
 import UserImg from '/public/assets/images/Ggo.png';
 import { Box, CircleBtn } from '../common';
-import { object } from 'yup';
 import { useStoreSelector } from '@/hooks/useStore';
 import ToggleModeBtn from '../common/ToggleModeBtn';
 import SpaceNameItem from './SpaceNameItem';
