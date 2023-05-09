@@ -50,19 +50,19 @@ const SpaceWorkPage = function (
     if (state && spaceId?.length) {
       provider = new WebrtcProvider(
         `ssafast${spaceId}`,
-        getYjsDoc(state) as any,
-        {
-          signaling: [
-            `ws://localhost:4444`,
-            `wss://localhost:4444`,
-            `wss://0.0.0.0:4444`,
-            `wss://www.ssafast.com:4444`,
-            `ws://www.ssafast.com:4444`,
-            'wss://signaling.yjs.dev',
-            'wss://y-webrtc-signaling-eu.herokuapp.com',
-            'wss://y-webrtc-signaling-us.herokuapp.com',
-          ], //`ws://www.ssafast.com:4444`
-        }
+        getYjsDoc(state) as any
+        // {
+        //   signaling: [
+        //     // `ws://localhost:4444`,
+        //     // `wss://localhost:4444`,
+        //     // `wss://0.0.0.0:4444`,
+        //     `wss://www.ssafast.com:4444`,
+        //     // `ws://www.ssafast.com:4444`,
+        //     'wss://signaling.yjs.dev',
+        //     'wss://y-webrtc-signaling-eu.herokuapp.com',
+        //     'wss://y-webrtc-signaling-us.herokuapp.com',
+        //   ], //`ws://www.ssafast.com:4444`
+        // }
       );
       console.log('커넥트', provider.signalingConns);
       const { awareness: innerAwareness } = provider;
