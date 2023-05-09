@@ -82,7 +82,7 @@ const LeftContainer = function ({
       <div className={`flex-1 overflow-y-scroll scrollbar-hide`}>
         {curTab === 'Figma' ? (
           //   화면별 api
-          <FigmaList store={store} apiData={apiMok} />
+          <FigmaList apiData={apiMok} />
         ) : (
           //   전체 api
           <APIList />

@@ -26,7 +26,6 @@ import {
 // import { yjsStore } from '@/utils/syncedStore';
 import YjsProvider, { useYjsState } from '@/components/work/YjsProvider';
 import { Awareness } from '@y-presence/client';
-import { YArray } from 'yjs/dist/src/internals';
 import * as Y from 'yjs';
 
 const SpaceWorkPage = function (
@@ -34,7 +33,7 @@ const SpaceWorkPage = function (
 ) {
   const router = useRouter();
   const spaceId = props.spaceId;
-  const { state, doc, figmaY } = useYjsState();
+  let { state, doc, figmaY } = useYjsState();
 
   const { data: userFigmaTokenData } = useUserFigmaTokens();
   const { data: spaceDetailData } = useSpaceDetail(parseInt(spaceId));
@@ -44,70 +43,77 @@ const SpaceWorkPage = function (
     isError: spaceFrameDataError,
   } = useSpaceFrames(parseInt(spaceId));
   const { data: userData, isLoading } = useUserData();
-
-  // const [store, setStore] = useState<any>(useSyncedStore(yjsStore));
   const store = useSyncedStore(state);
-
-  // const [rtcProvider, setRtcProvider] = useState<WebrtcProvider>();
   const [awareness, setAwareness] = useState<Awareness>();
   useEffect(function () {
-    // const rtcOpener = function () {
     let provider: WebrtcProvider;
     if (state && spaceId?.length) {
-      // setRtcProvider(function () {
       provider = new WebrtcProvider(
         `ssafast${spaceId}`,
         getYjsDoc(state) as any,
         {
-          signaling: [`wss://www.ssafast.com:4444`], //`ws://www.ssafast.com:4444`
+          signaling: [
+            `wss://www.ssafast.com:4444`,
+            `wss://ssafast.com:4444`,
+            // `ws://www.ssafast.com:4444`,
+            // 'wss://signaling.yjs.dev',
+            // 'wss://y-webrtc-signaling-eu.herokuapp.com',
+            // 'wss://y-webrtc-signaling-us.herokuapp.com',
+            // `ws://localhost:4444`,
+            // `wss://localhost:4444`,
+          ], //`ws://www.ssafast.com:4444`
         }
       );
       console.log('커넥트');
-      // provider.connect();
       const { awareness: innerAwareness } = provider;
       setAwareness(innerAwareness);
-      // return provider;
-      // });
     }
-    // };
-    // rtcOpener();
+
     return function () {
       console.log('디스커넥트');
-      // while (state.figmaList.length) {
-      //   state.figmaList.pop();
-      // }
-      // rtcProvider?.disconnect();
     };
   }, []);
-  useEffect(function () {}, []);
 
   useEffect(
     function () {
       if (!awareness && spaceFrameDataLoading) {
         return;
       }
-      // if (!state.figmaList.length) {
-      //   testData.forEach((section) => state.figmaList.push(section));
-      // }
-      // if (spaceFrameData?.figmaSections.length) {
-      //   while (state.figmaList.length) {
-      //     state.figmaList.pop();
-      //   }
-      //   spaceFrameData.figmaSections.forEach((section) =>
-      //     state.figmaList.push(section)
-      //   );
-      // }
       if (!figmaY.length && spaceFrameData) {
-        figmaY.push([...spaceFrameData.figmaSections]);
-        // spaceFrameData.figmaSections.forEach((section) =>
-        //   store.figmaList.push(section)
-        // );
+        // figmaY.push([...spaceFrameData.figmaSections]);
+        const nfigmaY = new Y.Array<SpaceFigma>();
+        nfigmaY.push([...spaceFrameData.figmaSections]);
+        figmaY = nfigmaY;
       }
-
-      // state.figmaList = [...spaceFrameData.figmaSections] as Array<any>;
-
-      // state.useCaseList = [];
-      // state.overloadList = [];
+      if (!figmaY.length) {
+        const nfigmaY = new Y.Array<SpaceFigma>();
+        nfigmaY.push([
+          {
+            id: 1,
+            name: `d`,
+            sectionId: `123`,
+            sectionUrl: ``,
+          },
+          {
+            id: 2,
+            name: `dd`,
+            sectionId: `123`,
+            sectionUrl: ``,
+          },
+          {
+            id: 3,
+            name: `ddd`,
+            sectionId: `123`,
+            sectionUrl: ``,
+          },
+          {
+            id: 4,
+            name: `dddd`,
+            sectionId: `123`,
+            sectionUrl: ``,
+          },
+        ]);
+      }
     },
     [awareness, spaceFrameData]
   );
