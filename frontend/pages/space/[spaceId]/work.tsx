@@ -59,7 +59,7 @@ const SpaceWorkPage = function (
         `ssafast${spaceId}`,
         getYjsDoc(state) as any,
         {
-          signaling: [`ws://www.ssafast.com:4444`],
+          signaling: [`wss://www.ssafast.com:4444`], //`ws://www.ssafast.com:4444`
         }
       );
       console.log('커넥트');
