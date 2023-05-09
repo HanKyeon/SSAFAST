@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rocket.ssafast.apispec.dto.request.ApiExecReqMessageDto;
 import com.rocket.ssafast.apispec.dto.request.ApiTestResultDto;
 import com.rocket.ssafast.apispec.service.ApiExecService;
-import com.rocket.ssafast.apispec.dto.request.temp.User;
+import com.rocket.ssafast.tmp.dto.TmpUserDto;
 import com.rocket.ssafast.auth.domain.UserDetailsImpl;
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
@@ -94,7 +94,7 @@ public class ApiExecController {
 	}
 
 	@PostMapping("/{id}/test/{user_id}")
-	ResponseEntity<?>  testpost(@RequestBody User body, @PathVariable("id") Long id, @PathVariable("user_id") String userId, @RequestParam Long longParam, @RequestParam String stringParam ) {
+	ResponseEntity<?>  testpost(@RequestBody TmpUserDto body, @PathVariable("id") Long id, @PathVariable("user_id") String userId, @RequestParam Long longParam, @RequestParam String stringParam ) {
 		String result = "post 성공: "+"id: "+id+", userId: "+userId+", longParams: "+longParam+", strParams:"+stringParam+", body:"+body;
 		Map<String, String> rr = new HashMap<>();
 		rr.put("result", result);
