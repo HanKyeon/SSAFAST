@@ -55,6 +55,7 @@ const SpaceWorkPage = function (
           signaling: [
             // `ws://localhost:4444`,
             `wss://localhost:4444`,
+            `wss://0.0.0.0:4444`,
             // `ws://localhost:4444`,
             `wss://www.ssafast.com:4444`,
             // `ws://www.ssafast.com:4444`,
