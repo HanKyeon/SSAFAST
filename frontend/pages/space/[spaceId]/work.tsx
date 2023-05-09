@@ -64,7 +64,7 @@ const SpaceWorkPage = function (
           ], //`ws://www.ssafast.com:4444`
         }
       );
-      console.log('커넥트');
+      console.log('커넥트', provider.signalingConns);
       const { awareness: innerAwareness } = provider;
       setAwareness(innerAwareness);
     }
