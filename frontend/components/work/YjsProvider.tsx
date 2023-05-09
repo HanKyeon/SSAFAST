@@ -18,6 +18,8 @@ import { Awareness } from '@y-presence/client';
 import { SpinnerDots } from '../common/Spinner';
 import Modal from '../common/Modal';
 import { PresenceUserData } from './presence-type';
+import * as Y from 'yjs';
+import { YArray } from 'yjs/dist/src/internals';
 
 interface YjsInterface {
   state: MappedTypeDescription<{
@@ -55,7 +57,7 @@ export const useYjsState = function () {
   const value = useContext(YjsContext) as YjsInterface;
   const { state } = value;
   const doc = getYjsDoc(state);
-  const figmaY = doc.getArray('figmaList');
+  const figmaY: YArray<SpaceFigma> = doc.getArray('figmaList');
   return { state, doc, figmaY };
 };
 

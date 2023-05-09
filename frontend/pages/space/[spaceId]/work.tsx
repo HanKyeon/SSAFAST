@@ -97,14 +97,7 @@ const SpaceWorkPage = function (
       //     state.figmaList.push(section)
       //   );
       // }
-      if (!store.editors.find((v) => v.name === userData?.name)) {
-        store.editors.push({
-          name: `${userData?.name || `나다이띱때끼야`}`,
-          color: `#${Math.round(Math.random() * 0xffffff).toString(16)}`,
-          step: 1,
-        });
-      }
-      if (!store.figmaList.length && spaceFrameData) {
+      if (!figmaY.length && spaceFrameData) {
         figmaY.push([...spaceFrameData.figmaSections]);
         // spaceFrameData.figmaSections.forEach((section) =>
         //   store.figmaList.push(section)

@@ -11,7 +11,7 @@ interface Props {
 }
 
 const FigmaList = function ({ figmaList = [] }: Props) {
-  const { state: yjsStore } = useYjsState();
+  const { state: yjsStore, figmaY } = useYjsState();
   const store = useSyncedStore(yjsStore);
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
   const changeIdxHandler = function (idx: number | null) {
@@ -26,39 +26,40 @@ const FigmaList = function ({ figmaList = [] }: Props) {
       sectionId: `232:2759`,
       name: `무야호`,
     };
-    if (store.figmaList) {
-      store.figmaList.push(addItem);
+    if (figmaY) {
+      figmaY.push([addItem]);
     }
+  };
+  const deleteFigmaYArr = function () {
+    figmaY.delete(0);
   };
 
   return (
     <div className="h-full w-full p-[3%] flex flex-col gap-[2%]">
-      {/* {figmaList.map((figmaData, idx) => {
+      {/* {figmaY.map((figmaData, idx) => {
         return (
           <FigmaListItem
             figmaData={figmaData}
             idx={idx}
             activeIdx={activeIdx}
             setActive={changeIdxHandler}
-            key={`${figmaData.name}-${idx}-${figmaData.figmaSectionId}`}
+            key={`${figmaData.name}-${idx}-${figmaData.id}`}
           />
         );
       })} */}
       <Box onClick={addSyncedStoreFigmaItem}>store 관련 테스트 해봅시다.</Box>
-      <div>{`${process.env.PORT}`}</div>
-      {/* {store?.figmaList
-        ? store.figmaList.map((figmaData: SpaceFigma, idx: number) => {
-            return (
-              <FigmaListItem
-                figmaData={figmaData}
-                idx={idx}
-                activeIdx={activeIdx}
-                setActive={changeIdxHandler}
-                key={`${figmaData.name}-${idx}-${figmaData.id}`}
-              />
-            );
-          })
-        : null} */}
+      <Box onClick={deleteFigmaYArr}>삭제 테스트</Box>
+      {figmaY.map((figmaData: SpaceFigma, idx: number) => {
+        return (
+          <FigmaListItem
+            figmaData={figmaData}
+            idx={idx}
+            activeIdx={activeIdx}
+            setActive={changeIdxHandler}
+            key={`${figmaData.name}-${idx}-${figmaData.id}`}
+          />
+        );
+      })}
     </div>
   );
 };
