@@ -140,7 +140,7 @@ const APIList = function ({}: APIListPropsType): JSX.Element {
                 <APIlistItem
                   key={api.id}
                   item={api}
-                  className={`w-full duration-[0.33s] hover:scale-[105%]`}
+                  className={`w-full duration-[0.33s] hover:scale-[101%]`}
                 />
               ))}
           </ul>

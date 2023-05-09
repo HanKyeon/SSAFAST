@@ -54,7 +54,7 @@ interface Props {
 const FigmaList = function ({ apiData, figmaList = mok }: Props) {
   const { state: yjsStore, figmaY } = useYjsState();
   const store = useSyncedStore(yjsStore);
-  const [activeIdx, setActiveIdx] = useState<number | null>(null);
+  const [activeIdx, setActiveIdx] = useState<number | null>(0);
   const changeIdxHandler = function (idx: number | null) {
     setActiveIdx(() => idx);
   };

@@ -88,14 +88,20 @@ const APIContainer = function ({ store }: Props) {
         {/* 헤더 */}
         <div className={`mb-5 flex items-center justify-between`}>
           <div className={`flex items-center gap-2`}>
-            <BsFilter />
-            <EomSelect />
+            <BsFilter className={`text-[26px]`} />
+            <EomSelect
+              type="methods"
+              selectedIdx={selectedIdx}
+              setSelectedIdx={setSelectedIdx}
+            />
           </div>
           <div className={`flex items-center gap-2`}>
             <Input placeholder="search" />
-            <HiOutlineSearch />
+            <HiOutlineSearch className={`text-[22px] cursor-pointer`} />
           </div>
-          <BsFolderPlus />
+          <BsFolderPlus
+            className={`text-[22px] cursor-pointer hover:text-mincho-strong duration-[0.33s]`}
+          />
           <Button
             isEmpty
             className={`flex justify-center items-center gap-2 py-[4px] pr-[12px] pl-[25px]`}
