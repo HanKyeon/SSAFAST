@@ -7,12 +7,51 @@ import { SpaceFigma } from '@/hooks/queries/queries';
 import { useYjsState } from './YjsProvider';
 import BoxHeader from '../common/BoxHeader';
 import { APIInfoType } from './APIEditContainer/APIList';
+
+const mok = [
+  {
+    id: 1,
+    sectionId: `1`,
+    sectionUrl:
+      'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e56c89a6-34b7-4c8b-9e49-22c7fd82c48a',
+    name: `홈 페이지 1`,
+  },
+  {
+    id: 2,
+    sectionId: `2`,
+    sectionUrl:
+      'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/fbcc8976-b92d-4454-8e61-0050b7a42f95',
+    name: `space - space메인 - Dark`,
+  },
+  {
+    id: 3,
+    sectionId: `3`,
+    sectionUrl:
+      'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/6d3ac41b-03ec-4491-9c63-1f4744d45650',
+    name: `space - space메인 - Light`,
+  },
+  {
+    id: 4,
+    sectionId: `4`,
+    sectionUrl:
+      'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/dba880b8-18c0-4835-ac27-b5af934d5806',
+    name: `Figma화면에 api 연결 - 편집`,
+  },
+  {
+    id: 5,
+    sectionId: `5`,
+    sectionUrl:
+      'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/35599cc7-27ff-4584-834a-e53af3849446',
+    name: `api명세 작성 - postman - dark`,
+  },
+];
+
 interface Props {
-  figmaList?: workFigma[];
+  figmaList?: SpaceFigma[];
   apiData?: APIInfoType[];
 }
 
-const FigmaList = function ({ apiData, figmaList = [] }: Props) {
+const FigmaList = function ({ apiData, figmaList = mok }: Props) {
   const { state: yjsStore, figmaY } = useYjsState();
   const store = useSyncedStore(yjsStore);
   const [activeIdx, setActiveIdx] = useState<number | null>(null);

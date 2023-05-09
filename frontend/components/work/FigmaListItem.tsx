@@ -75,55 +75,55 @@ const FigmaListItem = function ({
           </Box>
         </Modal>
       </AnimationBox>
-      <Box
+      {/* <Box
         variant="three"
         fontType="normal"
         className="pt-3 px-5 whitespace-nowrap w-full h-auto duration-[0.33s] flex flex-col gap-6 pb-4 cursor-pointer"
-      >
-        <div className="flex flex-row items-center justify-between gap-5 w-full">
-          <div
-            className="w-full text-ellipsis overflow-hidden"
-            onClick={expandHandler}
-          >
-            #{idx + 1} {figmaData.name}
-          </div>
-          {/* <Button className="text-[1.2rem]" onClick={deleteHandler}>
+      > */}
+      <div className="flex flex-row items-center justify-between gap-5 w-full">
+        <div
+          className="w-full text-ellipsis overflow-hidden text-normal py-3"
+          onClick={expandHandler}
+        >
+          #{idx + 1} {figmaData.name}
+        </div>
+        {/* <Button className="text-[1.2rem]" onClick={deleteHandler}>
             삭제
           </Button> */}
-          {activeIdx === idx && (
-            <HiOutlineTrash
-              className={`text-grayscale-dark hover:text-mammoth-normal text-[24px]`}
-              onClick={deleteHandler}
-            />
-          )}
-        </div>
-
-        {isExpand && (
-          <>
-            <AnimationBox
-              isOpened={isExpand}
-              appearClassName="animate-[appear-opacity-softly_0.22s_both]"
-              disappearClassName="animate-[disappear-opacity-softly_0.22s_both] relative"
-              className="w-full"
-            >
-              <img
-                className="object-contain rounded-[8px] w-full"
-                src={figmaData.sectionUrl!}
-                alt={`${figmaData.name}`}
-              />
-            </AnimationBox>
-            {apiData?.length !== 0 && (
-              <ul
-                className={`w-[95%] my-0 mx-auto flex flex-col gap-1 duration-[0.33s]`}
-              >
-                {apiData?.map((api) => (
-                  <APIlistItem key={api.id} item={api} />
-                ))}
-              </ul>
-            )}
-          </>
+        {activeIdx === idx && (
+          <HiOutlineTrash
+            className={`text-grayscale-dark hover:text-mammoth-normal text-[24px]`}
+            onClick={deleteHandler}
+          />
         )}
-      </Box>
+      </div>
+
+      {isExpand && (
+        <>
+          <AnimationBox
+            isOpened={isExpand}
+            appearClassName="animate-[appear-opacity-softly_0.22s_both]"
+            disappearClassName="animate-[disappear-opacity-softly_0.22s_both] relative"
+            className="w-full"
+          >
+            <img
+              className="object-contain rounded-[8px] w-full"
+              src={figmaData.sectionUrl!}
+              alt={`${figmaData.name}`}
+            />
+          </AnimationBox>
+          {apiData?.length !== 0 && (
+            <ul
+              className={`w-[95%] my-0 mx-auto flex flex-col gap-1 duration-[0.33s]`}
+            >
+              {apiData?.map((api) => (
+                <APIlistItem key={api.id} item={api} />
+              ))}
+            </ul>
+          )}
+        </>
+      )}
+      {/* </Box> */}
     </>
   );
 };

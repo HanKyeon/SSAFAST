@@ -61,7 +61,7 @@ const LeftContainer = function ({
   return (
     <div className={`flex flex-col h-full w-full`}>
       {/* 상단 탭 */}
-      <ul className={`flex items-center gap-10 text-content`}>
+      <ul className={`flex items-center gap-10 text-content mb-4`}>
         <li
           onClick={() => ToggleTab('Figma')}
           className={`${

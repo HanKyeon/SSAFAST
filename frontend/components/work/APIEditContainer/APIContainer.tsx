@@ -74,7 +74,7 @@ const APIContainer = function ({ store }: Props) {
         {/* <div className="h-full w-full p-5 flex flex-col"> */}
         <BoxHeader title="Figma" />
         <div className={`flex-1 overflow-y-scroll scrollbar-hide`}>
-          <FigmaList store={store} />
+          <FigmaList />
         </div>
         {/* </div> */}
       </Box>
