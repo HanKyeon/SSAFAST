@@ -59,9 +59,9 @@ const SpaceWorkPage = function (
             `wss://www.ssafast.com:4444`,
             // `ws://www.ssafast.com:4444`,
             // `ws://www.ssafast.com:4444`,
-            // 'wss://signaling.yjs.dev',
-            // 'wss://y-webrtc-signaling-eu.herokuapp.com',
-            // 'wss://y-webrtc-signaling-us.herokuapp.com',
+            'wss://signaling.yjs.dev',
+            'wss://y-webrtc-signaling-eu.herokuapp.com',
+            'wss://y-webrtc-signaling-us.herokuapp.com',
             // `wss://localhost:4444`,
           ], //`ws://www.ssafast.com:4444`
         }
