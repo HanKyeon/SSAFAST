@@ -1,7 +1,22 @@
 import { SpaceFigma } from '@/hooks/queries/queries';
-import syncedStore from '@syncedstore/core';
-import { PropsWithChildren, useContext, createContext } from 'react';
-import { MappedTypeDescription } from '@syncedstore/core/types/doc';
+import { SpaceParams } from '@/pages/space';
+import syncedStore, { getYjsDoc, getYjsValue } from '@syncedstore/core';
+import { useRouter } from 'next/router';
+import {
+  PropsWithChildren,
+  useContext,
+  createContext,
+  useEffect,
+  useState,
+} from 'react';
+import { WebrtcProvider } from 'y-webrtc';
+import {
+  DocTypeDescription,
+  MappedTypeDescription,
+} from '@syncedstore/core/types/doc';
+import { Awareness } from '@y-presence/client';
+import { SpinnerDots } from '../common/Spinner';
+import Modal from '../common/Modal';
 import { PresenceUserData } from './presence-type';
 
 interface YjsInterface {
