@@ -53,7 +53,10 @@ const YjsProvider = function ({ children }: PropsWithChildren) {
 
 export const useYjsState = function () {
   const value = useContext(YjsContext) as YjsInterface;
-  return value;
+  const { state } = value;
+  const doc = getYjsDoc(state);
+  const figmaY = doc.getArray('figmaList');
+  return { state, doc, figmaY };
 };
 
 export default YjsProvider;

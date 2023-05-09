@@ -17,6 +17,7 @@ import { useSyncedStore } from '@syncedstore/react';
 import { PresenceUserData, workFigma } from '@/components/work/presence-type';
 import MetaHead from '@/components/common/MetaHead';
 import {
+  SpaceFigma,
   useSpaceDetail,
   useSpaceFrames,
   useUserData,
@@ -25,13 +26,15 @@ import {
 // import { yjsStore } from '@/utils/syncedStore';
 import YjsProvider, { useYjsState } from '@/components/work/YjsProvider';
 import { Awareness } from '@y-presence/client';
+import { YArray } from 'yjs/dist/src/internals';
+import * as Y from 'yjs';
 
 const SpaceWorkPage = function (
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
   const router = useRouter();
   const spaceId = props.spaceId;
-  const { state } = useYjsState();
+  const { state, doc, figmaY } = useYjsState();
 
   const { data: userFigmaTokenData } = useUserFigmaTokens();
   const { data: spaceDetailData } = useSpaceDetail(parseInt(spaceId));
@@ -44,44 +47,39 @@ const SpaceWorkPage = function (
 
   // const [store, setStore] = useState<any>(useSyncedStore(yjsStore));
   const store = useSyncedStore(state);
-  const [rtcProvider, setRtcProvider] = useState<WebrtcProvider>();
+
+  // const [rtcProvider, setRtcProvider] = useState<WebrtcProvider>();
   const [awareness, setAwareness] = useState<Awareness>();
-  useEffect(
-    function () {
-      const rtcOpener = async function () {
-        let provider: WebrtcProvider;
-        if (state && spaceId?.length) {
-          setRtcProvider(function () {
-            provider = new WebrtcProvider(
-              `ssafast${spaceId}`,
-              getYjsValue(state) as any
-            );
-            console.log('커넥트');
-            provider.connect();
-            const { awareness: innerAwareness } = provider;
-            setAwareness(() => innerAwareness);
-            console.log('rtc 시그널링', provider.signalingUrls);
-            console.log('rtc 방이름', provider.roomName);
-            console.log('rtc 방', provider.room);
-            console.log('rtc 연결 여부', provider.connected);
-            console.log('rtc', provider);
-            return provider;
-          });
-        }
-      };
-      rtcOpener();
-    },
-    [spaceId]
-  );
   useEffect(function () {
+    // const rtcOpener = function () {
+    let provider: WebrtcProvider;
+    if (state && spaceId?.length) {
+      // setRtcProvider(function () {
+      provider = new WebrtcProvider(
+        `ssafast${spaceId}`,
+        getYjsDoc(state) as any,
+        {
+          signaling: [`ws://localhost:4444`],
+        }
+      );
+      console.log('커넥트');
+      // provider.connect();
+      const { awareness: innerAwareness } = provider;
+      setAwareness(innerAwareness);
+      // return provider;
+      // });
+    }
+    // };
+    // rtcOpener();
     return function () {
       console.log('디스커넥트');
       // while (state.figmaList.length) {
       //   state.figmaList.pop();
       // }
-      rtcProvider?.disconnect();
+      // rtcProvider?.disconnect();
     };
   }, []);
+  useEffect(function () {}, []);
 
   useEffect(
     function () {
@@ -107,9 +105,10 @@ const SpaceWorkPage = function (
         });
       }
       if (!store.figmaList.length && spaceFrameData) {
-        spaceFrameData.figmaSections.forEach((section) =>
-          store.figmaList.push(section)
-        );
+        figmaY.push([...spaceFrameData.figmaSections]);
+        // spaceFrameData.figmaSections.forEach((section) =>
+        //   store.figmaList.push(section)
+        // );
       }
 
       // state.figmaList = [...spaceFrameData.figmaSections] as Array<any>;

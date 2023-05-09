@@ -46,7 +46,7 @@ const FigmaList = function ({ figmaList = [] }: Props) {
       })} */}
       <Box onClick={addSyncedStoreFigmaItem}>store 관련 테스트 해봅시다.</Box>
       <div>{`${process.env.PORT}`}</div>
-      {store?.figmaList
+      {/* {store?.figmaList
         ? store.figmaList.map((figmaData: SpaceFigma, idx: number) => {
             return (
               <FigmaListItem
@@ -58,7 +58,7 @@ const FigmaList = function ({ figmaList = [] }: Props) {
               />
             );
           })
-        : null}
+        : null} */}
     </div>
   );
 };
