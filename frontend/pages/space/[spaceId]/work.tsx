@@ -46,22 +46,27 @@ const SpaceWorkPage = function (
   const { data: userData, isLoading } = useUserData();
   const store = useSyncedStore(state);
   const [wsprovider, setWsprovider] = useState(
-    // new WebrtcProvider(`ssafast${spaceId}`, getYjsDoc(state), {
-    //   signaling: ['wss://ssafast.com/ws'],
-    // })
-    new WebsocketProvider(
-      `wss://ssafast.com/ws`,
-      `ssafast${spaceId}`,
-      getYjsDoc(state)
-    )
+    new WebrtcProvider(`ssafast${spaceId}`, getYjsDoc(state), {
+      signaling: [
+        'wss://ssafast.com/ws',
+        'wss://signaling.yjs.dev',
+        'wss://y-webrtc-signaling-eu.herokuapp.com',
+        'wss://y-webrtc-signaling-us.herokuapp.com',
+      ],
+    })
+    // new WebsocketProvider(
+    //   `wss://ssafast.com/ws`,
+    //   `ssafast${spaceId}`,
+    //   getYjsDoc(state)
+    // )
   );
   const [awareness, setAwareness] = useState<Awareness>(wsprovider.awareness);
-  // useEffect(
-  //   function () {
-  //     console.log(wsprovider.signalingConns);
-  //   },
-  //   [wsprovider.signalingConns]
-  // );
+  useEffect(
+    function () {
+      console.log(wsprovider.signalingConns);
+    },
+    [wsprovider.connected]
+  );
   // useEffect(function () {
   //   let provider: WebrtcProvider;
   //   let wsprovider;
