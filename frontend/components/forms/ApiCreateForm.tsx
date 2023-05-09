@@ -248,7 +248,7 @@ const ApiCreateForm = function ({ toggleAddHandler }: ApiCreateProps) {
               step === 2 ? '' : 'hidden'
             } flex w-full h-full justify-center`}
           >
-            <ResponseForm />;
+            <ResponseForm />
           </AnimationBox>
           <Button type="submit">저장</Button>
         </form>

@@ -15,7 +15,7 @@ import { DispatchToast } from '@/store';
 import { inputTheme } from '@/utils/styleClasses';
 import { ApiCreateForm } from './ApiCreateForm';
 import ToggleableHeader from '../work/APIDocsContainer/ToggleableHeader';
-
+import ConstraintsController from './ContstraintsController';
 export interface RequestFormData {
   additional_url: string;
   headers: Headers[];
@@ -84,6 +84,31 @@ const RequestForm = function () {
 };
 
 function PathVariableFields({ control }: { control: any }) {
+  const { dark: isDark } = useStoreSelector((state) => state.dark);
+  const depth = useRef(0);
+
+  const styles = {
+    innerBox: `w-full h-auto flex items-center overflow-hidden mb-3 rounded-[13px] ${
+      isDark
+        ? 'bg-grayscale-deepdark text-white'
+        : 'bg-grayscale-light text-black'
+    }`,
+    key: `py-[8px] px-3 text-ellipsis ${
+      isDark ? `text-grayscale-light` : `text-grayscale-deepdarkdeep`
+    } w-1/4`,
+    type: `py-[8px] px-3 w-1/4 border-x-[1px] ${
+      isDark
+        ? `text-grayscale-light border-grayscale-deepdarklight`
+        : `text-grayscale-deepdarkdeep border-grayscale-deeplightlight`
+    }`,
+    desc: `py-[8px] px-3 flex-1 w-2/4 ${
+      isDark ? `text-grayscale-light` : `text-grayscale-deepdarkdeep`
+    }`,
+    constraints: `w-[95%] ${
+      isDark ? 'bg-grayscale-deepdarkdeep' : 'bg-grayscale-deeplight'
+    }`,
+  };
+
   const [isOpen, setisOpen] = useState<boolean>(true);
   const {
     fields: pathVariableFields,
@@ -93,6 +118,15 @@ function PathVariableFields({ control }: { control: any }) {
     name: `document.request.path_variable`,
     control,
   });
+  const [constraintsOpen, setConstraintsOpen] = useState<boolean>(true);
+  // const {
+  //   fields: constraintsFields,
+  //   append: constraintsAppend,
+  //   remove: constraintsRemove,
+  // } = useFieldArray({
+  //   control,
+  //   name: `document.request.path_variable.${index}.constraints`,
+  // });
 
   const appendPathVariableInput = function (e: FormEvent) {
     e.preventDefault();
@@ -107,7 +141,10 @@ function PathVariableFields({ control }: { control: any }) {
       setisOpen((prev) => !prev);
     }
   };
-
+  // const appendConstraint = function (e: FormEvent) {
+  //   e.preventDefault();
+  //   // constraintsAppend(``);
+  // };
   return (
     <>
       <div className="flex items-center w-96">
@@ -129,77 +166,100 @@ function PathVariableFields({ control }: { control: any }) {
               btnType="delete"
               onClick={() => remove(index)}
             ></CircleBtn>
-            <Controller
-              name={`document.request.path_variable.[${index}].key`}
-              control={control}
-              rules={{ required: true }}
-              render={({ field, fieldState }) => (
-                <div className="flex">
-                  <label htmlFor={`path_variable.[${index}].key`}>Key:</label>
-                  <input
-                    type="text"
-                    id={`path_variable.[${index}].key`}
-                    {...field}
-                  />
-                  {fieldState?.invalid && <span>This field is required</span>}
-                </div>
-              )}
-            />
-            <Controller
-              name={`document.request.path_variable.[${index}].type`}
-              control={control}
-              rules={{ required: true }}
-              render={({ field, fieldState }) => (
-                <div className="flex">
-                  <label htmlFor={`path_variable.[${index}].type`}>Type:</label>
-                  <input
-                    type="text"
-                    id={`path_variable.[${index}].type`}
-                    {...field}
-                  />
-                  {fieldState?.invalid && <span>This field is required</span>}
-                </div>
-              )}
-            />
-            <Controller
-              name={`document.request.path_variable.[${index}].desc`}
-              control={control}
-              rules={{ required: true }}
-              render={({ field, fieldState }) => (
-                <>
-                  <div className="flex">
-                    <label htmlFor={`path_variable.[${index}].desc`}>
-                      Description:
-                    </label>
-                    <input
+            <div className={`${styles['innerBox']}`}>
+              <Controller
+                name={`document.request.path_variable.${index}.key`}
+                control={control}
+                rules={{ required: true }}
+                render={({ field, fieldState }) => (
+                  <div className={`${styles['key']}`}>
+                    <label htmlFor={`path_variable.${index}.key`}></label>
+                    <Input
                       type="text"
-                      id={`path_variable.[${index}].desc`}
-                      {...field}
+                      placeholder="Key"
+                      name={`document.request.path_variable.${index}.key`}
+                      onChange={field.onChange}
                     />
                     {fieldState?.invalid && <span>This field is required</span>}
                   </div>
-                </>
-              )}
-            />
-            <Controller
-              name={`document.request.path_variable.[${index}].constraints`}
-              control={control}
-              render={({ field, fieldState }) => (
-                <>
-                  <div className="flex">
-                    <label htmlFor={`path_variable.[${index}].constraints`}>
-                      Contstraints:
-                    </label>
-                    <input
+                )}
+              />
+              <Controller
+                name={`document.request.path_variable.${index}.type`}
+                control={control}
+                rules={{ required: true }}
+                render={({ field, fieldState }) => (
+                  <div className={`${styles['type']}`}>
+                    <label htmlFor={`path_variable.${index}.type`}></label>
+                    <Input
                       type="text"
-                      id={`path_variable.[${index}].constraints`}
-                      {...field}
+                      placeholder="Type"
+                      id={`path_variable.[${index}].type`}
+                      name={`document.request.path_variable.${index}.type`}
+                      onChange={field.onChange}
                     />
                     {fieldState?.invalid && <span>This field is required</span>}
                   </div>
-                </>
+                )}
+              />
+              <Controller
+                name={`document.request.path_variable.${index}.desc`}
+                control={control}
+                rules={{ required: true }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <div className={`${styles['desc']}`}>
+                      <label htmlFor={`path_variable.${index}.desc`}></label>
+                      <Input
+                        type="text"
+                        placeholder="Description"
+                        name={`document.request.path_variable.${index}.desc`}
+                        id={`path_variable.${index}.desc`}
+                        onChange={field.onChange}
+                      />
+                      {fieldState?.invalid && (
+                        <span>This field is required</span>
+                      )}
+                    </div>
+                  </>
+                )}
+              />
+            </div>
+            <div className={`${styles['constraints']}`}>
+              <div className=" flex items-center">
+                <ToggleableHeader
+                  title="Constraints"
+                  isOpen={constraintsOpen}
+                  setIsOpen={setConstraintsOpen}
+                />
+                <CircleBtn
+                  btnType="plus"
+                  type="button"
+                  onClick={appendPathVariableInput}
+                ></CircleBtn>
+              </div>
+              {constraintsOpen && (
+                <Controller
+                  name={`document.request.path_variable.${index}.constraints`}
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <div className={`${styles['constraints']}`}>
+                        <Input
+                          type="text"
+                          placeholder="Description"
+                          name={`document.request.path_variable.${index}.constraints`}
+                          onChange={field.onChange}
+                        />
+                        {fieldState?.invalid && (
+                          <span>This field is required</span>
+                        )}
+                      </div>
+                    </>
+                  )}
+                />
               )}
-            />
+            </div>
           </div>
         ))}
     </>
@@ -215,6 +275,15 @@ function ParamsFields({ control }: { control: any }) {
   } = useFieldArray({
     name: `document.request.params`,
     control,
+  });
+  ``;
+  const {
+    fields: constraintsFields,
+    append: constraintsAppend,
+    remove: constraintsRemove,
+  } = useFieldArray({
+    control,
+    name: `document.request.params.constraints`,
   });
 
   const appendParamsInput = function (e: FormEvent) {
@@ -305,6 +374,36 @@ function ParamsFields({ control }: { control: any }) {
                     <label htmlFor={`params.[${index}].constraints`}>
                       Contstraints:
                     </label>
+                    {constraintsFields.map((item, idx) => {
+                      return (
+                        <Controller
+                          key={`${item.id}`}
+                          name={`document.request.params.[${index}].constraints.${idx}`}
+                          render={({ field }) => {
+                            return (
+                              <div className="flex flex-row gap-2">
+                                <select
+                                  key={`${item.id}-constraint`}
+                                  name={`document.request.params.[${index}].constraints.${idx}`}
+                                  onChange={field.onChange}
+                                >
+                                  s<option value={``}>선택하세욤 뿌우</option>
+                                  <option value={`NotNull`}>NotNull</option>
+                                  <option value={`NotOption`}>NotOption</option>
+                                  <option value={`SomeOption`}>
+                                    SomeOption
+                                  </option>
+                                  <option value={`AnyOption`}>AnyOption</option>
+                                </select>
+                                <div onClick={() => constraintsRemove(idx)}>
+                                  제거
+                                </div>
+                              </div>
+                            );
+                          }}
+                        />
+                      );
+                    })}
                     <input
                       type="text"
                       id={`params.[${index}].constraints`}
@@ -349,7 +448,11 @@ function HeaderFields({ control }: { control: any }) {
           isOpen={isOpen}
           setIsOpen={setisOpen}
         />
-        <CircleBtn btnType="plus" onClick={appendHeaderInput}></CircleBtn>
+        <CircleBtn
+          btnType="plus"
+          type="button"
+          onClick={appendHeaderInput}
+        ></CircleBtn>
       </div>
       {isOpen &&
         headerFields.map((item, index) => (

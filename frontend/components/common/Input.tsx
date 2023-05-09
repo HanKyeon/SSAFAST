@@ -15,7 +15,7 @@ const Input = function ({
 }: PropsWithChildren<InputPropsType>): JSX.Element {
   const { dark: isDark } = useStoreSelector((state) => state.dark);
   const styles = {
-    input: `bg-transparent border-b-[1px] outline-none ${
+    input: `bg-transparent border-b-[1px] outline-none w-full ${
       isDark
         ? `border-theme-white-normal placeholder:text-grayscale-deepdarklight`
         : `border-theme-dark-normal placeholder:text-grayscale-deepdarklight`

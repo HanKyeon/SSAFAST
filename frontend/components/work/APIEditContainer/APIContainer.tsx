@@ -7,7 +7,7 @@ import Input from '@/components/common/Input';
 import { BsFilter, BsFolderPlus } from 'react-icons/bs';
 import { HiOutlineSearch, HiPencil } from 'react-icons/hi';
 import EomSelect from '@/components/common/EomSelect';
-import ApiCreateForm from '@/components/forms/ApiCreateForm';
+import { ApiCreateForm } from '@/components/forms/';
 import { FormEvent, useState } from 'react';
 interface Props {
   store?: any;

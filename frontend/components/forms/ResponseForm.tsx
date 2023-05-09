@@ -104,6 +104,7 @@ const ResponseForm = function () {
             maxLength={3}
             pattern="^[0-9]*$"
           />
+
           <Input
             type="text"
             inputref={descRef}
@@ -111,6 +112,7 @@ const ResponseForm = function () {
             placeholder="description"
             maxLength={300}
           />
+
           <Button
             type="button"
             onClick={() => {
