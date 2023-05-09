@@ -17,6 +17,7 @@ import {
 import { Awareness } from '@y-presence/client';
 import { SpinnerDots } from '../common/Spinner';
 import Modal from '../common/Modal';
+import { PresenceUserData } from './presence-type';
 
 interface YjsInterface {
   state: MappedTypeDescription<{
@@ -26,6 +27,7 @@ interface YjsInterface {
     useCaseList: any[];
     overloadList: any[];
     baseUrlList: string[];
+    editors: PresenceUserData[];
     fragment: 'xml';
   }>;
   // rtcProvider?: WebrtcProvider | undefined;
@@ -42,6 +44,7 @@ const YjsContext = createContext<YjsInterface>({
     useCaseList: [] as any[],
     overloadList: [] as any[],
     baseUrlList: [] as string[],
+    editors: [] as PresenceUserData[],
     fragment: 'xml',
   }),
   // rtcProvider: undefined,
