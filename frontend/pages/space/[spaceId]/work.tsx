@@ -54,12 +54,12 @@ const SpaceWorkPage = function (
         {
           signaling: [
             `wss://www.ssafast.com:4444`,
-            `wss://ssafast.com:4444`,
+            `ws://www.ssafast.com:4444`,
             // `ws://www.ssafast.com:4444`,
             // 'wss://signaling.yjs.dev',
             // 'wss://y-webrtc-signaling-eu.herokuapp.com',
             // 'wss://y-webrtc-signaling-us.herokuapp.com',
-            // `ws://localhost:4444`,
+            `ws://localhost:4444`,
             // `wss://localhost:4444`,
           ], //`ws://www.ssafast.com:4444`
         }
@@ -80,14 +80,14 @@ const SpaceWorkPage = function (
         return;
       }
       if (!figmaY.length && spaceFrameData) {
-        // figmaY.push([...spaceFrameData.figmaSections]);
-        const nfigmaY = new Y.Array<SpaceFigma>();
-        nfigmaY.push([...spaceFrameData.figmaSections]);
-        figmaY = nfigmaY;
+        figmaY.push([...spaceFrameData.figmaSections]);
+        // const nfigmaY = new Y.Array<SpaceFigma>();
+        // nfigmaY.push([...spaceFrameData.figmaSections]);
+        // figmaY = nfigmaY;
       }
       if (!figmaY.length) {
-        const nfigmaY = new Y.Array<SpaceFigma>();
-        nfigmaY.push([
+        // const nfigmaY = new Y.Array<SpaceFigma>();
+        figmaY.push([
           {
             id: 1,
             name: `d`,
