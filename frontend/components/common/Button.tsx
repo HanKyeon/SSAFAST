@@ -20,11 +20,11 @@ const Button = function ({
   const styles = {
     small: ` py-2 px-7 rounded-[20px] ${
       isDark && !isEmpty
-        ? 'bg-mincho-strong text-theme-white-strong'
+        ? 'bg-mincho-strong text-theme-white-strong border-mincho-strong border-[3px]'
         : isDark && isEmpty
         ? 'border-mincho-strong text-mincho-strong border-[3px]'
         : !isDark && !isEmpty
-        ? 'bg-taro-strong text-theme-white-strong'
+        ? 'bg-taro-strong text-theme-white-strong border-taro-strong border-[3px]'
         : 'border-taro-strong text-taro-strong border-[3px]'
     }`,
     full: `text-theme-white-strong py-4 px-7 rounded-[13px] w-full ${

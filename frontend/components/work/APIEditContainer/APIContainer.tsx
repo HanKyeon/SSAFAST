@@ -49,7 +49,7 @@ const APIContainer = function ({ store }: Props) {
       <Box
         variant="two"
         fontType="normal"
-        className="basis-[50%] w-[50%] flex-1 items-center justify-center p-5"
+        className="h-full basis-[50%] w-[50%] flex-1 flex flex-col p-5"
       >
         {isAdd ? (
           <ApiCreateForm toggleAddHandler={toggleAddHandler} />
@@ -64,22 +64,6 @@ const APIContainer = function ({ store }: Props) {
                   selectedIdx={selectedIdx}
                   setSelectedIdx={setSelectedIdx}
                 />
-                {/* <select
-              title="ApiFilterOption"
-              name="method"
-              defaultValue="method"
-              // key="method"
-              placeholder="method"
-            >
-              <option value="" selected>
-                method
-              </option>
-              <option value="PUT">PUT</option>
-              <option value="POST">POST</option>
-              <option value="PATCH">PATCH</option>
-              <option value="GET">GET</option>
-              <option value="DEL">DEL</option>
-            </select> */}
               </div>
               <div className={`flex items-center gap-2`}>
                 <Input placeholder="search" />

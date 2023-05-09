@@ -49,14 +49,22 @@ const mok = [
 interface Props {
   figmaList?: SpaceFigma[];
   apiData?: APIInfoType[];
+  onChangeSection?: (id: string | number) => void;
 }
 
-const FigmaList = function ({ apiData, figmaList = mok }: Props) {
+const FigmaList = function ({
+  onChangeSection,
+  apiData,
+  figmaList = mok,
+}: Props) {
   const { state: yjsStore, figmaY } = useYjsState();
   const store = useSyncedStore(yjsStore);
   const [activeIdx, setActiveIdx] = useState<number | null>(0);
   const changeIdxHandler = function (idx: number | null) {
     setActiveIdx(() => idx);
+    if (onChangeSection && idx) {
+      onChangeSection(figmaY.get(idx).sectionId);
+    }
   };
 
   const addSyncedStoreFigmaItem = function () {

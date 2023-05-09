@@ -26,7 +26,7 @@ export type APIInfoType = {
     | `del`
     | `patch`;
   status: '명세중' | '명세완료' | '개발중' | '개발완료';
-  writter: APIWritterType;
+  writter?: APIWritterType;
 };
 
 type APIListType = {
@@ -100,6 +100,201 @@ const mockupAPIList: APIListType[] = [
           profileImg: 'anjanj.png',
         },
       },
+      {
+        id: 1,
+        name: '전체 회원 목록',
+        description: '아무튼 다 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 2,
+        name: '회원 한명 조회',
+        description: '한명 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 3,
+        name: '회원가입',
+        description: '아무튼 가입',
+        method: 'POST',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 1,
+        name: '전체 회원 목록',
+        description: '아무튼 다 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 2,
+        name: '회원 한명 조회',
+        description: '한명 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 3,
+        name: '회원가입',
+        description: '아무튼 가입',
+        method: 'POST',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 1,
+        name: '전체 회원 목록',
+        description: '아무튼 다 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 2,
+        name: '회원 한명 조회',
+        description: '한명 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 3,
+        name: '회원가입',
+        description: '아무튼 가입',
+        method: 'POST',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 1,
+        name: '전체 회원 목록',
+        description: '아무튼 다 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 2,
+        name: '회원 한명 조회',
+        description: '한명 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 3,
+        name: '회원가입',
+        description: '아무튼 가입',
+        method: 'POST',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 1,
+        name: '전체 회원 목록',
+        description: '아무튼 다 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 2,
+        name: '회원 한명 조회',
+        description: '한명 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 3,
+        name: '회원가입',
+        description: '아무튼 가입',
+        method: 'POST',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
     ],
   },
 ];
@@ -111,7 +306,9 @@ const APIList = function ({}: APIListPropsType): JSX.Element {
     setCurCateIdx(cateIdx);
   };
   return (
-    <ul className={`w-full flex flex-col items-center gap-3`}>
+    <ul
+      className={`h-full w-full overflow-y-scroll scrollbar-hide flex flex-col items-center gap-3`}
+    >
       {mockupAPIList.map((cate, cateIdx) => (
         <li key={cate.categoryId} className={`w-full`}>
           <div className={`mb-1 flex items-center gap-3`}>
