@@ -1,6 +1,12 @@
-import { Box } from '@/components/common';
+import { Box, Button } from '@/components/common';
+import { DtoForm } from '@/components/forms';
+import {
+  DtoFieldInCompo,
+  DtoInterfaceInForm,
+} from '@/components/forms/DtoForm';
 import { useStoreSelector } from '@/hooks/useStore';
 import { RiAddCircleLine } from 'react-icons/ri';
+import { useForm, FormProvider } from 'react-hook-form';
 
 // 상수 스타일
 const addBtnStyle = (dark: boolean) =>
@@ -12,6 +18,9 @@ const addBtnStyle = (dark: boolean) =>
 
 const DTOContainer = function () {
   const { dark } = useStoreSelector((state) => state.dark);
+  const methods = useForm<DtoInterfaceInForm>();
+  const { handleSubmit, control, getValues } = methods;
+
   return (
     <Box
       variant="one"
@@ -21,7 +30,7 @@ const DTOContainer = function () {
       <Box
         variant="two"
         fontType="normal"
-        className="basis-[50%] w-[50%] h-full flex-1 items-center justify-center overflow-y-scroll p-4 flex flex-col"
+        className="basis-[50%] w-[50%] h-full flex-1 items-center justify-center p-4 flex flex-col"
       >
         <div className="h-[8%] w-full flex flex-row items-center justify-between">
           <div className="text-[36px]">DTO List</div>
@@ -34,7 +43,7 @@ const DTOContainer = function () {
             <RiAddCircleLine className="text-[24px]" />
           </div>
         </div>
-        <div className="h-[92%] w-full flex flex-col">
+        <div className="h-[92%] w-full flex flex-col overflow-y-scroll">
           <div className="w-full flex flex-row">
             <div>DTO Name</div>
             <div>Description</div>
@@ -44,8 +53,10 @@ const DTOContainer = function () {
       <Box
         variant="two"
         fontType="normal"
-        className="basis-[50%] w-[50%] h-full flex-1 items-center justify-center overflow-y-scroll"
-      ></Box>
+        className="basis-[50%] w-[50%] h-full flex-1 items-center justify-center p-5 flex flex-col"
+      >
+        <DtoForm methods={methods} />
+      </Box>
     </Box>
   );
 };

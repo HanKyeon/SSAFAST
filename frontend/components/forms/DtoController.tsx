@@ -1,3 +1,9 @@
+import {
+  commonConstraints,
+  defaultTypes,
+  stringConstraints,
+} from '@/utils/constraints';
+import { Box } from '../common';
 import { DtoFieldInCompo, DtoInterfaceInForm } from './DtoForm';
 import {
   Controller,
@@ -6,15 +12,30 @@ import {
   useFormContext,
   useFieldArray,
   useForm,
+  UseFieldArrayRemove,
 } from 'react-hook-form';
+import { useDtoList } from '@/hooks/queries/queries';
+import { useRouter } from 'next/router';
+import { SpaceParams } from '@/pages/space';
+import { useStoreSelector } from '@/hooks/useStore';
+import { IoAddCircle } from 'react-icons/io5';
+import { RiDeleteBack2Fill } from 'react-icons/ri';
+import { useState } from 'react';
+import AnimationBox from '../common/AnimationBox';
+import ConstraintsOption, { StringOption } from './ConstraintsOption';
 
 interface Props {
   item: FieldArrayWithId<DtoInterfaceInForm, 'fields', 'id'>;
   idx: number;
+  remove: (idx: number) => void;
 }
-
-const DtoController = function ({ item, idx }: Props) {
-  const { control } = useFormContext();
+``;
+const DtoController = function ({ item, idx, remove }: Props) {
+  const { control, getValues, watch } = useFormContext();
+  const router = useRouter();
+  const { spaceId } = router.query as SpaceParams;
+  const { dark } = useStoreSelector((state) => state.dark);
+  const [typeData, setTypeData] = useState<string | number>(``);
   // const { field: constraintField } = useController({
   //   control,
   //   name: `fields.${idx}.constraints`,
@@ -28,120 +49,341 @@ const DtoController = function ({ item, idx }: Props) {
     name: `fields.${idx}.constraints`,
   });
   const appendConstraint = function () {
-    constraintsAppend(``);
+    constraintsAppend({ mainName: ``, minV: null, maxV: null });
   };
+  const { data: dtoListData } = useDtoList(spaceId);
+  const removeHandler = function () {
+    remove(idx);
+  };
+
+  const getTypeValue = function () {
+    // console.log(getValues().fields[idx].type);
+    setTypeData(() => getValues().fields[idx].type);
+  };
+
   return (
-    <div key={`${item.id}-container`} className="flex flex-col w-[50%] gap-2">
-      <Controller
-        key={`field-type-${item.id}`}
-        name={`fields.${idx}.type`}
-        control={control}
-        render={({ field }) => (
-          <div className="flex flex-row gap-2">
-            <label>타입</label>
-            <select
-              name={`fields.${idx}.type`}
-              onChange={field.onChange}
-              value={field.value}
-            >
-              <option value={0}>타입을 선택하세요</option>
-              <option value={1}>string</option>
-              <option value={2}>float</option>
-              <option value={3}>integer</option>
-              <option value={11}>someDto</option>
-            </select>
-          </div>
-        )}
-      />
-      <Controller
-        key={`field-typeName-${idx}`}
-        name={`fields.${idx}.typeName`}
-        control={control}
-        render={({ field }) => (
-          <div className="flex flex-row gap-2">
-            <label>이름</label>
-            <input
-              name={`fields.${idx}.typeName`}
-              onChange={field.onChange}
-              value={field.value}
-            />
-          </div>
-        )}
-      />
-      <Controller
-        key={`field-desc-${idx}`}
-        name={`fields.${idx}.desc`}
-        control={control}
-        render={({ field }) => (
-          <div className="flex flex-row gap-2">
-            <label>설명</label>
-            <input
-              name={`fields.${idx}.desc`}
-              onChange={field.onChange}
-              value={field.value}
-            />
-          </div>
-        )}
-      />
-      <Controller
-        key={`field-itera-${idx}`}
-        name={`fields.${idx}.itera`}
-        control={control}
-        render={({ field }) => (
-          <div className="flex flex-row gap-2">
-            <label>배열 여부</label>
-            <input
-              type="checkbox"
-              name={`fields.${idx}.itera`}
-              onChange={field.onChange}
-              value={field.value} // 빨간줄이어도 돌아감. input이 text를 다루는데 checkbox 여부까지 TS가 쳐다보진 않는듯.
-            />
-          </div>
-        )}
-      />
+    <AnimationBox
+      key={`${item.id}-container`}
+      className="flex flex-col w-full overflow-y-scroll items-center"
+    >
+      <Box
+        variant="three"
+        className="px-3 py-2 flex flex-row gap-3 w-full items-center"
+      >
+        <Controller
+          key={`field-typeName-${idx}`}
+          name={`fields.${idx}.typeName`}
+          control={control}
+          render={({ field }) => (
+            <div className="flex flex-row gap-2 w-[23%]">
+              {/* <label>이름</label> */}
+              <input
+                name={`fields.${idx}.typeName`}
+                onChange={field.onChange}
+                title={field.value}
+                placeholder="Key"
+                className="w-full flex items-center justify-center outline-none border-b-[3px] border-b-grayscale-dark bg-opacity-0 bg-theme-white-light truncate px-2"
+              />
+            </div>
+          )}
+        />
+        <Controller
+          key={`field-type-${item.id}`}
+          name={`fields.${idx}.type`}
+          control={control}
+          render={({ field }) => (
+            <div className="flex flex-row gap-2 w-[17%]">
+              {/* <label>타입</label> */}
+              <select
+                name={`fields.${idx}.type`}
+                onChange={(v) => {
+                  field.onChange(v);
+                  getTypeValue();
+                }}
+                value={field.value}
+                placeholder="Type"
+                className="w-full flex items-center justify-center outline-none border-b-[3px] border-b-grayscale-dark bg-opacity-0 bg-theme-white-light aria-selected:bg-black px-2"
+              >
+                <option value={``}>Type</option>
+                {defaultTypes.map((type) => {
+                  return (
+                    <option value={type.id} title={type.desc}>
+                      {type.name}
+                    </option>
+                  );
+                })}
+                {dtoListData?.dtoList.map((dto) => {
+                  return (
+                    <option value={dto.id} title={dto.description}>
+                      {dto.name}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+          )}
+        />
+
+        <Controller
+          key={`field-itera-${idx}`}
+          name={`fields.${idx}.itera`}
+          control={control}
+          render={({ field }) => (
+            <div className="flex flex-col w-[7%] items-center justify-center">
+              <label className="text-[16.6px]">배열</label>
+              <input
+                type="checkbox"
+                name={`fields.${idx}.itera`}
+                onChange={field.onChange}
+                value={field.value}
+                className="flex items-center justify-center outline-none border-b-[3px] border-b-grayscale-dark bg-opacity-0 bg-theme-white-light px-2"
+              />
+            </div>
+          )}
+        />
+        <Controller
+          key={`field-desc-${idx}`}
+          name={`fields.${idx}.desc`}
+          control={control}
+          render={({ field }) => (
+            <div className="flex flex-row gap-2 w-[48%]">
+              {/* <label>설명</label> */}
+              <input
+                name={`fields.${idx}.desc`}
+                onChange={field.onChange}
+                title={field.value}
+                className="w-full flex items-center justify-center outline-none border-b-[3px] border-b-grayscale-dark bg-opacity-0 bg-theme-white-light"
+                placeholder="Description"
+              />
+            </div>
+          )}
+        />
+        <RiDeleteBack2Fill
+          className={`text-red-400 hover:scale-105 cursor-pointer`}
+          onClick={removeHandler}
+        />
+      </Box>
+      {/* d아래가 제약조건 */}
+      {/* <div className="w-full flex flex-col"> */}
       <Controller
         key={`field-constraints-${idx}`}
         name={`fields.${idx}.constraints`}
         control={control}
         render={({ field }) => {
           return (
-            <div className="flex flex-col gap-1">
-              <label>제약조건</label>
+            <AnimationBox
+              className={`flex flex-col gap-1 w-[90%] justify-center rounded-b-[13px] px-3 py-2 ${
+                dark
+                  ? 'bg-grayscale-deepdarkdeep'
+                  : 'bg-grayscale-deeplightlight'
+              }`}
+            >
+              <div className="w-full flex flex-row gap-3 items-center">
+                <span className="text-[22px]">Constraints</span>
+                <IoAddCircle
+                  className={`text-[24px] cursor-pointer hover:scale-105 duration-[0.33s] ${
+                    dark ? 'text-taro-strong' : 'text-mincho-strong'
+                  }`}
+                  onClick={appendConstraint}
+                />
+              </div>
+              {/* <ConstraintsOption
+                typeData={typeData}
+                AddConstraint={constraintsAddHandler}
+              /> */}
               {constraintsFields.map((item, iidx) => {
                 return (
                   <Controller
                     key={`${item.id}-constraint`}
-                    name={`fields.${idx}.constraints.${iidx}`}
-                    render={({ field }) => {
+                    name={`fields.${idx}.constraints.${iidx}.mainName`}
+                    render={({ field: ifield }) => {
                       return (
-                        <div className="flex flex-row gap-2">
+                        <AnimationBox className="flex flex-row gap-2">
                           <select
-                            key={`${item.id}-constraint`}
-                            name={`fields.${idx}.constraints.${iidx}`}
-                            onChange={field.onChange}
+                            key={`${item.id}-constraint-${iidx}`}
+                            name={`fields.${idx}.constraints.${iidx}.mainName`}
+                            onChange={ifield.onChange}
+                            value={ifield.value}
+                            className="w-[25%] flex items-center justify-center outline-none border-b-[3px] border-b-grayscale-dark bg-opacity-0 bg-theme-white-light aria-selected:bg-black px-2"
                           >
-                            <option value={``}>선택하세욤 뿌우</option>
-                            <option value={`NotNull`}>NotNull</option>
-                            <option value={`NotOption`}>NotOption</option>
-                            <option value={`SomeOption`}>SomeOption</option>
-                            <option value={`AnyOption`}>AnyOption</option>
+                            <option value={``}>선택</option>
+                            {commonConstraints.map((con) => {
+                              return (
+                                <option value={con.name} title={con.desc}>
+                                  {con.name}
+                                </option>
+                              );
+                            })}
+                            {typeData === 'String' &&
+                              stringConstraints.map((con) => {
+                                return (
+                                  <option
+                                    value={`${con.name}`}
+                                    title={con.desc}
+                                  >
+                                    {con.name}
+                                  </option>
+                                );
+                              })}
+                            {typeData === 'String' && (
+                              <>
+                                <option value={`Pattern`}>Pattern</option>
+                                <option value={`Length`}>Length</option>
+                              </>
+                            )}
+                            {(typeData === 'int' ||
+                              typeData === `long` ||
+                              typeData === `float` ||
+                              typeData === `double`) && (
+                              <option value={`Max`}>Max</option>
+                            )}
+                            {(typeData === 'int' ||
+                              typeData === `long` ||
+                              typeData === `float` ||
+                              typeData === `double`) && (
+                              <option value={`Min`}>Min</option>
+                            )}
+                            {(typeData === 'int' ||
+                              typeData === `long` ||
+                              typeData === `float` ||
+                              typeData === `double`) && (
+                              <option value={`Range`}>Range</option>
+                            )}
                           </select>
-                          <div onClick={() => constraintsRemove(iidx)}>
-                            제거
-                          </div>
-                        </div>
+                          {ifield.value === `Pattern` && (
+                            <>
+                              <Controller
+                                key={`${item.id}-constraint-validateReg-${iidx}`}
+                                name={`fields.${idx}.constraints.${iidx}.validateReg`}
+                                render={({ field: validateRegField }) => {
+                                  return (
+                                    <input
+                                      name={`fields.${idx}.constraints.${iidx}.validateReg`}
+                                      type="text"
+                                      onChange={validateRegField.onChange}
+                                      className="text-grayscale-deepdarklight"
+                                    />
+                                  );
+                                }}
+                              />
+                            </>
+                          )}
+                          {ifield.value === `Max` && (
+                            <>
+                              <Controller
+                                key={`${item.id}-constraint-maxV-${iidx}`}
+                                name={`fields.${idx}.constraints.${iidx}.maxV`}
+                                render={({ field: maxVField }) => {
+                                  return (
+                                    <input
+                                      name={`fields.${idx}.constraints.${iidx}.maxV`}
+                                      type="number"
+                                      onChange={maxVField.onChange}
+                                      className="text-grayscale-deepdarklight"
+                                    />
+                                  );
+                                }}
+                              />
+                            </>
+                          )}
+                          {ifield.value === `Min` && (
+                            <>
+                              <Controller
+                                key={`${item.id}-constraint-minV-${iidx}`}
+                                name={`fields.${idx}.constraints.${iidx}.minV`}
+                                render={({ field: minVField }) => {
+                                  return (
+                                    <input
+                                      name={`fields.${idx}.constraints.${iidx}.minV`}
+                                      type="number"
+                                      onChange={minVField.onChange}
+                                      className="text-grayscale-deepdarklight"
+                                    />
+                                  );
+                                }}
+                              />
+                            </>
+                          )}
+                          {ifield.value === `Range` && (
+                            <>
+                              <Controller
+                                key={`${item.id}-constraint-minV-${iidx}`}
+                                name={`fields.${idx}.constraints.${iidx}.minV`}
+                                render={({ field: minVField }) => {
+                                  return (
+                                    <input
+                                      name={`fields.${idx}.constraints.${iidx}.minV`}
+                                      type="number"
+                                      onChange={minVField.onChange}
+                                      className="text-grayscale-deepdarklight"
+                                    />
+                                  );
+                                }}
+                              />
+                              <Controller
+                                key={`${item.id}-constraint-maxV-${iidx}`}
+                                name={`fields.${idx}.constraints.${iidx}.maxV`}
+                                render={({ field: maxVField }) => {
+                                  return (
+                                    <input
+                                      name={`fields.${idx}.constraints.${iidx}.maxV`}
+                                      type="number"
+                                      onChange={maxVField.onChange}
+                                      className="text-grayscale-deepdarklight"
+                                    />
+                                  );
+                                }}
+                              />
+                            </>
+                          )}
+                          {ifield.value === `Length` && (
+                            <>
+                              <Controller
+                                key={`${item.id}-constraint-minV-${iidx}`}
+                                name={`fields.${idx}.constraints.${iidx}.minV`}
+                                render={({ field: minVField }) => {
+                                  return (
+                                    <input
+                                      name={`fields.${idx}.constraints.${iidx}.minV`}
+                                      type="number"
+                                      onChange={minVField.onChange}
+                                      className="text-grayscale-deepdarklight"
+                                    />
+                                  );
+                                }}
+                              />
+                              <Controller
+                                key={`${item.id}-constraint-maxV-${iidx}`}
+                                name={`fields.${idx}.constraints.${iidx}.maxV`}
+                                render={({ field: maxVField }) => {
+                                  return (
+                                    <input
+                                      name={`fields.${idx}.constraints.${iidx}.maxV`}
+                                      type="number"
+                                      onChange={maxVField.onChange}
+                                      className="text-grayscale-deepdarklight"
+                                    />
+                                  );
+                                }}
+                              />
+                            </>
+                          )}
+                          <RiDeleteBack2Fill
+                            className="cursor-pointer hover:scale-105 text-red-400"
+                            onClick={() => constraintsRemove(iidx)}
+                          />
+                        </AnimationBox>
                       );
                     }}
                   />
                 );
               })}
-            </div>
+            </AnimationBox>
           );
         }}
       />
-      <div onClick={appendConstraint}>제약조건 추가</div>
-      <div>----------------------</div>
-    </div>
+      {/* </div> */}
+    </AnimationBox>
   );
 };
 
