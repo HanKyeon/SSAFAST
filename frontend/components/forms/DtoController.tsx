@@ -112,20 +112,26 @@ const DtoController = function ({ item, idx }: Props) {
                   <Controller
                     key={`${item.id}-constraint`}
                     name={`fields.${idx}.constraints.${iidx}`}
-                    render={({ field }) => {
+                    rules={{ required: true }}
+                    render={({ field, fieldState }) => {
                       return (
                         <div className="flex flex-row gap-2">
-                          <select
-                            key={`${item.id}-constraint`}
-                            name={`fields.${idx}.constraints.${iidx}`}
-                            onChange={field.onChange}
-                          >
-                            <option value={``}>선택하세욤 뿌우</option>
-                            <option value={`NotNull`}>NotNull</option>
-                            <option value={`NotOption`}>NotOption</option>
-                            <option value={`SomeOption`}>SomeOption</option>
-                            <option value={`AnyOption`}>AnyOption</option>
-                          </select>
+                          <div className="flex flex-col gap-2">
+                            <select
+                              key={`${item.id}-constraint`}
+                              name={`fields.${idx}.constraints.${iidx}`}
+                              onChange={field.onChange}
+                            >
+                              <option value={``}>선택하세욤 뿌우</option>
+                              <option value={`NotNull`}>NotNull</option>
+                              <option value={`NotOption`}>NotOption</option>
+                              <option value={`SomeOption`}>SomeOption</option>
+                              <option value={`AnyOption`}>AnyOption</option>
+                            </select>
+                            {fieldState?.invalid && (
+                              <span>제약조건을 입력해 주세요.</span>
+                            )}
+                          </div>
                           <div onClick={() => constraintsRemove(iidx)}>
                             제거
                           </div>

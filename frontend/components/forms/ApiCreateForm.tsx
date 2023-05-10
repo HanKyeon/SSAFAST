@@ -1,6 +1,6 @@
 import { useForm, FormProvider, Controller } from 'react-hook-form';
 import { Box, Button, CircleBtn, Select, Input } from '../common';
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { RequestForm, ResponseForm } from './index';
 import { useStoreSelector } from '@/hooks/useStore';
 import AnimationBox from '../common/AnimationBox';
@@ -34,8 +34,11 @@ const selectedStyle = (dark: boolean) =>
       : 'border-b-[3px] border-taro-strong active:border-opacity-100 border-opacity-80 text-taro-strong active:bg-grayscale-light active:bg-opacity-70 active:border-taro-normal active:border-b-[3px] active:text-taro-normal'
   }` as const;
 
+interface ApiCreateProps {
+  toggleAddHandler: (e: FormEvent) => void;
+}
 // Form을 모을 최상위 함수
-const ApiCreateForm = function () {
+const ApiCreateForm = function ({ toggleAddHandler }: ApiCreateProps) {
   const { dark } = useStoreSelector((state) => state.dark);
   const [step, setStep] = useState<number>(1);
   const router = useRouter();
@@ -78,7 +81,11 @@ const ApiCreateForm = function () {
   return (
     <div className="flex flex-col gap-3 p-[3%] w-full h-full overflow-y-scroll">
       <div>
-        <Button isEmpty className="flex flex-row gap-2 items-center">
+        <Button
+          onClick={toggleAddHandler}
+          isEmpty
+          className="flex flex-row gap-2 items-center"
+        >
           <IoMdArrowRoundBack /> Back
         </Button>
       </div>
@@ -241,7 +248,7 @@ const ApiCreateForm = function () {
               step === 2 ? '' : 'hidden'
             } flex w-full h-full justify-center`}
           >
-            <ResponseForm />;
+            <ResponseForm />
           </AnimationBox>
           <Button type="submit">저장</Button>
         </form>
