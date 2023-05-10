@@ -54,7 +54,7 @@ public class WorkspaceService {
         //baseurl 하나씩 추가
         List<Baseurl> baseurls = new ArrayList<>();
         for (String url : createWorkspaceDto.getBaseurls()) {
-            baseurls.add(Baseurl.builder().workspace(workspace).url(url).build());
+            baseurls.add(Baseurl.builder().workspace(workspace).url(url).isCertified(false).build());
         }
 
         //baseurl workspace entity에 추가

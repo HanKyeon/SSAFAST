@@ -4,20 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="07b52940-1828-4ae6-ba42-968c6dcaf444" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/overload/controller/OverloadController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/overload/dto/request/OverloadExecDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/overload/dto/response/CheckBaseurlDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/overload/service/OverloadService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+    <list default="true" id="07b52940-1828-4ae6-ba42-968c6dcaf444" name="Changes" comment="[BE] Feat : baseurl 인증 확인">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/auth/service/RedisService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/auth/service/RedisService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/domain/Baseurl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/domain/Baseurl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/dto/response/BaseurlDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/dto/response/BaseurlDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/service/ApiPreService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/service/ApiPreService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/service/WorkspaceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/service/WorkspaceService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,8 +107,16 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1683682383509</updated>
-      <workItem from="1683682384721" duration="10332000" />
+      <workItem from="1683682384721" duration="10634000" />
     </task>
+    <task id="LOCAL-00001" summary="[BE] Feat : baseurl 인증 확인">
+      <created>1683709922125</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1683709922125</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -134,5 +132,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="[BE] Feat : baseurl 인증 확인" />
+    <option name="LAST_COMMIT_MESSAGE" value="[BE] Feat : baseurl 인증 확인" />
   </component>
 </project>
