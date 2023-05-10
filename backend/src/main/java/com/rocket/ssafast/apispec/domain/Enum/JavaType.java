@@ -1,13 +1,13 @@
 package com.rocket.ssafast.apispec.domain.Enum;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.squareup.javapoet.TypeName;
 
@@ -22,9 +22,9 @@ public enum JavaType {
 	FLOAT_TYPE("float", TypeName.FLOAT),
 	DOUBLE_TYPE("double", TypeName.DOUBLE),
 	BOOLEAN_TYPE("boolean", TypeName.BOOLEAN),
-	FILE_TYPE("File", TypeName.get(File.class)),
+	MULTIPART_FILE_TYPE("MultipartFile", TypeName.get(MultipartFile.class)),
 	DATE_TYPE("Date", TypeName.get(Date.class)),
-	LOCALDATETIME_TYPE("LocalDateTime", TypeName.get(LocalDateTime.class));
+	LOCAL_DATETIME_TYPE("LocalDateTime", TypeName.get(LocalDateTime.class));
 
 	private String typeName;
 

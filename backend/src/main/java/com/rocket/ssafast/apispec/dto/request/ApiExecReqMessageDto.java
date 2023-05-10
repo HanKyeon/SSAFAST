@@ -7,12 +7,16 @@ import javax.validation.constraints.NotNull;
 
 import com.rocket.ssafast.apispec.domain.Document.element.ApiTestResultRequest;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ToString
 public class ApiExecReqMessageDto {
 
@@ -22,7 +26,6 @@ public class ApiExecReqMessageDto {
 	@NotNull
 	Integer method;
 
-	@NotNull
 	Map<String, String> headers;
 
 	Map<String, String> pathVars;
