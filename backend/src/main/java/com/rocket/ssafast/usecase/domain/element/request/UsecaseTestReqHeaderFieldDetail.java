@@ -16,7 +16,7 @@ public class UsecaseTestReqHeaderFieldDetail {
 	String desc;
 
 	@NotNull
-	Boolean mapped;
+	boolean mapped;
 
 	Object value;
 }

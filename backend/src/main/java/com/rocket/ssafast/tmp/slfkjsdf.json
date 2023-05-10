@@ -1,0 +1,53 @@
+{
+  "user": {
+      "id": 1,
+      "name": "John Doe",
+      "age": 35,
+      "address": {
+        "id": 1,
+        "street": "123 Main St",
+        "city": "Anytown",
+        "state": "CA"
+      },
+      "orderList": [
+        {
+          "id": 1,
+          "userId": null,
+          "num": "ORDER001",
+          "itemList": [
+            {
+              "id": 1,
+              "orderId": null,
+              "name": "Item 1",
+              "price": 10.99
+            },
+            {
+              "id": 2,
+              "orderId": null,
+              "name": "Item 2",
+              "price": 5.99
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "userId": null,
+          "num": "ORDER002",
+          "itemList": [
+            {
+              "id": 3,
+              "orderId": null,
+              "name": "Item 3",
+              "price": 7.99
+            },
+            {
+              "id": 4,
+              "orderId": null,
+              "name": "Item 4",
+              "price": 2.99
+            }
+          ]
+        }
+      ]
+    }
+}

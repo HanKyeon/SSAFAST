@@ -22,5 +22,5 @@ public class UsecaseTestDocument {
 	@Id
 	String id;		// ssafast-usecase-test
 
-	Map<Long, UsecaseTestInfo> usecaseTset;		// key : test id
+	Map<Long, UsecaseTestInfo> usecaseTest;		// key : test id
 }

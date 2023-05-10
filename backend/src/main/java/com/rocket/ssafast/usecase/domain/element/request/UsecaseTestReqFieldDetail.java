@@ -23,7 +23,7 @@ public class UsecaseTestReqFieldDetail {
 	List<String> constraints;
 
 	@NotNull
-	Boolean mapped;
+	boolean mapped;
 
 	Object value;
 }
