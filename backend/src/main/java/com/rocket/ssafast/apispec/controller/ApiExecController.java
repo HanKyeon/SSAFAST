@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.rocket.ssafast.apispec.dto.request.ApiExecReqMessageDto;
 import com.rocket.ssafast.apispec.dto.request.ApiTestResultDto;
 import com.rocket.ssafast.apispec.service.ApiExecService;
-import com.rocket.ssafast.apispec.dto.request.temp.User;
+import com.rocket.ssafast.tmp.dto.TmpUserDto;
 import com.rocket.ssafast.auth.domain.UserDetailsImpl;
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
@@ -35,13 +37,19 @@ public class ApiExecController {
 	private final ApiExecService apiExecService;
 
 	@PostMapping
-	ResponseEntity<?> executeAPI(@Valid @RequestBody ApiExecReqMessageDto apiExecReqMessageDto) {
+	ResponseEntity<?> executeAPI(
+		@RequestPart(value = "files", required = false) MultipartFile[] files,				// 단건 파일들
+		@RequestPart(value = "filesArrs", required = false) MultipartFile[][] filesArrs,		// 다건 파일들
+		@RequestPart(value = "filekeys", required = false) String[] filekeys,				// 단건 파일 키들
+		@RequestPart(value = "filesArrKeys", required = false) String[] filesArrKeys,		// 다건 파일 키들
+		@Valid @RequestPart("execReqData") ApiExecReqMessageDto apiExecReqMessageDto) {		// json 데이터
+
 		try {
-			return new ResponseEntity<>(apiExecService.requestAPI(apiExecReqMessageDto), HttpStatus.OK);
+			return new ResponseEntity<>(apiExecService.requestAPI(apiExecReqMessageDto, files, filesArrs, filekeys, filesArrKeys), HttpStatus.OK);
 		} catch (CustomException e) {
 			return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
 		} catch (Exception e) {
-			if (e.getMessage().equals("CLIENT_ERROR")) {
+			if (e.getMessage() != null) {
 				Map<String, String> clientError = new HashMap<>();
 				clientError.put("errorMessage", e.getCause().getMessage());
 				return new ResponseEntity<>(clientError, HttpStatus.OK);
@@ -93,9 +101,31 @@ public class ApiExecController {
 		}
 	}
 
-	@PostMapping("/{id}/test/{user_id}")
-	ResponseEntity<?>  testpost(@RequestBody User body, @PathVariable("id") Long id, @PathVariable("user_id") String userId, @RequestParam Long longParam, @RequestParam String stringParam ) {
+	/*
+		@PostMapping("/{id}/test/{user_id}")
+	ResponseEntity<?>  testpost(@RequestBody TmpUserDto body, @PathVariable("id") Long id, @PathVariable("user_id") String userId, @RequestParam Long longParam, @RequestParam String stringParam ) {
 		String result = "post 성공: "+"id: "+id+", userId: "+userId+", longParams: "+longParam+", strParams:"+stringParam+", body:"+body;
+		Map<String, String> rr = new HashMap<>();
+		rr.put("result", result);
+		return new ResponseEntity<>(rr, HttpStatus.OK);
+	}
+	 */
+	// @PostMapping("/{id}/test/{user_id}")
+	// ResponseEntity<?>  testpost(@RequestPart(value = "file1", required = false) MultipartFile file1 ,@RequestPart(value = "user") TmpUserDto body, @PathVariable("id") Long id, @PathVariable("user_id") String userId, @RequestParam Long longParam, @RequestParam String stringParam ) {
+	// 	String result = "post 성공: "+"id: "+id+", userId: "+userId+", longParams: "+longParam+", strParams:"+stringParam+", body:"+body;
+	// 	if(file1 != null) {
+	// 		result += ", file1 :"+file1.getOriginalFilename();
+	// 	}
+	// 	Map<String, String> rr = new HashMap<>();
+	// 	rr.put("result", result);
+	// 	return new ResponseEntity<>(rr, HttpStatus.OK);
+	// }
+	@PostMapping("/{id}/test/{user_id}")
+	ResponseEntity<?>  testpost(@RequestParam(value = "file1") MultipartFile file1, @PathVariable("id") Long id, @PathVariable("user_id") String userId, @RequestParam Long longParam, @RequestParam String stringParam ) {
+		String result = "post 성공: "+"id: "+id+", userId: "+userId+", longParams: "+longParam+", strParams:"+stringParam;
+		if(file1 != null) {
+			result += ", file1 :"+file1.getOriginalFilename();
+		}
 		Map<String, String> rr = new HashMap<>();
 		rr.put("result", result);
 		return new ResponseEntity<>(rr, HttpStatus.OK);

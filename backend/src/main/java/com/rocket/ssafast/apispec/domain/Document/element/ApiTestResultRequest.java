@@ -18,7 +18,7 @@ public class ApiTestResultRequest {
 	String body;
 
 	@Builder
-	public ApiTestResultRequest(String url, int method, Map<String, String> headers, Map<String, String> pathVars, Map<String, String> params,String body) {
+	public ApiTestResultRequest(String url, int method, Map<String, String> headers, Map<String, String> pathVars, Map<String, String> params, String body) {
 		this.url = url;
 		this.method = method;
 		this.headers = headers;
