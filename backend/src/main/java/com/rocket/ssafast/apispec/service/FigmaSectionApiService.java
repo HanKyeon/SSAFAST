@@ -26,7 +26,6 @@ public class FigmaSectionApiService {
     private final FigmaSectionApiRepository figmaSectionApiRepository;
     private final ApiSpecRepository apiSpecRepository;
     private final FigmaSectionRepository figmaSectionRepository;
-    private final CategoryEntityRepository categoryEntityRepository;
 
     @Transactional
     public void createApiFigmaSection(Long figmaSectionId, List<Long> apiIds) {
@@ -34,7 +33,7 @@ public class FigmaSectionApiService {
             throw new CustomException(ErrorCode.SECTION_NOT_FOUND);
         }
 
-        if(!figmaSectionApiRepository.existsByFigmaSectionId(figmaSectionId)){
+        if(figmaSectionApiRepository.existsByFigmaSectionId(figmaSectionId)){
             figmaSectionApiRepository.deleteAllByFigmaSectionId(figmaSectionId);
         }
 
@@ -46,7 +45,7 @@ public class FigmaSectionApiService {
             }
 
             figmaSectionApiRepository.save(FigmaSectionApi.builder()
-                    .apiInfoId(apiId)
+                    .apiSpecEntity(apiSpecRepository.findById(apiId).get())
                     .figmaSectionId(figmaSectionId).build());
         }
     }
@@ -60,7 +59,7 @@ public class FigmaSectionApiService {
 
         HashMap<Long, List<ApiSpecEntity>> map = new HashMap<>();
         for(FigmaSectionApi figmaSectionApi : apis){
-            ApiSpecEntity apiSpecEntity = apiSpecRepository.findById(figmaSectionApi.getApiInfoId()).get();
+            ApiSpecEntity apiSpecEntity = figmaSectionApi.getApiSpecEntity();
             Long categoryId = apiSpecEntity.getCategory().getId();
             if(!map.containsKey(categoryId)){
                 map.put(categoryId, new ArrayList<>());
@@ -75,7 +74,7 @@ public class FigmaSectionApiService {
             ApiCategoryDto apiCategoryDto = new ApiCategoryDto();
             apiCategoryDto.setCategoryId(entry.getKey());
             apiCategoryDto.setCategoryName(apiSpecEntities.get(0).getCategory().getName());
-
+            apiCategoryDto.setApis(new ArrayList<>());
             for(ApiSpecEntity apiSpecEntity : apiSpecEntities){
                 apiCategoryDto.getApis().add(apiSpecEntity.toDto());
             }
