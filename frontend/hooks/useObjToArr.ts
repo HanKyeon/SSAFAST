@@ -1,4 +1,4 @@
-import { BodyType, DtoType } from '@/components/work/APIDocsContainer/ReqBox';
+import { BodyType, NestedDtosType } from '@/components/work/APIDocsContainer';
 import {
   DtoInfoType,
   RefinedDtosType,
@@ -7,12 +7,14 @@ import {
 export const useObjToArr = function (item: BodyType) {
   const arr: RefinedDtosType[] = [];
   for (const eachDtoID in item.nestedDtos) {
-    const eachDto: DtoType = item.nestedDtos[eachDtoID] as DtoType;
+    const eachDto: BodyType = item.nestedDtos[eachDtoID as any] as BodyType;
     //   console.log('eachDto', eachDto); // 객체
     //   console.log('eachDtoID', eachDtoID); // 15
     const innerArr: RefinedDtosType[] = [];
     for (const eachInnerDtoID in eachDto.nestedDtos) {
-      const innerDto: DtoType = eachDto.nestedDtos[eachInnerDtoID] as DtoType;
+      const innerDto: BodyType = eachDto.nestedDtos[
+        eachInnerDtoID as any
+      ] as BodyType;
       //   console.log('innerDto', innerDto); // 객체
       //   console.log('eachDtosInnerDto', eachDtosInnerDto); // 15 (: dtoID)
 

@@ -56,15 +56,9 @@ export type FieldsType = {
   itera?: boolean;
   value?: null | any;
 };
-export type DtosNestedDtoType = {
-  [key: string | number]: DtoType | DtoType[];
-};
-export type DtoType = {
-  fields: FieldsType[];
-  nestedDtos: DtosNestedDtoType | DtosNestedDtoType[];
-};
+
 export type NestedDtosType = {
-  [key: string | number]: DtoType;
+  [key: string | number]: BodyType;
 };
 export type BodyType = {
   fields: FieldsType[];
