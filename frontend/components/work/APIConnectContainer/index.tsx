@@ -6,8 +6,350 @@ import { EventHandler, FormEvent, useEffect, useState } from 'react';
 import EomSelect from '@/components/common/EomSelect';
 import { BsFilter, BsFolderPlus, BsCheckLg } from 'react-icons/bs';
 import { HiOutlineSearch, HiPencil } from 'react-icons/hi';
-import APIList from '../APIEditContainer/APIList';
+import APIList, { APIListType } from '../APIEditContainer/APIList';
 import { useSectionsApi } from '@/hooks/queries/queries';
+
+const allAPIList: APIListType[] = [
+  {
+    categoryId: 1,
+    categoryName: 'user',
+    apis: [
+      {
+        id: 1,
+        name: '전체 회원 목록',
+        description: '아무튼 다 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 2,
+        name: '회원 한명 조회',
+        description: '한명 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 3,
+        name: '회원가입',
+        description: '아무튼 가입',
+        method: 'POST',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+    ],
+  },
+  {
+    categoryId: 2,
+    categoryName: 'mypage',
+    apis: [
+      {
+        id: 4,
+        name: '내 정보 수정',
+        description: '내 정보를 막 수정해버려',
+        method: 'PUT',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 5,
+        name: '전체 회원 목록',
+        description: '아무튼 다 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 6,
+        name: '회원 한명 조회',
+        description: '한명 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 7,
+        name: '회원가입',
+        description: '아무튼 가입',
+        method: 'POST',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 8,
+        name: '전체 회원 목록',
+        description: '아무튼 다 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 9,
+        name: '회원 한명 조회',
+        description: '한명 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 10,
+        name: '회원가입',
+        description: '아무튼 가입',
+        method: 'POST',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 11,
+        name: '전체 회원 목록',
+        description: '아무튼 다 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 12,
+        name: '회원 한명 조회',
+        description: '한명 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 13,
+        name: '회원가입',
+        description: '아무튼 가입',
+        method: 'POST',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 14,
+        name: '전체 회원 목록',
+        description: '아무튼 다 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 15,
+        name: '회원 한명 조회',
+        description: '한명 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 16,
+        name: '회원가입',
+        description: '아무튼 가입',
+        method: 'POST',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 17,
+        name: '전체 회원 목록',
+        description: '아무튼 다 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 18,
+        name: '회원 한명 조회',
+        description: '한명 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 19,
+        name: '회원가입',
+        description: '아무튼 가입',
+        method: 'POST',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+    ],
+  },
+];
+
+const checkedAPIList: APIListType[] = [
+  {
+    categoryId: 1,
+    categoryName: 'user',
+    apis: [
+      {
+        id: 1,
+        name: '전체 회원 목록',
+        description: '아무튼 다 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+    ],
+  },
+  {
+    categoryId: 2,
+    categoryName: 'mypage',
+    apis: [
+      {
+        id: 4,
+        name: '내 정보 수정',
+        description: '내 정보를 막 수정해버려',
+        method: 'PUT',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 5,
+        name: '전체 회원 목록',
+        description: '아무튼 다 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 7,
+        name: '회원가입',
+        description: '아무튼 가입',
+        method: 'POST',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+      {
+        id: 8,
+        name: '전체 회원 목록',
+        description: '아무튼 다 가져오는거',
+        method: 'GET',
+        status: '명세중',
+        writter: {
+          id: 1,
+          name: '로사짱',
+          email: 'a@naver.com',
+          profileImg: 'anjanj.png',
+        },
+      },
+    ],
+  },
+];
 
 interface Props {
   serverSideStore?: RTCSpaceData;
@@ -67,7 +409,7 @@ const APIConnectContainer = function ({ store, serverSideStore }: Props) {
           {isSaved ? (
             <Button
               isEmpty
-              className={`flex justify-center items-center gap-2 py-[4px] pr-[12px] pl-[25px]`}
+              className={`w-[125px] flex justify-center items-center gap-2 py-[4px] pr-[12px] pl-[25px]`}
               onClick={handleButton}
             >
               편집
@@ -75,16 +417,19 @@ const APIConnectContainer = function ({ store, serverSideStore }: Props) {
             </Button>
           ) : (
             <Button
-              className={`flex justify-center items-center gap-2 py-[4px] pr-[12px] pl-[25px]`}
+              className={`w-[125px] flex justify-center items-center gap-2 py-[4px] pr-[12px] pl-[25px]`}
               onClick={handleButton}
             >
-              저장
+              <b className={``}>{3}</b>저장
               <BsCheckLg />
             </Button>
           )}
         </div>
-        {/* api 목록 */}
-        <APIList />
+        <APIList
+          apiList={isSaved ? checkedAPIList : allAPIList}
+          checkedAPIList={!isSaved ? checkedAPIList : undefined}
+          checkBox={!isSaved} // 체크박스 달고있을지 말지
+        />
       </Box>
     </div>
   );

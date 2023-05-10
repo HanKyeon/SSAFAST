@@ -352,28 +352,17 @@ export const useSpaceCategory = function (spaceId: string | number) {
 };
 
 interface sectionsApi {
-  filteredApiList: {
-    category: {
+  apiCategories: {
+    categoryId: number;
+    categoryName: string;
+    apis: {
       id: number;
       name: string;
-      apiList: {
-        id: number;
-        name: string;
-        description: string;
-        method:
-          | 'PUT'
-          | 'GET'
-          | 'POST'
-          | 'DEL'
-          | 'PATCH'
-          | `put`
-          | `get`
-          | `post`
-          | `del`
-          | `patch`;
-        status: number | string;
-      }[];
-    };
+      description: string;
+      method: string;
+      status: number;
+      writter: { id: number; name: string; email: string; profileImg: string };
+    }[];
   }[];
 }
 
