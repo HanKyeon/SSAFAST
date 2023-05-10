@@ -39,7 +39,7 @@ public class ApiExecController {
 	@PostMapping
 	ResponseEntity<?> executeAPI(
 		@RequestPart(value = "files", required = false) MultipartFile[] files,				// 단건 파일들
-		@RequestPart(value = "filesArrs", required = false) MultipartFile[][] filesArrs,		// 다건 파일들
+		@RequestPart(value = "filesArrs", required = false) MultipartFile[][] filesArrs,	// 다건 파일들
 		@RequestPart(value = "filekeys", required = false) String[] filekeys,				// 단건 파일 키들
 		@RequestPart(value = "filesArrKeys", required = false) String[] filesArrKeys,		// 다건 파일 키들
 		@Valid @RequestPart("execReqData") ApiExecReqMessageDto apiExecReqMessageDto) {		// json 데이터
@@ -101,27 +101,27 @@ public class ApiExecController {
 		}
 	}
 
-	/*
-		@PostMapping("/{id}/test/{user_id}")
-	ResponseEntity<?>  testpost(@RequestBody TmpUserDto body, @PathVariable("id") Long id, @PathVariable("user_id") String userId, @RequestParam Long longParam, @RequestParam String stringParam ) {
+	@PostMapping("/{id}/test/json/{user_id}")
+	ResponseEntity<?>  testjson(@RequestBody TmpUserDto body, @PathVariable("id") Long id, @PathVariable("user_id") String userId, @RequestParam Long longParam, @RequestParam String stringParam ) {
 		String result = "post 성공: "+"id: "+id+", userId: "+userId+", longParams: "+longParam+", strParams:"+stringParam+", body:"+body;
 		Map<String, String> rr = new HashMap<>();
 		rr.put("result", result);
 		return new ResponseEntity<>(rr, HttpStatus.OK);
 	}
-	 */
-	// @PostMapping("/{id}/test/{user_id}")
-	// ResponseEntity<?>  testpost(@RequestPart(value = "file1", required = false) MultipartFile file1 ,@RequestPart(value = "user") TmpUserDto body, @PathVariable("id") Long id, @PathVariable("user_id") String userId, @RequestParam Long longParam, @RequestParam String stringParam ) {
-	// 	String result = "post 성공: "+"id: "+id+", userId: "+userId+", longParams: "+longParam+", strParams:"+stringParam+", body:"+body;
-	// 	if(file1 != null) {
-	// 		result += ", file1 :"+file1.getOriginalFilename();
-	// 	}
-	// 	Map<String, String> rr = new HashMap<>();
-	// 	rr.put("result", result);
-	// 	return new ResponseEntity<>(rr, HttpStatus.OK);
-	// }
-	@PostMapping("/{id}/test/{user_id}")
-	ResponseEntity<?>  testpost(@RequestParam(value = "file1") MultipartFile file1, @PathVariable("id") Long id, @PathVariable("user_id") String userId, @RequestParam Long longParam, @RequestParam String stringParam ) {
+
+	@PostMapping("/{id}/test/json-multipart/{user_id}")
+	ResponseEntity<?>  testJsonMultiPart(@RequestPart(value = "file1", required = false) MultipartFile file1 ,@RequestPart(value = "user") TmpUserDto body, @PathVariable("id") Long id, @PathVariable("user_id") String userId, @RequestParam Long longParam, @RequestParam String stringParam ) {
+		String result = "post 성공: "+"id: "+id+", userId: "+userId+", longParams: "+longParam+", strParams:"+stringParam+", body:"+body;
+		if(file1 != null) {
+			result += ", file1 :"+file1.getOriginalFilename();
+		}
+		Map<String, String> rr = new HashMap<>();
+		rr.put("result", result);
+		return new ResponseEntity<>(rr, HttpStatus.OK);
+	}
+
+	@PostMapping("/{id}/test/multipart/{user_id}")
+	ResponseEntity<?>  testMultipart(@RequestParam(value = "file1") MultipartFile file1, @PathVariable("id") Long id, @PathVariable("user_id") String userId, @RequestParam Long longParam, @RequestParam String stringParam ) {
 		String result = "post 성공: "+"id: "+id+", userId: "+userId+", longParams: "+longParam+", strParams:"+stringParam;
 		if(file1 != null) {
 			result += ", file1 :"+file1.getOriginalFilename();

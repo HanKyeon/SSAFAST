@@ -5,6 +5,11 @@ import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor
 public class UsecaseTestReqNestedDto {
 
 	@NotNull
