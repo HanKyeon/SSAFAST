@@ -22,6 +22,9 @@ public class Baseurl {
     @Column(name = "url")
     private String url;
 
+    @Column(name = "is_certified")
+    private Boolean isCertified;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workspace_id")
     private Workspace workspace;

@@ -11,4 +11,5 @@ import lombok.*;
 public class BaseurlDto {
     private Long id;
     private String url;
+    private boolean isCertified;
 }

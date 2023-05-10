@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ssafast.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ssafast.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/SSAFAST.iml" filepath="$PROJECT_DIR$/.idea/SSAFAST.iml" />
     </modules>
   </component>
 </project>
