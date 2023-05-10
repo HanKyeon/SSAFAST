@@ -1,19 +1,29 @@
 import { useStoreSelector } from '@/hooks/useStore';
 import { HiChatBubbleBottomCenterText } from 'react-icons/hi2';
-import { FieldsType, HeadersType } from './ReqBox';
+
 import Input from '@/components/common/Input';
 import { DtoInfoType } from './ReqItemBody';
+import { Controller } from 'react-hook-form';
+import { HeadersType, FieldsType } from '.';
 
 interface ReqItemInnerPropsType {
   item: HeadersType | FieldsType | DtoInfoType;
   className?: string;
   depth?: 0 | 1 | 2;
+  control?: any;
+  name?: string;
+  field?: any;
+  formName?: string;
 }
 
 const ReqItemInner = function ({
+  name,
+  control,
   item,
   className,
   depth = 0,
+  field,
+  formName,
 }: ReqItemInnerPropsType): JSX.Element {
   const { dark: isDark } = useStoreSelector((state) => state.dark);
 
@@ -86,7 +96,20 @@ const ReqItemInner = function ({
             {'type' in item ? item.type : item.name}
           </div>
           <div className={`${styles['value']}`}>
-            {'type' in item && <Input className={`w-full`} />}
+            {'type' in item && (
+              <Controller
+                name={`${formName}.value`}
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Input
+                    name={`${formName}.value`}
+                    onChange={field.onChange}
+                    className={`w-full`}
+                    placeholder="value"
+                  />
+                )}
+              />
+            )}
           </div>
         </div>
       )}

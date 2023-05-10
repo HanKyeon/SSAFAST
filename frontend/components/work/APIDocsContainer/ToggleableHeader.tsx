@@ -37,7 +37,7 @@ const ToggleableHeader = function ({
 
   return (
     <div className={`${styles['wrapper']}`} onClick={onToggleOpen}>
-      <div className={`${!big && 'flex items-center w-[130px] mr-2'}`}>
+      <div className={`${!big && 'flex items-center w-[150px] mr-2'}`}>
         <span className={`${!big && 'flex-1 mr-2'} text-normal`}>{title}</span>
         {!big && add && <CircleBtn btnType="plus" small />}
       </div>
