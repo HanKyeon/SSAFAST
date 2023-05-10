@@ -4,15 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="68c3ac46-3b5b-41fc-94b0-32029979774c" name="Changes" comment="[BE] Feat : FigmaSection 삭제 작업">
+    <list default="true" id="68c3ac46-3b5b-41fc-94b0-32029979774c" name="Changes" comment="[BE] Feat : 피그마섹션별 api 업데이트">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/controller/ApiFigmaSectionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/controller/ApiFigmaSectionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/domain/Entity/ApiSpecEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/domain/Entity/ApiSpecEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/domain/Entity/FigmaSectionApiEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/domain/Entity/FigmaSectionApi.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/repository/FigmaSectionApiRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/repository/FigmaSectionApiRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/backend/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/domain/Entity/FigmaSectionApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/domain/Entity/FigmaSectionApi.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/service/FigmaSectionApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/apispec/service/FigmaSectionApiService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/figma/domain/FigmaSection.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/figma/domain/FigmaSection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/controller/WorkspaceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/workspace/controller/WorkspaceController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,12 +23,32 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
+        <task path="$PROJECT_DIR$/backend">
+          <activation />
+        </task>
         <projects_view>
           <tree_state>
             <expand>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="ssafast" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="ssafast" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="ssafast" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="application" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="ssafast" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
               </path>
             </expand>
             <select />
@@ -105,7 +121,67 @@
     </key>
   </component>
   <component name="RunManager" selected="Spring Boot.BackendApplication">
-    <configuration name="generated-requests | #3" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" index="3" requestIdentifier="#3" runType="Run single request">
+    <configuration name="backend [bootJar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/backend" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="bootJar" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="backend [bootRun]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/backend" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="bootRun" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="backend [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/backend" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
     <configuration name="generated-requests | #4" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" index="4" requestIdentifier="#4" runType="Run single request">
@@ -147,8 +223,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Spring Boot.BackendApplication" />
+        <item itemvalue="Gradle.backend [bootRun]" />
+        <item itemvalue="Gradle.backend [bootJar]" />
+        <item itemvalue="Gradle.backend [build]" />
         <item itemvalue="HTTP Request.generated-requests | #4" />
-        <item itemvalue="HTTP Request.generated-requests | #3" />
       </list>
     </recent_temporary>
   </component>
@@ -256,7 +334,14 @@
       <option name="project" value="LOCAL" />
       <updated>1683256329062</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="[BE] Feat : 피그마섹션별 api 업데이트">
+      <created>1683636669963</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1683636669963</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -287,6 +372,7 @@
     <MESSAGE value="[BE] FEAT : 기타 파일 추가" />
     <MESSAGE value="[BE] FIX : 포스트맨 테스트 + 노션 명세 대조" />
     <MESSAGE value="[BE] Feat : FigmaSection 삭제 작업중" />
-    <option name="LAST_COMMIT_MESSAGE" value="[BE] Feat : FigmaSection 삭제 작업중" />
+    <MESSAGE value="[BE] Feat : 피그마섹션별 api 업데이트" />
+    <option name="LAST_COMMIT_MESSAGE" value="[BE] Feat : 피그마섹션별 api 업데이트" />
   </component>
 </project>

@@ -16,9 +16,9 @@ public class FigmaSectionApi {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "api_info_id")
-    private Long apiInfoId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "api_info_id")
+    private ApiSpecEntity apiSpecEntity;
 
     @Column(name = "figma_section_id")
     private Long figmaSectionId;
