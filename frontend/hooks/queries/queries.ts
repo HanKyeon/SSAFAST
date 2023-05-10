@@ -6,6 +6,28 @@ import apiRequest from '@/utils/axios';
 import { useStoreDispatch, useStoreSelector } from '../useStore';
 import { figmaTokenActions } from '@/store/figma-token-slice';
 
+export interface DtoList {
+  dtoList: DtoListItem[];
+}
+
+export interface DtoField {
+  key: string;
+  type: string;
+  desc: string;
+  itera: boolean;
+  constraints: string[];
+}
+
+export interface DtoDetail {
+  id: number | string;
+  name: string;
+  description: string;
+  fields?: DtoField[];
+  nestedDtos?: {
+    [id: number]: DtoDetail;
+  };
+}
+
 export interface FigmaBasic {
   id?: string;
   name?: string;
@@ -156,13 +178,6 @@ export interface WonsiAttr {
   Constraints: string[];
 }
 
-export interface DepthDto {
-  [key: number]: {
-    fields: WonsiAttr[];
-    nestedDtos?: DepthDto;
-  };
-}
-
 interface ApiResponse {
   id: string | number;
   name: string;
@@ -297,18 +312,22 @@ export const useDtoClasses = function (
   });
 };
 
+export const getDtoDetail = async function (dtoId: string | number) {
+  return apiRequest({
+    method: `get`,
+    url: `/api/dto/${dtoId}`,
+  });
+};
+
 // Dto 디테일
 export const useDtoDetail = function (
   spaceId: string | number,
   dtoId: string | number
 ) {
-  return useQuery<WonsiAttr | DepthDto>({
+  return useQuery<DtoDetail>({
     queryKey: queryKeys.spaceDtoDetail(spaceId, dtoId),
     queryFn: async function () {
-      return apiRequest({
-        method: `get`,
-        url: `/api/dto/${dtoId}`,
-      }).then((res) => res.data);
+      return getDtoDetail(dtoId).then((res) => res.data);
     },
     enabled: !!spaceId && !!dtoId,
   });
@@ -316,7 +335,7 @@ export const useDtoDetail = function (
 
 // Dto List
 export const useDtoList = function (spaceId: string | number) {
-  return useQuery<DtoListItem[]>({
+  return useQuery<DtoList>({
     queryKey: queryKeys.spaceDtoList(spaceId),
     queryFn: async function () {
       return apiRequest({
