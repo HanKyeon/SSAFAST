@@ -82,7 +82,7 @@ const FigmaListItem = function ({
       > */}
       <div className="flex flex-row items-center justify-between gap-5 w-full">
         <div
-          className="w-full text-ellipsis overflow-hidden text-normal py-3"
+          className="w-full text-ellipsis overflow-hidden text-header py-3"
           onClick={expandHandler}
         >
           #{idx + 1} {figmaData.name}

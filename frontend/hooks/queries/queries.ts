@@ -352,30 +352,39 @@ export const useSpaceCategory = function (spaceId: string | number) {
 };
 
 interface sectionsApi {
-  filteredApiList: {
-    category: {
+  apiCategories: {
+    categoryId: number;
+    categoryName: string;
+    apis: {
       id: number;
       name: string;
-      apiList: {
-        id: number;
-        name: string;
-        description: string;
-        method:
-          | 'PUT'
-          | 'GET'
-          | 'POST'
-          | 'DEL'
-          | 'PATCH'
-          | `put`
-          | `get`
-          | `post`
-          | `del`
-          | `patch`;
-        status: number | string;
-      }[];
-    };
+      description: string;
+      method: string;
+      status: number;
+      writter: { id: number; name: string; email: string; profileImg: string };
+    }[];
   }[];
 }
+
+// 섹션별 api 맵핑 정보 수정 (추가 및 삭제)
+export const useSectionsApiPost = function (
+  spaceId: string | number,
+  sectionId: string | number
+) {
+  return useQuery<string>({
+    // queryKey:,
+    queryFn: async function () {
+      return apiRequest({
+        method: `post`,
+        url: `api/api-pre/figma-section`,
+        params: {
+          figmaSectionId: sectionId,
+        },
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId && !!sectionId,
+  });
+};
 
 // 섹션 별 api 목록 조회
 export const useSectionsApi = function (

@@ -23,7 +23,7 @@ const UserBadge = function ({
   return (
     <div className={`${styles['userImgWrapper']} ${styles['size']}`}>
       <Image
-        src={imgSrc as string}
+        src={(imgSrc as string) ? (imgSrc as string) : UserImg}
         alt="user image"
         className="min-w-full min-h-full object-cover"
       />
