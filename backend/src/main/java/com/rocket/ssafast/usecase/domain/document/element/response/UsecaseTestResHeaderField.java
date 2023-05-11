@@ -1,4 +1,4 @@
-package com.rocket.ssafast.usecase.domain.element.response;
+package com.rocket.ssafast.usecase.domain.document.element.response;
 
 import javax.validation.constraints.NotEmpty;
 

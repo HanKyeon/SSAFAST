@@ -1,4 +1,4 @@
-package com.rocket.ssafast.usecase.domain;
+package com.rocket.ssafast.usecase.domain.document;
 
 import java.util.Map;
 
@@ -6,7 +6,7 @@ import javax.persistence.Id;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.rocket.ssafast.usecase.domain.element.UsecaseTestInfo;
+import com.rocket.ssafast.usecase.domain.document.element.UsecaseTestInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.rocket.ssafast.usecase.domain.element;
+package com.rocket.ssafast.usecase.domain.document.element;
 
 import java.util.Map;
 
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UsecaseTestInfo {
 	@NotNull
-	long rootApiId;
+	String rootApiId;
 
 	@Valid
 	@NotNull

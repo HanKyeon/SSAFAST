@@ -1,5 +1,6 @@
-package com.rocket.ssafast.usecase.domain.element.response;
+package com.rocket.ssafast.usecase.domain.document.element.response;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -15,4 +16,7 @@ public class UsecaseTestResBody {
 
 	@Valid
 	Map<String, UsecaseTestResNestedDto> nestedDtos;	// key : 내부 dto 이름
+
+	@Valid
+	Map<String, List<UsecaseTestResNestedDto>> nestedDtoLists;	// key : 내부 dto 이름
 }

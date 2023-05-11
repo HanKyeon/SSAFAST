@@ -1,4 +1,4 @@
-package com.rocket.ssafast.usecase.domain.element.request;
+package com.rocket.ssafast.usecase.domain.document.element.request;
 
 import java.util.Map;
 
@@ -15,7 +15,7 @@ public class UsecaseTestRequest {
 	Map<String, UsecaseTestReqHeaderFieldDetail> headers;	// key : header의 필드
 
 	@Valid
-	Map<String, UsecaseTestReqFieldDetail> pathVars;	// key : pathVariable 이름
+	Map<String, UsecaseTestReqPathFieldDetail> pathVars;	// key : pathVariable 이름
 
 	@Valid
 	Map<String, UsecaseTestReqFieldDetail> params;		// key : param 이름

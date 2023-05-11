@@ -1,4 +1,4 @@
-package com.rocket.ssafast.usecase.domain.element.response;
+package com.rocket.ssafast.usecase.domain.document.element.response;
 
 import java.util.List;
 import java.util.Map;
@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UsecaseTestResNestedDto {
+public class UsecaseTestResFinalNestedDto {
 
 	@NotNull
 	Boolean itera;
 
 	Map<String, UsecaseTestResFieldDetail> fields;
 
-	List<Map<String, UsecaseTestResFieldDetail>> fieldsList;
+	Map<String, List<UsecaseTestResFieldDetail>> fieldsList;
 }

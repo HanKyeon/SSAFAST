@@ -1,14 +1,12 @@
-package com.rocket.ssafast.usecase.domain.element;
-
-import java.util.Map;
+package com.rocket.ssafast.usecase.domain.document.element;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.rocket.ssafast.usecase.domain.element.request.UsecaseTestRequest;
-import com.rocket.ssafast.usecase.domain.element.response.UsecaseTestResponse;
+import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseTestRequest;
+import com.rocket.ssafast.usecase.domain.document.element.response.UsecaseTestResponse;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,12 +17,9 @@ public class UsecaseTestDetailInfo {
 	@NotEmpty
 	String additionalUrl;
 
-	@NotNull
-	int order;
+	String parent;
 
-	long parent;
-
-	long child;
+	String child;
 
 	@Valid
 	@NotNull
@@ -32,5 +27,5 @@ public class UsecaseTestDetailInfo {
 
 	@Valid
 	@NotNull
-	Map<String, UsecaseTestResponse> response;	// key : status code
+	UsecaseTestResponse response;
 }

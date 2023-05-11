@@ -1,7 +1,6 @@
 package com.rocket.ssafast.usecase.repository;
 
 import java.util.Map;
-import java.util.Optional;
 
 import org.bson.Document;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -9,8 +8,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import com.rocket.ssafast.usecase.domain.UsecaseTestDocument;
-import com.rocket.ssafast.usecase.domain.element.UsecaseTestInfo;
+import com.rocket.ssafast.usecase.domain.document.UsecaseTestDocument;
+import com.rocket.ssafast.usecase.domain.document.element.UsecaseTestInfo;
 
 import lombok.RequiredArgsConstructor;
 
