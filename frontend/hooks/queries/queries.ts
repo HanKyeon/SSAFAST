@@ -484,17 +484,7 @@ export interface EachCateApi {
   id: number;
   name: string;
   description: string;
-  method:
-    | 'PUT'
-    | 'GET'
-    | 'POST'
-    | 'DEL'
-    | 'PATCH'
-    | `put`
-    | `get`
-    | `post`
-    | `del`
-    | `patch`;
+  method: 1 | 2 | 3 | 4 | 5;
   status: 1 | 2 | 3 | 4; // 1 명세중 2명세완료 3개발중 4개발완료
   writter: {
     id: number;

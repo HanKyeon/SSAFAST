@@ -2,14 +2,13 @@ import { FormEvent, useEffect, useState } from 'react';
 import { Box, Button } from '../common';
 import { workFigma } from './presence-type';
 import AnimationBox from '../common/AnimationBox';
-import { SpaceFigma } from '@/hooks/queries/queries';
+import { EachCateApi, SpaceFigma } from '@/hooks/queries/queries';
 import Modal from '../common/Modal';
 import { HiOutlineTrash } from 'react-icons/hi';
-import { APIInfoType } from './APIEditContainer/APIList';
 import APIlistItem from '../apis/APIlistItem';
 
 interface Props {
-  apiData?: APIInfoType[];
+  apiData?: EachCateApi[];
   figmaData: SpaceFigma;
   activeIdx: number | null;
   idx: number;
