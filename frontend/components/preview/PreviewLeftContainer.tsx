@@ -3,21 +3,24 @@ import { Box } from '../common';
 import SpaceIcon from '/public/assets/images/Ggo.png';
 import BoxHeader from '../common/BoxHeader';
 import APIlistItem from '../apis/APIlistItem';
-import { APIInfoType } from '../work/APIEditContainer/APIList';
 import { useRouter } from 'next/router';
-import { useSpaceApis, useSpaceDetail } from '@/hooks/queries/queries';
+import {
+  EachCateApi,
+  useSpaceApis,
+  useSpaceDetail,
+} from '@/hooks/queries/queries';
 import { SpaceParams } from '@/pages/space';
 import { useMemo } from 'react';
 
 const statusLsit = [``, `명세중`, `명세완료`, `개발중`, `개발완료`];
 
-const apiListMockup: APIInfoType[] = [
+const apiListMockup: EachCateApi[] = [
   {
     id: 1,
     name: '전체 회원 목록',
     description: '아무튼 다 가져오는거',
-    method: 'GET',
-    status: '명세중',
+    method: 2,
+    status: 1,
     writter: {
       id: 1,
       name: '로사짱',
@@ -29,8 +32,8 @@ const apiListMockup: APIInfoType[] = [
     id: 2,
     name: '회원 한명 조회',
     description: '한명 가져오는거',
-    method: 'GET',
-    status: '명세중',
+    method: 1,
+    status: 3,
     writter: {
       id: 1,
       name: '로사짱',
@@ -42,8 +45,8 @@ const apiListMockup: APIInfoType[] = [
     id: 3,
     name: '회원가입',
     description: '아무튼 가입',
-    method: 'POST',
-    status: '명세중',
+    method: 2,
+    status: 2,
     writter: {
       id: 1,
       name: '로사짱',
@@ -68,29 +71,7 @@ const PreviewLeftContainer = function (): JSX.Element {
   } = useSpaceApis(parseInt(spaceId));
   const apiList = useMemo(
     function () {
-      let ret: {
-        id: number;
-        name: string;
-        description: string;
-        method:
-          | 'PUT'
-          | 'GET'
-          | 'POST'
-          | 'DEL'
-          | 'PATCH'
-          | `put`
-          | `get`
-          | `post`
-          | `del`
-          | `patch`;
-        status: number | string;
-        writter: {
-          id: number;
-          name: string;
-          email: string;
-          profileImg: string;
-        };
-      }[] = [];
+      let ret: EachCateApi[] = [];
       if (!spaceApiData) {
         return [];
       }
@@ -162,14 +143,7 @@ const PreviewLeftContainer = function (): JSX.Element {
             return (
               <APIlistItem
                 key={`${api.id}-api-preview-item`}
-                item={{
-                  ...api,
-                  status: statusLsit[api.status as 1 | 2 | 3 | 4] as
-                    | `명세중`
-                    | `명세완료`
-                    | `개발중`
-                    | `개발완료`,
-                }}
+                item={api}
                 writter={false}
               />
             );

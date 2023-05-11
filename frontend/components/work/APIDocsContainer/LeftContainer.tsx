@@ -14,7 +14,7 @@ const mockupAPIList: SpaceApiList = {
           id: 1,
           name: '전체 회원 목록',
           description: '아무튼 다 가져오는거',
-          method: 'GET',
+          method: 1,
           status: 1,
           writter: {
             id: 1,
@@ -33,7 +33,7 @@ const mockupAPIList: SpaceApiList = {
           id: 4,
           name: '내 정보 수정',
           description: '내 정보를 막 수정해버려',
-          method: 'PUT',
+          method: 2,
           status: 1,
           writter: {
             id: 1,
@@ -46,7 +46,7 @@ const mockupAPIList: SpaceApiList = {
           id: 5,
           name: '전체 회원 목록',
           description: '아무튼 다 가져오는거',
-          method: 'GET',
+          method: 1,
           status: 2,
           writter: {
             id: 1,
@@ -59,7 +59,7 @@ const mockupAPIList: SpaceApiList = {
           id: 7,
           name: '회원가입',
           description: '아무튼 가입',
-          method: 'POST',
+          method: 1,
           status: 4,
           writter: {
             id: 1,
@@ -72,7 +72,7 @@ const mockupAPIList: SpaceApiList = {
           id: 8,
           name: '전체 회원 목록',
           description: '아무튼 다 가져오는거',
-          method: 'GET',
+          method: 3,
           status: 3,
           writter: {
             id: 1,
@@ -91,7 +91,7 @@ const apiMok: EachCateApi[] = [
     id: 1,
     name: '전체 회원 목록',
     description: '아무튼 다 가져오는거',
-    method: 'GET',
+    method: 2,
     status: 1,
     writter: {
       id: 1,
@@ -104,7 +104,7 @@ const apiMok: EachCateApi[] = [
     id: 2,
     name: '회원 한명 조회',
     description: '한명 가져오는거',
-    method: 'GET',
+    method: 2,
     status: 2,
     writter: {
       id: 1,
@@ -117,7 +117,7 @@ const apiMok: EachCateApi[] = [
     id: 3,
     name: '회원가입',
     description: '아무튼 가입',
-    method: 'POST',
+    method: 1,
     status: 2,
     writter: {
       id: 1,
