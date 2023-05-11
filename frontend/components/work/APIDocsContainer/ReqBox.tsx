@@ -42,7 +42,11 @@ const ReqBox = function ({ data, control }: Props): JSX.Element {
         setIsOpen={setIsOpen}
         big
       />
-      <div className={`p-2 pb-4 flex flex-col gap-3 ${isOpen ? '' : 'hidden'}`}>
+      <div
+        className={`p-2 pb-4 flex flex-col gap-3 flex-1 ${
+          isOpen ? '' : 'hidden'
+        }`}
+      >
         {data.request.headers && (
           <ReqItem
             fields={headersFields}

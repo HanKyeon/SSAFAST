@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { BodyType, FieldsType, HeadersType } from '.';
 import ToggleableHeader from './ToggleableHeader';
 import ReqItemInner from './ReqItemInner';
@@ -9,7 +9,7 @@ type ReqtemPropsType = {
   formName: string;
   control?: any;
   name: string;
-  item?: HeadersType[] | BodyType | FieldsType[];
+  item: HeadersType[] | FieldsType[];
 };
 const ReqItem = function ({
   fields,
@@ -19,8 +19,14 @@ const ReqItem = function ({
   control,
 }: ReqtemPropsType): JSX.Element {
   const [isOpen, setisOpen] = useState<boolean>(true);
+  const a = item?.length + 1;
+
+  const styles = {
+    style: `${isOpen ? `h-[calc(${a}*43px)]` : 'h-[43px]'}`,
+  };
+
   return (
-    <div className={`w-full duratoin-[0.33s]`}>
+    <div className={`${styles['style']} w-full duration-[0.33s]`}>
       <ToggleableHeader title={name} isOpen={isOpen} setIsOpen={setisOpen} />
       {/* {fields.map((iitem, idx) => {
         return <Controller 
@@ -39,31 +45,31 @@ const ReqItem = function ({
           }}
         />
       })} */}
-      {(item as HeadersType[] | FieldsType[])?.map((item, idx) => (
-        <Controller
-          key={`${Math.random()}`} // fields[idx].id
-          name={`${formName}.${idx}`}
-          control={control}
-          render={({ field }) => {
-            return (
-              <div
-                key={item.key}
-                className={`w-[87%] rounded-[13px] overflow-hidden mt-0 mb-3 mx-auto text-content ${
-                  isOpen ? '' : 'hidden'
-                }`}
-              >
-                <ReqItemInner
-                  formName={`${formName}.${idx}`}
-                  field={field}
-                  item={item}
-                  control={control}
-                  name={name}
-                />
-              </div>
-            );
-          }}
-        />
-      ))}
+      <div className={`${isOpen ? '' : 'hidden'}`}>
+        {(item as HeadersType[] | FieldsType[])?.map((item, idx) => (
+          <Controller
+            key={`${Math.random()}`} // fields[idx].id
+            name={`${formName}.${idx}`}
+            control={control}
+            render={({ field }) => {
+              return (
+                <div
+                  key={item.key}
+                  className={`엄지바보 w-[87%] rounded-[13px] overflow-hidden mt-0 mb-3 mx-auto text-content`}
+                >
+                  <ReqItemInner
+                    formName={`${formName}.${idx}`}
+                    field={field}
+                    item={item}
+                    control={control}
+                    name={name}
+                  />
+                </div>
+              );
+            }}
+          />
+        ))}
+      </div>
     </div>
   );
 };
