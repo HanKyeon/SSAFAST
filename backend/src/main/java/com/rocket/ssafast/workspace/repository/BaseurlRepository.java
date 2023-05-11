@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface BaseurlRepository extends JpaRepository<Baseurl, Long> {
     List<Baseurl> findAllByWorkspaceId(Long workspaceId);
+    List<Baseurl> findAllByWorkspaceIdAndIsCertifiedFalse(Long workspaceId);
 }

@@ -12,8 +12,10 @@ import com.rocket.ssafast.apispec.dto.response.ApiTestResultSummaryDto;
 import com.rocket.ssafast.apispec.repository.ApiSpecRepository;
 import com.rocket.ssafast.apispec.repository.ApiTestResultDocsRepository;
 import com.rocket.ssafast.apispec.repository.ApiTestResultEntityRepository;
+import com.rocket.ssafast.auth.service.RedisService;
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
+import com.rocket.ssafast.overload.dto.request.CertCodeDto;
 import com.rocket.ssafast.overload.dto.request.OverloadExecDto;
 import com.rocket.ssafast.overload.dto.response.CheckBaseurlDto;
 import com.rocket.ssafast.workspace.domain.Baseurl;
@@ -39,6 +41,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -47,11 +50,9 @@ public class OverloadService {
 	@Value("${mongoid.document.test}")
 	private String SSAFAST_TEST_ID;
 	private static final RestTemplate restTemplate;
-	private final ApiTestResultDocsRepository apiTestResultDocsRepository;
-	private final ApiTestResultEntityRepository apiTestResultEntityRepository;
-	private final ApiSpecRepository apiSpecRepository;
 	private final BaseurlRepository baseurlRepository;
 	private final WorkspaceRepository workspaceRepository;
+	private final RedisService redisService;
 
 	public ResponseEntity<?> requestOverload(OverloadExecDto overloadExecDto) throws JsonProcessingException {
 		ApiExecReqMessageDto apiExecReqMessageDto = overloadExecDto.getApiExecReqMessageDto();
@@ -164,5 +165,72 @@ public class OverloadService {
 			return CheckBaseurlDto.builder()
 					.certification(true).build();
 		}
+	}
+
+	public static int generateCertCode() {
+		return ThreadLocalRandom.current().nextInt(100000, 1000000);
+	}
+
+	public void sendCertCode(Long workspaceId) {
+		// 1. 인증 안 된 baseurl 목록 확인
+		List<Baseurl> baseurls = baseurlRepository.findAllByWorkspaceIdAndIsCertifiedFalse(workspaceId);
+		// 2. baseurl 목록 돌면서
+		for(Baseurl baseurl : baseurls){
+			// 2-1. 인증번호 생성
+			Integer certCode = generateCertCode();
+			// 2-2. 인증번호 redis에 저장
+			redisService.setValuesWithTimeout("baseurl_" + baseurl.getId().toString(), // key
+					certCode.toString(), // value
+					600000); // timeout(milliseconds)
+			// 2-3. 인증번호 발송 (POST | baseurl/api/ssafast | "certCode is 00000"
+			UriComponents uri = UriComponentsBuilder.fromHttpUrl(baseurl.getUrl()+"/api/ssafast")
+					.build();
+
+			// body를 entity에 담기
+			Map<String, Object> requestBodyMap = new HashMap<>();
+			ObjectMapper objectMapper = new ObjectMapper();
+			requestBodyMap.put("verification", "cert_code : " + certCode.toString());
+			String requestBodyJson = null;
+			try {
+				requestBodyJson = objectMapper.writeValueAsString(requestBodyMap);
+			} catch (JsonProcessingException e) {
+				throw new RuntimeException(e);
+			}
+			HttpEntity<?> entity = new HttpEntity<>(requestBodyJson);
+
+			//요청
+			try {
+				restTemplate.exchange(
+						uri.toUriString(),
+						HTTPMethod.getMethodByNumber(2),
+						entity,
+						new ParameterizedTypeReference<Object>() {
+						});
+				return;
+			} catch (Exception e) {
+				throw new RuntimeException("CLIENT_ERROR", e);
+			}
+		}
+
+	}
+
+	public CheckBaseurlDto checkCertCode(List<CertCodeDto> certCodeDtos) {
+		CheckBaseurlDto checkBaseurlDto = new CheckBaseurlDto();
+		checkBaseurlDto.setCertification(true);
+		checkBaseurlDto.setBaseurls(new ArrayList<>());
+		//1. for문 돌면서
+		for(CertCodeDto certCodeDto : certCodeDtos){
+			Integer correctCode = Integer.parseInt(redisService.getValues("baseurl_" + certCodeDto.getBaseurlId().toString()));
+			if(correctCode == certCodeDto.getCode()){
+				Baseurl baseurl = baseurlRepository.findById(certCodeDto.getBaseurlId()).get();
+				baseurl.updateCertified(true);
+				baseurlRepository.save(baseurl);
+			}else{
+				checkBaseurlDto.setCertification(false);
+				checkBaseurlDto.getBaseurls().add(baseurlRepository.findById(certCodeDto.getBaseurlId()).get().toDto());
+			}
+		}
+
+		return checkBaseurlDto;
 	}
 }

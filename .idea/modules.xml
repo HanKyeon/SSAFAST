@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/SSAFAST.iml" filepath="$PROJECT_DIR$/.idea/SSAFAST.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.rocket.ssafast.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.rocket.ssafast.main.iml" />
     </modules>
   </component>
 </project>
