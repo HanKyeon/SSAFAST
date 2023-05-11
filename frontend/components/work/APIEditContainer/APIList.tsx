@@ -4,7 +4,11 @@ import { AiOutlineMore } from 'react-icons/ai';
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { SpaceParams } from '@/pages/space';
-import { useSectionsApi, useSpaceApis } from '@/hooks/queries/queries';
+import {
+  SpaceApiList,
+  useSectionsApi,
+  useSpaceApis,
+} from '@/hooks/queries/queries';
 
 export type APIWritterType = {
   id: string | number;
@@ -28,7 +32,7 @@ export type APIInfoType = {
     | `post`
     | `del`
     | `patch`;
-  status: '명세중' | '명세완료' | '개발중' | '개발완료';
+  status: 1 | 2 | 3 | 4;
   writter?: APIWritterType;
 };
 
@@ -39,7 +43,7 @@ export type APIListType = {
 };
 
 type APIListPropsType = {
-  apiList: APIListType[];
+  apiList: SpaceApiList;
   // checkedAPIList?: APIListType[] | undefined;
   checkedIds?: (number | string)[];
   checkBox?: boolean;
@@ -47,7 +51,7 @@ type APIListPropsType = {
 };
 
 const APIList = function ({
-  apiList = [],
+  apiList = { apiCategories: [] },
   // checkedAPIList = undefined,
   checkedIds = [],
   checkBox = false, // checkbox===true이면 -> figma화면이랑 api 연결중!
@@ -98,7 +102,7 @@ const APIList = function ({
     <ul
       className={`h-full w-full overflow-y-scroll scrollbar-hide flex flex-col items-center gap-3`}
     >
-      {apiList.map((cate, cateIdx) => (
+      {apiList.apiCategories.map((cate, cateIdx) => (
         <li key={`${cate.categoryId}_${cateIdx}`} className={`w-full`}>
           {/* 카테고리 */}
           <div className={`mb-1 flex items-center gap-3`}>

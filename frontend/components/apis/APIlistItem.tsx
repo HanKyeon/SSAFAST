@@ -8,12 +8,16 @@ import {
 } from '../work/APIEditContainer/APIList';
 import MethodBadge, { MethodBadgePropsType } from './MethodBadge';
 import StatusBadge, { StatusBadgePropsType } from './StatusBadge';
-import { useSectionsApi, useSpaceApis } from '@/hooks/queries/queries';
+import {
+  EachCateApi,
+  useSectionsApi,
+  useSpaceApis,
+} from '@/hooks/queries/queries';
 import { useRouter } from 'next/router';
 import { SpaceParams } from '@/pages/space';
 
 interface APIlistItemPropsType {
-  item: APIInfoType;
+  item: EachCateApi;
   className?: string;
   writter?: boolean;
   checkBox?: boolean;

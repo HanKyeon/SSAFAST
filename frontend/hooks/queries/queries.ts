@@ -441,62 +441,12 @@ export const useSpaceCategory = function (spaceId: string | number) {
   });
 };
 
-interface sectionsApi {
-  apiCategories: {
-    categoryId: number | string;
-    categoryName: string;
-    apis: {
-      id: string | number;
-      name: string;
-      description: string;
-      method:
-        | 'PUT'
-        | 'GET'
-        | 'POST'
-        | 'DEL'
-        | 'PATCH'
-        | `put`
-        | `get`
-        | `post`
-        | `del`
-        | `patch`;
-      status: 1 | 2 | 3 | 4;
-      writter: {
-        id: string | number;
-        name: string;
-        email: string;
-        profileImg: string;
-      };
-    }[];
-  }[];
-}
-
-// 섹션별 api 맵핑 정보 수정 (추가 및 삭제)
-// export const useSectionsApiPost = function (
-//   spaceId: string | number,
-//   sectionId: string | number
-// ) {
-//   return useQuery<string>({
-//     // queryKey:,
-//     queryFn: async function () {
-//       return apiRequest({
-//         method: `post`,
-//         url: `api/api-pre/figma-section`,
-//         params: {
-//           figmaSectionId: sectionId,
-//         },
-//       }).then((res) => res.data);
-//     },
-//     enabled: !!spaceId && !!sectionId,
-//   });
-// };
-
 // 섹션 별 api 목록 조회
 export const useSectionsApi = function (
   spaceId: string | number,
   sectionId: string | number
 ) {
-  return useQuery<sectionsApi>({
+  return useQuery<SpaceApiList>({
     queryKey: queryKeys.spaceSectionApis(spaceId, sectionId),
     queryFn: async function () {
       return apiRequest({
@@ -530,43 +480,40 @@ export const useSectionsApiSearch = function (
   });
 };
 
-/**
- * categoryId, categoryName, apis: {id, name, description, method, status, writter: {id, name, email, profileImg}}
- */
-interface EachCate {
-  categoryId: number;
-  categoryName: string;
-  apis: {
+export interface EachCateApi {
+  id: number;
+  name: string;
+  description: string;
+  method:
+    | 'PUT'
+    | 'GET'
+    | 'POST'
+    | 'DEL'
+    | 'PATCH'
+    | `put`
+    | `get`
+    | `post`
+    | `del`
+    | `patch`;
+  status: 1 | 2 | 3 | 4; // 1 명세중 2명세완료 3개발중 4개발완료
+  writter: {
     id: number;
     name: string;
-    description: string;
-    method:
-      | 'PUT'
-      | 'GET'
-      | 'POST'
-      | 'DEL'
-      | 'PATCH'
-      | `put`
-      | `get`
-      | `post`
-      | `del`
-      | `patch`;
-    status: 1 | 2 | 3 | 4; // 1 명세중 2명세완료 3개발중 4개발완료
-
-    writter: {
-      id: number;
-      name: string;
-      email: string;
-      profileImg: string;
-    };
-  }[];
+    email: string;
+    profileImg: string;
+  };
 }
 
-interface SpaceApiList {
+export interface EachCate {
+  categoryId: number;
+  categoryName: string;
+  apis: EachCateApi[];
+}
+export interface SpaceApiList {
   apiCategories: EachCate[];
 }
-// ok 확인 불가.
-// space api 목록
+
+// space api 목록 (api 전체 목록 조회)
 export const useSpaceApis = function (spaceId: string | number) {
   return useQuery<SpaceApiList>({
     queryKey: queryKeys.spaceApiList(spaceId),
