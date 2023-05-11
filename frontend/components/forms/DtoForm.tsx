@@ -242,6 +242,7 @@ const DtoForm = function ({
       description: desc,
       document: { fields, nestedDtos },
     }).then((res) => {
+      resetSelected();
       reset({ name: ``, desc: ``, fields: [] });
     });
   };
