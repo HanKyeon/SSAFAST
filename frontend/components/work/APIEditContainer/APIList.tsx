@@ -10,41 +10,8 @@ import {
   useSpaceApis,
 } from '@/hooks/queries/queries';
 
-export type APIWritterType = {
-  id: string | number;
-  name: string;
-  email: string;
-  profileImg: string;
-};
-
-export type APIInfoType = {
-  id: string | number;
-  name: string;
-  description: string;
-  method:
-    | 'PUT'
-    | 'GET'
-    | 'POST'
-    | 'DEL'
-    | 'PATCH'
-    | `put`
-    | `get`
-    | `post`
-    | `del`
-    | `patch`;
-  status: 1 | 2 | 3 | 4;
-  writter?: APIWritterType;
-};
-
-export type APIListType = {
-  categoryId: string | number;
-  categoryName: string;
-  apis: APIInfoType[];
-};
-
 type APIListPropsType = {
   apiList: SpaceApiList;
-  // checkedAPIList?: APIListType[] | undefined;
   checkedIds?: (number | string)[];
   checkBox?: boolean;
   onToggleCheck?: (apiId: number | string, check: boolean) => void;
@@ -52,7 +19,6 @@ type APIListPropsType = {
 
 const APIList = function ({
   apiList = { apiCategories: [] },
-  // checkedAPIList = undefined,
   checkedIds = [],
   checkBox = false, // checkbox===true이면 -> figma화면이랑 api 연결중!
   onToggleCheck,
@@ -60,9 +26,6 @@ const APIList = function ({
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
   const [curCateIdx, setCurCateIdx] = useState<number>(0);
-  // const [refinedCheckedList, setRefinedCheckedList] = useState<
-  //   (number | string)[]
-  // >([]);
 
   const { data: spaceApiList, isLoading, isError } = useSpaceApis(spaceId);
 
@@ -72,31 +35,6 @@ const APIList = function ({
   const onClickOpenCate = (cateID: string | number, cateIdx: number): void => {
     setCurCateIdx(cateIdx);
   };
-
-  // useEffect(() => {
-  //   console.log(refinedCheckedList, '<<<<<<<<<<<<<<<<<<<<<');
-  // }, [refinedCheckedList]);
-
-  // const onToggleCheck = (apiId: number | string, check: boolean): void => {
-  //   setRefinedCheckedList((prev) =>
-  //     check ? [...prev, apiId] : [...prev.filter((id) => id !== apiId)]
-  //   );
-  // };
-
-  // useEffect(() => {
-  //   setRefinedCheckedList(() => {
-  //     let selectedIds: (number | string)[] = [];
-  //     // sectionApiList?.apiCategories;
-  //     checkedAPIList
-  //       ?.map((cate: APIListType) => {
-  //         return cate.apis.map((api: APIInfoType) => api.id);
-  //       })
-  //       .map((arr: (number | string)[]) => {
-  //         selectedIds = [...selectedIds, ...arr];
-  //       });
-  //     return selectedIds;
-  //   });
-  // }, [checkedAPIList]);
 
   return (
     <ul
