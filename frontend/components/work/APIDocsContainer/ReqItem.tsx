@@ -3,6 +3,7 @@ import { BodyType, FieldsType, HeadersType } from '.';
 import ToggleableHeader from './ToggleableHeader';
 import ReqItemInner from './ReqItemInner';
 import { Controller, FieldArrayWithId, useFormContext } from 'react-hook-form';
+import styles from './ReqItem.module.css';
 
 type ReqtemPropsType = {
   fields: FieldArrayWithId[];
@@ -21,12 +22,18 @@ const ReqItem = function ({
   const [isOpen, setisOpen] = useState<boolean>(true);
   const a = item?.length + 1;
 
-  const styles = {
+  const Styles = {
+    style: `${
+      isOpen ? `${styles['act']} ${styles[`slide`]}` : `${styles[`slide`]}`
+    }`,
+  };
+
+  const styles1 = {
     style: `${isOpen ? `h-[calc(${a}*43px)]` : 'h-[43px]'}`,
   };
 
   return (
-    <div className={`${styles['style']} w-full duration-[0.33s]`}>
+    <div className={`${styles1[`style`]} w-full`}>
       <ToggleableHeader title={name} isOpen={isOpen} setIsOpen={setisOpen} />
       {/* {fields.map((iitem, idx) => {
         return <Controller 
@@ -45,7 +52,7 @@ const ReqItem = function ({
           }}
         />
       })} */}
-      <div className={`${isOpen ? '' : 'hidden'}`}>
+      <div className={`${Styles['style']}`}>
         {(item as HeadersType[] | FieldsType[])?.map((item, idx) => (
           <Controller
             key={`${Math.random()}`} // fields[idx].id
@@ -55,7 +62,7 @@ const ReqItem = function ({
               return (
                 <div
                   key={item.key}
-                  className={`엄지바보 w-[87%] rounded-[13px] overflow-hidden mt-0 mb-3 mx-auto text-content`}
+                  className={`w-[87%] rounded-[13px] overflow-hidden mt-0 mb-3 mx-auto text-content duration-[0.33s]`}
                 >
                   <ReqItemInner
                     formName={`${formName}.${idx}`}

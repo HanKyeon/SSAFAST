@@ -19,8 +19,8 @@ import ConstraintsController from './ContstraintsController';
 export interface RequestFormData {
   additional_url: string;
   headers: Headers[];
-  body: Body;
-  path_variable: PathVariables[];
+  body: BodyType[];
+  pathVars: PathVariables[];
   params: Params[];
 }
 interface Headers {
@@ -30,9 +30,9 @@ interface Headers {
   value: string | null;
 }
 
-interface Body {
+export interface BodyType {
   fields: Fields[];
-  dtos: DTO;
+  nestedDtos?: NestedDtosType | NestedDtosType[];
 }
 
 interface Fields {
@@ -44,12 +44,9 @@ interface Fields {
   value: string | null;
 }
 
-interface DTO {
-  [id: number]: {
-    fields: Fields[];
-  };
-  nestedDto: DTO;
-}
+export type NestedDtosType = {
+  [key: string | number]: BodyType;
+};
 
 interface PathVariables {
   key: string;
@@ -64,6 +61,7 @@ interface Params {
   type: string;
   desc: string;
   constraints: string[];
+  itera: boolean;
   value: null;
 }
 
