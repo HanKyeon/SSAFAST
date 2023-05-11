@@ -24,7 +24,7 @@ const ToggleableHeader = function ({
       big &&
       `flex justify-between items-center py-2 px-5 duration-[0.33s] cursor-pointer ${
         isOpen &&
-        `sticky top-0 z-50 ${
+        `sticky top-0 z-40 ${
           isDark ? `bg-theme-dark-normal` : `bg-theme-white-normal`
         } rounded-t-[13px] border-b-[1px] border-grayscale-dark`
       }`

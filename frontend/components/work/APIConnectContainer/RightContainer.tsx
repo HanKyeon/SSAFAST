@@ -8,9 +8,9 @@ import { useRouter } from 'next/router';
 import { SpaceParams } from '@/pages/space';
 import { useMappingApi } from '@/hooks/queries/mutations';
 import {
-  apiCateType,
-  apiType,
-  sectionsApi,
+  EachCate,
+  EachCateApi,
+  SpaceApiList,
   useSectionsApi,
   useSpaceApis,
 } from '@/hooks/queries/queries';
@@ -276,89 +276,7 @@ import {
 //     ],
 //   },
 // ];
-
-const allAPIList: sectionsApi = {
-  apiCategories: [
-    {
-      categoryId: 1,
-      categoryName: 'user',
-      apis: [
-        {
-          id: 1,
-          name: '전체 회원 목록',
-          description: '아무튼 다 가져오는거',
-          method: 'GET',
-          status: 1,
-          writter: {
-            id: 1,
-            name: '로사짱',
-            email: 'a@naver.com',
-            profileImg: 'anjanj.png',
-          },
-        },
-      ],
-    },
-    {
-      categoryId: 2,
-      categoryName: 'mypage',
-      apis: [
-        {
-          id: 4,
-          name: '내 정보 수정',
-          description: '내 정보를 막 수정해버려',
-          method: 'PUT',
-          status: 1,
-          writter: {
-            id: 1,
-            name: '로사짱',
-            email: 'a@naver.com',
-            profileImg: 'anjanj.png',
-          },
-        },
-        {
-          id: 5,
-          name: '전체 회원 목록',
-          description: '아무튼 다 가져오는거',
-          method: 'GET',
-          status: 2,
-          writter: {
-            id: 1,
-            name: '로사짱',
-            email: 'a@naver.com',
-            profileImg: 'anjanj.png',
-          },
-        },
-        {
-          id: 7,
-          name: '회원가입',
-          description: '아무튼 가입',
-          method: 'POST',
-          status: 4,
-          writter: {
-            id: 1,
-            name: '로사짱',
-            email: 'a@naver.com',
-            profileImg: 'anjanj.png',
-          },
-        },
-        {
-          id: 8,
-          name: '전체 회원 목록',
-          description: '아무튼 다 가져오는거',
-          method: 'GET',
-          status: 3,
-          writter: {
-            id: 1,
-            name: '로사짱',
-            email: 'a@naver.com',
-            profileImg: 'anjanj.png',
-          },
-        },
-      ],
-    },
-  ],
-};
-const checkedAPIList: sectionsApi = {
+const checkedMok: SpaceApiList = {
   apiCategories: [
     {
       categoryId: 1,
@@ -491,8 +409,8 @@ const RightContainer = function ({
       let selectedIds: (number | string)[] = [];
       // sectionApiList?.apiCategories;
       checkedAPIList?.apiCategories
-        ?.map((cate: apiCateType) => {
-          return cate.apis.map((api: apiType) => api.id);
+        ?.map((cate: EachCate) => {
+          return cate.apis.map((api: EachCateApi) => api.id);
         })
         .map((arr: (number | string)[]) => {
           selectedIds = [...selectedIds, ...arr];
@@ -517,9 +435,9 @@ const RightContainer = function ({
           <Input placeholder="search" />
           <HiOutlineSearch className={`text-[22px] cursor-pointer`} />
         </div>
-        <BsFolderPlus
+        {/* <BsFolderPlus
           className={`text-[22px] cursor-pointer hover:text-mincho-strong duration-[0.33s]`}
-        />
+        /> */}
         {isSaved ? (
           <Button
             isEmpty
@@ -540,7 +458,13 @@ const RightContainer = function ({
         )}
       </div>
       <APIList
-        apiList={isSaved ? checkedAPIList : allAPIList}
+        apiList={
+          isSaved && checkedAPIList
+            ? checkedAPIList
+            : isSaved && allAPIList
+            ? allAPIList
+            : checkedMok
+        }
         checkedIds={!isSaved ? refinedCheckedList : undefined}
         checkBox={!isSaved} // 체크박스 달고있을지 말지
         onToggleCheck={onToggleCheck}

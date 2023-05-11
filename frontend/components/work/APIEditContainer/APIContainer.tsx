@@ -11,9 +11,9 @@ import { ApiCreateForm } from '@/components/forms/';
 import { FormEvent, useState, useEffect } from 'react';
 import Select from '@/components/common/Select';
 import BoxHeader from '@/components/common/BoxHeader';
-import { sectionsApi } from '@/hooks/queries/queries';
+import { SpaceApiList } from '@/hooks/queries/queries';
 
-const mockupAPIList: sectionsApi = {
+const mockupAPIList: SpaceApiList = {
   apiCategories: [
     {
       categoryId: 1,

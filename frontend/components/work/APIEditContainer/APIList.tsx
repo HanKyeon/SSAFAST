@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { SpaceParams } from '@/pages/space';
 import {
-  sectionsApi,
+  SpaceApiList,
   useSectionsApi,
   useSpaceApis,
 } from '@/hooks/queries/queries';
@@ -43,7 +43,7 @@ export type APIListType = {
 };
 
 type APIListPropsType = {
-  apiList: sectionsApi;
+  apiList: SpaceApiList;
   // checkedAPIList?: APIListType[] | undefined;
   checkedIds?: (number | string)[];
   checkBox?: boolean;
