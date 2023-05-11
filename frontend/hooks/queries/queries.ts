@@ -366,6 +366,26 @@ interface sectionsApi {
   }[];
 }
 
+// 섹션별 api 맵핑 정보 수정 (추가 및 삭제)
+export const useSectionsApiPost = function (
+  spaceId: string | number,
+  sectionId: string | number
+) {
+  return useQuery<string>({
+    // queryKey:,
+    queryFn: async function () {
+      return apiRequest({
+        method: `post`,
+        url: `api/api-pre/figma-section`,
+        params: {
+          figmaSectionId: sectionId,
+        },
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId && !!sectionId,
+  });
+};
+
 // 섹션 별 api 목록 조회
 export const useSectionsApi = function (
   spaceId: string | number,

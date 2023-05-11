@@ -40,55 +40,59 @@ export type APIListType = {
 
 type APIListPropsType = {
   apiList: APIListType[];
-  checkedAPIList?: APIListType[] | undefined;
+  // checkedAPIList?: APIListType[] | undefined;
+  checkedIds?: (number | string)[];
   checkBox?: boolean;
+  onToggleCheck?: (apiId: number | string, check: boolean) => void;
 };
 
 const APIList = function ({
   apiList = [],
-  checkedAPIList = undefined,
+  // checkedAPIList = undefined,
+  checkedIds = [],
   checkBox = false, // checkbox===true이면 -> figma화면이랑 api 연결중!
+  onToggleCheck,
 }: APIListPropsType): JSX.Element {
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
   const [curCateIdx, setCurCateIdx] = useState<number>(0);
-  const [refinedCheckedList, setRefinedCheckedList] = useState<
-    (number | string)[]
-  >([]);
+  // const [refinedCheckedList, setRefinedCheckedList] = useState<
+  //   (number | string)[]
+  // >([]);
 
   const { data: spaceApiList, isLoading, isError } = useSpaceApis(spaceId);
 
   // const {data: sectionApiList} = useSectionsApi(spaceId, sectionId, selectedMethod, searchInputData)
   const { data: sectionApiList } = useSectionsApi(spaceId, 1);
 
-  useEffect(() => {
-    console.log(refinedCheckedList, '<<<<<<<<<<<<<<<<<<<<<');
-  }, [refinedCheckedList]);
-
-  const onToggleCheck = (apiId: number | string, check: boolean): void => {
-    setRefinedCheckedList((prev) =>
-      check ? [...prev, apiId] : [...prev.filter((id) => id !== apiId)]
-    );
-  };
-
   const onClickOpenCate = (cateID: string | number, cateIdx: number): void => {
     setCurCateIdx(cateIdx);
   };
 
-  useEffect(() => {
-    setRefinedCheckedList(() => {
-      let selectedIds: (number | string)[] = [];
-      // sectionApiList?.apiCategories;
-      checkedAPIList
-        ?.map((cate: APIListType) => {
-          return cate.apis.map((api: APIInfoType) => api.id);
-        })
-        .map((arr: (number | string)[]) => {
-          selectedIds = [...selectedIds, ...arr];
-        });
-      return selectedIds;
-    });
-  }, [checkedAPIList]);
+  // useEffect(() => {
+  //   console.log(refinedCheckedList, '<<<<<<<<<<<<<<<<<<<<<');
+  // }, [refinedCheckedList]);
+
+  // const onToggleCheck = (apiId: number | string, check: boolean): void => {
+  //   setRefinedCheckedList((prev) =>
+  //     check ? [...prev, apiId] : [...prev.filter((id) => id !== apiId)]
+  //   );
+  // };
+
+  // useEffect(() => {
+  //   setRefinedCheckedList(() => {
+  //     let selectedIds: (number | string)[] = [];
+  //     // sectionApiList?.apiCategories;
+  //     checkedAPIList
+  //       ?.map((cate: APIListType) => {
+  //         return cate.apis.map((api: APIInfoType) => api.id);
+  //       })
+  //       .map((arr: (number | string)[]) => {
+  //         selectedIds = [...selectedIds, ...arr];
+  //       });
+  //     return selectedIds;
+  //   });
+  // }, [checkedAPIList]);
 
   return (
     <ul
@@ -125,10 +129,10 @@ const APIList = function ({
               <APIlistItem
                 key={`${api.id}_${apiIdx}`}
                 checkBox={checkBox} // 체크박스 달고있는 list
-                checked={!!refinedCheckedList.find((id) => id === api.id)}
+                checked={!!checkedIds.find((id) => id === api.id)}
                 item={api}
                 className={`w-full duration-[0.33s] hover:scale-[101%]`}
-                checkedList={checkBox ? refinedCheckedList : undefined}
+                // checkedList={checkBox ? refinedCheckedList : undefined}
                 onToggleCheck={onToggleCheck}
               />
             ))}

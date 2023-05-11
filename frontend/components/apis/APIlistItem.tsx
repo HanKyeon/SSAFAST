@@ -18,7 +18,7 @@ interface APIlistItemPropsType {
   writter?: boolean;
   checkBox?: boolean;
   checked?: boolean;
-  checkedList?: (string | number)[];
+  // checkedList?: (string | number)[];
   onToggleCheck?: (apiId: number | string, check: boolean) => void;
 }
 
