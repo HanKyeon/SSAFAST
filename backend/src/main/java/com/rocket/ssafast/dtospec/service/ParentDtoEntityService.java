@@ -50,8 +50,8 @@ public class ParentDtoEntityService {
         //1. findByDtoIdAndParentDtoId 로 부모정보를 가지지 않은 key 선별
         List<Long> updateCandidateKeys = new ArrayList<>();
         for(Long childKey : childKeyList){
-            Optional<ParentDtoEntity> getParentInfosById = parentDtoEntityRepository.findByDtoIdAndDtoSpecEntity(childKey, parentDto.get());
-            if(!getParentInfosById.isPresent()){
+            Optional<ParentDtoEntity> getParentInfosByParentDto = parentDtoEntityRepository.findByDtoIdAndDtoSpecEntity(childKey, parentDto.get());
+            if(!getParentInfosByParentDto.isPresent()){
                 updateCandidateKeys.add(childKey);
             }
         }
