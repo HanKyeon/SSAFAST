@@ -19,6 +19,7 @@ interface APIlistItemPropsType {
   checkBox?: boolean;
   checked?: boolean;
   checkedList?: (string | number)[];
+  onToggleCheck?: (apiId: number | string, check: boolean) => void;
 }
 
 const APIlistItem = function ({
@@ -27,39 +28,27 @@ const APIlistItem = function ({
   writter = true,
   checkBox = false,
   checked = false,
+  onToggleCheck,
 }: APIlistItemPropsType): JSX.Element {
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
-  const [isChecked, setIsChecked] = useState<boolean>(false);
-  const onToggleCheck = (): void => {
-    setIsChecked((prev) => !prev);
-  };
+
   const onClickApiItem = (apiID: string | number): void => {
-    console.log(`${apiID}번 api : api 하나 dispatch!??`);
+    if (!checkBox) {
+      console.log(`${apiID}번 api : api 하나 dispatch!??`);
+    }
   };
   // const { data: spaceApiList, isLoading, isError } = useSpaceApis(spaceId);
   // section Id 받아야함.
   // const {} = useSectionsApi(spaceId, sectionId, method, searchVal);
 
-  // useEffect(() => {
-  //   if (isChecked) {
-  //     // 체크됐을 때
-  //   } else {
-  //     // 체크 해제됐을 때
-  //   }
-  // }, [isChecked]);
-
-  // useEffect(() => {
-  //   console.log('111', item);
-  //   if (checkedAPIList && checkedAPIList.length > 0) {
-  //     console.log('22222', item);
-  //     checkedAPIList.map((cate) => {
-  //       const temp = cate.apis.find((api) => api.id === item.id);
-  //       setIsChecked(temp ? true : false);
-  //       return temp;
-  //     });
-  //   }
-  // }, []);
+  const onClickCheckBox = () => {
+    checked = !checked;
+    if (checkBox && onToggleCheck) {
+      // console.log('!!!!!!!!!!!!!!!!', checked);
+      onToggleCheck(item.id, checked);
+    }
+  };
 
   return (
     <li
@@ -67,7 +56,7 @@ const APIlistItem = function ({
       className={`${className} flex items-center gap-3 h-[40px] min-h-[40px]`}
     >
       {checkBox && (
-        <CheckBox isChecked={checked} onToggleCheck={onToggleCheck} />
+        <CheckBox isChecked={checked} onToggleCheck={onClickCheckBox} />
       )}
       <MethodBadge className="" method={item.method} />
       <p className="text-content flex-1 truncate hover:text-clip">

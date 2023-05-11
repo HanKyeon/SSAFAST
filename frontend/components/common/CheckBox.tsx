@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { BsCheck } from 'react-icons/bs';
 
 type CheckBoxPropsType = {
