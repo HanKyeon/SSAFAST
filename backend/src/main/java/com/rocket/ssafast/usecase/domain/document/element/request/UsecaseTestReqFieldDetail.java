@@ -1,4 +1,6 @@
-package com.rocket.ssafast.usecase.domain.element.response;
+package com.rocket.ssafast.usecase.domain.document.element.request;
+
+import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -8,12 +10,20 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UsecaseTestResFieldDetail {
+public class UsecaseTestReqFieldDetail {
+
 	@NotEmpty
 	String type;
 
 	String desc;
 
 	@NotNull
-	Boolean itera;
+	boolean itera;
+
+	List<String> constraints;
+
+	@NotNull
+	boolean mapped;
+
+	Object value;
 }

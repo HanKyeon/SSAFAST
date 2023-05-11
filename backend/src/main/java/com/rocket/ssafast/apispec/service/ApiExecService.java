@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponents;
@@ -32,6 +34,8 @@ import com.rocket.ssafast.apispec.domain.Entity.ApiTestResultEntity;
 import com.rocket.ssafast.apispec.domain.Enum.HTTPMethod;
 import com.rocket.ssafast.apispec.dto.request.ApiExecReqMessageDto;
 import com.rocket.ssafast.apispec.dto.request.ApiTestResultDto;
+import com.rocket.ssafast.apispec.dto.request.ApiTestResultResponseDto;
+import com.rocket.ssafast.apispec.dto.response.ApiTestResultResponseRawDto;
 import com.rocket.ssafast.apispec.dto.response.ApiTestResultSummaryDto;
 import com.rocket.ssafast.apispec.repository.ApiSpecRepository;
 import com.rocket.ssafast.apispec.repository.ApiTestResultDocsRepository;
@@ -52,7 +56,7 @@ public class ApiExecService {
 	private final ApiTestResultEntityRepository apiTestResultEntityRepository;
 	private final ApiSpecRepository apiSpecRepository;
 
-	public ResponseEntity<?> requestAPI(
+	public ApiTestResultResponseDto requestAPI(
 		ApiExecReqMessageDto apiExecReqMessageDto,
 		MultipartFile[] files, MultipartFile[][] filesArr,
 		String[] filekeys, String[] filesArrKeys) throws IOException {
@@ -61,7 +65,7 @@ public class ApiExecService {
 			throw new CustomException(ErrorCode.HTTPMETHOD_NOT_FOUND);
 		}
 
-
+		System.out.println("API TEST 서비스:"+ apiExecReqMessageDto);
 		// 1. Headers 셋팅
 		HttpHeaders headers = new HttpHeaders();
 		Map<String, String> reqHeaders = apiExecReqMessageDto.getHeaders();
@@ -92,6 +96,7 @@ public class ApiExecService {
 		}
 		sb.deleteCharAt(sb.lastIndexOf("/"));
 
+
 		// 3. params 셋팅
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		if (apiExecReqMessageDto.getParams() != null) {
@@ -100,10 +105,12 @@ public class ApiExecService {
 			});
 		}
 
+
 		// 4. 최종 URI 셋팅
 		UriComponents uri = UriComponentsBuilder.fromHttpUrl(sb.toString())
 			.queryParams(params)
 			.build();
+
 
 		// 5. header, body를 entity에 담기
 		HttpEntity<?> entity = null;
@@ -172,14 +179,27 @@ public class ApiExecService {
 
 		// 6. API 요청
 		try {
-			return restTemplate.exchange(
+			ResponseEntity<?> response =  restTemplate.exchange(
 				uri.toUriString(),
 				HTTPMethod.getMethodByNumber(apiExecReqMessageDto.getMethod()),
 				entity,
 				new ParameterizedTypeReference<Object>() {
 				});
-		} catch (Exception e) {
-			throw new RuntimeException("CLIENT_ERROR", e);
+
+			HttpHeaders httpHeaders = response.getHeaders();
+			Map<String, List> resHeader = new HashMap<>();
+			httpHeaders.forEach((key, value) -> resHeader.put(key, value));
+
+			return ApiTestResultResponseRawDto.builder()
+				.headers(resHeader)
+				.body(response.getBody())
+				.statusCode(response.getStatusCode().name())
+				.statusCodeValue(response.getStatusCodeValue())
+				.build()
+				.toResponseDto();
+
+		} catch (HttpClientErrorException | HttpServerErrorException e){
+			throw new HttpClientErrorException(e.getStatusCode(), e.getMessage());
 		}
 	}
 
@@ -236,7 +256,9 @@ public class ApiExecService {
 		if(apiTestResultDto.getName() == null || apiTestResultDto.getMember() == null || apiTestResultDto.getApiInfoId() == null) {
 			throw new CustomException(ErrorCode.BAD_REQUEST);
 		}
-
+		if(!apiSpecRepository.findById(apiTestResultDto.getApiInfoId()).isPresent()) {
+			throw new CustomException(ErrorCode.API_NOT_FOUND);
+		}
 		long resultId = apiTestResultEntityRepository.save(apiTestResultDto.toEntity()).getId();
 
 		ApiTestResultDocument document = createOrFinResultsIfExists();

@@ -4,15 +4,15 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import com.rocket.ssafast.usecase.domain.UsecaseTestEntity;
-import com.rocket.ssafast.usecase.domain.element.UsecaseTestInfo;
+import com.rocket.ssafast.usecase.domain.entity.UsecaseTestEntity;
+import com.rocket.ssafast.usecase.domain.document.element.UsecaseTestInfo;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UsecaseTestDto {
+public class ReqUsecaseTestDto {
 
 	Long id;
 

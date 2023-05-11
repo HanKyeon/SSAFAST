@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ApiTestResultResponse {
-	Map<String, List> headers;
+	Map<String, String> headers;
 	Object body;
 	String statusCode;
 	int statusCodeValue;
 
 	@Builder
-	public ApiTestResultResponse(Map<String, List> headers, Object body, String statusCode, int statusCodeValue) {
+	public ApiTestResultResponse(Map<String, String> headers, Object body, String statusCode, int statusCodeValue) {
 		this.headers = headers;
 		this.body = body;
 		this.statusCode = statusCode;

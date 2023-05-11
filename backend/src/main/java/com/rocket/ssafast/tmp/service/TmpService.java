@@ -9,6 +9,7 @@ import com.rocket.ssafast.tmp.domain.TmpItem;
 import com.rocket.ssafast.tmp.domain.TmpOrder;
 import com.rocket.ssafast.tmp.domain.TmpUser;
 import com.rocket.ssafast.tmp.dto.TmpItemDto;
+import com.rocket.ssafast.tmp.dto.TmpOrderDto;
 import com.rocket.ssafast.tmp.dto.TmpUserDto;
 import com.rocket.ssafast.tmp.repository.TmpItemRepository;
 import com.rocket.ssafast.tmp.repository.TmpUserRepository;
@@ -24,7 +25,7 @@ public class TmpService {
 	private final TmpItemRepository tmpItemRepository;
 
 
-	public TmpUserDto save(TmpUserDto tmpUserDto) {
+	public List<TmpOrderDto> save(TmpUserDto tmpUserDto) {
 		TmpUser tmpUser = tmpUserDto.toEntity();
 		List<TmpOrder> tmpOrders = new ArrayList<>();
 		tmpUserDto.getOrderList().forEach(orderDto -> {
@@ -33,7 +34,7 @@ public class TmpService {
 			tmpOrders.add(order);
 		});
 		tmpUser.setOrders(tmpOrders);
-		return tmpUserRepository.save(tmpUser).toDto();
+		return tmpUserRepository.save(tmpUser).toDto().getOrderList();
 	}
 
 	public List<TmpItemDto> saveOrderItems(long orderId, List<TmpItemDto> tmpItemDtos) {
