@@ -15,7 +15,12 @@ import {
   FieldArrayWithId,
   UseFormReturn,
 } from 'react-hook-form/dist/types';
-import { DtoDetail, getDtoDetail, useDtoList } from '@/hooks/queries/queries';
+import {
+  DtoDetail,
+  getDtoDetail,
+  useDtoDetail,
+  useDtoList,
+} from '@/hooks/queries/queries';
 import ToggleModeBtn from '../common/ToggleModeBtn';
 import DtoController from './DtoController';
 import { BsTrash, BsSave } from 'react-icons/bs';
@@ -30,6 +35,15 @@ import { useStoreDispatch, useStoreSelector } from '@/hooks/useStore';
 import { DispatchToast } from '@/store';
 import { IoAddCircle } from 'react-icons/io5';
 import AnimationBox from '../common/AnimationBox';
+import { valuedConstraints } from '@/utils/constraints';
+
+export interface RefineDtoField {
+  type: string | number; // 필드 타입. string 등
+  typeName: string;
+  desc: string; // 설명
+  itera: boolean; // 배열 여부
+  constraints: string[]; // 제한 조건 들
+}
 
 export interface DtoFieldInCompo {
   type: string | number; // 필드 타입. string 등
@@ -53,15 +67,24 @@ export interface DtoInterfaceInForm {
 interface Props {
   methods: UseFormReturn<DtoInterfaceInForm, any>;
   defaultData?: DtoDetail;
+  resetSelected: () => void;
+  selectedId: string | number | null;
 }
 
-const DtoForm = function ({ defaultData, methods }: Props) {
+const DtoForm = function ({
+  defaultData,
+  methods,
+  resetSelected,
+  selectedId,
+}: Props) {
   const router = useRouter();
   const dispatch = useStoreDispatch();
   const { spaceId } = router.query as SpaceParams;
   const queryClient = useQueryClient();
   const { dark } = useStoreSelector((state) => state.dark);
-  const { handleSubmit, control, getValues, getFieldState } = methods;
+  const { handleSubmit, control, reset, resetField } = methods;
+  // data
+  const { data, isLoading, isError } = useDtoDetail(spaceId, selectedId || ``);
 
   const {
     fields: wonsiFields,
@@ -76,23 +99,32 @@ const DtoForm = function ({ defaultData, methods }: Props) {
     wonsiRemove(idx);
   }, []);
   // 생성 mutate
-  const { mutate, mutateAsync } = useMutation({
+  const { mutateAsync: deleteMutateAsync } = useMutation({
     mutationFn: async function () {
       return apiRequest({
         method: `delete`,
-        url: `/api/dto/${defaultData?.id}`,
+        url: `/api/dto/${data?.id}`,
         params: {},
         // data: {}
       });
     },
     onSuccess: function () {
-      if (defaultData) {
+      if (data) {
         queryClient.removeQueries({
-          queryKey: queryKeys.spaceDtoDetail(parseInt(spaceId), defaultData.id),
+          queryKey: queryKeys.spaceDtoDetail(parseInt(spaceId), data.id),
         });
         queryClient.invalidateQueries(queryKeys.spaceDto(parseInt(spaceId)));
         queryClient.invalidateQueries(queryKeys.spaceApi(parseInt(spaceId)));
       }
+    },
+  });
+  const { mutateAsync: postMutateAsync } = useMutation({
+    mutationFn: async function (data: any) {
+      return apiRequest({
+        method: `post`,
+        url: `/api/dto`,
+        data: data,
+      });
     },
   });
   const { data: dtoListData } = useDtoList(spaceId);
@@ -124,28 +156,112 @@ const DtoForm = function ({ defaultData, methods }: Props) {
     setIsModal(() => true);
   }, []);
 
+  const [isCodeModal, setIsCodeModal] = useState<boolean>(false);
+  const closeCodeModal = useCallback(function () {
+    setIsCodeModal(() => false);
+  }, []);
+  const openCodeModal = useCallback(function () {
+    setIsCodeModal(() => true);
+  }, []);
+
   const dataSetting = function (data: DtoInterfaceInForm) {
-    let fields: DtoFieldInCompo[] = [];
-    let nestedDtos: DtoFieldInCompo[] = [];
-    data.fields.forEach((field) => {
-      if ((field.type as number) > 10) {
-        nestedDtos.push(field);
+    let name = data.name;
+    let desc = data.desc;
+    let fields: RefineDtoField[] = [];
+    let nestedDtos: any = {};
+    data.fields.forEach(async (field) => {
+      if (
+        field.type === `String` ||
+        field.type === `int` ||
+        field.type === `long` ||
+        field.type === `float` ||
+        field.type === `double` ||
+        field.type === `boolean` ||
+        field.type === `MultipartFile` ||
+        field.type === `Data` ||
+        field.type === `LocalDateTime`
+      ) {
+        fields.push({
+          constraints: [
+            ...field.constraints
+              .map((constraint) => {
+                const mainName = constraint.mainName;
+                if (mainName === 'Max') {
+                  if (constraint.maxV === null) {
+                    return ``;
+                  }
+                  return `Max(value=${constraint.maxV})`;
+                } else if (mainName === `Min`) {
+                  if (constraint.minV === null) {
+                    return ``;
+                  }
+                  return `Min(value=${constraint.minV}`;
+                } else if (mainName === `Range`) {
+                  if (constraint.minV === null || constraint.maxV === null) {
+                    return ``;
+                  }
+                  return `Range(min=${constraint.minV},max=${constraint.maxV})`;
+                } else if (mainName === `Pattern`) {
+                  return `${
+                    constraint.validateReg?.length
+                      ? `Pattern(regexp=${constraint.validateReg})`
+                      : ``
+                  }`;
+                } else if (mainName === `Length`) {
+                  if (constraint.minV === null || constraint.maxV === null) {
+                    return ``;
+                  }
+                  return `Length(min=${constraint.minV},max=${constraint.maxV})`;
+                }
+                return mainName;
+              })
+              .filter((v) => v.length !== 0),
+          ],
+          desc: field.desc,
+          itera: field.itera,
+          type: field.type,
+          typeName: field.typeName,
+        });
       } else {
-        fields.push(field);
+        const dtoId = field.type;
+        let data;
+        await apiRequest({
+          method: `get`,
+          url: `/api/dto/${dtoId}`,
+        }).then((res) => {
+          data = res.data;
+          return res;
+        });
+        nestedDtos[dtoId] = data;
+        return data;
       }
     });
-    const config = { fields, nestedDtos };
+    postMutateAsync({
+      workspaceId: spaceId,
+      name,
+      description: desc,
+      document: { fields, nestedDtos },
+    });
+    console.log({
+      workspaceId: spaceId,
+      name,
+      description: desc,
+      document: { fields, nestedDtos },
+    });
     console.log(data);
-    console.log(config);
   };
 
   const deleteHandler = function () {
     console.log('삭제');
-    if (defaultData) {
-      mutateAsync().then((res) => {
+    if (data) {
+      deleteMutateAsync().then((res) => {
         dispatch(DispatchToast('삭제 완료!', true));
       });
+    } else {
+      dispatch(DispatchToast('작성 정보가 초기화 됩니다.', true));
+      reset({ name: ``, desc: ``, fields: [] });
     }
+    resetSelected();
     closeModal();
   };
 
@@ -176,6 +292,28 @@ const DtoForm = function ({ defaultData, methods }: Props) {
           </Box>
         </Modal>
       )}
+      {isCodeModal && (
+        <Modal closeModal={closeCodeModal} parentClasses="h-[70%] w-[60%]">
+          <Box className="flex flex-col gap-4 w-full h-full p-5 items-center justify-center">
+            <div className="text-[36px]">ㅎㅇ 님들 DTO 코드임</div>
+            <div className="text-[24px] text-red-500">
+              근데 니들 저장해야 저장된거 보여줌. 꼬우면 결제 ㄱ
+            </div>
+            <Box variant="three" className="w-full h-full p-5">
+              이 편지는 17세기 영국으로부터 시작되어...
+            </Box>
+            <div className="flex flex-row gap-4">
+              <Box
+                variant="three"
+                className="w-[80px] h-[60px] rounded-[13px] flex items-center justify-center cursor-pointer hover:scale-105 duration-[0.33s]"
+                onClick={closeCodeModal}
+              >
+                닫기
+              </Box>
+            </div>
+          </Box>
+        </Modal>
+      )}
 
       <AnimationBox className="w-full h-full flex flex-col gap-2">
         <FormProvider {...methods}>
@@ -184,7 +322,10 @@ const DtoForm = function ({ defaultData, methods }: Props) {
             onSubmit={handleSubmit(dataSetting)}
           >
             <div className="w-full basis-[7%] h-[7%] flex flex-row items-center justify-end gap-5">
-              <BsSave className="cursor-pointer hover:scale-105 duration-[0.33s]" />
+              <BsSave
+                className="cursor-pointer hover:scale-105 duration-[0.33s]"
+                onClick={openCodeModal}
+              />
               <BsTrash
                 className="cursor-pointer hover:scale-105 duration-[0.33s] text-red-500"
                 onClick={openModal}
@@ -194,7 +335,7 @@ const DtoForm = function ({ defaultData, methods }: Props) {
               </Button>
             </div>
             <div className="w-full h-[6%] text-[32px] flex items-center justify-center">
-              {defaultData ? `DTO 수정하기` : `DTO 생성하기`}
+              {data ? `DTO 수정하기` : `DTO 생성하기`}
             </div>
             <Controller
               name={`name`}
@@ -271,7 +412,7 @@ const DtoForm = function ({ defaultData, methods }: Props) {
                 }}
               />
             </div>
-            <div className="w-full flex flex-col gap-3">
+            <div className="w-full h-[66%] flex flex-col gap-3 overflow-y-scroll">
               {wonsiFields.map((item, idx) => {
                 return (
                   <DtoController

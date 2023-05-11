@@ -28,6 +28,7 @@ import YjsProvider, { useYjsState } from '@/components/work/YjsProvider';
 import { Awareness } from '@y-presence/client';
 import * as Y from 'yjs';
 import { WebsocketProvider } from 'y-websocket';
+import { useMutation } from '@tanstack/react-query';
 
 const SpaceWorkPage = function (
   props: InferGetServerSidePropsType<typeof getServerSideProps>

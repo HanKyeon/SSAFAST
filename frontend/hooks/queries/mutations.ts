@@ -5,7 +5,7 @@ import { queryKeys } from './QueryKeys';
 import { useStoreDispatch } from '../useStore';
 import { DispatchLogout, DispatchToast } from '@/store';
 
-export const example = function () {
+export const useExample = function () {
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
   return useMutation({

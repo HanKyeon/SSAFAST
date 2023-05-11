@@ -64,7 +64,7 @@ const DtoController = function ({ item, idx, remove }: Props) {
   return (
     <AnimationBox
       key={`${item.id}-container`}
-      className="flex flex-col w-full overflow-y-scroll items-center"
+      className="flex flex-col w-full items-center"
     >
       <Box
         variant="three"
@@ -107,14 +107,22 @@ const DtoController = function ({ item, idx, remove }: Props) {
                 <option value={``}>Type</option>
                 {defaultTypes.map((type) => {
                   return (
-                    <option value={type.id} title={type.desc}>
+                    <option
+                      key={`${type.id}-${type.desc}-${idx}`}
+                      value={type.id}
+                      title={type.desc}
+                    >
                       {type.name}
                     </option>
                   );
                 })}
                 {dtoListData?.dtoList.map((dto) => {
                   return (
-                    <option value={dto.id} title={dto.description}>
+                    <option
+                      key={`${dto.id}-dtoType-${idx}`}
+                      value={dto.id}
+                      title={dto.description}
+                    >
                       {dto.name}
                     </option>
                   );
@@ -171,7 +179,7 @@ const DtoController = function ({ item, idx, remove }: Props) {
         control={control}
         render={({ field }) => {
           return (
-            <AnimationBox
+            <div
               className={`flex flex-col gap-1 w-[90%] justify-center rounded-b-[13px] px-3 py-2 ${
                 dark
                   ? 'bg-grayscale-deepdarkdeep'
@@ -209,7 +217,11 @@ const DtoController = function ({ item, idx, remove }: Props) {
                             <option value={``}>선택</option>
                             {commonConstraints.map((con) => {
                               return (
-                                <option value={con.name} title={con.desc}>
+                                <option
+                                  key={`${con.name}-wonsi-${iidx}`}
+                                  value={con.name}
+                                  title={con.desc}
+                                >
                                   {con.name}
                                 </option>
                               );
@@ -218,6 +230,7 @@ const DtoController = function ({ item, idx, remove }: Props) {
                               stringConstraints.map((con) => {
                                 return (
                                   <option
+                                    key={`${con.name}-string-wonsi-${iidx}`}
                                     value={`${con.name}`}
                                     title={con.desc}
                                   >
@@ -227,27 +240,46 @@ const DtoController = function ({ item, idx, remove }: Props) {
                               })}
                             {typeData === 'String' && (
                               <>
-                                <option value={`Pattern`}>Pattern</option>
-                                <option value={`Length`}>Length</option>
+                                <option
+                                  key={`pattern-string-${iidx}`}
+                                  value={`Pattern`}
+                                >
+                                  Pattern
+                                </option>
+                                <option
+                                  key={`length-string-${iidx}`}
+                                  value={`Length`}
+                                >
+                                  Length
+                                </option>
                               </>
                             )}
                             {(typeData === 'int' ||
                               typeData === `long` ||
                               typeData === `float` ||
                               typeData === `double`) && (
-                              <option value={`Max`}>Max</option>
+                              <option key={`max-number-${iidx}`} value={`Max`}>
+                                Max
+                              </option>
                             )}
                             {(typeData === 'int' ||
                               typeData === `long` ||
                               typeData === `float` ||
                               typeData === `double`) && (
-                              <option value={`Min`}>Min</option>
+                              <option key={`min-number-${iidx}`} value={`Min`}>
+                                Min
+                              </option>
                             )}
                             {(typeData === 'int' ||
                               typeData === `long` ||
                               typeData === `float` ||
                               typeData === `double`) && (
-                              <option value={`Range`}>Range</option>
+                              <option
+                                key={`range-number-${iidx}`}
+                                value={`Range`}
+                              >
+                                Range
+                              </option>
                             )}
                           </select>
                           {ifield.value === `Pattern` && (
@@ -261,7 +293,8 @@ const DtoController = function ({ item, idx, remove }: Props) {
                                       name={`fields.${idx}.constraints.${iidx}.validateReg`}
                                       type="text"
                                       onChange={validateRegField.onChange}
-                                      className="text-grayscale-deepdarklight"
+                                      placeholder="regexp"
+                                      className="text-grayscale-dark bg-grayscale-deeplightlight bg-opacity-0 border-b-[3px] border-b-grayscale-dark w-[33%]"
                                     />
                                   );
                                 }}
@@ -278,8 +311,10 @@ const DtoController = function ({ item, idx, remove }: Props) {
                                     <input
                                       name={`fields.${idx}.constraints.${iidx}.maxV`}
                                       type="number"
+                                      step={typeData === `int` ? 1 : 0.01}
                                       onChange={maxVField.onChange}
-                                      className="text-grayscale-deepdarklight"
+                                      placeholder="Maximum"
+                                      className="text-grayscale-dark bg-grayscale-deeplightlight bg-opacity-0 border-b-[3px] border-b-grayscale-dark w-[33%]"
                                     />
                                   );
                                 }}
@@ -296,8 +331,10 @@ const DtoController = function ({ item, idx, remove }: Props) {
                                     <input
                                       name={`fields.${idx}.constraints.${iidx}.minV`}
                                       type="number"
+                                      step={typeData === `int` ? 1 : 0.01}
                                       onChange={minVField.onChange}
-                                      className="text-grayscale-deepdarklight"
+                                      placeholder="Minimum"
+                                      className="text-grayscale-dark bg-grayscale-deeplightlight bg-opacity-0 border-b-[3px] border-b-grayscale-dark w-[33%]"
                                     />
                                   );
                                 }}
@@ -314,8 +351,10 @@ const DtoController = function ({ item, idx, remove }: Props) {
                                     <input
                                       name={`fields.${idx}.constraints.${iidx}.minV`}
                                       type="number"
+                                      step={typeData === `int` ? 1 : 0.01}
                                       onChange={minVField.onChange}
-                                      className="text-grayscale-deepdarklight"
+                                      placeholder="Minimum"
+                                      className="text-grayscale-dark bg-grayscale-deeplightlight bg-opacity-0 border-b-[3px] border-b-grayscale-dark w-[33%]"
                                     />
                                   );
                                 }}
@@ -328,8 +367,10 @@ const DtoController = function ({ item, idx, remove }: Props) {
                                     <input
                                       name={`fields.${idx}.constraints.${iidx}.maxV`}
                                       type="number"
+                                      step={typeData === `int` ? 1 : 0.01}
                                       onChange={maxVField.onChange}
-                                      className="text-grayscale-deepdarklight"
+                                      placeholder="Maximum"
+                                      className="text-grayscale-dark bg-grayscale-deeplightlight bg-opacity-0 border-b-[3px] border-b-grayscale-dark w-[33%]"
                                     />
                                   );
                                 }}
@@ -347,7 +388,8 @@ const DtoController = function ({ item, idx, remove }: Props) {
                                       name={`fields.${idx}.constraints.${iidx}.minV`}
                                       type="number"
                                       onChange={minVField.onChange}
-                                      className="text-grayscale-deepdarklight"
+                                      placeholder="Minimum"
+                                      className="text-grayscale-dark bg-grayscale-deeplightlight bg-opacity-0 border-b-[3px] border-b-grayscale-dark w-[33%]"
                                     />
                                   );
                                 }}
@@ -361,7 +403,8 @@ const DtoController = function ({ item, idx, remove }: Props) {
                                       name={`fields.${idx}.constraints.${iidx}.maxV`}
                                       type="number"
                                       onChange={maxVField.onChange}
-                                      className="text-grayscale-deepdarklight"
+                                      placeholder="Maximum"
+                                      className="text-grayscale-dark bg-grayscale-deeplightlight bg-opacity-0 border-b-[3px] border-b-grayscale-dark w-[33%]"
                                     />
                                   );
                                 }}
@@ -378,7 +421,7 @@ const DtoController = function ({ item, idx, remove }: Props) {
                   />
                 );
               })}
-            </AnimationBox>
+            </div>
           );
         }}
       />
