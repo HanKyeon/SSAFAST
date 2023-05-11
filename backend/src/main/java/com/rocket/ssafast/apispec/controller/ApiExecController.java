@@ -1,6 +1,7 @@
 package com.rocket.ssafast.apispec.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -16,10 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.rocket.ssafast.apispec.dto.request.ApiExecReqMessageDto;
 import com.rocket.ssafast.apispec.dto.request.ApiTestResultDto;
+import com.rocket.ssafast.apispec.dto.request.ApiTestResultResponseDto;
+import com.rocket.ssafast.apispec.dto.response.ApiTestResultSummaryDto;
 import com.rocket.ssafast.apispec.service.ApiExecService;
 import com.rocket.ssafast.tmp.dto.TmpUserDto;
 import com.rocket.ssafast.auth.domain.UserDetailsImpl;
@@ -48,12 +53,15 @@ public class ApiExecController {
 			return new ResponseEntity<>(apiExecService.requestAPI(apiExecReqMessageDto, files, filesArrs, filekeys, filesArrKeys), HttpStatus.OK);
 		} catch (CustomException e) {
 			return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
+		} catch (HttpServerErrorException | HttpClientErrorException e) {
+
+			ApiTestResultResponseDto apiTestResultResponseDto = ApiTestResultResponseDto.builder()
+				.statusCodeValue(e.getStatusCode().value())
+				.statusCode(e.getStatusCode().name())
+				.body(e.getMessage())
+				.build();
+			return new ResponseEntity<>(apiTestResultResponseDto, HttpStatus.OK);
 		} catch (Exception e) {
-			if (e.getMessage() != null) {
-				Map<String, String> clientError = new HashMap<>();
-				clientError.put("errorMessage", e.getCause().getMessage());
-				return new ResponseEntity<>(clientError, HttpStatus.OK);
-			}
 			log.error("error: ", e);
 			ErrorCode error = ErrorCode.INTERNAL_SERVER_ERROR;
 			return new ResponseEntity<>(error.getMessage(), error.getHttpStatus());
@@ -78,7 +86,9 @@ public class ApiExecController {
 	@GetMapping("/response/list")
 	ResponseEntity<?> getAPIExecResults(@RequestParam Long apiId) {
 		try {
-			return new ResponseEntity<>(apiExecService.getAPIExecResults(apiId), HttpStatus.OK);
+			Map<String, List<ApiTestResultSummaryDto>> result = new HashMap<>();
+			result.put("resultList", apiExecService.getAPIExecResults(apiId));
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch (CustomException e) {
 			return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
 		} catch (Exception e) {
@@ -91,7 +101,9 @@ public class ApiExecController {
 	@GetMapping("/response")
 	ResponseEntity<?> getAPIExecDetailResult(@RequestParam Long resId) {
 		try {
-			return new ResponseEntity<>(apiExecService.getAPIExecDetailResult(resId), HttpStatus.OK);
+			Map<String, Map<String, Object>> result = new HashMap<>();
+			result.put("result", apiExecService.getAPIExecDetailResult(resId));
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch (CustomException e) {
 			return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
 		} catch (Exception e) {
