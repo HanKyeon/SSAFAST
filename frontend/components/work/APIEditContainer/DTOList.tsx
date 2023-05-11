@@ -17,6 +17,7 @@ const DTOList = function ({ setSelected }: Props) {
       {DtoListData?.dtoList.map((dto) => {
         return (
           <DTOListItem
+            key={`${dto.id}-dto-list-item`}
             dtoDesc={dto.description}
             dtoName={dto.name}
             dtoId={dto.id}
