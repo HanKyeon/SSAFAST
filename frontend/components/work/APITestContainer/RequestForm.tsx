@@ -34,7 +34,11 @@ export interface LoadForm {
   };
 }
 
-const RequestForm = function () {
+interface Props {
+  toggleIsList: () => void;
+}
+
+const RequestForm = function ({ toggleIsList }: Props) {
   const [data, setData] = useState({
     request: {
       url: '/api/:userid/comment/:commentid', // baseurl 외에 추가로 붙어야 하는 url 정보
@@ -259,7 +263,9 @@ const RequestForm = function () {
             </div>
           </div>
           <div className="flex pb-4 justify-end items-end">
-            <Button className="w-6">실행</Button>
+            <Button className="w-6" onClick={toggleIsList}>
+              실행
+            </Button>
           </div>
         </form>
       </FormProvider>

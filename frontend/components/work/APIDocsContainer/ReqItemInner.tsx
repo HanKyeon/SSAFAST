@@ -103,6 +103,7 @@ const ReqItemInner = function ({
                 render={({ field, fieldState }) => (
                   <Input
                     name={`${formName}.value`}
+                    value={field.value}
                     onChange={field.onChange}
                     className={`w-full`}
                     placeholder="value"
