@@ -326,3 +326,17 @@ export const useDeleteMember = function (spaceId: string | number) {
 //     onError: function () {},
 //   });
 // };
+
+export const useUserMutation = function () {
+  const dispatch = useStoreDispatch();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: function (request: AxiosRequestConfig) {
+      return apiRequest(request);
+    },
+    onSuccess: function () {
+      queryClient.invalidateQueries(queryKeys.user());
+    },
+    onError: function () {},
+  });
+};

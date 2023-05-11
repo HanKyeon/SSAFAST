@@ -7,6 +7,7 @@ import {
 import { useStoreSelector } from '@/hooks/useStore';
 import { RiAddCircleLine } from 'react-icons/ri';
 import { useForm, FormProvider } from 'react-hook-form';
+import DTOList from './DTOList';
 
 // 상수 스타일
 const addBtnStyle = (dark: boolean) =>
@@ -43,11 +44,16 @@ const DTOContainer = function () {
             <RiAddCircleLine className="text-[24px]" />
           </div>
         </div>
-        <div className="h-[92%] w-full flex flex-col overflow-y-scroll">
-          <div className="w-full flex flex-row">
-            <div>DTO Name</div>
-            <div>Description</div>
+        <div className="h-[92%] w-full flex flex-col overflow-y-scroll gap-3">
+          <div className="w-full h-[8%] flex flex-row text-[24px]">
+            <div className="w-[30%] h-full flex items-center justify-center border-b-[3px] border-b-grayscale-dark">
+              DTO Name
+            </div>
+            <div className="w-[70%] h-full flex items-center justify-center border-b-[3px] border-b-grayscale-dark">
+              Description
+            </div>
           </div>
+          <DTOList />
         </div>
       </Box>
       <Box
