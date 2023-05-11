@@ -305,10 +305,9 @@ public class UsecaseTestService {
 		}
 
 		// 13-2. usecase 저장
-		if(usecaseTestEntity.getUsecaseTestDtoEntities().size() > 0) {
-			usecaseTestEntity.getUsecaseTestDtoEntities().clear();
-			usecaseTestEntity.setUsecaseTestDtoEntities(usecaseTestDtoEntities);
-		}
+		usecaseTestEntity.getUsecaseTestDtoEntities().clear();
+		usecaseTestEntity.getUsecaseTestDtoEntities().addAll(usecaseTestDtoEntities);
+
 		usecaseTestEntityRepository.save(usecaseTestEntity);
 
 		return apiTestResultResponseDto;
