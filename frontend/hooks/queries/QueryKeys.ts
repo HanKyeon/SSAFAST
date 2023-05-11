@@ -35,88 +35,88 @@ figma // 로그아웃 정도 초기화 고민할듯
     ㄴsections
 `;
 export const queryKeys = {
-  // 검색 기능
+  // 검색 기능 => 사용
   search: (email: string) => [`search`, { email }] as const,
 
-  // 유저 개인 기능
+  // 유저 개인 기능 => 사용
   user: () => [`user`] as const,
 
   // invalid, remove를 위한 space 위치
   space: () => [...queryKeys.user(), `space`] as const,
 
-  // space 목록. 이름, id
+  // space 목록. 이름, id => 사용
   spaceList: () => [...queryKeys.space(), `list`] as const,
-  // space 상세.
+  // space 상세. => 사용
   spaceDetail: (spaceId: string | number) =>
     [...queryKeys.space(), `detail`, `${spaceId}`] as const,
-  // space에 멤버 조회
+  // space에 멤버 조회 => 사용
   spaceMembers: (spaceId: string | number) =>
     [...queryKeys.spaceDetail(spaceId), `member`] as const,
-  // space에 선택된 figma Image List
+  // space에 선택된 figma Image List => 사용
   spaceFigmas: (spaceId: string | number) =>
     [...queryKeys.spaceDetail(spaceId), `frames`] as const,
-  // space의 api 완성도
+  // space의 api 완성도 => 사용
   spaceApiComplete: (spaceId: string | number) =>
     [...queryKeys.spaceDetail(spaceId), `complete`] as const,
-  // space의 피그마 토큰
+  // space의 피그마 토큰 => 사용
   spaceFigmaTokens: (spaceId: string | number) =>
     [...queryKeys.spaceDetail(spaceId), `figma-tokens`] as const,
-  // space의 baseURL
+  // space의 baseURL => 사용
   spaceBaseUrl: (spaceId: string | number) =>
     [...queryKeys.spaceDetail(spaceId), `baseurls`] as const,
 
-  // space의 api들, 상단
+  // space의 api들, 상단 => 사용
   spaceApi: (spaceId: string | number) =>
     [...queryKeys.spaceDetail(spaceId), `api`] as const,
 
-  // space에 귀속된 api 목록
+  // space에 귀속된 api 목록 => 사용
   spaceApiList: (spaceId: string | number) =>
     [...queryKeys.spaceApi(spaceId), `list`] as const,
   // space에 귀속된 api 상세
   spaceApiDetail: (spaceId: string | number, apiId: string | number) =>
     [...queryKeys.spaceApi(spaceId), `detail`, `${apiId}`] as const,
-  // space의 section 하나에 귀속된 api들
+  // space의 section 하나에 귀속된 api들 => 사용
   spaceSectionApis: (spaceId: string | number, sectionId: string | number) =>
     [...queryKeys.spaceApi(spaceId), `section`, `${sectionId}`] as const,
-  // space의 category 목록
+  // space의 category 목록 => 사용
   spaceCategoryList: (spaceId: string | number) =>
     [...queryKeys.spaceApi(spaceId), `list`] as const,
   // space의 카테고리에 종속된 api 목록들
   spaceCategoryApis: (spaceId: string | number, categoryId: string | number) =>
     [...queryKeys.spaceApi(spaceId), `category`, `${categoryId}`] as const,
+  // api code => 사용
   spaceApiCodeFE: (spaceId: string | number, apiId: string | number) =>
     [...queryKeys.spaceApiDetail(spaceId, apiId), `front`] as const,
 
   // space의 dto
   spaceDto: (spaceId: string | number) =>
     [...queryKeys.spaceDetail(spaceId), `dto`] as const,
-  // dto 목록
+  // dto 목록 => 사용
   spaceDtoList: (spaceId: string | number) =>
     [...queryKeys.spaceDto(spaceId), `list`] as const,
-  //  dto 상세
+  //  dto 상세 => 사용
   spaceDtoDetail: (spaceId: string | number, dtoId: string | number) =>
     [...queryKeys.spaceDto(spaceId), `detail`, `${dtoId}`] as const,
-  // dto bE 코드
+  // dto bE 코드 => 사용
   spaceDtoCodeBE: (spaceId: string | number, dtoId: string | number) =>
     [...queryKeys.spaceDtoDetail(spaceId, dtoId), `back`] as const,
-  // dto FE 코드 => API Axios 객체 코드
 
   // 포스트맨
   spaceResult: (spaceId: string | number, apiId: number | string) =>
     [...queryKeys.spaceApiDetail(spaceId, apiId), `result`] as const,
-  // 포스트맨 결과 리스트
+  // 포스트맨 결과 리스트 => 사용
   spaceResultList: (spaceId: string | number, apiId: number | string) =>
     [...queryKeys.spaceResult(spaceId, apiId), `list`] as const,
-  // 포스트맨 결과 상세
+  // 포스트맨 결과 상세 => 사용
   spaceResultDetail: (
     spaceId: string | number,
     apiId: number | string,
     responseId: number | string
   ) => [...queryKeys.spaceResult(spaceId, apiId), `${responseId}`] as const,
-  // 포스트맨 결과의 요청 객체
+  // 포스트맨 결과의 요청 객체 => 사용
   spaceResultRequest: (spaceId: string | number, apiId: number | string) =>
     [...queryKeys.spaceResult(spaceId, apiId), `request`] as const,
-  // 포스트맨 결과의 응답 DTO 코드
+  // 포스트맨 결과의 응답 DTO 코드 => 사용
   spaceResultDtoClass: (spaceId: string | number, apiId: number | string) =>
     [...queryKeys.spaceResult(spaceId, apiId), `dto`] as const,
 
@@ -124,15 +124,15 @@ export const queryKeys = {
   /* 피그마 API 기능 */
   /////////////////////
   figma: (figmaId: string) => [`figma`, figmaId] as const,
-  // 유저 개인 피그마 토큰
+  // 유저 개인 피그마 토큰 => 사용
   figmaTokens: () => [...queryKeys.user(), `figma-tokens`] as const,
   // 피그마 파일 구분
   figmaFiles: (figmaId: string) =>
     [...queryKeys.figma(figmaId), `file`] as const,
-  // 피그마 파일로 데이터 호출
+  // 피그마 파일로 데이터 호출 => 사용
   figmaAllDatas: (figmaId: string) =>
     [...queryKeys.figmaFiles(figmaId), `all`] as const,
-  // 피그마 섹션 이미지들.
+  // 피그마 섹션 이미지들. => 사용
   figmaSections: (figmaId: string, ids: string) =>
     [
       ...queryKeys.figmaFiles(figmaId),

@@ -6,6 +6,45 @@ import apiRequest from '@/utils/axios';
 import { useStoreDispatch, useStoreSelector } from '../useStore';
 import { figmaTokenActions } from '@/store/figma-token-slice';
 
+/**
+ * dtoList: 디티오 리스트
+ */
+export interface DtoList {
+  dtoList: DtoListItem[];
+}
+
+/**
+ * key: 이름
+ * type: 타입
+ * desc: 설명
+ * itera: 배열 여부
+ * constraints: 제약조건 문자열 배열
+ */
+export interface DtoField {
+  key: string;
+  type: string | number;
+  desc: string;
+  itera: boolean;
+  constraints: string[];
+}
+
+/**
+ * id: dto Id
+ * name: dto name
+ * description : dto 설명
+ * fields: 원시 필드 리스트
+ * nestedDtos: 중첩된 dto들
+ */
+export interface DtoDetail {
+  id: number | string;
+  name: string;
+  description: string;
+  fields?: DtoField[];
+  nestedDtos?: {
+    [id: number]: DtoDetail;
+  };
+}
+
 export interface FigmaBasic {
   id?: string;
   name?: string;
@@ -77,23 +116,36 @@ export interface FigmaTokenData {
   figmaRefreshToken: string;
 }
 
+/**
+ * users: {id, name, profileImg}[]
+ */
 export interface SearchUserResult {
   users: { id: number; name: string; profileImg: string }[];
 }
 
+/**
+ * id, name, profileImg, email
+ */
 export interface User {
   id: string | number;
   name: string;
   profileImg: string;
   email: string;
 }
-
+/**
+ * id: 아이디
+ * name: 이름
+ * favicon: 프로필 이미지
+ */
 export interface SpaceShortcut {
   id: string | number;
   name: string;
   favicon: string;
 }
 
+/**
+ * id, figmaUrl, figmaFileId, figmaFileName, figmaImg, name, favicon, description, startDate, endDate, totalApiCount, completeApiCount, baseurls, leaderId, figmaToken: {}
+ */
 export interface SpaceDetail {
   id: number | string;
   figmaUrl: string;
@@ -115,16 +167,25 @@ export interface SpaceDetail {
   };
 }
 
+/**
+ * id, profileImg, name
+ */
 export interface TeamMember {
   id: number;
   profileImg: string;
   name: string;
 }
 
+/**
+ * members
+ */
 export interface TeamMemberList {
   members: TeamMember[];
 }
 
+/**
+ * id, sectionUrl, sectionId, name
+ */
 export interface SpaceFigma {
   id: string | number;
   sectionUrl: string | null;
@@ -132,16 +193,25 @@ export interface SpaceFigma {
   name: string;
 }
 
+/**
+ * totalApiCount, completeApiCount
+ */
 export interface SpaceComplete {
   totalApiCount: number;
   completeApiCount: number;
 }
 
+/**
+ * figmaAccessToken, figmaRefreshToken
+ */
 export interface SpaceFigmaToken {
   figmaAccessToken: string;
   figmaRefreshToken: string;
 }
 
+/**
+ * id, name, description
+ */
 export interface DtoListItem {
   id: number | string;
   name: string;
@@ -156,25 +226,35 @@ export interface WonsiAttr {
   Constraints: string[];
 }
 
-export interface DepthDto {
-  [key: number]: {
-    fields: WonsiAttr[];
-    nestedDtos?: DepthDto;
-  };
-}
-
 interface ApiResponse {
   id: string | number;
   name: string;
+  apiInfoId: string | number;
   createdTime: any;
   member: { name: string; profileImg: string };
 }
 
 interface ApiResponseDetail {
-  [key: string | number]: {
-    url: string;
-    request: AxiosRequestConfig;
-    response: any;
+  request: {
+    method: number;
+    headers: {
+      [key: string]: string;
+    };
+    pathVars: {
+      [key: string]: string;
+    };
+    params: {
+      [key: string]: string;
+    };
+    body: string;
+  };
+  response: {
+    headers: {
+      [key: string]: string;
+    };
+    body: string; // json임
+    statusCode: string;
+    statusCodeValue: number;
   };
 }
 
@@ -238,17 +318,18 @@ export const useApiResultResponseDetail = function (
   });
 };
 
-// Api 응답 결과
+// ok
+// Api 응답 결과 리스트
 export const useApiResultResponseList = function (
   spaceId: string | number,
   apiId: string | number
 ) {
-  return useQuery<ApiResponse[]>({
+  return useQuery<{ resultList: ApiResponse[] }>({
     queryKey: queryKeys.spaceResultList(spaceId, apiId),
     queryFn: async function () {
       return apiRequest({
         method: `get`,
-        url: `/api/api-pre/response/list`,
+        url: `/api/api-exec/response/list`,
         params: {
           apiId: apiId,
         },
@@ -277,12 +358,16 @@ export const useDtoAxiosConfig = function (
     enabled: !!spaceId && !!apiId,
   });
 };
+
+export interface DtoBECode {
+  dtoClass: string;
+}
 // Dto class 코드
 export const useDtoClasses = function (
   spaceId: number | string,
   dtoId: number | string
 ) {
-  return useQuery({
+  return useQuery<DtoBECode>({
     queryKey: queryKeys.spaceDtoCodeBE(spaceId, dtoId),
     queryFn: async function () {
       return apiRequest({
@@ -297,18 +382,22 @@ export const useDtoClasses = function (
   });
 };
 
+export const getDtoDetail = async function (dtoId: string | number) {
+  return apiRequest({
+    method: `get`,
+    url: `/api/dto/${dtoId}`,
+  });
+};
+
 // Dto 디테일
 export const useDtoDetail = function (
   spaceId: string | number,
   dtoId: string | number
 ) {
-  return useQuery<WonsiAttr | DepthDto>({
+  return useQuery<DtoDetail>({
     queryKey: queryKeys.spaceDtoDetail(spaceId, dtoId),
     queryFn: async function () {
-      return apiRequest({
-        method: `get`,
-        url: `/api/dto/${dtoId}`,
-      }).then((res) => res.data);
+      return getDtoDetail(dtoId).then((res) => res.data);
     },
     enabled: !!spaceId && !!dtoId,
   });
@@ -316,7 +405,7 @@ export const useDtoDetail = function (
 
 // Dto List
 export const useDtoList = function (spaceId: string | number) {
-  return useQuery<DtoListItem[]>({
+  return useQuery<DtoList>({
     queryKey: queryKeys.spaceDtoList(spaceId),
     queryFn: async function () {
       return apiRequest({
@@ -332,14 +421,15 @@ export const useDtoList = function (spaceId: string | number) {
 };
 
 interface CategoryList {
-  categoryList: { id: number | string; name: string }[];
+  categorys: { id: number | string; name: string }[];
 }
 
+// ??
 // 카테고리 조회
 export const useSpaceCategory = function (spaceId: string | number) {
   return useQuery<CategoryList>({
     queryKey: queryKeys.spaceCategoryList(spaceId),
-    queryFn: function () {
+    queryFn: async function () {
       return apiRequest({
         method: `get`,
         url: `/api/api-pre/category/list`,
@@ -353,45 +443,58 @@ export const useSpaceCategory = function (spaceId: string | number) {
 
 interface sectionsApi {
   apiCategories: {
-    categoryId: number;
+    categoryId: number | string;
     categoryName: string;
     apis: {
-      id: number;
+      id: string | number;
       name: string;
       description: string;
-      method: string;
-      status: number;
-      writter: { id: number; name: string; email: string; profileImg: string };
+      method:
+        | 'PUT'
+        | 'GET'
+        | 'POST'
+        | 'DEL'
+        | 'PATCH'
+        | `put`
+        | `get`
+        | `post`
+        | `del`
+        | `patch`;
+      status: 1 | 2 | 3 | 4;
+      writter: {
+        id: string | number;
+        name: string;
+        email: string;
+        profileImg: string;
+      };
     }[];
   }[];
 }
 
 // 섹션별 api 맵핑 정보 수정 (추가 및 삭제)
-export const useSectionsApiPost = function (
-  spaceId: string | number,
-  sectionId: string | number
-) {
-  return useQuery<string>({
-    // queryKey:,
-    queryFn: async function () {
-      return apiRequest({
-        method: `post`,
-        url: `api/api-pre/figma-section`,
-        params: {
-          figmaSectionId: sectionId,
-        },
-      }).then((res) => res.data);
-    },
-    enabled: !!spaceId && !!sectionId,
-  });
-};
+// export const useSectionsApiPost = function (
+//   spaceId: string | number,
+//   sectionId: string | number
+// ) {
+//   return useQuery<string>({
+//     // queryKey:,
+//     queryFn: async function () {
+//       return apiRequest({
+//         method: `post`,
+//         url: `api/api-pre/figma-section`,
+//         params: {
+//           figmaSectionId: sectionId,
+//         },
+//       }).then((res) => res.data);
+//     },
+//     enabled: !!spaceId && !!sectionId,
+//   });
+// };
 
 // 섹션 별 api 목록 조회
 export const useSectionsApi = function (
   spaceId: string | number,
-  sectionId: string | number,
-  method?: string | number,
-  name?: string
+  sectionId: string | number
 ) {
   return useQuery<sectionsApi>({
     queryKey: queryKeys.spaceSectionApis(spaceId, sectionId),
@@ -401,37 +504,25 @@ export const useSectionsApi = function (
         url: `/api/api-pre/figma-section`,
         params: {
           figmaSectionId: sectionId,
-          method: method || 0,
-          name: name || '',
         },
       }).then((res) => res.data);
     },
     enabled: !!spaceId && !!sectionId,
   });
 };
-// api 목록 검색 캐싱.
+// api 목록
 export const useSectionsApiSearch = function (
   spaceId: string | number,
-  sectionId: string | number,
-  restType: string = ``,
-  searchData: string = ``
+  sectionId: string | number
 ) {
   return useQuery<any>({
-    queryKey: [
-      ...queryKeys.spaceApi(spaceId),
-      `section`,
-      `${sectionId}`,
-      restType,
-      searchData,
-    ],
+    queryKey: [...queryKeys.spaceApi(spaceId), `section`, `${sectionId}`],
     queryFn: async function () {
       return apiRequest({
         method: `get`,
         url: `/api/figma-section/api-list`,
         params: {
           figmaSectionId: sectionId,
-          method: restType || null,
-          name: searchData || null,
         },
       }).then((res) => res.data);
     },
@@ -439,6 +530,9 @@ export const useSectionsApiSearch = function (
   });
 };
 
+/**
+ * categoryId, categoryName, apis: {id, name, description, method, status, writter: {id, name, email, profileImg}}
+ */
 interface EachCate {
   categoryId: number;
   categoryName: string;
@@ -467,10 +561,11 @@ interface EachCate {
     };
   }[];
 }
+
 interface SpaceApiList {
   apiCategories: EachCate[];
 }
-
+// ok 확인 불가.
 // space api 목록
 export const useSpaceApis = function (spaceId: string | number) {
   return useQuery<SpaceApiList>({
@@ -488,6 +583,7 @@ export const useSpaceApis = function (spaceId: string | number) {
   });
 };
 
+// ok
 // space baseUrl 목록
 export const useBaseUrl = function (spaceId: string | number) {
   return useQuery<{ baseurls: { id: string | number; url: string }[] }>({
@@ -505,6 +601,7 @@ export const useBaseUrl = function (spaceId: string | number) {
   });
 };
 
+// ok
 // space 팀 리더의 figma의 access/refresh 토큰들
 export const useSpaceFigmaTokens = function (
   spaceId: string | number,
@@ -525,6 +622,7 @@ export const useSpaceFigmaTokens = function (
   });
 };
 
+// ok
 // space의 api들 몇개 중 몇개 완성인지
 export const useSpaceApiComplete = function (spaceId: string | number) {
   return useQuery<SpaceComplete>({
@@ -546,6 +644,7 @@ interface SelectedSpaceFrames {
   figmaSections: SpaceFigma[];
 }
 
+// ok
 // space가 가진 figma sections
 export const useSpaceFrames = function (spaceId: string | number = ``) {
   return useQuery<SelectedSpaceFrames>({
@@ -563,6 +662,7 @@ export const useSpaceFrames = function (spaceId: string | number = ``) {
   });
 };
 
+// ok
 // space 멤버 확인
 export const useSpaceMembers = function (spaceId: string | number) {
   return useQuery<TeamMemberList>({
@@ -580,6 +680,7 @@ export const useSpaceMembers = function (spaceId: string | number) {
   });
 };
 
+// ok
 // 유저 space 상세
 export const useSpaceDetail = function (spaceId: string | number) {
   return useQuery<SpaceDetail>({
@@ -597,6 +698,7 @@ export const useSpaceDetail = function (spaceId: string | number) {
   });
 };
 
+// ok
 // 유저 space 목록
 export const useSpaceList = function () {
   const { accessToken, refreshToken } = useStoreSelector(
@@ -614,6 +716,7 @@ export const useSpaceList = function () {
   });
 };
 
+// ok
 // 토큰으로 정보 갖고 오기
 export const useUserData = function () {
   const { accessToken, refreshToken } = useStoreSelector(
@@ -631,6 +734,7 @@ export const useUserData = function () {
   });
 };
 
+// ok
 // 검색
 export const useSearchUser = function (email: string) {
   return useQuery<SearchUserResult>({
@@ -648,6 +752,7 @@ export const useSearchUser = function (email: string) {
   });
 };
 
+// ok
 // 유저 개인 피그마 토큰 확인
 export const useUserFigmaTokens = function () {
   const { accessToken, refreshToken } = useStoreSelector(
@@ -680,6 +785,7 @@ export const useUserFigmaTokens = function () {
   });
 };
 
+// ok
 // figma 데이터 받아오기
 export const useFigmaDatas = function (figmaId: string) {
   const { figmaAccess, figmaRefresh } = useStoreSelector(
@@ -734,6 +840,7 @@ export const useFigmaDatas = function (figmaId: string) {
   });
 };
 
+// ok
 // figma 이미지 파일 링크 받아오기
 export const useFigmaSections = function (figmaId: string, ids: string) {
   return useQuery({

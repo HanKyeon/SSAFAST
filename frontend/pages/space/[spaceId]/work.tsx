@@ -28,6 +28,7 @@ import YjsProvider, { useYjsState } from '@/components/work/YjsProvider';
 import { Awareness } from '@y-presence/client';
 import * as Y from 'yjs';
 import { WebsocketProvider } from 'y-websocket';
+import { useMutation } from '@tanstack/react-query';
 
 const SpaceWorkPage = function (
   props: InferGetServerSidePropsType<typeof getServerSideProps>
@@ -45,65 +46,36 @@ const SpaceWorkPage = function (
   } = useSpaceFrames(parseInt(spaceId));
   const { data: userData, isLoading } = useUserData();
   const store = useSyncedStore(state);
-  const [wsprovider, setWsprovider] = useState(
-    new WebrtcProvider(`ssafast${spaceId}`, getYjsDoc(state), {
-      signaling: [
-        'wss://ssafast.com/ws',
-        'wss://signaling.yjs.dev',
-        'wss://y-webrtc-signaling-eu.herokuapp.com',
-        'wss://y-webrtc-signaling-us.herokuapp.com',
-      ],
-    })
-    // new WebsocketProvider(
-    //   `wss://ssafast.com/ws`,
-    //   `ssafast${spaceId}`,
-    //   getYjsDoc(state)
-    // )
-  );
-  const [awareness, setAwareness] = useState<Awareness>(wsprovider.awareness);
-  useEffect(
-    function () {
-      console.log(wsprovider.signalingConns);
-    },
-    [wsprovider.connected]
-  );
-  // useEffect(function () {
-  //   let provider: WebrtcProvider;
-  //   let wsprovider;
-  //   if (state && spaceId?.length) {
-  // wsprovider = new WebsocketProvider(
-  //   'wss://ssafast.com/ws',
-  //   `ssafast${spaceId}`,
-  //   getYjsDoc(state)
-  //   // { WebSocketPolyfill: require('ws') }
-  // );
-  //     // provider = new WebrtcProvider(
-  //     //   `ssafast${spaceId}`,
-  //     //   getYjsDoc(state) as any
-  //     //   // {
-  //     //   //   signaling: [
-  //     //   //     // `ws://localhost:4444`,
-  //     //   //     // `wss://localhost:4444`,
-  //     //   //     // `wss://0.0.0.0:4444`,
-  //     //   //     `wss://www.ssafast.com:4444`,
-  //     //   //     // `ws://www.ssafast.com:4444`,
-  //     //   //     'wss://signaling.yjs.dev',
-  //     //   //     'wss://y-webrtc-signaling-eu.herokuapp.com',
-  //     //   //     'wss://y-webrtc-signaling-us.herokuapp.com',
-  //     //   //   ], //`ws://www.ssafast.com:4444`
-  //     //   // }
-  //     // );
+  const [awareness, setAwareness] = useState<Awareness>();
+  useEffect(function () {
+    let provider: WebrtcProvider;
+    if (state && spaceId?.length) {
+      provider = new WebrtcProvider(
+        `ssafast${spaceId}`,
+        getYjsDoc(state) as any
+        // {
+        //   signaling: [
+        //     // `ws://localhost:4444`,
+        //     // `wss://localhost:4444`,
+        //     // `wss://0.0.0.0:4444`,
+        //     `wss://www.ssafast.com:4444`,
+        //     // `ws://www.ssafast.com:4444`,
+        //     'wss://signaling.yjs.dev',
+        //     'wss://y-webrtc-signaling-eu.herokuapp.com',
+        //     'wss://y-webrtc-signaling-us.herokuapp.com',
+        //   ], //`ws://www.ssafast.com:4444`
+        // }
+      );
 
-  //     // console.log('커넥트', provider.signalingConns);
-  //     console.log('커넥트', wsprovider.wsconnecting);
-  //     const { awareness: innerAwareness } = wsprovider;
-  //     setAwareness(innerAwareness);
-  //   }
+      console.log('커넥트', provider.signalingConns);
+      const { awareness: innerAwareness } = provider;
+      setAwareness(innerAwareness);
+    }
 
-  //   return function () {
-  //     console.log('디스커넥트');
-  //   };
-  // }, []);
+    return function () {
+      console.log('디스커넥트');
+    };
+  }, []);
 
   useEffect(
     function () {

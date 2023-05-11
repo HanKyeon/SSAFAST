@@ -23,11 +23,7 @@ const TestingPage = function () {
   //   watch, // 사용 시 form 전체 재 렌더링. 따라서 useWatch 등 사용.
   // } = methods;
 
-  return (
-    <div>
-      <DtoForm />
-    </div>
-  );
+  return <div>{/* <DtoForm /> */}</div>;
 };
 
 export default TestingPage;

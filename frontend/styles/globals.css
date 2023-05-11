@@ -53,3 +53,15 @@ body {
 #backdrop-root::-webkit-scrollbar {
   display: none;
 }
+
+select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+select {
+  background-color: none;
+  color: #9d9d9d;
+  outline: none;
+}

@@ -8,6 +8,10 @@ const useInput = function (
   const [debouncedData, setDebouncedInput] = useState<string>();
 
   const onChangeHandler = useCallback(function () {
+    // if (ref.current?.type === "file") {
+    //   const reader = new FileReader()
+    //   reader.readAsDataURL(ref.current.value as Blob)
+    // }
     if (ref.current && ref.current?.value.length <= maxLength) {
       setInputData(() => ref.current?.value || ``);
     }
