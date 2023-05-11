@@ -241,14 +241,9 @@ const DtoForm = function ({
       name,
       description: desc,
       document: { fields, nestedDtos },
+    }).then((res) => {
+      reset({ name: ``, desc: ``, fields: [] });
     });
-    console.log({
-      workspaceId: spaceId,
-      name,
-      description: desc,
-      document: { fields, nestedDtos },
-    });
-    console.log(data);
   };
 
   const deleteHandler = function () {
