@@ -3,7 +3,7 @@ import BoxHeader from '@/components/common/BoxHeader';
 import { RTCSpaceData } from '@/pages/space/[spaceId]/work';
 import FigmaList from '../FigmaList';
 import { useEffect, useState } from 'react';
-import { useSectionsApi } from '@/hooks/queries/queries';
+import { useSectionsApi, useSpaceFrames } from '@/hooks/queries/queries';
 import RightContainer from './RightContainer';
 
 interface Props {
@@ -12,9 +12,10 @@ interface Props {
 }
 
 const APIConnectContainer = function ({ store, serverSideStore }: Props) {
+  // useSpaceFrames();
   // const {data:sectionApiList, isLoading, isError} = useSectionsApi(store.);
 
-  const [sectionId, setSectionId] = useState<string | number | null>(null);
+  const [sectionId, setSectionId] = useState<string | number>(0);
 
   const onChangeSection = (id: string | number): void => {
     setSectionId(id);
@@ -36,7 +37,7 @@ const APIConnectContainer = function ({ store, serverSideStore }: Props) {
       </Box>
       {/* 오른쪽 */}
       <Box className={`h-full p-5 flex-1 flex flex-col`}>
-        <RightContainer />
+        <RightContainer sectionId={sectionId} />
       </Box>
     </div>
   );
