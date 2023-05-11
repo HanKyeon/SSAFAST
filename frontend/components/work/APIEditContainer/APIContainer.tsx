@@ -2,7 +2,7 @@ import { Box, Button } from '@/components/common';
 import { useStoreDispatch, useStoreSelector } from '@/hooks/useStore';
 import { darkActions } from '@/store/dark-slice';
 import FigmaList from '../FigmaList';
-import APIList, { APIListType } from './APIList';
+import APIList from './APIList';
 import Input from '@/components/common/Input';
 import { BsFilter, BsFolderPlus } from 'react-icons/bs';
 import { HiOutlineSearch, HiPencil } from 'react-icons/hi';

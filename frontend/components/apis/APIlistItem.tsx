@@ -1,11 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import CheckBox from '../common/CheckBox';
 import UserBadge from '../common/UserBadge';
-import {
-  APIInfoType,
-  APIListType,
-  APIWritterType,
-} from '../work/APIEditContainer/APIList';
 import MethodBadge, { MethodBadgePropsType } from './MethodBadge';
 import StatusBadge, { StatusBadgePropsType } from './StatusBadge';
 import {
