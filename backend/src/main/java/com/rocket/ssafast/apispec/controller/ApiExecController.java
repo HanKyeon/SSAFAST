@@ -101,9 +101,7 @@ public class ApiExecController {
 	@GetMapping("/response")
 	ResponseEntity<?> getAPIExecDetailResult(@RequestParam Long resId) {
 		try {
-			Map<String, Map<String, Object>> result = new HashMap<>();
-			result.put("result", apiExecService.getAPIExecDetailResult(resId));
-			return new ResponseEntity<>(result, HttpStatus.OK);
+			return new ResponseEntity<>(apiExecService.getAPIExecDetailResult(resId), HttpStatus.OK);
 		} catch (CustomException e) {
 			return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
 		} catch (Exception e) {
