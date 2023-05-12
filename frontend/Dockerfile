@@ -18,4 +18,4 @@ RUN npm run build
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "PORT=4444 node ./node_modules/y-webrtc/bin/server.js > y-webrtc.log & npm start"]
+CMD ["sh", "-c", "PORT=4444 node ./node_modules/y-webrtc/bin/server.js & npm start"]
