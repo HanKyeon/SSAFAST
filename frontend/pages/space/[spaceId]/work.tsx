@@ -18,6 +18,7 @@ import { PresenceUserData, workFigma } from '@/components/work/presence-type';
 import MetaHead from '@/components/common/MetaHead';
 import {
   SpaceFigma,
+  useBaseUrl,
   useSpaceDetail,
   useSpaceFrames,
   useUserData,
@@ -29,6 +30,16 @@ import { Awareness } from '@y-presence/client';
 import * as Y from 'yjs';
 import { WebsocketProvider } from 'y-websocket';
 import { useMutation } from '@tanstack/react-query';
+
+export interface RTCSpaceData {
+  figmaList: workFigma[];
+  dtoList: any[];
+  apiList: any[];
+  SectionApiList: any[];
+  useCaseList: any[];
+  overloadList: any[];
+  baseUrlList: string[];
+}
 
 const SpaceWorkPage = function (
   props: InferGetServerSidePropsType<typeof getServerSideProps>
@@ -44,6 +55,8 @@ const SpaceWorkPage = function (
     isLoading: spaceFrameDataLoading,
     isError: spaceFrameDataError,
   } = useSpaceFrames(parseInt(spaceId));
+  const { data: baseUrls } = useBaseUrl(parseInt(spaceId));
+
   const { data: userData, isLoading } = useUserData();
   const store = useSyncedStore(state);
   const [awareness, setAwareness] = useState<Awareness>();
@@ -57,7 +70,7 @@ const SpaceWorkPage = function (
           signaling: [
             // `ws://localhost:4444`,
             // `wss://localhost:4444`,
-            `ws://${process.env.NEXT_PUBLIC_DOMAIM}:4444`,
+            `wss:www.ssafast.com/ws`,
             // `wss://0.0.0.0:4444`,
             // `wss://www.ssafast.com:4444`,
             // `ws://www.ssafast.com:4444`,
@@ -119,7 +132,7 @@ const SpaceWorkPage = function (
       //   ]);
       // }
     },
-    [awareness, spaceFrameData]
+    [awareness, spaceFrameData, baseUrls]
   );
 
   return (
@@ -150,15 +163,6 @@ const SpaceWorkPage = function (
 };
 
 export default SpaceWorkPage;
-
-export interface RTCSpaceData {
-  figmaList: workFigma[];
-  apiConnectList: any[];
-  apiList: any[];
-  useCaseList: any[];
-  overloadList: any[];
-  baseURLList: string[];
-}
 
 export const getServerSideProps: GetServerSideProps = async function (context) {
   const { spaceId } = context.params as SpaceParams;
