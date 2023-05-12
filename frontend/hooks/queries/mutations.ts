@@ -302,6 +302,82 @@ export const useDeleteMember = function (spaceId: string | number) {
   });
 };
 
+export const useAddApi = function (spaceId: string | number) {
+  const dispatch = useStoreDispatch();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: function (data: any) {
+      return apiRequest({
+        method: `post`,
+        url: `api/api`,
+        data,
+      });
+    },
+    onSuccess: function () {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.spaceApiList(spaceId),
+      });
+
+      dispatch(DispatchToast('API 생성이 완료되었습니다!', true));
+    },
+    onError: function () {
+      dispatch(DispatchToast('다시 시도해주세요!', false));
+    },
+  });
+};
+
+export const useUpdateApi = function (spaceId: string | number) {
+  const dispatch = useStoreDispatch();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: function (data: any) {
+      return apiRequest({
+        method: `put`,
+        url: `api/api/${data.apiId}`,
+        data: data.data,
+      });
+    },
+    onSuccess: function () {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.spaceApiList(spaceId),
+      });
+
+      dispatch(DispatchToast('API 수정이 완료되었습니다!', true));
+    },
+    onError: function () {
+      dispatch(DispatchToast('다시 시도해주세요!', false));
+    },
+  });
+};
+
+export const useDeleteApi = function (spaceId: string | number) {
+  const dispatch = useStoreDispatch();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: function (apiId: number) {
+      return apiRequest({
+        method: `delete`,
+        url: `api/api/${apiId}`,
+      });
+    },
+    onSuccess: function () {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.spaceApiList(spaceId),
+      });
+
+      dispatch(DispatchToast('작성중이던 API가 삭제되었습니다!', true));
+    },
+    onError: function () {
+      dispatch(
+        DispatchToast('삭제를 실패하였습니다. 다시 시도해주세요!', false)
+      );
+    },
+  });
+};
+
 // export const useMappingApi = function (figmaSectionId: string | number) {
 //   const disaptch = useStoreDispatch();
 //   const queryClient = useQueryClient();
@@ -326,3 +402,5 @@ export const useDeleteMember = function (spaceId: string | number) {
 //     onError: function () {},
 //   });
 // };
+
+// 성능테스트

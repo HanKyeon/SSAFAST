@@ -113,7 +113,7 @@ function PathVariableFields({ control }: { control: any }) {
     append,
     remove,
   } = useFieldArray({
-    name: `document.request.path_variable`,
+    name: `document.request.pathVars`,
     control,
   });
   const [constraintsOpen, setConstraintsOpen] = useState<boolean>(true);
@@ -123,7 +123,7 @@ function PathVariableFields({ control }: { control: any }) {
   //   remove: constraintsRemove,
   // } = useFieldArray({
   //   control,
-  //   name: `document.request.path_variable.${index}.constraints`,
+  //   name: `document.request.pathVars.${index}.constraints`,
   // });
 
   const appendPathVariableInput = function (e: FormEvent) {
@@ -166,16 +166,16 @@ function PathVariableFields({ control }: { control: any }) {
             ></CircleBtn>
             <div className={`${styles['innerBox']}`}>
               <Controller
-                name={`document.request.path_variable.${index}.key`}
+                name={`document.request.pathVars.${index}.key`}
                 control={control}
                 rules={{ required: true }}
                 render={({ field, fieldState }) => (
                   <div className={`${styles['key']}`}>
-                    <label htmlFor={`path_variable.${index}.key`}></label>
+                    <label htmlFor={`pathVars.${index}.key`}></label>
                     <Input
                       type="text"
                       placeholder="Key"
-                      name={`document.request.path_variable.${index}.key`}
+                      name={`document.request.pathVars.${index}.key`}
                       onChange={field.onChange}
                     />
                     {fieldState?.invalid && <span>This field is required</span>}
@@ -183,17 +183,17 @@ function PathVariableFields({ control }: { control: any }) {
                 )}
               />
               <Controller
-                name={`document.request.path_variable.${index}.type`}
+                name={`document.request.pathVars.${index}.type`}
                 control={control}
                 rules={{ required: true }}
                 render={({ field, fieldState }) => (
                   <div className={`${styles['type']}`}>
-                    <label htmlFor={`path_variable.${index}.type`}></label>
+                    <label htmlFor={`pathVars.${index}.type`}></label>
                     <Input
                       type="text"
                       placeholder="Type"
-                      id={`path_variable.[${index}].type`}
-                      name={`document.request.path_variable.${index}.type`}
+                      id={`pathVars.[${index}].type`}
+                      name={`document.request.pathVars.${index}.type`}
                       onChange={field.onChange}
                     />
                     {fieldState?.invalid && <span>This field is required</span>}
@@ -201,18 +201,18 @@ function PathVariableFields({ control }: { control: any }) {
                 )}
               />
               <Controller
-                name={`document.request.path_variable.${index}.desc`}
+                name={`document.request.pathVars.${index}.desc`}
                 control={control}
                 rules={{ required: true }}
                 render={({ field, fieldState }) => (
                   <>
                     <div className={`${styles['desc']}`}>
-                      <label htmlFor={`path_variable.${index}.desc`}></label>
+                      <label htmlFor={`pathVars.${index}.desc`}></label>
                       <Input
                         type="text"
                         placeholder="Description"
-                        name={`document.request.path_variable.${index}.desc`}
-                        id={`path_variable.${index}.desc`}
+                        name={`document.request.pathVars.${index}.desc`}
+                        id={`pathVars.${index}.desc`}
                         onChange={field.onChange}
                       />
                       {fieldState?.invalid && (
@@ -238,7 +238,7 @@ function PathVariableFields({ control }: { control: any }) {
               </div>
               {constraintsOpen && (
                 <Controller
-                  name={`document.request.path_variable.${index}.constraints`}
+                  name={`document.request.pathVars.${index}.constraints`}
                   control={control}
                   render={({ field, fieldState }) => (
                     <>
@@ -246,7 +246,7 @@ function PathVariableFields({ control }: { control: any }) {
                         <Input
                           type="text"
                           placeholder="Description"
-                          name={`document.request.path_variable.${index}.constraints`}
+                          name={`document.request.pathVars.${index}.constraints`}
                           onChange={field.onChange}
                         />
                         {fieldState?.invalid && (
