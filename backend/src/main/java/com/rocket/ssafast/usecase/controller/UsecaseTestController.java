@@ -62,6 +62,7 @@ public class UsecaseTestController {
 					usecaseTestId, usecaseTestInfo, files, filesArrs, filekeys, filesArrKeys
 				), HttpStatus.OK);
 		} catch (CustomException e) {
+			log.error("error: ", e);
 			return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
 		} catch (Exception e) {
 			ErrorCode error = ErrorCode.INTERNAL_SERVER_ERROR;
