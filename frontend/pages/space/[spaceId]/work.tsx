@@ -52,19 +52,20 @@ const SpaceWorkPage = function (
     if (state && spaceId?.length) {
       provider = new WebrtcProvider(
         `ssafast${spaceId}`,
-        getYjsDoc(state) as any
-        // {
-        //   signaling: [
-        //     // `ws://localhost:4444`,
-        //     // `wss://localhost:4444`,
-        //     // `wss://0.0.0.0:4444`,
-        //     `wss://www.ssafast.com:4444`,
-        //     // `ws://www.ssafast.com:4444`,
-        //     'wss://signaling.yjs.dev',
-        //     'wss://y-webrtc-signaling-eu.herokuapp.com',
-        //     'wss://y-webrtc-signaling-us.herokuapp.com',
-        //   ], //`ws://www.ssafast.com:4444`
-        // }
+        getYjsDoc(state) as any,
+        {
+          signaling: [
+            // `ws://localhost:4444`,
+            // `wss://localhost:4444`,
+            `ws://0.0.0.0:4444`,
+            // `wss://0.0.0.0:4444`,
+            // `wss://www.ssafast.com:4444`,
+            // `ws://www.ssafast.com:4444`,
+            // 'wss://signaling.yjs.dev',
+            // 'wss://y-webrtc-signaling-eu.herokuapp.com',
+            // 'wss://y-webrtc-signaling-us.herokuapp.com',
+          ], //`ws://www.ssafast.com:4444`
+        }
       );
 
       console.log('커넥트', provider.signalingConns);
@@ -88,35 +89,35 @@ const SpaceWorkPage = function (
         // nfigmaY.push([...spaceFrameData.figmaSections]);
         // figmaY = nfigmaY;
       }
-      if (!figmaY.length) {
-        // const nfigmaY = new Y.Array<SpaceFigma>();
-        figmaY.push([
-          {
-            id: 1,
-            name: `d`,
-            sectionId: `123`,
-            sectionUrl: ``,
-          },
-          {
-            id: 2,
-            name: `dd`,
-            sectionId: `123`,
-            sectionUrl: ``,
-          },
-          {
-            id: 3,
-            name: `ddd`,
-            sectionId: `123`,
-            sectionUrl: ``,
-          },
-          {
-            id: 4,
-            name: `dddd`,
-            sectionId: `123`,
-            sectionUrl: ``,
-          },
-        ]);
-      }
+      // if (!figmaY.length) {
+      //   // const nfigmaY = new Y.Array<SpaceFigma>();
+      //   figmaY.push([
+      //     {
+      //       id: 1,
+      //       name: `d`,
+      //       sectionId: `123`,
+      //       sectionUrl: ``,
+      //     },
+      //     {
+      //       id: 2,
+      //       name: `dd`,
+      //       sectionId: `123`,
+      //       sectionUrl: ``,
+      //     },
+      //     {
+      //       id: 3,
+      //       name: `ddd`,
+      //       sectionId: `123`,
+      //       sectionUrl: ``,
+      //     },
+      //     {
+      //       id: 4,
+      //       name: `dddd`,
+      //       sectionId: `123`,
+      //       sectionUrl: ``,
+      //     },
+      //   ]);
+      // }
     },
     [awareness, spaceFrameData]
   );
