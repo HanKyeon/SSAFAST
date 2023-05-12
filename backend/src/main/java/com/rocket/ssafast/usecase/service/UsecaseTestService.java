@@ -1,6 +1,5 @@
 package com.rocket.ssafast.usecase.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,6 +11,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
@@ -39,6 +40,7 @@ import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseTestReq
 import com.rocket.ssafast.usecase.domain.entity.UsecaseTestDtoEntity;
 import com.rocket.ssafast.usecase.domain.entity.UsecaseTestEntity;
 import com.rocket.ssafast.usecase.dto.request.ReqUsecaseTestEntityDto;
+import com.rocket.ssafast.usecase.dto.response.ResUsecaseTestDto;
 import com.rocket.ssafast.usecase.repository.UsecaseTestDocsRepository;
 import com.rocket.ssafast.usecase.repository.UsecaseTestEntityRepository;
 import com.rocket.ssafast.workspace.repository.BaseurlRepository;
@@ -69,7 +71,7 @@ public class UsecaseTestService {
 	}
 
 	@Transactional
-	public Object execUsecaseTest(long usecaseTestId, UsecaseTestInfo usecaseTestInfo,
+	public ResUsecaseTestDto execUsecaseTest(long usecaseTestId, UsecaseTestInfo usecaseTestInfo,
 		MultipartFile[] files, MultipartFile[][] filesArrs,
 		String[] filekeys, String[] filesArrKeys) {
 
@@ -87,6 +89,7 @@ public class UsecaseTestService {
 
 		Gson gson = new Gson();																// json 파싱 객체
 
+		Long lastApiId = 0L;
 		JsonObject results = new JsonObject();												// 응답 데이터 축적 객체
 		
 
@@ -252,21 +255,38 @@ public class UsecaseTestService {
 				.body(body)
 				.build();
 
-			System.out.println("요청 :"+apiExecReqMessageDto);
+			System.out.println("요청 :" + apiExecReqMessageDto);
 			
 			// 11. API 요청 전송
 			try {
 				apiTestResultResponseDto = apiExecService.requestAPI(apiExecReqMessageDto, files, filesArrs, filekeys, filesArrKeys);
 
 				System.out.println("결과: "+apiTestResultResponseDto);
-				if(400 <= apiTestResultResponseDto.getStatusCodeValue()) { break; }					// 요청 에러
-				
+
 				results.add(nowApiId, gson.toJsonTree(apiTestResultResponseDto));		// 응답 축적
 				System.out.println("축적: "+results);
+
+				if(testDetails.get(nowApiId).getChild() == null) {
+					lastApiId = Long.parseLong(nowApiId);
+				}
 				nowApiId = testDetails.get(nowApiId).getChild();						// 다음 API로 GO
 
-			} catch (IOException e) {
-				throw new RuntimeException(e);
+			} catch (HttpClientErrorException | HttpServerErrorException e){
+
+				ApiTestResultResponseDto errorResponstDto = ApiTestResultResponseDto.builder()
+					.statusCodeValue(e.getStatusCode().value())
+					.statusCode(e.getStatusCode().name())
+					.body(e.getMessage())
+					.build();
+
+				return ResUsecaseTestDto.builder()
+					.success(false)
+					.lastApiId(Long.parseLong(nowApiId))
+					.apiTestResultResponseDto(errorResponstDto)
+					.build();
+
+			} catch (Exception e) {
+				throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 			}
 		}
 
@@ -310,7 +330,11 @@ public class UsecaseTestService {
 
 		usecaseTestEntityRepository.save(usecaseTestEntity);
 
-		return apiTestResultResponseDto;
+		return ResUsecaseTestDto.builder()
+			.success(true)
+			.lastApiId(lastApiId)
+			.apiTestResultResponseDto(apiTestResultResponseDto)
+			.build();
 	}
 	
 	private void addPrimitiveDataToJson(JsonObject jsonObject, String type, String key, Object value, boolean isItera){
