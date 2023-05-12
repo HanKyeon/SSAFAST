@@ -528,7 +528,7 @@ export const useBaseUrl = function (spaceId: string | number) {
     queryFn: async function () {
       return apiRequest({
         method: `get`,
-        url: `/api/api-pre/baseurl`,
+        url: `/api/api-pre/baseurls`,
         params: {
           workspaceId: spaceId,
         },
