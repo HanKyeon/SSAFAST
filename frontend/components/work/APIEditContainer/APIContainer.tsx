@@ -12,6 +12,7 @@ import { FormEvent, useState, useEffect } from 'react';
 import Select from '@/components/common/Select';
 import BoxHeader from '@/components/common/BoxHeader';
 import { SpaceApiList } from '@/hooks/queries/queries';
+import ApiWrite from './ApiWrite';
 
 const mockupAPIList: SpaceApiList = {
   apiCategories: [
@@ -435,7 +436,8 @@ const APIContainer = function ({ store }: Props) {
         className="h-full basis-[50%] w-[50%] flex-1 flex flex-col p-5"
       >
         {isAdd ? (
-          <ApiCreateForm toggleAddHandler={toggleAddHandler} />
+          // <ApiCreateForm toggleAddHandler={toggleAddHandler} />
+          <ApiWrite toggleAddHandler={toggleAddHandler} />
         ) : (
           <>
             {/* 헤더 */}
