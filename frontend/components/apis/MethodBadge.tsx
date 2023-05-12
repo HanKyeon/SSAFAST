@@ -1,15 +1,5 @@
 export interface MethodBadgePropsType {
-  method:
-    | 'PUT'
-    | 'GET'
-    | 'POST'
-    | 'DEL'
-    | 'PATCH'
-    | `put`
-    | `get`
-    | `post`
-    | `del`
-    | `patch`;
+  method: 1 | 2 | 3 | 4 | 5;
   className?: string;
   small?: boolean;
 }
@@ -21,13 +11,13 @@ const MethodBadge = function ({
 }: MethodBadgePropsType): JSX.Element {
   const styles = {
     color:
-      method === 'POST' || method === 'post'
+      method === 2
         ? 'bg-mega-normal'
-        : method === 'PUT' || method === 'put'
+        : method === 3
         ? 'bg-taro-normal'
-        : method === 'GET' || method === 'get'
+        : method === 1
         ? 'bg-mincho-normal'
-        : method === 'DEL' || method === 'del'
+        : method === 4
         ? 'bg-mammoth-normal'
         : 'bg-milktea-strong',
     size: small

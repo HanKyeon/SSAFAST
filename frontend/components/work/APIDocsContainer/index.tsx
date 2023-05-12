@@ -14,7 +14,7 @@ import { IoMdArrowDropright } from 'react-icons/io';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import { FormProvider, useForm } from 'react-hook-form';
 
-const status: string[] = ['명세중', '명세완료', '개발중', '개발완료'];
+const status: (1 | 2 | 3 | 4)[] = [1, 2, 3, 4];
 export type MockupData2Type = {
   request: {
     headers: HeadersType[];
@@ -26,7 +26,7 @@ export type MockupData2Type = {
 export interface ApiTestForm {
   request: {
     url: string; // request.url
-    method: number; // request.method
+    method: 1 | 2 | 3 | 4 | 5; // request.method
 
     // useFieldArray
     headers: HeadersType[]; // request.headers
@@ -234,7 +234,7 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
                     <BsDownload />
                     <HiOutlineFolderArrowDown />
                     <IoSaveOutline />
-                    <button type="submit">
+                    <button title="submit-btn" type="submit">
                       <TbSend className="text-mincho-normal cursor-pointer" />
                     </button>
                   </div>
@@ -244,7 +244,7 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
                   게시글 목록 쭈루리 불러오는 것
                 </p>
                 <div className="mt-[12px] flex gap-3 items-center">
-                  <MethodBadge method="GET" small />
+                  <MethodBadge method={1} small />
                   <p className="text-[14px] text-grayscale-light">
                     https://localhost:8080/user/:userid
                   </p>

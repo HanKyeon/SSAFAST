@@ -3,10 +3,9 @@ import { Box } from '../common';
 import FigmaListItem from './FigmaListItem';
 import { workFigma } from './presence-type';
 import { useSyncedStore } from '@syncedstore/react';
-import { SpaceFigma } from '@/hooks/queries/queries';
+import { EachCateApi, SpaceFigma } from '@/hooks/queries/queries';
 import { useYjsState } from './YjsProvider';
 import BoxHeader from '../common/BoxHeader';
-import { APIInfoType } from './APIEditContainer/APIList';
 
 const mok = [
   {
@@ -48,7 +47,7 @@ const mok = [
 
 interface Props {
   figmaList?: SpaceFigma[];
-  apiData?: APIInfoType[];
+  apiData?: EachCateApi[];
   onChangeSection?: (id: string | number) => void;
 }
 
