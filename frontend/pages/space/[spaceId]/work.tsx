@@ -80,6 +80,7 @@ const SpaceWorkPage = function (
           ], //`ws://www.ssafast.com:4444`
         }
       );
+      provider.connect();
 
       console.log('커넥트', provider.signalingConns);
       console.log('쌩 provider', provider);
@@ -90,6 +91,7 @@ const SpaceWorkPage = function (
 
     return function () {
       console.log('디스커넥트');
+      provider.disconnect();
     };
   }, []);
 
