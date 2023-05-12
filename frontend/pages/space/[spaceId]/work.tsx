@@ -82,6 +82,8 @@ const SpaceWorkPage = function (
       );
 
       console.log('커넥트', provider.signalingConns);
+      console.log('쌩 provider', provider);
+      console.log('어웨어니스', provider.awareness);
       const { awareness: innerAwareness } = provider;
       setAwareness(innerAwareness);
     }
