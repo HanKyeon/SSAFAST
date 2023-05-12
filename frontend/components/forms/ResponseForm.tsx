@@ -16,17 +16,18 @@ export interface ResponseFormData {
   status_code: number;
   desc: string;
   headers: Headers[];
-  body: Body;
+  body: BodyType;
 }
 interface Headers {
   key: string;
   type: string;
   desc: string;
 }
-interface Body {
+export interface BodyType {
   fields: Fields[];
-  // dtos: Dto;
+  nestedDtos?: NestedDtosType | NestedDtosType[];
 }
+
 interface Fields {
   key: string;
   type: string;
@@ -35,6 +36,10 @@ interface Fields {
   constraints: string[];
   value: string | null;
 }
+
+export type NestedDtosType = {
+  [key: string | number]: BodyType;
+};
 
 const ResponseForm = function () {
   const dispatch = useStoreDispatch();
@@ -75,6 +80,7 @@ const ResponseForm = function () {
       headers: [],
       body: {
         fields: [],
+        nestedDtos: {},
       },
     });
     codeReset();

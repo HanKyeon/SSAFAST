@@ -10,14 +10,15 @@ import { RequestFormData } from './RequestForm';
 import { useRouter } from 'next/router';
 import { useBaseUrl } from '@/hooks/queries/queries';
 import { SpaceParams } from '@/pages/space';
+import { MockupData2Type } from '../work/APIDocsContainer';
 
 // Api interface
 export interface ApiCreateForm {
   name: string;
   description: string;
-  method: 1 | 2 | 3 | 4 | 5;
+  method?: 1 | 2 | 3 | 4 | 5;
   baseUrl: number;
-  categoryId: number;
+  categoryId?: number;
   status: number;
   document: Document;
 }
@@ -25,6 +26,163 @@ export interface Document {
   request: RequestFormData;
   response: ResponseFormData[];
 }
+
+export interface ServerData {
+  name: string;
+  description: string;
+  method?: 1 | 2 | 3 | 4 | 5;
+  baseUrl: number;
+  categoryId?: number;
+  status: number;
+  document: {
+    request: MockupData2Type;
+    response: Body;
+  };
+}
+
+const data: any = {
+  name: '엄지',
+  description: '엄지 바보',
+  method: 1,
+  baseUrl: 1,
+  categoryId: 1,
+  status: 1,
+  document: {
+    request: {
+      headers: [
+        {
+          key: 'Content-Type',
+          type: 'String',
+          desc: 'Define request data type',
+          value: null,
+        },
+        {
+          key: 'Age',
+          type: 'Integer',
+          desc: 'Fields for cashing',
+          value: null,
+        },
+      ],
+      body: {
+        fields: [
+          {
+            key: 'ID',
+            type: 'String',
+            desc: 'Login User ID',
+            itera: false,
+            constraints: ['NotBlank', 'Size(min=4, max=10)', 'NotNull'],
+            value: null,
+          },
+          {
+            key: 'telephones',
+            type: 'String',
+            desc: 'cell-phone numbers with candidates',
+            itera: true,
+            constraints: ['NotBlank', 'NotNull', 'Length(min=2, max=5)'],
+            value: null,
+          },
+        ],
+        nestedDtos: {
+          //dto id
+          '15': {
+            fields: [
+              {
+                key: 'ID',
+                type: 'String',
+                desc: 'User Identify Info',
+                itera: false,
+                constraints: ['notNull'],
+                value: null,
+              },
+            ],
+            nestedDtos: {
+              '5': {
+                fields: [
+                  {
+                    key: 'content',
+                    type: 'String',
+                    desc: 'comment for user',
+                    itera: true,
+                    constraints: ['NotNull', 'NotEmpty'],
+                  },
+                  {
+                    key: 'CreatedDate',
+                    type: 'Date',
+                    desc: 'Sign up date',
+                    itera: false,
+                    constraints: ['NotNull'],
+                  },
+                ],
+                nestedDtos: {},
+              },
+              '3': {
+                fields: [
+                  {
+                    key: 'content',
+                    type: 'String',
+                    desc: 'comment for user',
+                    itera: true,
+                    constraints: ['NotNull', 'NotEmpty'],
+                  },
+                  {
+                    key: 'CreatedDate',
+                    type: 'Date',
+                    desc: 'Sign up date',
+                    itera: false,
+                    constraints: ['NotNull'],
+                  },
+                ],
+                nestedDtos: {},
+              },
+            },
+          },
+          //dto id
+          '8': {
+            fields: [
+              {
+                key: 'ID',
+                type: 'String',
+                desc: 'User Identify Info',
+                itera: false,
+                constraints: ['notNull'],
+              },
+            ],
+            nestedDtos: {},
+          },
+        },
+      },
+      pathVars: [
+        {
+          key: 'userid',
+          type: 'String',
+          desc: 'for login',
+          constraints: ['NotNull'],
+          value: null,
+        },
+      ],
+      params: [
+        {
+          key: 'age',
+          type: 'int',
+          desc: 'user age',
+          constraints: ['NotNull'],
+          value: null,
+        },
+      ],
+    },
+    response: [
+      {
+        status_code: 200,
+        desc: '요청 성공',
+        headers: [],
+        body: {
+          fields: [],
+          nestedDtos: {},
+        },
+      },
+    ],
+  },
+};
 
 // Form Tab 스타일
 const selectedStyle = (dark: boolean) =>

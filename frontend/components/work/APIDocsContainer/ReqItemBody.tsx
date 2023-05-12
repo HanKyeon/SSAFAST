@@ -3,6 +3,7 @@ import { BodyType, FieldsType } from '.';
 import ToggleableHeader from './ToggleableHeader';
 import ReqItemInner from './ReqItemInner';
 import { useObjToArr } from '@/hooks/useObjToArr';
+import styles from './ReqItemBody.module.css';
 
 export type DtoInfoType = {
   id: string | number;
@@ -33,18 +34,26 @@ const ReqItemBody = function ({
 }: ReqItemBodyPropsType): JSX.Element {
   const refinedDtos = useObjToArr(item);
   const [isOpen, setisOpen] = useState<boolean>(true);
-  const styles = {
+
+  const a = refinedDtos?.length + 1;
+
+  const Styles = {
+    style: `${
+      isOpen ? `${styles['act']} ${styles[`slide`]}` : `${styles[`slide`]}`
+    }`,
+  };
+
+  const styles1 = {
+    style: `${isOpen ? `h-[calc(${a}*43px)]` : 'h-[43px]'}`,
     wrapper: `overflow-hidden mt-0 mx-auto text-content`,
   };
 
   return (
-    <div className={`w-full`}>
+    <div className={`${styles1[`style`]} w-full`}>
       <ToggleableHeader title={name} isOpen={isOpen} setIsOpen={setisOpen} />
       {/* {isOpen && ( */}
       <div
-        className={`${styles['wrapper']} rounded-[13px] w-[87%] ${
-          isOpen ? '' : 'hidden'
-        }`}
+        className={`${styles1['wrapper']} ${Styles['style']} rounded-[13px] w-[87%]`}
       >
         {item.fields?.map((item: any) => (
           <ReqItemInner
@@ -63,7 +72,7 @@ const ReqItemBody = function ({
               className={`rounded-[13px]`}
             />
             <div
-              className={`${styles['wrapper']} rounded-b-[13px] mb-3 w-[95%]`}
+              className={`${styles1['wrapper']} rounded-b-[13px] mb-3 w-[95%]`}
             >
               {item.nestedDtos.fields?.map((item: any) => (
                 <ReqItemInner
@@ -81,7 +90,7 @@ const ReqItemBody = function ({
                     depth={1}
                     className={`rounded-[13px]`}
                   />
-                  <div className={`${styles['wrapper']} w-[95%]`}>
+                  <div className={`${styles1['wrapper']} w-[95%]`}>
                     {item.nestedDtos.fields?.map((item: any) => (
                       <ReqItemInner
                         key={item.key}
