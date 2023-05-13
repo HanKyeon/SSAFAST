@@ -22,25 +22,27 @@ import com.jayway.jsonpath.JsonPath;
 import com.rocket.ssafast.apispec.domain.Entity.ApiSpecEntity;
 import com.rocket.ssafast.apispec.dto.request.ApiExecReqMessageDto;
 import com.rocket.ssafast.apispec.dto.request.ApiTestResultResponseDto;
+import com.rocket.ssafast.apispec.repository.ApiSpecMongoTempRepository;
 import com.rocket.ssafast.apispec.repository.ApiSpecRepository;
 import com.rocket.ssafast.apispec.service.ApiExecService;
 import com.rocket.ssafast.dtospec.domain.ApiHasDtoEntity;
 import com.rocket.ssafast.dtospec.repository.ApiHasDtoEntityRepository;
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
-import com.rocket.ssafast.usecase.domain.document.UsecaseTestDocument;
-import com.rocket.ssafast.usecase.domain.document.element.UsecaseTestDetailInfo;
-import com.rocket.ssafast.usecase.domain.document.element.UsecaseTestInfo;
-import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseTestReqBody;
-import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseTestReqFieldDetail;
-import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseTestReqHeaderFieldDetail;
-import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseTestReqNestedDto;
-import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseTestReqPathFieldDetail;
+import com.rocket.ssafast.usecase.domain.document.UsecaseDocument;
+import com.rocket.ssafast.usecase.domain.document.element.UsecaseDetailInfo;
+import com.rocket.ssafast.usecase.domain.document.element.UsecaseInfo;
+import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseReqBody;
+import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseReqFieldDetail;
+import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseReqHeaderFieldDetail;
+import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseReqNestedDto;
+import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseReqPathFieldDetail;
 import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseTestRequest;
-import com.rocket.ssafast.usecase.domain.entity.UsecaseTestDtoEntity;
-import com.rocket.ssafast.usecase.domain.entity.UsecaseTestEntity;
-import com.rocket.ssafast.usecase.dto.request.ReqUsecaseTestEntityDto;
-import com.rocket.ssafast.usecase.dto.response.ResUsecaseTestDto;
+import com.rocket.ssafast.usecase.domain.entity.UsecaseDtoEntity;
+import com.rocket.ssafast.usecase.domain.entity.UsecaseEntity;
+import com.rocket.ssafast.usecase.dto.request.ReqUsecaseEntityDto;
+import com.rocket.ssafast.usecase.dto.response.ResUsecaseDto;
+import com.rocket.ssafast.usecase.dto.response.ResUsecasePrevResponseDto;
 import com.rocket.ssafast.usecase.repository.UsecaseTestDocsRepository;
 import com.rocket.ssafast.usecase.repository.UsecaseTestEntityRepository;
 import com.rocket.ssafast.workspace.repository.BaseurlRepository;
@@ -52,8 +54,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UsecaseTestService {
 
+	@Value("${mongoid.document.api}")
+	String SSAFAST_API_SPEC;
+
 	@Value("${mongoid.document.usecase}")
 	String SSAFAST_USECASE_TEST;
+
 	private final UsecaseTestDocsRepository usecaseTestDocsRepository;
 	private final UsecaseTestEntityRepository usecaseTestEntityRepository;
 	private final WorkspaceRepository workspaceRepository;
@@ -61,9 +67,10 @@ public class UsecaseTestService {
 	private final ApiExecService apiExecService;
 	private final BaseurlRepository baseurlRepository;
 	private final ApiHasDtoEntityRepository apiHasDtoEntityRepository;
+	private final ApiSpecMongoTempRepository apiSpecMongoTempRepository;
 
 	@Transactional
-	public Long saveUsecaseTestEntity(ReqUsecaseTestEntityDto reqUsecaseTestEntityDto) {
+	public Long saveUsecaseTestEntity(ReqUsecaseEntityDto reqUsecaseTestEntityDto) {
 		if(!workspaceRepository.findById(reqUsecaseTestEntityDto.getWorkspaceId()).isPresent()) {
 			throw new CustomException(ErrorCode.WORKSPACE_NOT_FOUND);
 		}
@@ -71,11 +78,11 @@ public class UsecaseTestService {
 	}
 
 	@Transactional
-	public ResUsecaseTestDto execUsecaseTest(long usecaseTestId, UsecaseTestInfo usecaseTestInfo,
+	public ResUsecaseDto execUsecaseTest(long usecaseTestId, UsecaseInfo usecaseTestInfo,
 		MultipartFile[] files, MultipartFile[][] filesArrs,
 		String[] filekeys, String[] filesArrKeys) {
 
-		Optional<UsecaseTestEntity> usecaseTestEntityOptional = usecaseTestEntityRepository.findById(usecaseTestId);
+		Optional<UsecaseEntity> usecaseTestEntityOptional = usecaseTestEntityRepository.findById(usecaseTestId);
 		if(!usecaseTestEntityOptional.isPresent()) {
 			throw new CustomException(ErrorCode.USECASETEST_NOT_FOUND);
 		}
@@ -83,7 +90,7 @@ public class UsecaseTestService {
 		
 		// 1. UsecaseTest 정보
 		String nowApiId = usecaseTestInfo.getRootApiId();										// 시작 api id
-		Map<String, UsecaseTestDetailInfo> testDetails = usecaseTestInfo.getTestDetails();	// usecase test 정보
+		Map<String, UsecaseDetailInfo> testDetails = usecaseTestInfo.getTestDetails();	// usecase test 정보
 
 		ApiTestResultResponseDto apiTestResultResponseDto = null;							// api 응답 저장 객체
 
@@ -109,7 +116,7 @@ public class UsecaseTestService {
 			String baseUrl = baseurlRepository.findById(baseUrlId).get().getUrl();
 			System.out.println("baseUrl: " + baseUrl);
 
-			UsecaseTestDetailInfo nowUsecaseDetail = testDetails.get(nowApiId);	// 현재 순서 api의 테스트 정보
+			UsecaseDetailInfo nowUsecaseDetail = testDetails.get(nowApiId);	// 현재 순서 api의 테스트 정보
 			String url = baseUrl + nowUsecaseDetail.getAdditionalUrl();					// path variable 포함 url
 
 
@@ -122,7 +129,7 @@ public class UsecaseTestService {
 
 			
 			// 6. headers 정보
-			Map<String, UsecaseTestReqHeaderFieldDetail> nowHeaders = nowRequest.getHeaders();
+			Map<String, UsecaseReqHeaderFieldDetail> nowHeaders = nowRequest.getHeaders();
 			Map<String, String> headers;
 			
 			if(nowHeaders != null) {
@@ -140,7 +147,7 @@ public class UsecaseTestService {
 
 
 			// 7. path variable 정보
-			Map<String, UsecaseTestReqPathFieldDetail> nowPathVars = nowRequest.getPathVars();	// 현재 순서 api의 path variable 정보
+			Map<String, UsecaseReqPathFieldDetail> nowPathVars = nowRequest.getPathVars();	// 현재 순서 api의 path variable 정보
 			Map<String, String> pathVars;
 
 			if(nowPathVars != null) {
@@ -158,7 +165,7 @@ public class UsecaseTestService {
 
 
 			// 8. query params 정보
-			Map<String, UsecaseTestReqFieldDetail> nowParams = nowRequest.getParams();	// 현재 순서 api의 query params 정보
+			Map<String, UsecaseReqFieldDetail> nowParams = nowRequest.getParams();	// 현재 순서 api의 query params 정보
 			Map<String, String> params;
 
 			if(nowParams != null) {
@@ -176,20 +183,20 @@ public class UsecaseTestService {
 
 			
 			// 9. json body 정보
-			UsecaseTestReqBody nowBody = nowRequest.getBody();
+			UsecaseReqBody nowBody = nowRequest.getBody();
 			String body = null;
 
 			if(nowBody != null) {
 				JsonObject jsonBody = new JsonObject();
 
 				// 9-1. primitive type field
-				Map<String, UsecaseTestReqFieldDetail> nowFields = nowBody.getFields();
+				Map<String, UsecaseReqFieldDetail> nowFields = nowBody.getFields();
 				if(nowFields != null) {
 					addFieldsToJson(nowFields, jsonBody, results);
 				}
 
 				// 9-2. nested dto
-				Map<String, UsecaseTestReqNestedDto> nowNestedDtos = nowBody.getNestedDtos();
+				Map<String, UsecaseReqNestedDto> nowNestedDtos = nowBody.getNestedDtos();
 				if(nowNestedDtos != null) {
 					nowNestedDtos.forEach((key, nowNestedDto) -> {
 						JsonObject nestedJson = new JsonObject();
@@ -201,8 +208,7 @@ public class UsecaseTestService {
 				}
 
 				//  9-3. nested dto list
-				Map<String, List<UsecaseTestReqNestedDto>> nowNestedDtoLists = nowBody.getNestedDtoLists();
-				System.out.println("내부 객체 리스트ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ: "+nowNestedDtoLists);
+				Map<String, List<UsecaseReqNestedDto>> nowNestedDtoLists = nowBody.getNestedDtoLists();
 				if(nowNestedDtoLists != null) {
 					nowNestedDtoLists.forEach((key, nowNestedDtoList) -> {
 						JsonArray nestedJsonArray = new JsonArray();
@@ -257,10 +263,10 @@ public class UsecaseTestService {
 					.body(e.getMessage())
 					.build();
 
-				return ResUsecaseTestDto.builder()
+				return ResUsecaseDto.builder()
 					.success(false)
 					.lastApiId(Long.parseLong(nowApiId))
-					.apiTestResultResponseDto(errorResponstDto)
+					.lastApiResponse(errorResponstDto)
 					.build();
 
 			} catch (Exception e) {
@@ -270,11 +276,11 @@ public class UsecaseTestService {
 
 
 		// 12. usecase test 정보 업데이트
-		Map<Long, UsecaseTestInfo> usecaseTest = new HashMap<>();
+		Map<Long, UsecaseInfo> usecaseTest = new HashMap<>();
 		usecaseTest.put(usecaseTestId, usecaseTestInfo);
 
 		usecaseTestDocsRepository.save(
-			UsecaseTestDocument.builder()
+			UsecaseDocument.builder()
 				.id(SSAFAST_USECASE_TEST)
 				.usecaseTest(usecaseTest)
 				.build());
@@ -283,10 +289,10 @@ public class UsecaseTestService {
 		// 13. usecase test에 포함된 dto 정보 업데이트
 
 		// 13-1. usecase에서 쓰이는 api id 목록 -> usecase에서 쓰이는 dto 목록
-		UsecaseTestEntity usecaseTestEntity = usecaseTestEntityOptional.get();
+		UsecaseEntity usecaseEntity = usecaseTestEntityOptional.get();
 		Iterator<String> apiIdSet = testDetails.keySet().iterator();
 
-		List<UsecaseTestDtoEntity> usecaseTestDtoEntities = new ArrayList<>();
+		List<UsecaseDtoEntity> usecaseTestDtoEntities = new ArrayList<>();
 
 		while (apiIdSet.hasNext()) {
 			long apiId = Long.parseLong(apiIdSet.next());
@@ -294,8 +300,8 @@ public class UsecaseTestService {
 														apiSpecRepository.findById(apiId).get());
 			apiHasDtoEntities.forEach(apiHasDtoEntity -> {
 				usecaseTestDtoEntities.add(
-					UsecaseTestDtoEntity.builder()
-						.usecaseTestEntity(usecaseTestEntity)
+					UsecaseDtoEntity.builder()
+						.usecaseEntity(usecaseEntity)
 						.dtoId(apiHasDtoEntity.getDtoSpecEntity().getId())
 						.build()
 				);
@@ -303,19 +309,19 @@ public class UsecaseTestService {
 		}
 
 		// 13-2. usecase 저장
-		usecaseTestEntity.getUsecaseTestDtoEntities().clear();
-		usecaseTestEntity.getUsecaseTestDtoEntities().addAll(usecaseTestDtoEntities);
+		usecaseEntity.getUsecaseTestDtoEntities().clear();
+		usecaseEntity.getUsecaseTestDtoEntities().addAll(usecaseTestDtoEntities);
 
-		usecaseTestEntityRepository.save(usecaseTestEntity);
+		usecaseTestEntityRepository.save(usecaseEntity);
 
-		return ResUsecaseTestDto.builder()
+		return ResUsecaseDto.builder()
 			.success(true)
 			.lastApiId(lastApiId)
-			.apiTestResultResponseDto(apiTestResultResponseDto)
+			.lastApiResponse(apiTestResultResponseDto)
 			.build();
 	}
 
-	private void addNestedDtosToJson(UsecaseTestReqNestedDto nowNestedDto, JsonObject jsonObject, JsonObject results) {
+	public void addNestedDtosToJson(UsecaseReqNestedDto nowNestedDto, JsonObject jsonObject, JsonObject results) {
 
 		// 1. nested dto의 primitive type field
 		if(nowNestedDto.getFields() != null) {
@@ -351,7 +357,7 @@ public class UsecaseTestService {
 		}
 	}
 
-	private void addFieldsToJson(Map<String, UsecaseTestReqFieldDetail> fields, JsonObject jsonObject, JsonObject results) {
+	public void addFieldsToJson(Map<String, UsecaseReqFieldDetail> fields, JsonObject jsonObject, JsonObject results) {
 		fields.forEach((key, field) -> {
 			if(!field.isMapped()) {
 				addPrimitiveDataToJson(jsonObject, field.getType(), key, field.getValue(), field.isItera());
@@ -362,7 +368,7 @@ public class UsecaseTestService {
 		});
 	}
 
-	private void addPrimitiveDataToJson(JsonObject jsonObject, String type, String key, Object value, boolean isItera){
+	public void addPrimitiveDataToJson(JsonObject jsonObject, String type, String key, Object value, boolean isItera){
 		if(type.equals("String") || type.equals("Date") || type.equals("LocalDateTime")) {
 			if(isItera) {
 				JsonArray jsonArray = new JsonArray();
@@ -429,5 +435,26 @@ public class UsecaseTestService {
 		System.out.println("results :"+results);
 		System.out.println("json path: "+"$." + mappingTarget);
 		return JsonPath.read(results, "$." + mappingTarget);
+	}
+
+	public List<ResUsecasePrevResponseDto> getPrevResponses(List<Long> apiIds) {
+		Map<Long, String[]> apiNames = new HashMap<>();
+		apiIds.forEach(apiId -> {
+			Optional<ApiSpecEntity> apiSpec = apiSpecRepository.findById(apiId);
+			if(!apiSpec.isPresent()) {
+				throw new CustomException(ErrorCode.API_NOT_FOUND);
+			}
+			apiNames.put(apiId, new String[] {apiSpec.get().getName(), apiSpec.get().getDescription()});
+		});
+
+		List<ResUsecasePrevResponseDto> prevResponseDtos = apiSpecMongoTempRepository
+										.findApiResponseListByIdAndApiIdLIst(SSAFAST_API_SPEC, apiIds);
+
+		prevResponseDtos.forEach(prevResponseDto -> {
+			prevResponseDto.setApiName(apiNames.get(prevResponseDto.getApiId())[0]);
+			prevResponseDto.setDesc(apiNames.get(prevResponseDto.getApiId())[1]);
+		});
+
+		return prevResponseDtos;
 	}
 }

@@ -6,14 +6,14 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseTestRequest;
-import com.rocket.ssafast.usecase.domain.document.element.response.UsecaseTestResponse;
+import com.rocket.ssafast.usecase.domain.document.element.response.UsecaseResponse;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UsecaseTestDetailInfo {
+public class UsecaseDetailInfo {
 	@NotEmpty
 	String additionalUrl;
 
@@ -27,5 +27,5 @@ public class UsecaseTestDetailInfo {
 
 	@Valid
 	@NotNull
-	UsecaseTestResponse response;
+	UsecaseResponse response;
 }

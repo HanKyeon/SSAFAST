@@ -3,14 +3,14 @@ package com.rocket.ssafast.usecase.dto.request;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import com.rocket.ssafast.usecase.domain.entity.UsecaseTestEntity;
+import com.rocket.ssafast.usecase.domain.entity.UsecaseEntity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ReqUsecaseTestEntityDto {
+public class ReqUsecaseEntityDto {
 	@NotEmpty
 	String name;
 
@@ -20,8 +20,8 @@ public class ReqUsecaseTestEntityDto {
 	Long workspaceId;
 
 
-	public UsecaseTestEntity toEntity() {
-		return UsecaseTestEntity.builder()
+	public UsecaseEntity toEntity() {
+		return UsecaseEntity.builder()
 			.name(name)
 			.description(description)
 			.workspaceId(workspaceId)

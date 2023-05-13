@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UsecaseTestResFinalNestedDto {
+public class UsecaseResFinalNestedDto {
 
 	@NotNull
 	Boolean itera;
 
-	Map<String, UsecaseTestResFieldDetail> fields;
+	Map<String, UsecaseResFieldDetail> fields;
 
-	Map<String, List<UsecaseTestResFieldDetail>> fieldsList;
+	Map<String, List<UsecaseResFieldDetail>> fieldsList;
 }

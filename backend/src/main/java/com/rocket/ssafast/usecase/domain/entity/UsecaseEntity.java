@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @DynamicUpdate
 @Entity(name = "usecase_test")
-public class UsecaseTestEntity {
+public class UsecaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,9 +43,9 @@ public class UsecaseTestEntity {
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "usecase_test_id")
-	List<UsecaseTestDtoEntity> usecaseTestDtoEntities = new ArrayList<>();
+	List<UsecaseDtoEntity> usecaseTestDtoEntities = new ArrayList<>();
 
-	public void setUsecaseTestDtoEntities(List<UsecaseTestDtoEntity> usecaseTestDtoEntities) {
+	public void setUsecaseTestDtoEntities(List<UsecaseDtoEntity> usecaseTestDtoEntities) {
 		this.usecaseTestDtoEntities = usecaseTestDtoEntities;
 	}
 }

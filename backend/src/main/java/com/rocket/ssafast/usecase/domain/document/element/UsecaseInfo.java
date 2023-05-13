@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UsecaseTestInfo {
+public class UsecaseInfo {
 	@NotNull
 	String rootApiId;
 
 	@Valid
 	@NotNull
-	Map<String, UsecaseTestDetailInfo> testDetails;	// key : api id, value : api detail
+	Map<String, UsecaseDetailInfo> testDetails;	// key : api id, value : api detail
 }

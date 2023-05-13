@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
-public class ApiTestResultDocsRepository {
+public class ApiTestResultDocRepository {
 
 	private final MongoTemplate mongoTemplate;
 

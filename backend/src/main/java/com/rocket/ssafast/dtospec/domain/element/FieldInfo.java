@@ -11,7 +11,7 @@ import java.util.List;
 @ToString
 public class FieldInfo {
     private String keyName;
-    private String type;
+    private int type;
     private String desc;
     private String value;
     private boolean itera;

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UsecaseTestReqNestedDto {
+public class UsecaseReqNestedDto {
 
 	@NotEmpty
 	String dtoName;
@@ -19,11 +19,11 @@ public class UsecaseTestReqNestedDto {
 	String desc;
 
 	@Valid
-	Map<String, UsecaseTestReqFieldDetail> fields;
+	Map<String, UsecaseReqFieldDetail> fields;
 
 	@Valid
-	Map<String, UsecaseTestReqNestedDto> nestedDtos;				// key : nested dto 이름 (ex. board, comment...)
+	Map<String, UsecaseReqNestedDto> nestedDtos;				// key : nested dto 이름 (ex. board, comment...)
 
 	@Valid
-	Map<String, List<UsecaseTestReqNestedDto>> nestedDtoList;		// key : nested dto list 이름 (ex. boads, comments...)
+	Map<String, List<UsecaseReqNestedDto>> nestedDtoList;		// key : nested dto list 이름 (ex. boads, comments...)
 }
