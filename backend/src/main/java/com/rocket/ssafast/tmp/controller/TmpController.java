@@ -39,8 +39,8 @@ public class TmpController {
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Authorization", auth);
 
-		Map<String, List<TmpOrderDto>> result = new HashMap<>();
-		result.put("orderList", tmpService.save(tmpUserDto));
+		Map<String, TmpUserDto> result = new HashMap<>();
+		result.put("user", tmpService.save(tmpUserDto));
 		return ResponseEntity.ok().headers(responseHeaders).body(result);
 	}
 
