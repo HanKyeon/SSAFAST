@@ -1,11 +1,13 @@
 package com.rocket.ssafast.apispec.controller;
 
 import com.rocket.ssafast.apispec.dto.request.ApiSpecInfoDto;
+import com.rocket.ssafast.apispec.dto.response.DetailApiSpecInfoDto;
 import com.rocket.ssafast.apispec.repository.ApiSpecRepository;
 import com.rocket.ssafast.apispec.service.ApiSpecService;
 import com.rocket.ssafast.auth.domain.UserDetailsImpl;
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
+import com.rocket.ssafast.member.dto.response.ResMemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -35,12 +37,52 @@ public class ApiSpecController {
         }
     }
 
-    @GetMapping("{apiId}")
+    @GetMapping("/{apiId}")
     public ResponseEntity<?> getApiSpec(Long apiId){
-        //api 명세를 한 주인을 찾아야 하네
         try{
-            apiSpecService.getApiSpecDetail(apiId);
-            return new ResponseEntity<>(apiId, HttpStatus.OK);
+            return new ResponseEntity<>(apiSpecService.getApiSpec(apiId), HttpStatus.OK);
+        }
+        catch (CustomException c){
+            return new ResponseEntity<>(c.getMessage(), c.getHttpStatus());
+        }
+        catch (Error e){
+            return new ResponseEntity<>(ErrorCode.INTERNAL_SERVER_ERROR.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus());
+        }
+    }
+
+    @GetMapping("/{apiId}/detail")
+    public ResponseEntity<?> getApiSpecDetail(Long apiId){
+        try{
+            DetailApiSpecInfoDto result = apiSpecService.getApiSpecDetail(apiId);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        catch (CustomException c){
+            return new ResponseEntity<>(c.getMessage(), c.getHttpStatus());
+        }
+        catch (Error e){
+            return new ResponseEntity<>(ErrorCode.INTERNAL_SERVER_ERROR.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus());
+        }
+    }
+
+    @PutMapping("/{apiId}")
+    public ResponseEntity<?> updateApiSpec(@AuthenticationPrincipal ResMemberDto memberDto, Long apiId, @RequestBody ApiSpecInfoDto apiSpecInfoDto){
+        try{
+            ApiSpecInfoDto result = apiSpecService.updateApiSpec(apiId, memberDto.getId(), apiSpecInfoDto);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        catch (CustomException c){
+            return new ResponseEntity<>(c.getMessage(), c.getHttpStatus());
+        }
+        catch (Error e){
+            return new ResponseEntity<>(ErrorCode.INTERNAL_SERVER_ERROR.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus());
+        }
+    }
+
+    @DeleteMapping("/{apiId}")
+    public ResponseEntity<?> deleteApiSpec(@AuthenticationPrincipal ResMemberDto resMemberDto, Long apiId){
+        try{
+            apiSpecService.deleteApiSpec(apiId);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (CustomException c){
             return new ResponseEntity<>(c.getMessage(), c.getHttpStatus());

@@ -3,6 +3,8 @@ package com.rocket.ssafast.apispec.service;
 import com.rocket.ssafast.apispec.domain.Document.ApiSpecDocument;
 import com.rocket.ssafast.apispec.domain.Document.element.ApiDoc;
 import com.rocket.ssafast.apispec.repository.ApiSpecDocRepository;
+import com.rocket.ssafast.exception.CustomException;
+import com.rocket.ssafast.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +36,23 @@ public class ApiSpecDocumentService {
         document.getApis().put(apiId, apiSpec);
         apiSpecDocRepository.save(document);
         return document.getApis().get(apiId);
+    }
+
+    public ApiDoc updateApiSpec(Long apiId, ApiDoc apiSpec){
+        ApiSpecDocument document = createOrFindApiSpecsIfExists();
+        document.getApis().put(apiId, apiSpec);
+        apiSpecDocRepository.save(document);
+        return getApiSpecDocs(apiId);
+    }
+
+    public boolean deleteApiSpec(Long apiId){
+        ApiSpecDocument document = createOrFindApiSpecsIfExists();
+        if(!document.getApis().containsKey(apiId)){
+            throw new CustomException(ErrorCode.API_NOT_FOUND);
+        }
+        document.getApis().remove(apiId);
+        apiSpecDocRepository.save(document);
+        return true;
     }
 
     public ApiSpecDocument createOrFindApiSpecsIfExists(){

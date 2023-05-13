@@ -13,6 +13,7 @@ import java.util.Map;
 public class DtoInfo {
 
     private String name;
+    private String keyName;
     private String desc;
     private boolean itera;
     private List<FieldInfo> fields;

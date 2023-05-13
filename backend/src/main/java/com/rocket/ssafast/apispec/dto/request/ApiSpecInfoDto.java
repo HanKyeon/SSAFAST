@@ -1,11 +1,13 @@
 package com.rocket.ssafast.apispec.dto.request;
 
 import com.rocket.ssafast.apispec.domain.Document.element.ApiDoc;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ApiSpecInfoDto {
     private Long workspaceId;
     private String name;

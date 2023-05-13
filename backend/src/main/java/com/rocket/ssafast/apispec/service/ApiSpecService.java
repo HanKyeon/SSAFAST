@@ -88,6 +88,28 @@ public class ApiSpecService {
         return apiSpec.getId();
     }
 
+    public DetailApiSpecInfoDto getApiSpec(Long apiId){
+        Optional<ApiSpecEntity> apiSpec = apiSpecRepository.findById(apiId);
+        ApiDoc apiDoc = apiSpecDocumentService.getApiSpecDocs(apiId);
+
+        if(!apiSpec.isPresent()){ throw new CustomException(ErrorCode.API_NOT_FOUND); }
+        ApiSpecEntity presentApiSpec = apiSpec.get();
+
+        ResMemberDto memberDto = findApiSpecWriterByApiId(apiId);
+
+        return
+                DetailApiSpecInfoDto.builder()
+                        .name(apiSpec.get().getName())
+                        .description(apiSpec.get().getDescription())
+                        .method(apiSpec.get().getMethod())
+                        .status(apiSpec.get().getStatus())
+                        .baseurlId(apiSpec.get().getBaseurlId())
+                        .categoryId(apiSpec.get().getCategory().getId())
+                        .member(memberDto)
+                        .document(apiDoc)
+                        .build();
+    }
+
     public DetailApiSpecInfoDto getApiSpecDetail(Long apiId){
         Optional<ApiSpecEntity> apiSpec = apiSpecRepository.findById(apiId);
         ApiDoc apiDoc = apiSpecDocumentService.getApiSpecDocs(apiId);
@@ -165,6 +187,86 @@ public class ApiSpecService {
                 .createdTime(presentApiSpec.getCreatedTime())
                 .document(apiDoc)
                 .build();
+    }
+
+    public ApiSpecInfoDto updateApiSpec(Long apiId, Long memberId, ApiSpecInfoDto apiSpecInfoDto){
+        //mysql api table update
+        Optional<ApiSpecEntity> apiEntity = apiSpecRepository.findById(apiId);
+        if(!apiEntity.isPresent()){ throw new CustomException(ErrorCode.API_NOT_FOUND); }
+        apiSpecRepository.save(
+                ApiSpecEntity.builder()
+                        .id(apiEntity.get().getId())
+                        .name(apiSpecInfoDto.getName())
+                        .description(apiSpecInfoDto.getDesc())
+                        .method(apiSpecInfoDto.getMethod())
+                        .status(apiSpecInfoDto.getStatus())
+                        .baseurlId(apiSpecInfoDto.getBaseUrl())
+                        .category(categoryEntityRepository.findById(apiSpecInfoDto.getCategoryId()).get())
+                        .member(memberRepository.findById(memberId).get())
+                        .figmaSectionApiEntities(apiEntity.get().getFigmaSectionApiEntities())
+                        .build()
+        );
+
+        //update 된 내용 받아올라나 싶어서 일단 해둠
+        apiEntity = apiSpecRepository.findById(apiId);
+
+        //mysql api has dto table remove
+        for(ApiHasDtoEntity apiHasDto : apiHasDtoEntityRepository.findAllByApiSpecEntity(apiEntity.get())){
+            apiHasDtoEntityRepository.delete(apiHasDto);
+        }
+        //mysql api has dto table update
+        for(Map.Entry<Long, DtoInfo> entry : apiSpecInfoDto.getDocument().getRequest().getBody().getNestedDtos().entrySet()){
+            Long key = entry.getKey();
+            DtoInfo value = entry.getValue();
+
+            for(Long childKey : value.getNestedDtos().keySet()){
+                Optional<DtoSpecEntity> dtoSpec = dtoSpecEntityRepository.findById(childKey);
+                if(!dtoSpec.isPresent()){
+                    throw new CustomException(ErrorCode.DTO_NOT_FOUND);
+                }
+                apiHasDtoEntityRepository.save(
+                        ApiHasDtoEntity.builder()
+                                .apiSpecEntity(apiEntity.get())
+                                .dtoSpecEntity(dtoSpec.get())
+                                .build()
+                );
+            }
+
+            Optional<DtoSpecEntity> dtoSpec = dtoSpecEntityRepository.findById(key);
+            if(!dtoSpec.isPresent()){ throw new CustomException(ErrorCode.DTO_NOT_FOUND); }
+
+            apiHasDtoEntityRepository.save(
+                    ApiHasDtoEntity.builder()
+                            .apiSpecEntity(apiEntity.get())
+                            .dtoSpecEntity(dtoSpec.get())
+                            .build()
+            );
+        }
+        //mongodb collection update
+        apiSpecDocumentService.updateApiSpec(apiId, apiSpecInfoDto.getDocument());
+
+        return
+                ApiSpecInfoDto.builder()
+                        .name(apiEntity.get().getName())
+                        .desc(apiEntity.get().getDescription())
+                        .method(apiEntity.get().getMethod())
+                        .baseUrl(apiEntity.get().getBaseurlId())
+                        .categoryId(apiEntity.get().getCategory().getId())
+                        .status(apiEntity.get().getStatus())
+                        .document(apiSpecDocumentService.getApiSpecDocs(apiId))
+                        .build();
+    }
+
+    public void deleteApiSpec(Long apiId){
+        //mysql entity update
+        Optional<ApiSpecEntity> apiSpec = apiSpecRepository.findById(apiId);
+        if(!apiSpec.isPresent()){
+            throw new CustomException(ErrorCode.API_NOT_FOUND);
+        }
+        apiSpecRepository.delete(apiSpec.get());
+
+        //mongodb drop document
+        apiSpecDocumentService.deleteApiSpec(apiId);
     }
 
     public ResMemberDto findApiSpecWriterByApiId(Long apiId){
