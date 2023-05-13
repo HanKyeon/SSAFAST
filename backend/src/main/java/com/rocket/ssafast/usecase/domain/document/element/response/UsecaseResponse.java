@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UsecaseTestResponse {
+public class UsecaseResponse {
 
 	@Valid
-	Map<String, UsecaseTestResHeaderField> headers;
+	Map<String, UsecaseResHeaderField> headers;
 
 	@Valid
-	UsecaseTestResBody body;
+	UsecaseResBody body;
 }

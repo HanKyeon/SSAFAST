@@ -11,18 +11,18 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UsecaseTestResNestedDto {
+public class UsecaseResNestedDto {
 
 	@NotEmpty
 	String dtoName;
 
 	@Valid
-	Map<String, UsecaseTestResFieldDetail> fields;
+	Map<String, UsecaseResFieldDetail> fields;
 
 	@Valid
-	Map<String, UsecaseTestResNestedDto> nestedDtos;	// key : 내부 dto 이름
+	Map<String, UsecaseResNestedDto> nestedDtos;	// key : 내부 dto 이름
 
 	@Valid
-	Map<String, List<UsecaseTestResNestedDto>> nestedDtoLists;	// key : 내부 dto 이름
+	Map<String, List<UsecaseResNestedDto>> nestedDtoLists;	// key : 내부 dto 이름
 
 }

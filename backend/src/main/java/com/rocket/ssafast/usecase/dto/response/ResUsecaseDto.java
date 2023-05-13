@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ResUsecaseTestDto {
+public class ResUsecaseDto {
 
 	Boolean success;
 
 	Long lastApiId;
 
-	ApiTestResultResponseDto apiTestResultResponseDto;
+	ApiTestResultResponseDto lastApiResponse;
 }
