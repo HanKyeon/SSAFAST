@@ -11,12 +11,12 @@ const MethodBadge = function ({
 }: MethodBadgePropsType): JSX.Element {
   const styles = {
     color:
-      method === 2
+      method === 1
+        ? 'bg-mincho-normal'
+        : method === 2
         ? 'bg-mega-normal'
         : method === 3
         ? 'bg-taro-normal'
-        : method === 1
-        ? 'bg-mincho-normal'
         : method === 4
         ? 'bg-mammoth-normal'
         : 'bg-milktea-strong',
@@ -28,7 +28,17 @@ const MethodBadge = function ({
     <div
       className={`${className} ${styles.color} ${styles.size} flex items-center justify-center rounded-[5px] `}
     >
-      <span className={`text-theme-dark-strong`}>{method}</span>
+      <span className={`text-theme-dark-strong`}>
+        {method === 1
+          ? 'GET'
+          : method === 2
+          ? 'POST'
+          : method === 3
+          ? 'PUT'
+          : method === 4
+          ? 'DEL'
+          : 'PATCH'}
+      </span>
     </div>
   );
 };
