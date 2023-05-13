@@ -3,6 +3,7 @@ package com.rocket.ssafast.apispec.service;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,14 +101,14 @@ public class ApiExecService {
 		// 3. params 셋팅
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		if (apiExecReqMessageDto.getParams() != null) {
-			apiExecReqMessageDto.getParams().forEach((key, value) -> {
-				if(value instanceof ArrayList) {
-					for (Object obj : (List<?>)value) {{
-						params.put(key, String.valueOf(obj));
-					}
+			apiExecReqMessageDto.getParams().forEach((key, param) -> {
+				if(!param.getItera()) {
+					params.add(key, param.getValue());
 				}
 				else {
-					params.add(key, String.valueOf(value));
+					String[] pramArray = param.getValue().substring(1, param.getValue().length()-1).split(",");
+					System.out.println("pramArray: "+Arrays.toString(pramArray));
+					Arrays.stream(pramArray).forEach(p -> params.add(key, p));
 				}
 			});
 		}
@@ -186,6 +187,7 @@ public class ApiExecService {
 
 		// 6. API 요청
 		try {
+			System.out.println("API EXEC SERVICE 요청 바디:"+entity);
 			ResponseEntity<?> response =  restTemplate.exchange(
 				uri.toUriString(),
 				HTTPMethod.getMethodByNumber(apiExecReqMessageDto.getMethod()),

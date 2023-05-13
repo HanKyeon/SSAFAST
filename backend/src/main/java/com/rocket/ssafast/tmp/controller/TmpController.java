@@ -1,5 +1,6 @@
 package com.rocket.ssafast.tmp.controller;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,8 +46,8 @@ public class TmpController {
 	}
 
 	@PostMapping("/order/{orderId}")
-	ResponseEntity<?> postItemsMethod(@RequestBody Map<String, List<TmpItemDto>> orderItemList, @RequestParam String orderNum, @PathVariable("orderId") Long orderId) {
-		System.out.println("/api/tmp/order/주문id?주문번호: "+ orderNum);
+	ResponseEntity<?> postItemsMethod(@RequestBody Map<String, List<TmpItemDto>> orderItemList, @RequestParam String[] userAddressStreet, @RequestParam(required = false) String orderNum, @PathVariable("orderId") Long orderId) {
+		System.out.println("/api/tmp/order/주문id?주문번호: "+ Arrays.toString(userAddressStreet));
 		Map<String, List<TmpItemDto>> result = new HashMap<>();
 		result.put("orderItemList", tmpService.saveOrderItems(orderId, orderItemList.get("orderItemList")));
 		return new ResponseEntity<>(result, HttpStatus.OK);

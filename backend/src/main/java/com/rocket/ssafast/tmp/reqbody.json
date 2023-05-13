@@ -39,7 +39,7 @@
                             "NotEmpty"
                         ],
                         "mapped": false,
-                        "value" : ["쿠리", "파라", "미터"]
+                        "value" : "[\"쿠리\", \"파라\", \"미터\"]"
                     }
                 },
                 "body" : {
@@ -259,6 +259,16 @@
                         ],
                         "mapped": true,
                         "value" : "1.body.user.orderList[0].id"
+                    },
+                    "userAddressStreet": {
+                        "type" : 1,
+                        "desc" : "사용자 주소들",
+                        "itera" : true,
+                        "constraints" : [
+                            "NotEmpty"
+                        ],
+                        "mapped": true,
+                        "value" : "[\"쿠리\", \"파라\", \"미터\"]"
                     }
                 },
                 "body" : {

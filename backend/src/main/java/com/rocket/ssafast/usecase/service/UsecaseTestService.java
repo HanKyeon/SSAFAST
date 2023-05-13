@@ -1,9 +1,7 @@
 package com.rocket.ssafast.usecase.service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -22,7 +20,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.jayway.jsonpath.JsonPath;
 import com.rocket.ssafast.apispec.domain.Entity.ApiSpecEntity;
+import com.rocket.ssafast.apispec.domain.Enum.JavaType;
 import com.rocket.ssafast.apispec.dto.request.ApiExecReqMessageDto;
+import com.rocket.ssafast.apispec.dto.request.ApiExecReqMessageParamDto;
 import com.rocket.ssafast.apispec.dto.request.ApiTestResultResponseDto;
 import com.rocket.ssafast.apispec.repository.ApiSpecMongoTempRepository;
 import com.rocket.ssafast.apispec.repository.ApiSpecRepository;
@@ -38,6 +38,7 @@ import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseReqBody
 import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseReqFieldDetail;
 import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseReqHeaderFieldDetail;
 import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseReqNestedDto;
+import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseReqParamFieldDetail;
 import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseReqPathFieldDetail;
 import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseTestRequest;
 import com.rocket.ssafast.usecase.domain.entity.UsecaseDtoEntity;
@@ -49,6 +50,7 @@ import com.rocket.ssafast.usecase.repository.UsecaseTestDocsRepository;
 import com.rocket.ssafast.usecase.repository.UsecaseTestEntityRepository;
 import com.rocket.ssafast.workspace.repository.BaseurlRepository;
 import com.rocket.ssafast.workspace.repository.WorkspaceRepository;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import lombok.RequiredArgsConstructor;
 
@@ -167,24 +169,25 @@ public class UsecaseTestService {
 
 
 			// 8. query params 정보
-			Map<String, UsecaseReqFieldDetail> nowParams = nowRequest.getParams();	// 현재 순서 api의 query params 정보
-			Map<String, Object> params;
+			Map<String, UsecaseReqParamFieldDetail> nowParams = nowRequest.getParams();	// 현재 순서 api의 query params 정보
+			Map<String, ApiExecReqMessageParamDto> params;
 
 			if(nowParams != null) {
 				params = new HashMap<>();
 				nowParams.forEach((key, param) -> {
 					if(!param.isMapped()) {
-						if(!param.isItera()) {
-							params.put(key, String.valueOf(param.getValue()));
-						}
-						else {
-							addFieldsToMap(param.getType(), key, param.getValue(), params);
-						}
+						params.put(key,
+							ApiExecReqMessageParamDto.builder()
+								.itera(param.isItera())
+								.value(param.getValue())
+								.build());
 					} else {
-						addFieldsToMap(param.getType(),
-							key,
-							getMappedValue(results.toString(), String.valueOf(param.getValue())),
-							params);
+						params.put(key,
+							ApiExecReqMessageParamDto.builder()
+								.itera(param.isItera())
+								.value(String.valueOf(getMappedValue(results.toString(), String.valueOf(param.getValue()))))
+								.build()
+							);
 					}
 				});
 			} else {
@@ -453,101 +456,6 @@ public class UsecaseTestService {
 		System.out.println("results :"+results);
 		System.out.println("json path: "+"$." + mappingTarget);
 		return JsonPath.read(results, "$." + mappingTarget);
-	}
-
-	private void addFieldsToMap(Long type, String key, Object value, Map<String, Object> map) {
-		if (value instanceof List<?>) {
-
-			switch (type.intValue()) {
-				case 1:
-					List<String> stringList = new ArrayList<>();
-
-					for (Object obj : (List<?>)value) {
-						if (obj instanceof String) {
-							String o = (String)obj;
-							stringList.add(o);
-						}
-					}
-					map.put(key, stringList);
-					break;
-				case 2:
-					List<Integer> intList = new ArrayList<>();
-
-					for (Object obj : (List<?>)value) {
-						if (obj instanceof Integer) {
-							Integer o = (Integer)obj;
-							intList.add(o);
-						}
-					}
-					map.put(key, intList);
-					break;
-				case 3:
-					List<Long> longList = new ArrayList<>();
-
-					for (Object obj : (List<?>)value) {
-						if (obj instanceof Integer) {
-							Long o = (Long)obj;
-							longList.add(o);
-						}
-					}
-					map.put(key, longList);
-					break;
-				case 4:
-					List<Float> floatList = new ArrayList<>();
-
-					for (Object obj : (List<?>)value) {
-						if (obj instanceof Float) {
-							Float o = (Float)obj;
-							floatList.add(o);
-						}
-					}
-					map.put(key, floatList);
-					break;
-				case 5:
-					List<Double> doubleList = new ArrayList<>();
-
-					for (Object obj : (List<?>)value) {
-						if (obj instanceof Double) {
-							Double o = (Double)obj;
-							doubleList.add(o);
-						}
-					}
-					map.put(key, doubleList);
-					break;
-				case 6:
-					List<Boolean> booleantList = new ArrayList<>();
-
-					for (Object obj : (List<?>)value) {
-						if (obj instanceof Boolean) {
-							Boolean o = (Boolean)obj;
-							booleantList.add(o);
-						}
-					}
-					map.put(key, booleantList);
-				case 8:
-					List<Date> dateList = new ArrayList<>();
-
-					for (Object obj : (List<?>)value) {
-						if (obj instanceof Date) {
-							Date o = (Date)obj;
-							dateList.add(o);
-						}
-					}
-					map.put(key, dateList);
-					break;
-				case 9:
-					List<LocalDateTime> localDateTimeList = new ArrayList<>();
-
-					for (Object obj : (List<?>)value) {
-						if (obj instanceof LocalDateTime) {
-							LocalDateTime o = (LocalDateTime)obj;
-							localDateTimeList.add(o);
-						}
-					}
-					map.put(key, localDateTimeList);
-					break;
-			}
-		}
 	}
 
 	public List<ResUsecasePrevResponseDto> getPrevResponses(List<Long> apiIds) {
