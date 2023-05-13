@@ -185,54 +185,32 @@ public class UsecaseTestService {
 				// 9-1. primitive type field
 				Map<String, UsecaseTestReqFieldDetail> nowFields = nowBody.getFields();
 				if(nowFields != null) {
-					nowFields.forEach((key, field) -> {
-						if(!field.isMapped()) {
-							addPrimitiveDataToJson(jsonBody, field.getType(), key, field.getValue(), field.isItera());
-						} else {
-							Object fieldValue = getMappedValue(results.toString(), String.valueOf(field.getValue()));
-							addPrimitiveDataToJson(jsonBody, field.getType(), key, fieldValue, field.isItera());
-						}
-					});
+					addFieldsToJson(nowFields, jsonBody, results);
 				}
 
 				// 9-2. nested dto
 				Map<String, UsecaseTestReqNestedDto> nowNestedDtos = nowBody.getNestedDtos();
 				if(nowNestedDtos != null) {
 					nowNestedDtos.forEach((key, nowNestedDto) -> {
-
 						JsonObject nestedJson = new JsonObject();
 
-						nowNestedDto.getFields().forEach((fieldKey, field) -> {
-							if(!field.isMapped()) {
-								addPrimitiveDataToJson(nestedJson, field.getType(), fieldKey, field.getValue(), field.isItera());
-							} else {
-								Object fieldValue = getMappedValue(results.toString(), String.valueOf(field.getValue()));
-								addPrimitiveDataToJson(nestedJson, field.getType(), fieldKey, fieldValue, field.isItera());
-							}
-						});
+						addNestedDtosToJson(nowNestedDto, nestedJson, results);
 
 						jsonBody.add(key, nestedJson);
 					});
 				}
 
 				//  9-3. nested dto list
-				Map<String, List<UsecaseTestReqNestedDto>> nowNestedDtoLists = nowBody.getNestedDtoList();
+				Map<String, List<UsecaseTestReqNestedDto>> nowNestedDtoLists = nowBody.getNestedDtoLists();
+				System.out.println("내부 객체 리스트ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ: "+nowNestedDtoLists);
 				if(nowNestedDtoLists != null) {
 					nowNestedDtoLists.forEach((key, nowNestedDtoList) -> {
-
 						JsonArray nestedJsonArray = new JsonArray();
 
 						nowNestedDtoList.forEach(nowNestedDto -> {
 							JsonObject nestedJson = new JsonObject();
 
-							nowNestedDto.getFields().forEach((fieldKey, field) -> {
-								if(!field.isMapped()) {
-									addPrimitiveDataToJson(nestedJson, field.getType(), fieldKey, field.getValue(), field.isItera());
-								} else {
-									Object fieldValue = getMappedValue(results.toString(), String.valueOf(field.getValue()));
-									addPrimitiveDataToJson(nestedJson, field.getType(), fieldKey, fieldValue, field.isItera());
-								}
-							});
+							addNestedDtosToJson(nowNestedDto, nestedJson, results);
 
 							nestedJsonArray.add(nestedJson);
 						});
@@ -336,7 +314,54 @@ public class UsecaseTestService {
 			.apiTestResultResponseDto(apiTestResultResponseDto)
 			.build();
 	}
-	
+
+	private void addNestedDtosToJson(UsecaseTestReqNestedDto nowNestedDto, JsonObject jsonObject, JsonObject results) {
+
+		// 1. nested dto의 primitive type field
+		if(nowNestedDto.getFields() != null) {
+			addFieldsToJson(nowNestedDto.getFields(), jsonObject, results);
+		}
+
+		// 2. nested dto의 nested dto field
+		if(nowNestedDto.getNestedDtos() != null) {
+			JsonObject nestedJson = new JsonObject();
+
+			nowNestedDto.getNestedDtos().forEach((fieldKey, innerNestedDto) -> {
+				addFieldsToJson(innerNestedDto.getFields(), nestedJson, results);
+
+				jsonObject.add(fieldKey, nestedJson);
+			});
+		}
+
+		// 3. nested dto의 nested dto list type field
+		if(nowNestedDto.getNestedDtoList() != null) {
+
+			nowNestedDto.getNestedDtoList().forEach((fieldKey, nestedDtoList) -> {
+				JsonArray nestedDtoListJson = new JsonArray();
+
+				nestedDtoList.forEach(nestedDto -> {
+					JsonObject nestedJson = new JsonObject();
+
+					addFieldsToJson(nestedDto.getFields(), nestedJson, results);
+					nestedDtoListJson.add(nestedJson);
+				});
+
+				jsonObject.add(fieldKey, nestedDtoListJson);
+			});
+		}
+	}
+
+	private void addFieldsToJson(Map<String, UsecaseTestReqFieldDetail> fields, JsonObject jsonObject, JsonObject results) {
+		fields.forEach((key, field) -> {
+			if(!field.isMapped()) {
+				addPrimitiveDataToJson(jsonObject, field.getType(), key, field.getValue(), field.isItera());
+			} else {
+				Object fieldValue = getMappedValue(results.toString(), String.valueOf(field.getValue()));
+				addPrimitiveDataToJson(jsonObject, field.getType(), key, fieldValue, field.isItera());
+			}
+		});
+	}
+
 	private void addPrimitiveDataToJson(JsonObject jsonObject, String type, String key, Object value, boolean isItera){
 		if(type.equals("String") || type.equals("Date") || type.equals("LocalDateTime")) {
 			if(isItera) {

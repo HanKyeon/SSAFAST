@@ -25,7 +25,7 @@ public class TmpService {
 	private final TmpItemRepository tmpItemRepository;
 
 
-	public List<TmpOrderDto> save(TmpUserDto tmpUserDto) {
+	public TmpUserDto save(TmpUserDto tmpUserDto) {
 		TmpUser tmpUser = tmpUserDto.toEntity();
 		List<TmpOrder> tmpOrders = new ArrayList<>();
 		tmpUserDto.getOrderList().forEach(orderDto -> {
@@ -34,7 +34,7 @@ public class TmpService {
 			tmpOrders.add(order);
 		});
 		tmpUser.setOrders(tmpOrders);
-		return tmpUserRepository.save(tmpUser).toDto().getOrderList();
+		return tmpUserRepository.save(tmpUser).toDto();
 	}
 
 	public List<TmpItemDto> saveOrderItems(long orderId, List<TmpItemDto> tmpItemDtos) {

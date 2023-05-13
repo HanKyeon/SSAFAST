@@ -18,5 +18,5 @@ public class UsecaseTestReqBody {
 	Map<String, UsecaseTestReqNestedDto> nestedDtos;		// key : nested dto 이름 (ex. board, comment...)
 
 	@Valid
-	Map<String, List<UsecaseTestReqNestedDto>> nestedDtoList;		// key : nested dto list 이름 (ex. boads, comments...)
+	Map<String, List<UsecaseTestReqNestedDto>> nestedDtoLists;		// key : nested dto list 이름 (ex. boads, comments...)
 }

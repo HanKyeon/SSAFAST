@@ -51,6 +51,7 @@ const d = {
                     "nestedDtos": {     // 내부 객체
                         "키": {         // 내부 객체형 필드 이름 ex. blog
                             "dtoName": "DTO 이름",                      // ex. Blog
+                            "desc": "DTO 설명",
                             "fields": {
                                 "키": {                                 // 내부 객체의 필드 이름. ex. blogName 
                                     "type": "타입",                     // 문자열
@@ -61,14 +62,68 @@ const d = {
                                     "value": "값"       // 타입 아무거나 cf. itera == true라면 value는 리스트여야함 이래야함 ex. [값, 값, 값]
                                 },
                                 "키": {}
+                            },
+                            "nestedDtos": {
+                                "키": {
+                                    "dtoName": "DTO 이름",                      // ex. Blog
+                                    "desc": "DTO 설명",
+                                    "fields": {
+                                        "키": {                                 // 내부 객체의 필드 이름. ex. blogName 
+                                            "type": "타입",                     // 문자열
+                                            "desc": "설명",                     // 문자열
+                                            "itera": "리스트 형식인지 여부",     // bool
+                                            "constraints": "제약조건들",        // 문자열 리스트 ex. ["NotNull", "Email"]
+                                            "mapped": "이전 response에서 맵핑되는지 여부",    // bool
+                                            "value": "값"       // 타입 아무거나 cf. itera == true라면 value는 리스트여야함 이래야함 ex. [값, 값, 값]
+                                        },
+                                        "키": {}
+                                    }
+                                },
+                                "키": {}
+                            },
+                            "nestedDtoLists": {
+                                "키": [
+                                    {
+                                        "dtoName": "DTO 이름",                      // ex. Blog
+                                        "desc": "DTO 설명",
+                                        "fields": {
+                                            "키": {                                 // 내부 객체의 필드 이름 ex. title (게시글의 제목)
+                                                "type": "타입",                     // 문자열
+                                                "desc": "설명",                     // 문자열
+                                                "itera": "리스트 형식인지 여부",     // bool
+                                                "constraints": "제약조건들",        // 문자열 리스트 ex. ["NotNull", "Email"]
+                                                "mapped": "이전 response에서 맵핑되는지 여부",    // bool
+                                                "value": "값"       // 타입 아무거나 cf. itera == true라면 value는 리스트여야함 이래야함 ex. [값, 값, 값]
+                                            },
+                                            "키": {}
+                                        }
+                                    },
+                                    {
+                                        "dtoName": "DTO 이름",                      // ex. Blog
+                                        "desc": "DTO 설명",
+                                        "fields": {
+                                            "키": {                                 // 내부 객체의 필드 이름 ex. title (게시글의 제목)
+                                                "type": "타입",                     // 문자열
+                                                "desc": "설명",                     // 문자열
+                                                "itera": "리스트 형식인지 여부",     // bool
+                                                "constraints": "제약조건들",        // 문자열 리스트 ex. ["NotNull", "Email"]
+                                                "mapped": "이전 response에서 맵핑되는지 여부",    // bool
+                                                "value": "값"       // 타입 아무거나 cf. itera == true라면 value는 리스트여야함 이래야함 ex. [값, 값, 값]
+                                            },
+                                            "키": {}
+                                        }
+                                    }
+                                ],
+                                "키": [{}, {}]
                             }
                         },
                         "키": {}
                     },
-                    "nestedDtoList": {      // 내부 객체 리스트
+                    "nestedDtoLists": {      // 내부 객체 리스트
                         "키": [             // 내부 객체 리스트형 필드 이름
                             {
                                 "dtoName": "DTO 이름",                      // ex. Blog
+                                "desc": "DTO 설명",
                                 "fields": {
                                     "키": {                                 // 내부 객체의 필드 이름 ex. title (게시글의 제목)
                                         "type": "타입",                     // 문자열
@@ -79,8 +134,61 @@ const d = {
                                         "value": "값"       // 타입 아무거나 cf. itera == true라면 value는 리스트여야함 이래야함 ex. [값, 값, 값]
                                     },
                                     "키": {}
+                                },
+                                "nestedDtos": {
+                                    "키": {
+                                        "dtoName": "DTO 이름",                      // ex. Blog
+                                        "desc": "DTO 설명",
+                                        "fields": {
+                                            "키": {                                 // 내부 객체의 필드 이름. ex. blogName 
+                                                "type": "타입",                     // 문자열
+                                                "desc": "설명",                     // 문자열
+                                                "itera": "리스트 형식인지 여부",     // bool
+                                                "constraints": "제약조건들",        // 문자열 리스트 ex. ["NotNull", "Email"]
+                                                "mapped": "이전 response에서 맵핑되는지 여부",    // bool
+                                                "value": "값"       // 타입 아무거나 cf. itera == true라면 value는 리스트여야함 이래야함 ex. [값, 값, 값]
+                                            },
+                                            "키": {}
+                                        }
+                                    },
+                                    "키": {}
+                                },
+                                "nestedDtoLists": {
+                                    "키": [
+                                        {
+                                            "dtoName": "DTO 이름",                      // ex. Blog
+                                            "desc": "DTO 설명",
+                                            "fields": {
+                                                "키": {                                 // 내부 객체의 필드 이름 ex. title (게시글의 제목)
+                                                    "type": "타입",                     // 문자열
+                                                    "desc": "설명",                     // 문자열
+                                                    "itera": "리스트 형식인지 여부",     // bool
+                                                    "constraints": "제약조건들",        // 문자열 리스트 ex. ["NotNull", "Email"]
+                                                    "mapped": "이전 response에서 맵핑되는지 여부",    // bool
+                                                    "value": "값"       // 타입 아무거나 cf. itera == true라면 value는 리스트여야함 이래야함 ex. [값, 값, 값]
+                                                },
+                                                "키": {}
+                                            }
+                                        },
+                                        {
+                                            "dtoName": "DTO 이름",                      // ex. Blog
+                                            "desc": "DTO 설명",
+                                            "fields": {
+                                                "키": {                                 // 내부 객체의 필드 이름 ex. title (게시글의 제목)
+                                                    "type": "타입",                     // 문자열
+                                                    "desc": "설명",                     // 문자열
+                                                    "itera": "리스트 형식인지 여부",     // bool
+                                                    "constraints": "제약조건들",        // 문자열 리스트 ex. ["NotNull", "Email"]
+                                                    "mapped": "이전 response에서 맵핑되는지 여부",    // bool
+                                                    "value": "값"       // 타입 아무거나 cf. itera == true라면 value는 리스트여야함 이래야함 ex. [값, 값, 값]
+                                                },
+                                                "키": {}
+                                            }
+                                        }
+                                    ],
+                                    "키": [{}, {}]
                                 }
-                            },
+                            }
                         ],
                         "키": [{}, {}]
                     }
@@ -108,6 +216,7 @@ const d = {
                     "nestedDtos": {         // 내부 객체
                         "키": {             // 내부 객체형 필드 이름. ex. blog
                             "dtoName": "DTO이름",
+                            "desc": "DTO 설명",
                             "fields": {
                                 "키": {                 // 내부 객체의 필드 이름. ex. 블로그이름 
                                     "type": "타입",                     // 문자열
@@ -115,6 +224,50 @@ const d = {
                                     "itera": "리스트인지 아닌지 여부"    // bool
                                 }, 
                                 "키": {}
+                            },
+                            "nestedDtos": {
+                                "키": {
+                                    "dtoName": "DTO 이름",                      // ex. Blog
+                                    "desc": "DTO 설명",
+                                    "fields": {
+                                        "키": {                                 // 내부 객체의 필드 이름. ex. blogName 
+                                            "type": "타입",                     // 문자열
+                                            "desc": "설명",                     // 문자열
+                                            "itera": "리스트 형식인지 여부",     // bool
+                                        },
+                                        "키": {}
+                                    }
+                                },
+                                "키": {}
+                            },
+                            "nestedDtoLists": {
+                                "키": [
+                                    {
+                                        "dtoName": "DTO 이름",                      // ex. Blog
+                                        "desc": "DTO 설명",
+                                        "fields": {
+                                            "키": {                                 // 내부 객체의 필드 이름 ex. title (게시글의 제목)
+                                                "type": "타입",                     // 문자열
+                                                "desc": "설명",                     // 문자열
+                                                "itera": "리스트 형식인지 여부",     // bool
+                                            },
+                                            "키": {}
+                                        }
+                                    },
+                                    {
+                                        "dtoName": "DTO 이름",                      // ex. Blog
+                                        "desc": "DTO 설명",
+                                        "fields": {
+                                            "키": {                                 // 내부 객체의 필드 이름 ex. title (게시글의 제목)
+                                                "type": "타입",                     // 문자열
+                                                "desc": "설명",                     // 문자열
+                                                "itera": "리스트 형식인지 여부",     // bool
+                                            },
+                                            "키": {}
+                                        }
+                                    }
+                                ],
+                                "키": [{}, {}]
                             }
                         },
                         "키": {}
@@ -129,8 +282,52 @@ const d = {
                                         "itera": "리스트 형식인지 여부",     // bool
                                     },
                                     "키": {}
+                                },
+                                "nestedDtos": {
+                                    "키": {
+                                        "dtoName": "DTO 이름",                      // ex. Blog
+                                        "desc": "DTO 설명",
+                                        "fields": {
+                                            "키": {                                 // 내부 객체의 필드 이름. ex. blogName 
+                                                "type": "타입",                     // 문자열
+                                                "desc": "설명",                     // 문자열
+                                                "itera": "리스트 형식인지 여부",     // bool
+                                            },
+                                            "키": {}
+                                        }
+                                    },
+                                    "키": {}
+                                },
+                                "nestedDtoLists": {
+                                    "키": [
+                                        {
+                                            "dtoName": "DTO 이름",                      // ex. Blog
+                                            "desc": "DTO 설명",
+                                            "fields": {
+                                                "키": {                                 // 내부 객체의 필드 이름 ex. title (게시글의 제목)
+                                                    "type": "타입",                     // 문자열
+                                                    "desc": "설명",                     // 문자열
+                                                    "itera": "리스트 형식인지 여부",     // bool
+                                                },
+                                                "키": {}
+                                            }
+                                        },
+                                        {
+                                            "dtoName": "DTO 이름",                      // ex. Blog
+                                            "desc": "DTO 설명",
+                                            "fields": {
+                                                "키": {                                 // 내부 객체의 필드 이름 ex. title (게시글의 제목)
+                                                    "type": "타입",                     // 문자열
+                                                    "desc": "설명",                     // 문자열
+                                                    "itera": "리스트 형식인지 여부",     // bool
+                                                },
+                                                "키": {}
+                                            }
+                                        }
+                                    ],
+                                    "키": [{}, {}]
                                 }
-                            },
+                            }
                         ],
                         "키": [{}, {}]
                     }
@@ -138,29 +335,4 @@ const d = {
             }
         }
     }
-}
-
-
-const dd = {
-    "name": "민초현", 
-    "age": 27,
-    "필드 리스트": [4,5,6],
-    "nestedDto": {
-        "address": "서울",
-        "집값": "오억",
-        "필드 리스트": [1, 2, 3]
-    },
-    "nestedDtoList": [
-        {
-            "address": "서울",
-            "집값": "오억",
-            "필드 리스트": [1, 2, 3]
-        },
-        {
-            "address": "서울",
-            "집값": "오억",
-            "필드 리스트": [1, 2, 3]
-        }
-    ]
-
 }
