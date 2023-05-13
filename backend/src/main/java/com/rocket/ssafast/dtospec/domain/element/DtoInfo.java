@@ -12,6 +12,7 @@ import java.util.Map;
 @Builder
 public class DtoInfo {
 
+    private boolean itera;
     private List<FieldInfo> fields;
     private Map<Long, DtoInfo> nestedDtos;
 
