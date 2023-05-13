@@ -44,8 +44,4 @@ public class UsecaseEntity {
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "usecase_test_id")
 	List<UsecaseDtoEntity> usecaseTestDtoEntities = new ArrayList<>();
-
-	public void setUsecaseTestDtoEntities(List<UsecaseDtoEntity> usecaseTestDtoEntities) {
-		this.usecaseTestDtoEntities = usecaseTestDtoEntities;
-	}
 }

@@ -1,5 +1,6 @@
 package com.rocket.ssafast.tmp.controller;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +34,8 @@ public class TmpController {
 	private final TmpService tmpService;
 
 	@PostMapping("/user/{userName}")
-	ResponseEntity<?> postUserMethod(@RequestHeader(value = "Authorization") String auth, @RequestBody TmpUserDto tmpUserDto, @RequestParam String pTest, @PathVariable("userName") String userName) {
-		System.out.println("/api/tmp/user/사람이름의 쿼리 파람 잘 받았음: "+ pTest);
+	ResponseEntity<?> postUserMethod(@RequestHeader(value = "Authorization") String auth, @RequestBody TmpUserDto tmpUserDto, @RequestParam List<String> pTest, @PathVariable("userName") String userName) {
+		System.out.println("/api/tmp/user/사람이름의 쿼리 파람 잘 받았음: "+ pTest.get(0));
 
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Authorization", auth);
@@ -45,8 +46,8 @@ public class TmpController {
 	}
 
 	@PostMapping("/order/{orderId}")
-	ResponseEntity<?> postItemsMethod(@RequestBody Map<String, List<TmpItemDto>> orderItemList, @RequestParam String orderNum, @PathVariable("orderId") Long orderId) {
-		System.out.println("/api/tmp/order/주문id?주문번호: "+ orderNum);
+	ResponseEntity<?> postItemsMethod(@RequestBody Map<String, List<TmpItemDto>> orderItemList, @RequestParam String[] userAddressStreet, @RequestParam(required = false) String orderNum, @PathVariable("orderId") Long orderId) {
+		System.out.println("/api/tmp/order/주문id?주문번호: "+ Arrays.toString(userAddressStreet));
 		Map<String, List<TmpItemDto>> result = new HashMap<>();
 		result.put("orderItemList", tmpService.saveOrderItems(orderId, orderItemList.get("orderItemList")));
 		return new ResponseEntity<>(result, HttpStatus.OK);

@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class UsecaseResHeaderField {
-	@NotEmpty
-	String type;
+	
+	int type;
+
 	String desc;
 }

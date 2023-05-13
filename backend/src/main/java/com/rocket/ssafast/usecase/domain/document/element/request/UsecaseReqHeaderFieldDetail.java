@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class UsecaseReqHeaderFieldDetail {
-	@NotEmpty
-	String type;
+	
+	@NotNull
+	Long type;
 
 	@NotEmpty
 	String desc;

@@ -20,7 +20,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.jayway.jsonpath.JsonPath;
 import com.rocket.ssafast.apispec.domain.Entity.ApiSpecEntity;
+import com.rocket.ssafast.apispec.domain.Enum.JavaType;
 import com.rocket.ssafast.apispec.dto.request.ApiExecReqMessageDto;
+import com.rocket.ssafast.apispec.dto.request.ApiExecReqMessageParamDto;
 import com.rocket.ssafast.apispec.dto.request.ApiTestResultResponseDto;
 import com.rocket.ssafast.apispec.repository.ApiSpecMongoTempRepository;
 import com.rocket.ssafast.apispec.repository.ApiSpecRepository;
@@ -36,6 +38,7 @@ import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseReqBody
 import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseReqFieldDetail;
 import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseReqHeaderFieldDetail;
 import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseReqNestedDto;
+import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseReqParamFieldDetail;
 import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseReqPathFieldDetail;
 import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseTestRequest;
 import com.rocket.ssafast.usecase.domain.entity.UsecaseDtoEntity;
@@ -47,6 +50,7 @@ import com.rocket.ssafast.usecase.repository.UsecaseTestDocsRepository;
 import com.rocket.ssafast.usecase.repository.UsecaseTestEntityRepository;
 import com.rocket.ssafast.workspace.repository.BaseurlRepository;
 import com.rocket.ssafast.workspace.repository.WorkspaceRepository;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import lombok.RequiredArgsConstructor;
 
@@ -165,16 +169,25 @@ public class UsecaseTestService {
 
 
 			// 8. query params 정보
-			Map<String, UsecaseReqFieldDetail> nowParams = nowRequest.getParams();	// 현재 순서 api의 query params 정보
-			Map<String, String> params;
+			Map<String, UsecaseReqParamFieldDetail> nowParams = nowRequest.getParams();	// 현재 순서 api의 query params 정보
+			Map<String, ApiExecReqMessageParamDto> params;
 
 			if(nowParams != null) {
 				params = new HashMap<>();
 				nowParams.forEach((key, param) -> {
 					if(!param.isMapped()) {
-						params.put(key, String.valueOf(param.getValue()));
+						params.put(key,
+							ApiExecReqMessageParamDto.builder()
+								.itera(param.isItera())
+								.value(param.getValue())
+								.build());
 					} else {
-						params.put(key, String.valueOf(getMappedValue(results.toString(), String.valueOf(param.getValue()))));
+						params.put(key,
+							ApiExecReqMessageParamDto.builder()
+								.itera(param.isItera())
+								.value(String.valueOf(getMappedValue(results.toString(), String.valueOf(param.getValue()))))
+								.build()
+							);
 					}
 				});
 			} else {
@@ -368,66 +381,74 @@ public class UsecaseTestService {
 		});
 	}
 
-	public void addPrimitiveDataToJson(JsonObject jsonObject, String type, String key, Object value, boolean isItera){
-		if(type.equals("String") || type.equals("Date") || type.equals("LocalDateTime")) {
-			if(isItera) {
-				JsonArray jsonArray = new JsonArray();
-				new ArrayList<>(Arrays.asList((String[]) value)).forEach(strValue -> jsonArray.add(strValue));
-				jsonObject.add(key, jsonArray);
-			}
-			else {
-				jsonObject.addProperty(key, String.valueOf(value));
-			}
-		}
-		else if(type.equals("int")) {
-			if(isItera) {
-				JsonArray jsonArray = new JsonArray();
-				new ArrayList<>(Arrays.asList((Integer[]) value)).forEach(intValue -> jsonArray.add(intValue));
-				jsonObject.add(key, jsonArray);
-			}
-			else {
-				jsonObject.addProperty(key, ((Number)value).intValue());
-			}
-		}
-		else if(type.equals("long")) {
-			if(isItera) {
-				JsonArray jsonArray = new JsonArray();
-				new ArrayList<>(Arrays.asList((Long[]) value)).forEach(longValue -> jsonArray.add(longValue));
-				jsonObject.add(key, jsonArray);
-			}
-			else {
-				jsonObject.addProperty(key, ((Number)value).longValue());
-			}
-		}
-		else if(type.equals("float")) {
-			if(isItera) {
-				JsonArray jsonArray = new JsonArray();
-				new ArrayList<>(Arrays.asList((Float[]) value)).forEach(floatValue -> jsonArray.add(floatValue));
-				jsonObject.add(key, jsonArray);
-			}
-			else {
-				jsonObject.addProperty(key, ((Number)value).floatValue());
-			}
-		}
-		else if(type.equals("double")) {
-			if(isItera) {
-				JsonArray jsonArray = new JsonArray();
-				new ArrayList<>(Arrays.asList((Double[]) value)).forEach(doubleValue -> jsonArray.add(doubleValue));
-				jsonObject.add(key, jsonArray);
-			}
-			else {
-				jsonObject.addProperty(key, ((Number)value).doubleValue());
-			}
-		}
-		else if(type.equals("boolean")) {
-			if(isItera) {
-				JsonArray jsonArray = new JsonArray();
-				new ArrayList<>(Arrays.asList((Boolean[]) value)).forEach(boolValue -> jsonArray.add(boolValue));
-				jsonObject.add(key, jsonArray);
-			}
-			else {
-				jsonObject.addProperty(key, (Boolean) value);
-			}
+	public void addPrimitiveDataToJson(JsonObject jsonObject, Long type, String key, Object value, boolean isItera){
+		switch (type.intValue()) {
+			case 1:
+			case 8:
+			case 9:
+				if(isItera) {
+					JsonArray jsonArray = new JsonArray();
+					new ArrayList<>(Arrays.asList((String[]) value)).forEach(strValue -> jsonArray.add(strValue));
+					jsonObject.add(key, jsonArray);
+				}
+				else {
+					jsonObject.addProperty(key, String.valueOf(value));
+				}
+				break;
+
+			case 2:
+				if(isItera) {
+					JsonArray jsonArray = new JsonArray();
+					new ArrayList<>(Arrays.asList((Integer[]) value)).forEach(intValue -> jsonArray.add(intValue));
+					jsonObject.add(key, jsonArray);
+				}
+				else {
+					jsonObject.addProperty(key, ((Number)value).intValue());
+				}
+				break;
+
+			case 3:
+				if(isItera) {
+					JsonArray jsonArray = new JsonArray();
+					new ArrayList<>(Arrays.asList((Long[]) value)).forEach(longValue -> jsonArray.add(longValue));
+					jsonObject.add(key, jsonArray);
+				}
+				else {
+					jsonObject.addProperty(key, ((Number)value).longValue());
+				}
+				break;
+
+			case 4:
+				if(isItera) {
+					JsonArray jsonArray = new JsonArray();
+					new ArrayList<>(Arrays.asList((Float[]) value)).forEach(floatValue -> jsonArray.add(floatValue));
+					jsonObject.add(key, jsonArray);
+				}
+				else {
+					jsonObject.addProperty(key, ((Number)value).floatValue());
+				}
+				break;
+
+			case 5:
+				if(isItera) {
+					JsonArray jsonArray = new JsonArray();
+					new ArrayList<>(Arrays.asList((Double[]) value)).forEach(doubleValue -> jsonArray.add(doubleValue));
+					jsonObject.add(key, jsonArray);
+				}
+				else {
+					jsonObject.addProperty(key, ((Number)value).doubleValue());
+				}
+				break;
+
+			case 6:
+				if(isItera) {
+					JsonArray jsonArray = new JsonArray();
+					new ArrayList<>(Arrays.asList((Boolean[]) value)).forEach(boolValue -> jsonArray.add(boolValue));
+					jsonObject.add(key, jsonArray);
+				}
+				else {
+					jsonObject.addProperty(key, (Boolean) value);
+				}
 		}
 	}
 

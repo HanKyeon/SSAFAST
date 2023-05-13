@@ -7,13 +7,13 @@
             "request" : {
                 "headers" : {
                     "Content-Type": {
-                        "type" : "String",
+                        "type" : 1,
                         "desc" : "Define request data type",
                         "mapped": false,
                         "value" : "application/json"
                     },
                     "Authorization" : {
-                        "type" : "String",
+                        "type" : 1,
                         "desc" : "access token",
                         "mapped": false,
                         "value" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2ODM5ODQyMDIsInN1YiI6ImFjY2Vzcy10b2tlbiIsImVtYWlsIjoiY2hvaHllb245NzA4QGdtYWlsLmNvbSJ9.04sykH0Ih_f7qXMRT-xC3Ar88ZdrEvIOgAfCuBet7agBGIlnOBCz24Rihh2sTAfYtggLPLOSZZydMdI70_RvvA"
@@ -21,7 +21,7 @@
                 },
                 "pathVars" : {
                     "userName":{
-                        "type" : "String",
+                        "type" : 1,
                         "desc" : "패스 벨류 보내기",
                         "constraints" : [
                             "NotEmpty"
@@ -32,20 +32,20 @@
                 },
                 "params" : {
                     "pTest":{
-                        "type" : "String",
+                        "type" : 1,
                         "desc" : "쿼리 파람 보내기",
-                        "itera" : false,
+                        "itera" : true,
                         "constraints" : [
                             "NotEmpty"
                         ],
                         "mapped": false,
-                        "value" : "쿼리 파람 데이터"
+                        "value" : "[\"쿠리\", \"파라\", \"미터\"]"
                     }
                 },
                 "body" : {
                     "fields" : {
                         "name": {
-                            "type" : "String",
+                            "type" : 1,
                             "desc" : "사람 이름",
                             "itera" : false,
                             "constraints" : [
@@ -55,7 +55,7 @@
                             "value" : "민초현"
                         },
                         "age": {
-                            "type" : "int",
+                            "type" : 2,
                             "desc" : "사람 나이",
                             "itera" : false,
                             "constraints" : [
@@ -71,7 +71,7 @@
                             "desc": "사용자 주소",
                             "fields" : {
                                 "street": {
-                                    "type" : "String",
+                                    "type" : 1,
                                     "desc" : "길",
                                     "itera" : false,
                                     "constraints" : [
@@ -81,7 +81,7 @@
                                     "value" : "테헤란로"
                                 },
                                 "city": {
-                                    "type" : "String",
+                                    "type" : 1,
                                     "desc" : "시군구",
                                     "itera" : false,
                                     "constraints" : [
@@ -91,7 +91,7 @@
                                     "value" : "서울"
                                 },
                                 "state": {
-                                    "type" : "String",
+                                    "type" : 1,
                                     "desc" : "주",
                                     "itera" : false,
                                     "constraints" : [
@@ -110,7 +110,7 @@
                                 "desc": "사용자 주문",
                                 "fields": {
                                     "num": {
-                                        "type" : "String",
+                                        "type" : 1,
                                         "desc" : "주문번호",
                                         "itera" : false,
                                         "constraints" : [
@@ -126,7 +126,7 @@
                                 "desc": "사용자 주문",
                                 "fields": {
                                     "num": {
-                                        "type" : "String",
+                                        "type" : 1,
                                         "desc" : "주문번호",
                                         "itera" : false,
                                         "constraints" : [
@@ -144,7 +144,7 @@
             "response" : {
                 "headers" : {
                     "Authorization" : {
-                        "type" : "String",
+                        "type" : 1,
                         "desc" : "access token"
                     }
                 },
@@ -155,12 +155,12 @@
                             "desc": "사용자 정보",
                             "fields" : {
                                 "name": {
-                                    "type" : "String",
+                                    "type" : 1,
                                     "desc" : "사람 이름",
                                     "itera" : false
                                 },
                                 "age": {
-                                    "type" : "int",
+                                    "type" : 2,
                                     "desc" : "사람 나이",
                                     "itera" : false
                                 }
@@ -171,17 +171,17 @@
                                     "desc": "사용자 주소",
                                     "fields" : {
                                         "street": {
-                                            "type" : "String",
+                                            "type" : 1,
                                             "desc" : "길",
                                             "itera" : false
                                         },
                                         "city": {
-                                            "type" : "String",
+                                            "type" : 1,
                                             "desc" : "시군구",
                                             "itera" : false
                                         },
                                         "state": {
-                                            "type" : "String",
+                                            "type" : 1,
                                             "desc" : "주",
                                             "itera" : false
                                         }
@@ -195,7 +195,7 @@
                                         "desc": "사용자 주문",
                                         "fields": {
                                             "num": {
-                                                "type" : "String",
+                                                "type" : 1,
                                                 "desc" : "주문번호",
                                                 "itera" : false
                                             } 
@@ -206,7 +206,7 @@
                                         "desc": "사용자 주문",
                                         "fields": {
                                             "num": {
-                                                "type" : "String",
+                                                "type" : 1,
                                                 "desc" : "주문번호",
                                                 "itera" : false
                                             } 
@@ -226,13 +226,13 @@
             "request" : {
                 "headers" : {
                     "Content-Type" : {
-                        "type" : "String",
+                        "type" : 1,
                         "desc" : "Define request data type",
                         "mapped": false,
                         "value" : "application/json"
                     },
                     "Authorization" : {
-                        "type" : "String",
+                        "type" : 1,
                         "desc" : "access token",
                         "mapped": true,
                         "value" : "1.headers.Authorization"
@@ -240,7 +240,7 @@
                 },
                 "pathVars" : {
                     "orderId":{
-                        "type" : "long",
+                        "type" : 3,
                         "desc" : "주문 id",
                         "constraints" : [
                             "NotEmpty"
@@ -251,7 +251,7 @@
                 },
                 "params" : {
                     "orderNum":{
-                        "type" : "String",
+                        "type" : 1,
                         "desc" : "주문번호",
                         "itera" : false,
                         "constraints" : [
@@ -259,6 +259,16 @@
                         ],
                         "mapped": true,
                         "value" : "1.body.user.orderList[0].id"
+                    },
+                    "userAddressStreet": {
+                        "type" : 1,
+                        "desc" : "사용자 주소들",
+                        "itera" : true,
+                        "constraints" : [
+                            "NotEmpty"
+                        ],
+                        "mapped": true,
+                        "value" : "[\"쿠리\", \"파라\", \"미터\"]"
                     }
                 },
                 "body" : {
@@ -269,7 +279,7 @@
                                 "desc": "사용자 주문 상품",
                                 "fields": {
                                     "orderId": {
-                                        "type" : "long",
+                                        "type" : 3,
                                         "desc" : "주문 pk",
                                         "itera" : false,
                                         "constraints" : [
@@ -279,7 +289,7 @@
                                         "value" : "1.body.user.orderList[0].id"
                                     },
                                     "name": {
-                                        "type" : "String",
+                                        "type" : 1,
                                         "desc" : "주문 아이템 이름",
                                         "itera" : false,
                                         "constraints" : [
@@ -289,7 +299,7 @@
                                         "value" : "모나미 볼펜"
                                     },
                                     "price":  {
-                                        "type" : "double",
+                                        "type" : 5,
                                         "desc" : "가격",
                                         "itera" : false,
                                         "constraints" : [
@@ -305,7 +315,7 @@
                                 "desc": "사용자 주문 상품",
                                 "fields": {
                                     "orderId": {
-                                        "type" : "long",
+                                        "type" : 3,
                                         "desc" : "주문 pk",
                                         "itera" : false,
                                         "constraints" : [
@@ -315,7 +325,7 @@
                                         "value" : "1.body.user.orderList[0].id"
                                     },
                                     "name": {
-                                        "type" : "String",
+                                        "type" : 1,
                                         "desc" : "주문 아이템 이름",
                                         "itera" : false,
                                         "constraints" : [
@@ -325,7 +335,7 @@
                                         "value" : "우럭"
                                     },
                                     "price":  {
-                                        "type" : "double",
+                                        "type" : 5,
                                         "desc" : "가격",
                                         "itera" : false,
                                         "constraints" : [
@@ -343,7 +353,7 @@
             "response" : {
                 "headers" : {
                     "Authorization" : {
-                        "type" : "String",
+                        "type" : 1,
                         "desc" : "access token"
                     }
                 },
@@ -355,22 +365,22 @@
                                 "desc": "사용자 주문 상품",
                                 "fields": {
                                     "id": {
-                                        "type" : "long",
+                                        "type" : 3,
                                         "desc" : "주문 item pk",
                                         "itera" : false
                                     },
                                     "orderId": {
-                                        "type" : "long",
+                                        "type" : 3,
                                         "desc" : "주문 pk",
                                         "itera" : false
                                     },
                                     "name": {
-                                        "type" : "String",
+                                        "type" : 1,
                                         "desc" : "주문 아이템 이름",
                                         "itera" : false
                                     },
                                     "price":  {
-                                        "type" : "double",
+                                        "type" : 5,
                                         "desc" : "가격",
                                         "itera" : false
                                     }
@@ -381,22 +391,22 @@
                                 "desc": "사용자 주문 상품",
                                 "fields": {
                                     "id": {
-                                        "type" : "long",
+                                        "type" : 3,
                                         "desc" : "주문 item pk",
                                         "itera" : false
                                     },
                                     "orderId": {
-                                        "type" : "long",
+                                        "type" : 3,
                                         "desc" : "주문 pk",
                                         "itera" : false
                                     },
                                     "name": {
-                                        "type" : "String",
+                                        "type" : 1,
                                         "desc" : "주문 아이템 이름",
                                         "itera" : false
                                     },
                                     "price":  {
-                                        "type" : "double",
+                                        "type" : 5,
                                         "desc" : "가격",
                                         "itera" : false
                                     }
@@ -413,13 +423,13 @@
             "request" : {
                 "headers" : {
                     "Content-Type" : {
-                        "type" : "String",
+                        "type" : 1,
                         "desc" : "Define request data type",
                         "mapped": false,
                         "value" : "application/json"
                     },
                     "Authorization" : {
-                        "type" : "String",
+                        "type" : 1,
                         "desc" : "access token",
                         "mapped": true,
                         "value" : "1.headers.Authorization"
@@ -427,7 +437,7 @@
                 },
                 "pathVars" : {
                     "itemId" : {
-                        "type" : "long",
+                        "type" : 3,
                         "desc" : "item id",
                         "constraints" : [
                             "NotNull"
@@ -440,7 +450,7 @@
             "response" : {
                 "headers" : {
                     "Authorization" : {
-                        "type" : "String",
+                        "type" : 1,
                         "desc" : "access token"
                     }
                 },
@@ -451,22 +461,22 @@
                             "desc": "사용자 주문 상품",
                             "fields": {
                                 "id": {
-                                    "type" : "long",
+                                    "type" : 3,
                                     "desc" : "주문 item pk",
                                     "itera" : false
                                 },
                                 "orderId": {
-                                    "type" : "long",
+                                    "type" : 3,
                                     "desc" : "주문 pk",
                                     "itera" : false
                                 },
                                 "name": {
-                                    "type" : "String",
+                                    "type" : 1,
                                     "desc" : "주문 아이템 이름",
                                     "itera" : false
                                 },
                                 "price":  {
-                                    "type" : "double",
+                                    "type" : 5,
                                     "desc" : "가격",
                                     "itera" : false
                                 }
