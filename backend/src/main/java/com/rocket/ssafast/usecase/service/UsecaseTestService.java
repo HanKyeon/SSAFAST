@@ -1,7 +1,9 @@
 package com.rocket.ssafast.usecase.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -166,15 +168,23 @@ public class UsecaseTestService {
 
 			// 8. query params 정보
 			Map<String, UsecaseReqFieldDetail> nowParams = nowRequest.getParams();	// 현재 순서 api의 query params 정보
-			Map<String, String> params;
+			Map<String, Object> params;
 
 			if(nowParams != null) {
 				params = new HashMap<>();
 				nowParams.forEach((key, param) -> {
 					if(!param.isMapped()) {
-						params.put(key, String.valueOf(param.getValue()));
+						if(!param.isItera()) {
+							params.put(key, String.valueOf(param.getValue()));
+						}
+						else {
+							addFieldsToMap(param.getType(), key, param.getValue(), params);
+						}
 					} else {
-						params.put(key, String.valueOf(getMappedValue(results.toString(), String.valueOf(param.getValue()))));
+						addFieldsToMap(param.getType(),
+							key,
+							getMappedValue(results.toString(), String.valueOf(param.getValue())),
+							params);
 					}
 				});
 			} else {
@@ -368,66 +378,74 @@ public class UsecaseTestService {
 		});
 	}
 
-	public void addPrimitiveDataToJson(JsonObject jsonObject, String type, String key, Object value, boolean isItera){
-		if(type.equals("String") || type.equals("Date") || type.equals("LocalDateTime")) {
-			if(isItera) {
-				JsonArray jsonArray = new JsonArray();
-				new ArrayList<>(Arrays.asList((String[]) value)).forEach(strValue -> jsonArray.add(strValue));
-				jsonObject.add(key, jsonArray);
-			}
-			else {
-				jsonObject.addProperty(key, String.valueOf(value));
-			}
-		}
-		else if(type.equals("int")) {
-			if(isItera) {
-				JsonArray jsonArray = new JsonArray();
-				new ArrayList<>(Arrays.asList((Integer[]) value)).forEach(intValue -> jsonArray.add(intValue));
-				jsonObject.add(key, jsonArray);
-			}
-			else {
-				jsonObject.addProperty(key, ((Number)value).intValue());
-			}
-		}
-		else if(type.equals("long")) {
-			if(isItera) {
-				JsonArray jsonArray = new JsonArray();
-				new ArrayList<>(Arrays.asList((Long[]) value)).forEach(longValue -> jsonArray.add(longValue));
-				jsonObject.add(key, jsonArray);
-			}
-			else {
-				jsonObject.addProperty(key, ((Number)value).longValue());
-			}
-		}
-		else if(type.equals("float")) {
-			if(isItera) {
-				JsonArray jsonArray = new JsonArray();
-				new ArrayList<>(Arrays.asList((Float[]) value)).forEach(floatValue -> jsonArray.add(floatValue));
-				jsonObject.add(key, jsonArray);
-			}
-			else {
-				jsonObject.addProperty(key, ((Number)value).floatValue());
-			}
-		}
-		else if(type.equals("double")) {
-			if(isItera) {
-				JsonArray jsonArray = new JsonArray();
-				new ArrayList<>(Arrays.asList((Double[]) value)).forEach(doubleValue -> jsonArray.add(doubleValue));
-				jsonObject.add(key, jsonArray);
-			}
-			else {
-				jsonObject.addProperty(key, ((Number)value).doubleValue());
-			}
-		}
-		else if(type.equals("boolean")) {
-			if(isItera) {
-				JsonArray jsonArray = new JsonArray();
-				new ArrayList<>(Arrays.asList((Boolean[]) value)).forEach(boolValue -> jsonArray.add(boolValue));
-				jsonObject.add(key, jsonArray);
-			}
-			else {
-				jsonObject.addProperty(key, (Boolean) value);
-			}
+	public void addPrimitiveDataToJson(JsonObject jsonObject, Long type, String key, Object value, boolean isItera){
+		switch (type.intValue()) {
+			case 1:
+			case 8:
+			case 9:
+				if(isItera) {
+					JsonArray jsonArray = new JsonArray();
+					new ArrayList<>(Arrays.asList((String[]) value)).forEach(strValue -> jsonArray.add(strValue));
+					jsonObject.add(key, jsonArray);
+				}
+				else {
+					jsonObject.addProperty(key, String.valueOf(value));
+				}
+				break;
+
+			case 2:
+				if(isItera) {
+					JsonArray jsonArray = new JsonArray();
+					new ArrayList<>(Arrays.asList((Integer[]) value)).forEach(intValue -> jsonArray.add(intValue));
+					jsonObject.add(key, jsonArray);
+				}
+				else {
+					jsonObject.addProperty(key, ((Number)value).intValue());
+				}
+				break;
+
+			case 3:
+				if(isItera) {
+					JsonArray jsonArray = new JsonArray();
+					new ArrayList<>(Arrays.asList((Long[]) value)).forEach(longValue -> jsonArray.add(longValue));
+					jsonObject.add(key, jsonArray);
+				}
+				else {
+					jsonObject.addProperty(key, ((Number)value).longValue());
+				}
+				break;
+
+			case 4:
+				if(isItera) {
+					JsonArray jsonArray = new JsonArray();
+					new ArrayList<>(Arrays.asList((Float[]) value)).forEach(floatValue -> jsonArray.add(floatValue));
+					jsonObject.add(key, jsonArray);
+				}
+				else {
+					jsonObject.addProperty(key, ((Number)value).floatValue());
+				}
+				break;
+
+			case 5:
+				if(isItera) {
+					JsonArray jsonArray = new JsonArray();
+					new ArrayList<>(Arrays.asList((Double[]) value)).forEach(doubleValue -> jsonArray.add(doubleValue));
+					jsonObject.add(key, jsonArray);
+				}
+				else {
+					jsonObject.addProperty(key, ((Number)value).doubleValue());
+				}
+				break;
+
+			case 6:
+				if(isItera) {
+					JsonArray jsonArray = new JsonArray();
+					new ArrayList<>(Arrays.asList((Boolean[]) value)).forEach(boolValue -> jsonArray.add(boolValue));
+					jsonObject.add(key, jsonArray);
+				}
+				else {
+					jsonObject.addProperty(key, (Boolean) value);
+				}
 		}
 	}
 
@@ -435,6 +453,101 @@ public class UsecaseTestService {
 		System.out.println("results :"+results);
 		System.out.println("json path: "+"$." + mappingTarget);
 		return JsonPath.read(results, "$." + mappingTarget);
+	}
+
+	private void addFieldsToMap(Long type, String key, Object value, Map<String, Object> map) {
+		if (value instanceof List<?>) {
+
+			switch (type.intValue()) {
+				case 1:
+					List<String> stringList = new ArrayList<>();
+
+					for (Object obj : (List<?>)value) {
+						if (obj instanceof String) {
+							String o = (String)obj;
+							stringList.add(o);
+						}
+					}
+					map.put(key, stringList);
+					break;
+				case 2:
+					List<Integer> intList = new ArrayList<>();
+
+					for (Object obj : (List<?>)value) {
+						if (obj instanceof Integer) {
+							Integer o = (Integer)obj;
+							intList.add(o);
+						}
+					}
+					map.put(key, intList);
+					break;
+				case 3:
+					List<Long> longList = new ArrayList<>();
+
+					for (Object obj : (List<?>)value) {
+						if (obj instanceof Integer) {
+							Long o = (Long)obj;
+							longList.add(o);
+						}
+					}
+					map.put(key, longList);
+					break;
+				case 4:
+					List<Float> floatList = new ArrayList<>();
+
+					for (Object obj : (List<?>)value) {
+						if (obj instanceof Float) {
+							Float o = (Float)obj;
+							floatList.add(o);
+						}
+					}
+					map.put(key, floatList);
+					break;
+				case 5:
+					List<Double> doubleList = new ArrayList<>();
+
+					for (Object obj : (List<?>)value) {
+						if (obj instanceof Double) {
+							Double o = (Double)obj;
+							doubleList.add(o);
+						}
+					}
+					map.put(key, doubleList);
+					break;
+				case 6:
+					List<Boolean> booleantList = new ArrayList<>();
+
+					for (Object obj : (List<?>)value) {
+						if (obj instanceof Boolean) {
+							Boolean o = (Boolean)obj;
+							booleantList.add(o);
+						}
+					}
+					map.put(key, booleantList);
+				case 8:
+					List<Date> dateList = new ArrayList<>();
+
+					for (Object obj : (List<?>)value) {
+						if (obj instanceof Date) {
+							Date o = (Date)obj;
+							dateList.add(o);
+						}
+					}
+					map.put(key, dateList);
+					break;
+				case 9:
+					List<LocalDateTime> localDateTimeList = new ArrayList<>();
+
+					for (Object obj : (List<?>)value) {
+						if (obj instanceof LocalDateTime) {
+							LocalDateTime o = (LocalDateTime)obj;
+							localDateTimeList.add(o);
+						}
+					}
+					map.put(key, localDateTimeList);
+					break;
+			}
+		}
 	}
 
 	public List<ResUsecasePrevResponseDto> getPrevResponses(List<Long> apiIds) {

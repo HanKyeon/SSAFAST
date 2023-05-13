@@ -33,8 +33,8 @@ public class TmpController {
 	private final TmpService tmpService;
 
 	@PostMapping("/user/{userName}")
-	ResponseEntity<?> postUserMethod(@RequestHeader(value = "Authorization") String auth, @RequestBody TmpUserDto tmpUserDto, @RequestParam String pTest, @PathVariable("userName") String userName) {
-		System.out.println("/api/tmp/user/사람이름의 쿼리 파람 잘 받았음: "+ pTest);
+	ResponseEntity<?> postUserMethod(@RequestHeader(value = "Authorization") String auth, @RequestBody TmpUserDto tmpUserDto, @RequestParam List<String> pTest, @PathVariable("userName") String userName) {
+		System.out.println("/api/tmp/user/사람이름의 쿼리 파람 잘 받았음: "+ pTest.get(0));
 
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Authorization", auth);

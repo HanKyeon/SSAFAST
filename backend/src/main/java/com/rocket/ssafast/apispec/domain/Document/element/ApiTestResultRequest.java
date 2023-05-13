@@ -13,12 +13,12 @@ public class ApiTestResultRequest {
 
 	Map<String, String> pathVars;
 
-	Map<String, String> params;
+	Map<String, Object> params;
 
 	String body;
 
 	@Builder
-	public ApiTestResultRequest(String url, int method, Map<String, String> headers, Map<String, String> pathVars, Map<String, String> params, String body) {
+	public ApiTestResultRequest(String url, int method, Map<String, String> headers, Map<String, String> pathVars, Map<String, Object> params, String body) {
 		this.url = url;
 		this.method = method;
 		this.headers = headers;

@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UsecaseReqFieldDetail {
 
-	@NotEmpty
-	String type;
+	@NotNull
+	Long type;
 
 	String desc;
 

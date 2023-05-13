@@ -101,7 +101,14 @@ public class ApiExecService {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		if (apiExecReqMessageDto.getParams() != null) {
 			apiExecReqMessageDto.getParams().forEach((key, value) -> {
-				params.add(key, value);
+				if(value instanceof ArrayList) {
+					for (Object obj : (List<?>)value) {{
+						params.put(key, String.valueOf(obj));
+					}
+				}
+				else {
+					params.add(key, String.valueOf(value));
+				}
 			});
 		}
 

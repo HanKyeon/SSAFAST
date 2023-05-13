@@ -30,7 +30,7 @@ public class ApiExecReqMessageDto {
 
 	Map<String, String> pathVars;
 	
-	Map<String, String> params;
+	Map<String, Object> params;
 
 	String body;
 
