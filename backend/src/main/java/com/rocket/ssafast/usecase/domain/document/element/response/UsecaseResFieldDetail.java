@@ -9,11 +9,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class UsecaseResFieldDetail {
-	@NotEmpty
-	String type;
+	
+	int type;
 
 	String desc;
 
-	@NotNull
 	Boolean itera;
 }

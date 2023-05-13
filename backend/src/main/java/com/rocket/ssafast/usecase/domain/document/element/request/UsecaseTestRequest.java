@@ -18,7 +18,7 @@ public class UsecaseTestRequest {
 	Map<String, UsecaseReqPathFieldDetail> pathVars;	// key : pathVariable 이름
 
 	@Valid
-	Map<String, UsecaseReqFieldDetail> params;		// key : param 이름
+	Map<String, UsecaseReqParamFieldDetail> params;		// key : param 이름
 
 	@Valid
 	UsecaseReqBody body;

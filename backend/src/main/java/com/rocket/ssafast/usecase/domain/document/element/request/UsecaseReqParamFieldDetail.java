@@ -2,16 +2,18 @@ package com.rocket.ssafast.usecase.domain.document.element.request;
 
 import java.util.List;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UsecaseReqFieldDetail {
-
+@AllArgsConstructor
+@Builder
+public class UsecaseReqParamFieldDetail {
 	@NotNull
 	Long type;
 
@@ -25,5 +27,5 @@ public class UsecaseReqFieldDetail {
 	@NotNull
 	boolean mapped;
 
-	Object value;
+	String value;
 }
