@@ -101,11 +101,49 @@ public class ApiSpecService {
         for(Map.Entry<Long, DtoInfo> entry : apiDoc.getRequest().getBody().getNestedDtos().entrySet()){
             Long key = entry.getKey();
             DtoInfo value = entry.getValue();
+            //get name and desc
+            Optional<DtoSpecEntity> dto = dtoSpecEntityRepository.findById(key);
+            if(!dto.isPresent()){ throw new CustomException(ErrorCode.DTO_NOT_FOUND); }
+
+            //nestedDto 가 가진 dto 들의 정보에 name + desc 를 넣어주기 위한 맵 생성
+            Map<Long, DtoInfo> transferNestedDto = new HashMap<>();
+
+            //nestedDto 가 가진 dto 들의 정보 순회 및 데이터 조회
+            for(Map.Entry<Long, DtoInfo> nestedDtoEntry : value.getNestedDtos().entrySet()){
+                Long nestedDtoKey = nestedDtoEntry.getKey();
+                DtoInfo nestedDtoValue = nestedDtoEntry.getValue();
+
+                Optional<DtoSpecEntity> nestedDtoEntity = dtoSpecEntityRepository.findById(nestedDtoKey);
+                if(!nestedDtoEntity.isPresent()){
+                    throw new CustomException(ErrorCode.DTO_NOT_FOUND);
+                }
+                // make new dtoinfo for transfer
+                DtoInfo dtoWithNameAndDesc =
+                        DtoInfo.builder()
+                                .name(nestedDtoEntity.get().getName())
+                                .desc(nestedDtoEntity.get().getDescription())
+                                .itera(nestedDtoValue.isItera())
+                                .fields(nestedDtoValue.getFields())
+                                .nestedDtos(nestedDtoValue.getNestedDtos())
+                                .build();
+                transferNestedDto.put(nestedDtoKey, dtoWithNameAndDesc);
+            }
+
+            //make dto for transfer
+            DtoInfo transferDto =
+                    DtoInfo.builder()
+                            .name(dto.get().getName())
+                            .desc(dto.get().getDescription())
+                            .itera(value.isItera())
+                            .fields(value.getFields())
+                            .nestedDtos(transferNestedDto)
+                            .build();
+
             if(value.isItera()){
-                nestedDtoList.put(key, value);
+                nestedDtoList.put(key, transferDto);
             }
             else{
-                nestedDtos.put(key, value);
+                nestedDtos.put(key, transferDto);
             }
         }
 
