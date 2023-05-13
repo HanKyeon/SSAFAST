@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ApiHasDtoEntityRepository extends JpaRepository<ApiHasDtoEntity, Long> {
     List<ApiHasDtoEntity> findByApiSpecEntity(ApiSpecEntity apiSpecEntity);
+
+    List<ApiHasDtoEntity> findAllByApiSpecEntity(ApiSpecEntity apiSpecEntity);
 }

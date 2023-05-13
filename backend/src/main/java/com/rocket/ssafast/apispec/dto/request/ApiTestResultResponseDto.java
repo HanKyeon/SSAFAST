@@ -15,12 +15,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-//ApiExecController:58번째 줄에서 builder error 나길래 임시방편
 @AllArgsConstructor
 @Builder
 public class ApiTestResultResponseDto {
 	@NotNull
-	Map<String, List> headers;
+	Map<String, String> headers;
 
 	@NotNull
 	Object body;
