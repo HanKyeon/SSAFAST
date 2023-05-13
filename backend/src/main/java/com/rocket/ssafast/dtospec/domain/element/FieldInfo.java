@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class FieldInfo {
-    private String key;
+    private String keyName;
     private String type;
     private String desc;
     private String value;
