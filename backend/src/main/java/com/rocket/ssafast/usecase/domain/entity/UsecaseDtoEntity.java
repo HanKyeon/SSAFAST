@@ -9,8 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.rocket.ssafast.dtospec.domain.DtoSpecEntity;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity(name = "usecase_test_dto")
-public class UsecaseTestDtoEntity {
+public class UsecaseDtoEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +27,7 @@ public class UsecaseTestDtoEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "usecase_test_id")
-	UsecaseTestEntity usecaseTestEntity;
+	UsecaseEntity usecaseEntity;
 
 	@Column(name = "dto_id")
 	Long dtoId;

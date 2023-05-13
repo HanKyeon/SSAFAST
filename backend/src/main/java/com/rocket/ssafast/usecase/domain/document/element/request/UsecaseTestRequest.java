@@ -12,14 +12,14 @@ import lombok.NoArgsConstructor;
 public class UsecaseTestRequest {
 
 	@Valid
-	Map<String, UsecaseTestReqHeaderFieldDetail> headers;	// key : header의 필드
+	Map<String, UsecaseReqHeaderFieldDetail> headers;	// key : header의 필드
 
 	@Valid
-	Map<String, UsecaseTestReqPathFieldDetail> pathVars;	// key : pathVariable 이름
+	Map<String, UsecaseReqPathFieldDetail> pathVars;	// key : pathVariable 이름
 
 	@Valid
-	Map<String, UsecaseTestReqFieldDetail> params;		// key : param 이름
+	Map<String, UsecaseReqFieldDetail> params;		// key : param 이름
 
 	@Valid
-	UsecaseTestReqBody body;
+	UsecaseReqBody body;
 }

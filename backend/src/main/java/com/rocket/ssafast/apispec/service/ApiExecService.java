@@ -38,7 +38,7 @@ import com.rocket.ssafast.apispec.dto.request.ApiTestResultResponseDto;
 import com.rocket.ssafast.apispec.dto.response.ApiTestResultResponseRawDto;
 import com.rocket.ssafast.apispec.dto.response.ApiTestResultSummaryDto;
 import com.rocket.ssafast.apispec.repository.ApiSpecRepository;
-import com.rocket.ssafast.apispec.repository.ApiTestResultDocsRepository;
+import com.rocket.ssafast.apispec.repository.ApiTestResultDocRepository;
 import com.rocket.ssafast.apispec.repository.ApiTestResultEntityRepository;
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
@@ -52,7 +52,7 @@ public class ApiExecService {
 	@Value("${mongoid.document.test}")
 	private String SSAFAST_TEST_ID;
 	private static final RestTemplate restTemplate;
-	private final ApiTestResultDocsRepository apiTestResultDocsRepository;
+	private final ApiTestResultDocRepository apiTestResultDocRepository;
 	private final ApiTestResultEntityRepository apiTestResultEntityRepository;
 	private final ApiSpecRepository apiSpecRepository;
 
@@ -264,12 +264,12 @@ public class ApiExecService {
 		ApiTestResultDocument document = createOrFinResultsIfExists();
 		document.getResults().put(resultId, apiTestResultDto.toInfo());
 
-		apiTestResultDocsRepository.save(document);
+		apiTestResultDocRepository.save(document);
 	}
 
 
 	public ApiTestResultDocument createOrFinResultsIfExists(){
-		Optional<ApiTestResultDocument> document = apiTestResultDocsRepository.findById(SSAFAST_TEST_ID);
+		Optional<ApiTestResultDocument> document = apiTestResultDocRepository.findById(SSAFAST_TEST_ID);
 
 		if(document.isPresent()) { return document.get(); }
 
@@ -295,7 +295,7 @@ public class ApiExecService {
 			throw new CustomException(ErrorCode.API_NOT_FOUND);
 		}
 
-		Map<String, Object> detailResult = apiTestResultDocsRepository.findResultsByIdAndKey(SSAFAST_TEST_ID, resId);
+		Map<String, Object> detailResult = apiTestResultDocRepository.findResultsByIdAndKey(SSAFAST_TEST_ID, resId);
 		if(detailResult == null) {
 			throw new CustomException(ErrorCode.DETAIL_RESULT_NOT_FOUND);
 		}

@@ -10,20 +10,16 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UsecaseTestReqFieldDetail {
-
+public class UsecaseReqPathFieldDetail {
 	@NotEmpty
 	String type;
 
 	String desc;
 
 	@NotNull
-	boolean itera;
+	boolean mapped;
 
 	List<String> constraints;
-
-	@NotNull
-	boolean mapped;
 
 	Object value;
 }

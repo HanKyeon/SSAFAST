@@ -6,7 +6,7 @@ import javax.persistence.Id;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.rocket.ssafast.usecase.domain.document.element.UsecaseTestInfo;
+import com.rocket.ssafast.usecase.domain.document.element.UsecaseInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,9 +18,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Document("usecase_test_docs")
-public class UsecaseTestDocument {
+public class UsecaseDocument {
 	@Id
 	String id;		// ssafast-usecase-test
 
-	Map<Long, UsecaseTestInfo> usecaseTest;		// key : test id
+	Map<Long, UsecaseInfo> usecaseTest;		// key : test id
 }
