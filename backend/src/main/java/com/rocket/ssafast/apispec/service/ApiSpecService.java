@@ -88,7 +88,7 @@ public class ApiSpecService {
         return apiSpec.getId();
     }
 
-    public DetailApiSpecInfoDto getApiSpecDetail(Long apiId, ResMemberDto memberDto){
+    public DetailApiSpecInfoDto getApiSpecDetail(Long apiId){
         Optional<ApiSpecEntity> apiSpec = apiSpecRepository.findById(apiId);
         ApiDoc apiDoc = apiSpecDocumentService.getApiSpecDocs(apiId);
 
@@ -109,6 +109,9 @@ public class ApiSpecService {
             }
         }
 
+        //api 작성자 정보 get
+        ResMemberDto memberDto = findApiSpecWriterByApiId(apiId);
+
         apiDoc.getRequest().getBody().setNestedDtos(nestedDtos);
         apiDoc.getRequest().getBody().setNestedDtoList(nestedDtoList);
 
@@ -124,5 +127,22 @@ public class ApiSpecService {
                 .createdTime(presentApiSpec.getCreatedTime())
                 .document(apiDoc)
                 .build();
+    }
+
+    public ResMemberDto findApiSpecWriterByApiId(Long apiId){
+        Optional<ApiSpecEntity> apiSpec = apiSpecRepository.findById(apiId);
+        if(!apiSpec.isPresent()){
+            throw new CustomException(ErrorCode.API_NOT_FOUND);
+        }
+        ApiSpecEntity apiSpecEntity = apiSpec.get();
+
+        return ResMemberDto.builder()
+                .id(apiSpecEntity.getMember().getId())
+                .name(apiSpecEntity.getMember().getName())
+                .email(apiSpecEntity.getMember().getEmail())
+                .profileImg(apiSpecEntity.getMember().getProfileImg())
+                .build();
+
+
     }
 }
