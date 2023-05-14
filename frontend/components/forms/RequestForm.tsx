@@ -40,7 +40,12 @@ interface Fields {
   type: string;
   desc: string;
   itera: boolean;
-  constraints: string[];
+  constraints: {
+    mainName: string;
+    minV: number | null;
+    maxV: number | null;
+    validateReg: string | null;
+  }[]; // 제한 조건 들
   value: string | null;
 }
 
@@ -52,7 +57,12 @@ interface PathVariables {
   key: string;
   type: string;
   desc: string;
-  constraints: string[];
+  constraints: {
+    mainName: string;
+    minV: number | null;
+    maxV: number | null;
+    validateReg: string | null;
+  }[]; // 제한 조건 들
   value: null;
 }
 
@@ -60,7 +70,12 @@ interface Params {
   key: string;
   type: string;
   desc: string;
-  constraints: string[];
+  constraints: {
+    mainName: string;
+    minV: number | null;
+    maxV: number | null;
+    validateReg: string | null;
+  }[]; // 제한 조건 들
   itera: boolean;
   value: null;
 }
