@@ -5,8 +5,8 @@ import { IoMdArrowRoundBack } from 'react-icons/io';
 import { useRouter } from 'next/router';
 import { useBaseUrl } from '@/hooks/queries/queries';
 import { SpaceParams } from '@/pages/space';
-import { RequestFormData } from '@/components/forms/RequestForm';
-import { ResponseFormData } from '@/components/forms/ResponseForm';
+import { RequestFormData } from './RequestForm';
+import { ResponseFormData } from './ResponseForm';
 import { MockupData2Type } from '../APIDocsContainer';
 import { Box, Button, Input, Select } from '@/components/common';
 import AnimationBox from '@/components/common/AnimationBox';
@@ -218,7 +218,14 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
       status: undefined,
       document: {
         request: undefined,
-        response: undefined,
+        response: [
+          {
+            status_code: 200,
+            desc: 'success',
+            headers: [],
+            body: undefined,
+          },
+        ],
       },
     },
   });
@@ -239,7 +246,7 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
 
   return (
     <div className="flex flex-col gap-3 p-[3%] w-full h-full overflow-y-scroll">
-      <div>
+      <div className="h-[5%]">
         <Button
           onClick={toggleAddHandler}
           isEmpty
@@ -251,7 +258,7 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
 
       <Box
         fontType="normal"
-        className="flex justify-around flex-row items-center box-border"
+        className="flex justify-around flex-row items-center box-border h-[5%]"
       >
         <div
           className={`${step === 1 ? selectedStyle(dark) : ''} cursor-pointer `}
@@ -268,30 +275,33 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
       </Box>
       {/* <button onClick={onSubmit}>최종 제출</button> */}
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <AnimationBox
+        <form onSubmit={handleSubmit(onSubmit)} className="h-[80%]">
+          <div
             className={`${
               step === 1 ? '' : 'hidden'
-            } flex flex-col w-full h-full justify-center`}
+            } flex flex-col w-full h-full overflow-y-scroll`}
           >
-            <div className="flex flex-row justify-around">
+            <div className="flex flex-row items-center pt-10 h-[10%]">
               <Controller
                 name={`categoryId`}
                 control={control}
                 render={({ field, fieldState }) => (
-                  <div className="flex flex-col">
-                    {/* <Select
-                      className={`w-40 text-start items-start`}
-                      {...field}
+                  <div className="flex flex-col w-full h-full items-center">
+                    <Select
+                      className={`w-[30%] text-start items-center`}
+                      value={field.value}
+                      onChange={(v) => {
+                        field.onChange(v);
+                      }}
                     >
-                      <option value="0">경로를 설정해주세요.</option>
+                      <option value="">경로를 설정해주세요.</option>
                       <option value="1">/user</option>
                     </Select>
                     {fieldState.invalid && (
                       <span className="text-red-500">
                         경로는 반드시 입력해야합니다.
                       </span>
-                    )} */}
+                    )}
                   </div>
                 )}
               />
@@ -299,37 +309,39 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
                 name={`status`}
                 control={control}
                 render={({ field }) => (
-                  <div className="flex flex-col">
-                    {/* <Select
-                      className={`w-40 text-center items-start`}
+                  <div className="flex flex-col w-full items-center h-full">
+                    <Select
+                      className={`w-[20%] text-center items-center`}
                       {...field}
                     >
                       <option value="1">명세중</option>
                       <option value="2">명세완료</option>
                       <option value="3">개발중</option>
                       <option value="4">개발완료</option>
-                    </Select> */}
+                    </Select>
                   </div>
                 )}
               />
             </div>
-            <div className="flex flex-col items-center justify-center gap-3 ">
+            <div className="flex flex-col w-full items-center justify-center gap-4 py-10">
               <Controller
                 control={control}
                 name={`name`}
                 rules={{ required: true }}
                 render={({ field, fieldState }) => (
-                  <div className="flex flex-col">
+                  <div className="flex flex-col w-[90%]">
                     <Input
                       type="text"
                       placeholder="Name"
                       name={`name`}
-                      className={`w-96 text-start`}
+                      className={`w-full text-start`}
                       onChange={field.onChange}
                       onBlur={field.onBlur}
                     />
                     {fieldState.invalid && (
-                      <span>API 이름은 반드시 입력해야합니다.</span>
+                      <span className="text-red-500">
+                        API 이름은 반드시 입력해야합니다.
+                      </span>
                     )}
                   </div>
                 )}
@@ -339,68 +351,73 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
                 control={control}
                 rules={{ required: true }}
                 render={({ field, fieldState }) => (
-                  <div className="flex flex-col">
+                  <div className="flex flex-col w-[90%]">
                     <Input
                       type="text"
                       placeholder="Description"
                       name={`description`}
-                      className={`w-[512px] text-start`}
+                      className={`w-full text-start`}
                       onChange={field.onChange}
                       onBlur={field.onBlur}
                     />
                     {fieldState.invalid && (
-                      <span className="">API 설명에 대해서 적어주세요.</span>
+                      <span className="text-red-500">
+                        API 설명에 대해서 적어주세요.
+                      </span>
                     )}
                   </div>
                 )}
               />
-              <Controller
-                name={`method`}
-                control={control}
-                rules={{ required: true }}
-                render={({ field, fieldState }) => (
-                  <div className="flex flex-col">
-                    <Select
-                      className={`w-24 text-start items-start`}
-                      name={'method'}
-                      onChange={field.onChange}
-                      onBlur={field.onBlur}
-                    >
-                      <option value="">Method</option>
-                      <option value={1}>GET</option>
-                      <option value={2}>POST</option>
-                      <option value={3}>PUT</option>
-                      <option value={4}>DELETE</option>
-                      <option value={5}>PATCH</option>
-                    </Select>
-                    {fieldState.invalid && (
-                      <span className="">Method를 지정해 주세요.</span>
-                    )}
-                  </div>
-                )}
-              />
+              <div className="flex w-[90%] gap-4">
+                <Controller
+                  name={`method`}
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field, fieldState }) => (
+                    <div className="flex flex-col w-[21%]">
+                      <Select
+                        className={`w-full text-center items-start`}
+                        name={'method'}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                      >
+                        <option value="">Method</option>
+                        <option value={1}>GET</option>
+                        <option value={2}>POST</option>
+                        <option value={3}>PUT</option>
+                        <option value={4}>DELETE</option>
+                        <option value={5}>PATCH</option>
+                      </Select>
+                      {fieldState.invalid && (
+                        <span className="text-red-500">
+                          Method를 지정해 주세요.
+                        </span>
+                      )}
+                    </div>
+                  )}
+                />
 
-              <Controller
-                name={`baseUrl`}
-                control={control}
-                // rules={{ required: true }}
-                render={({ field, fieldState }) => (
-                  <div className="flex flex-col">
-                    <Select
-                      name={'baseUrl'}
-                      onChange={field.onChange}
-                      onBlur={field.onBlur}
-                      className={`w-[512px] text-start items-start`}
-                    >
-                      <option value="1">Base URL</option>
-                      <option value="2">또다른 Sub URL</option>
-                    </Select>
-                  </div>
-                )}
-              />
+                <Controller
+                  name={`baseUrl`}
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <div className="flex flex-col w-[79%]">
+                      <Select
+                        name={'baseUrl'}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        className={`w-full text-start items-start`}
+                      >
+                        <option value="1">Base URL</option>
+                        <option value="2">또다른 Sub URL</option>
+                      </Select>
+                    </div>
+                  )}
+                />
+              </div>
             </div>
             <RequestForm />
-          </AnimationBox>
+          </div>
 
           <AnimationBox
             className={`${
@@ -409,7 +426,9 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
           >
             <ResponseForm />
           </AnimationBox>
-          <Button type="submit">저장</Button>
+          <div className="flex justify-end pt-10">
+            <Button type="submit">저장</Button>
+          </div>
         </form>
       </FormProvider>
     </div>

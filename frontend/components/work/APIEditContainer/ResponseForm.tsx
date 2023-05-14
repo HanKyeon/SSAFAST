@@ -3,15 +3,25 @@ import {
   Controller,
   useFieldArray,
   UseFormReturn,
+  FieldArrayWithId,
+  UseFieldArrayRemove,
 } from 'react-hook-form';
 import { Box, Button, CircleBtn, Input } from '@/components/common';
-import { FormEvent, useRef } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import useInput from '@/hooks/useInput';
 import useInputNumber from '@/hooks/useInputNumber';
 import { useStoreDispatch, useStoreSelector } from '@/hooks/useStore';
 import { DispatchToast } from '@/store';
 import { ApiCreateForm } from './ApiWrite';
-
+import HeaderController from './HeaderController';
+import AnimationBox from '@/components/common/AnimationBox';
+import { defaultTypes } from '@/utils/constraints';
+import { useDtoList } from '@/hooks/queries/queries';
+import { useRouter } from 'next/router';
+import { SpaceParams } from '@/pages/space';
+import ToggleableHeader from '../APIDocsContainer/ToggleableHeader';
+import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
+import CodeToggleHeader from './CodeToggleHeader';
 export interface ResponseFormData {
   status_code: number;
   desc: string;
@@ -19,7 +29,7 @@ export interface ResponseFormData {
   body: BodyType;
 }
 interface Headers {
-  key: string;
+  keyName: string;
   type: string;
   desc: string;
 }
@@ -29,28 +39,32 @@ export interface BodyType {
 }
 
 interface Fields {
-  key: string;
+  keyName: string;
   type: string;
   desc: string;
   itera: boolean;
-  constraints: string[];
   value: string | null;
 }
 
+interface ItemProps {
+  item: FieldArrayWithId<ApiCreateForm, 'document.response', 'id'>;
+  index: number;
+  remove: UseFieldArrayRemove;
+  control: any;
+  getValues: any;
+}
 export type NestedDtosType = {
   [key: string | number]: BodyType;
 };
 
 const ResponseForm = function () {
   const dispatch = useStoreDispatch();
-  const selectedStyle = (dark: boolean) =>
-    `${dark ? 'text-mincho-strong' : 'text-taro-strong'}` as const;
 
-  const { dark } = useStoreSelector((state) => state.dark);
   const [codeRef, descRef] = [
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
   ];
+
   const {
     inputData: codeInput,
     onChangeHandler: codeChange,
@@ -63,7 +77,7 @@ const ResponseForm = function () {
   } = useInput(descRef);
 
   // const { control } = methods;
-  const { control } = useFormContext<ApiCreateForm>();
+  const { control, getValues } = useFormContext<ApiCreateForm>();
   const {
     fields: responseFields,
     append,
@@ -92,6 +106,10 @@ const ResponseForm = function () {
       dispatch(DispatchToast('상태 코드의 길이는 3자리여야 합니다!', false));
     } else if (descRef?.current?.value === '') {
       dispatch(DispatchToast('상태코드에 대한 설명을 입력해 주세요!', false));
+    } else if (codeRef?.current?.value === '200') {
+      dispatch(
+        DispatchToast('상태코드 200은 이미 입력되어 있는 값입니다.', false)
+      );
     } else {
       addComponent();
     }
@@ -100,24 +118,27 @@ const ResponseForm = function () {
   return (
     <Box className="overflow-y-scroll pt-5 w-full h-full">
       <div>
-        <div className="flex flex-row gap-4 items-center justify-center">
-          <Input
-            type="number"
-            inputref={codeRef}
-            onChange={codeChange}
-            placeholder="Code"
-            min={0}
-            maxLength={3}
-            pattern="^[0-9]*$"
-          />
-
-          <Input
-            type="text"
-            inputref={descRef}
-            onChange={descChange}
-            placeholder="description"
-            maxLength={300}
-          />
+        <div className="flex flex-row items-center justify-center">
+          <div className="flex w-[70%] gap-16 items-center pl-36">
+            <div className="w-[20%]">
+              <Input
+                className="text-center"
+                type="number"
+                inputref={codeRef}
+                onChange={codeChange}
+                placeholder="Code"
+              />
+            </div>
+            <div className="w-[50%]">
+              <Input
+                className="text-center"
+                type="text"
+                inputref={descRef}
+                onChange={descChange}
+                placeholder="description"
+              />
+            </div>
+          </div>
 
           <Button
             type="button"
@@ -134,37 +155,16 @@ const ResponseForm = function () {
       <>
         <>
           {responseFields.map((item, index) => (
-            <div key={item.id} className="p-5">
-              <div className="flex items-center justify-between">
-                <div className="flex gap-3">
-                  <div className="">
-                    <div
-                      id={`${item.id}-hukg`}
-                      className={`${selectedStyle(
-                        dark
-                      )} font-extrabold text-2xl`}
-                    >
-                      {item.status_code}
-                    </div>
-
-                    <div
-                      id={`${item.desc}`}
-                      className="text-grayscale-light text-sm"
-                    >
-                      {item.desc}
-                    </div>
-                  </div>
-                  <div>토글아이콘</div>
-                </div>
-                <CircleBtn
-                  className=""
-                  type="button"
-                  btnType="delete"
-                  onClick={() => remove(index)}
-                ></CircleBtn>
+            <div key={item.id} className="p-3">
+              <div className="">
+                <ItemCompos
+                  item={item}
+                  index={index}
+                  remove={remove}
+                  control={control}
+                  getValues={getValues}
+                />
               </div>
-              <HeaderFields control={control} Keyindex={index} />
-              <BodyFields control={control} Keyindex={index} />
             </div>
           ))}
         </>
@@ -173,12 +173,54 @@ const ResponseForm = function () {
   );
 };
 
+function ItemCompos({ item, index, remove, control, getValues }: ItemProps) {
+  const dispatch = useStoreDispatch();
+  const removeComponentHandler = function () {
+    if (item.status_code === 200) {
+      dispatch(
+        DispatchToast('성공시 응답은 반드시 입력해 주셔야합니다!', false)
+      );
+    } else {
+      remove(index);
+    }
+  };
+  const [detailOpen, setDetailOpen] = useState<boolean>(true);
+  return (
+    <div key={item.id}>
+      <div className="flex items-center justify-between">
+        <CodeToggleHeader
+          isOpen={detailOpen}
+          setIsOpen={setDetailOpen}
+          title={item.status_code}
+          description={item.desc}
+        />
+        <CircleBtn
+          className=""
+          type="button"
+          btnType="delete"
+          onClick={removeComponentHandler}
+        ></CircleBtn>
+      </div>
+      <div className={`${detailOpen ? '' : 'hidden'}`}>
+        <HeaderFields
+          control={control}
+          Keyindex={index}
+          getValues={getValues}
+        />
+        <BodyFields control={control} Keyindex={index} getValues={getValues} />
+      </div>
+    </div>
+  );
+}
+
 function HeaderFields({
   control,
   Keyindex,
+  getValues,
 }: {
   control: any;
   Keyindex: number;
+  getValues: any;
 }) {
   const {
     fields: headerFields,
@@ -188,70 +230,181 @@ function HeaderFields({
     name: `document.response.${Keyindex}.headers`,
     control,
   });
+  const [headersOpen, setHeadersOpen] = useState<boolean>(true);
   const appendHeaderInput = function (e: FormEvent) {
     e.preventDefault();
     append({
-      key: '',
+      keyName: '',
       type: '',
       desc: '',
     });
+    if (headersOpen === false) {
+      setHeadersOpen((prev) => !prev);
+    }
   };
+
+  const router = useRouter();
+  const { spaceId } = router.query as SpaceParams;
+  const { data: dtoListData } = useDtoList(spaceId);
+  const [typeData, setTypeData] = useState<string | number>(``);
+  const getTypeValue = function () {
+    console.log(getValues().headerFields);
+    // setTypeData(() => getValues().headerFields);
+  };
+
   return (
     <>
-      <div className="flex justify-between w-40">
-        <div>Header</div>
-        <CircleBtn btnType="plus" onClick={appendHeaderInput}></CircleBtn>
+      <div className="flex items-center">
+        <ToggleableHeader
+          title="Headers"
+          isOpen={headersOpen}
+          setIsOpen={setHeadersOpen}
+        />
+        <CircleBtn
+          btnType="plus"
+          type="button"
+          onClick={appendHeaderInput}
+        ></CircleBtn>
       </div>
       {headerFields.map((item, index) => (
-        <div key={item.id} className="">
-          <CircleBtn
-            btnType="delete"
-            type="button"
-            onClick={() => remove(index)}
-          ></CircleBtn>
-          <Controller
-            name={`document.response.${Keyindex}.headers[${index}].key`}
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState }) => (
-              <div className="flex">
-                <label htmlFor={`headers[${index}].key`}>Key:</label>
-                <input type="text" id={`headers[${index}].key`} {...field} />
-                {fieldState?.invalid && <span>This field is required</span>}
+        <div
+          key={item.id}
+          className={`flex items-center justify-between py-2 h-full ${
+            headersOpen ? '' : 'hidden'
+          }`}
+        >
+          <AnimationBox
+            key={`document.response.${Keyindex}.headers-container`}
+            className={`flex flex-col h-full w-full items-center pl-12 
+            `}
+          >
+            <Box
+              variant="three"
+              className="px-3 py-2 flex flex-row gap-3 h-full w-full items-center"
+            >
+              <div className="flex w-full">
+                <Controller
+                  key={`document.response.${Keyindex}.headers-keyName-${index}`}
+                  name={`document.response.${Keyindex}.headers.${index}.keyName`}
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <div className="flex flex-col gap-2 w-[25%] px-5">
+                        {/* <label>이름</label> */}
+                        <input
+                          name={`document.response.${Keyindex}.headers.${index}.typeName`}
+                          onChange={field.onChange}
+                          value={field.value}
+                          title={field.value}
+                          placeholder="Key"
+                          className="w-full flex items-center justify-center outline-none border-b-[3px] border-b-grayscale-dark bg-opacity-0 bg-theme-white-light truncate px-2"
+                        />
+                        {fieldState?.invalid && (
+                          <span className="text-red-500">
+                            This field is required
+                          </span>
+                        )}
+                      </div>
+                    </>
+                  )}
+                />
+                <Controller
+                  key={`document.response.${Keyindex}.headers-type-${item.id}`}
+                  name={`document.response.${Keyindex}.headers.${index}.type`}
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field, fieldState }) => (
+                    <div className="flex flex-col gap-2 w-[25%] px-3">
+                      {/* <label>타입</label> */}
+                      <select
+                        name={`document.response.${Keyindex}.headers.${index}.type`}
+                        onChange={(v) => {
+                          field.onChange(v);
+                          getTypeValue();
+                        }}
+                        value={field.value}
+                        placeholder="Type"
+                        className="w-full flex items-center justify-center outline-none border-b-[3px] border-b-grayscale-dark bg-opacity-0 bg-theme-white-light aria-selected:bg-black px-2"
+                      >
+                        <option value={``}>Type</option>
+                        {defaultTypes.map((type) => {
+                          return (
+                            <option
+                              key={`${type.id}-${type.desc}-${index}`}
+                              value={type.id}
+                              title={type.desc}
+                            >
+                              {type.name}
+                            </option>
+                          );
+                        })}
+                        {dtoListData?.dtoList.map((dto) => {
+                          return (
+                            <option
+                              key={`${dto.id}-dtoType-${index}`}
+                              value={dto.id}
+                              title={dto.description}
+                            >
+                              {dto.name}
+                            </option>
+                          );
+                        })}
+                      </select>
+                      {fieldState?.invalid && (
+                        <span className="text-red-500">
+                          This field is required
+                        </span>
+                      )}
+                    </div>
+                  )}
+                />
+                <Controller
+                  key={`document.response.${Keyindex}.headers.${index}.desc`}
+                  name={`document.response.${Keyindex}.headers.${index}.desc`}
+                  rules={{ required: true }}
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <div className="flex flex-col gap-2 w-[48%] px-4">
+                      {/* <label>설명</label> */}
+                      <input
+                        name={`document.response.${Keyindex}.headers.${index}.desc`}
+                        onChange={field.onChange}
+                        value={field.value}
+                        className="w-full flex items-center justify-center outline-none border-b-[3px] border-b-grayscale-dark bg-opacity-0 bg-theme-white-light"
+                        placeholder="Description"
+                      />
+                      {fieldState?.invalid && (
+                        <span className="text-red-500">
+                          This field is required
+                        </span>
+                      )}
+                    </div>
+                  )}
+                />
               </div>
-            )}
-          />
-          <Controller
-            name={`document.response.${Keyindex}.headers[${index}].type`}
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState }) => (
-              <div className="flex">
-                <label htmlFor={`headers[${index}].type`}>Type:</label>
-                <input type="text" id={`headers[${index}].type`} {...field} />
-                {fieldState?.invalid && <span>This field is required</span>}
-              </div>
-            )}
-          />
-          <Controller
-            name={`document.response.${Keyindex}.headers[${index}].desc`}
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState }) => (
-              <>
-                <label htmlFor={`headers[${index}].desc`}>Description:</label>
-                <input type="text" id={`headers[${index}].desc`} {...field} />
-                {fieldState?.invalid && <span>This field is required</span>}
-              </>
-            )}
-          />
+              <CircleBtn
+                type="button"
+                btnType="delete"
+                onClick={() => remove(index)}
+              ></CircleBtn>
+            </Box>
+          </AnimationBox>
         </div>
       ))}
     </>
   );
 }
 
-function BodyFields({ control, Keyindex }: { control: any; Keyindex: number }) {
+function BodyFields({
+  control,
+  Keyindex,
+  getValues,
+}: {
+  control: any;
+  Keyindex: number;
+  getValues: any;
+}) {
   const {
     fields: bodyFields,
     append,
@@ -260,23 +413,36 @@ function BodyFields({ control, Keyindex }: { control: any; Keyindex: number }) {
     name: `document.response.${Keyindex}.body.fields`,
     control,
   });
-
+  const [bodyOpen, setBodyOpen] = useState<boolean>(true);
   const appendBodyInput = function (e: FormEvent) {
     e.preventDefault();
     append({
-      key: '',
+      keyName: '',
       type: '',
       desc: '',
       itera: false,
-      constraints: [],
       value: null,
     });
+    if (bodyOpen === false) {
+      setBodyOpen((prev) => !prev);
+    }
   };
-
+  const router = useRouter();
+  const { spaceId } = router.query as SpaceParams;
+  const { data: dtoListData } = useDtoList(spaceId);
+  const [typeData, setTypeData] = useState<string | number>(``);
+  const getTypeValue = function () {
+    console.log(getValues().document.response[Keyindex].body.fields);
+    // setTypeData(() => getValues().headerFields);
+  };
   return (
     <>
-      <div className="flex justify-between w-40">
-        <div>body</div>
+      <div className="flex items-center">
+        <ToggleableHeader
+          title="Body"
+          isOpen={bodyOpen}
+          setIsOpen={setBodyOpen}
+        />
         <CircleBtn
           btnType="plus"
           type="button"
@@ -284,71 +450,141 @@ function BodyFields({ control, Keyindex }: { control: any; Keyindex: number }) {
         ></CircleBtn>
       </div>
       {bodyFields.map((item, index) => (
-        <div key={item.id}>
-          <CircleBtn btnType="delete" onClick={() => remove(index)}></CircleBtn>
-          <Controller
-            name={`document.response.${Keyindex}.body.fields[${index}].key`}
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState }) => (
-              <div className="flex">
-                <label htmlFor={`bodys[${index}].key`}>Key:</label>
-                <input type="text" id={`bodys[${index}].key`} {...field} />
-                {fieldState?.invalid && <span>This field is required</span>}
-              </div>
-            )}
-          />
-          <Controller
-            name={`document.response.${Keyindex}.body.fields[${index}].type`}
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState }) => (
-              <div className="flex">
-                <label htmlFor={`body.fields[${index}].type`}>Type:</label>
-                <input
-                  type="text"
-                  id={`body.fields[${index}].type`}
-                  {...field}
-                />
-                {fieldState?.invalid && <span>This field is required</span>}
-              </div>
-            )}
-          />
-          <Controller
-            name={`document.response.${Keyindex}.body.fields[${index}].desc`}
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState }) => (
-              <>
-                <div className="flex">
-                  <label htmlFor={`body.fields[${index}].desc`}>
-                    Description:
-                  </label>
-                  <input
-                    type="text"
-                    id={`body.fields[${index}].desc`}
-                    {...field}
-                  />
-                  {fieldState?.invalid && <span>This field is required</span>}
-                </div>
-              </>
-            )}
-          />
-          <Controller
-            name={`document.response.${Keyindex}.body.fields[${index}].itera`}
-            control={control}
-            // rules={{ required: true }}
-            render={({ field }) => (
-              <>
-                <label htmlFor={`body.fields[${index}].itera`}>Is List?:</label>
-                <input
-                  type="checkbox"
-                  id={`body.fields[${index}].itera`}
-                  {...field}
-                />
-              </>
-            )}
-          />
+        <div
+          key={item.id}
+          className={`flex items-center justify-between py-2 ${
+            bodyOpen ? '' : 'hidden'
+          }`}
+        >
+          <AnimationBox
+            key={`${item.id}-container`}
+            className="flex flex-col w-full items-center pl-12"
+          >
+            <Box
+              variant="three"
+              className="px-3 py-2 flex flex-row gap-3 w-full items-center"
+            >
+              <Controller
+                key={`document.response.${Keyindex}.body.fields.${index}-keyName-${index}`}
+                name={`document.response.${Keyindex}.body.fields.${index}.keyName`}
+                control={control}
+                rules={{ required: true }}
+                render={({ field, fieldState }) => (
+                  <div className="flex flex-col gap-2 w-[27%] px-5">
+                    {/* <label>이름</label> */}
+                    <input
+                      name={`document.response.${Keyindex}.body.fields.${index}.keyName`}
+                      onChange={field.onChange}
+                      value={field.value}
+                      title={field.value}
+                      placeholder="Key"
+                      className="w-full flex items-center justify-center outline-none border-b-[3px] border-b-grayscale-dark bg-opacity-0 bg-theme-white-light truncate px-2"
+                    />
+                    {fieldState?.invalid && (
+                      <span className="text-red-500">
+                        This field is required
+                      </span>
+                    )}
+                  </div>
+                )}
+              />
+              <Controller
+                key={`document.response.${Keyindex}.body.fields.${index}-type-${item.id}`}
+                name={`document.response.${Keyindex}.body.fields.${index}.type`}
+                control={control}
+                rules={{ required: true }}
+                render={({ field, fieldState }) => (
+                  <div className="flex flex-col gap-2 w-[25%] px-3">
+                    {/* <label>타입</label> */}
+                    <select
+                      name={`document.response.${Keyindex}.body.fields.${index}.type`}
+                      onChange={(v) => {
+                        field.onChange(v);
+                        getTypeValue();
+                      }}
+                      value={field.value}
+                      placeholder="Type"
+                      className="w-full flex items-center justify-center outline-none border-b-[3px] border-b-grayscale-dark bg-opacity-0 bg-theme-white-light aria-selected:bg-black px-2"
+                    >
+                      <option value={``}>Type</option>
+                      {defaultTypes.map((type) => {
+                        return (
+                          <option
+                            key={`${type.id}-${type.desc}-${index}`}
+                            value={type.id}
+                            title={type.desc}
+                          >
+                            {type.name}
+                          </option>
+                        );
+                      })}
+                      {dtoListData?.dtoList.map((dto) => {
+                        return (
+                          <option
+                            key={`${dto.id}-dtoType-${index}`}
+                            value={dto.id}
+                            title={dto.description}
+                          >
+                            {dto.name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                    {fieldState?.invalid && (
+                      <span className="text-red-500">
+                        This field is required
+                      </span>
+                    )}
+                  </div>
+                )}
+              />
+              <Controller
+                key={`document.response.${Keyindex}.body.fields.${index}.itera`}
+                name={`document.response.${Keyindex}.body.fields.${index}.itera`}
+                control={control}
+                render={({ field }) => (
+                  <div className="flex flex-col w-[7%] items-center justify-center">
+                    <label className="text-[16.6px]">배열</label>
+                    <input
+                      type="checkbox"
+                      name={`document.response.${Keyindex}.body.fields.${index}.itera`}
+                      onChange={field.onChange}
+                      value={field.value}
+                      className="flex items-center justify-center outline-none border-b-[3px] border-b-grayscale-dark bg-opacity-0 bg-theme-white-light px-2"
+                    />
+                  </div>
+                )}
+              />
+              <Controller
+                key={`document.response.${Keyindex}.body.fields.${index}.desc`}
+                name={`document.response.${Keyindex}.body.fields.${index}.desc`}
+                control={control}
+                rules={{ required: true }}
+                render={({ field, fieldState }) => (
+                  <div className="flex flex-col gap-2 w-[48%] px-4">
+                    {/* <label>설명</label> */}
+                    <input
+                      name={`document.response.${Keyindex}.body.fields.${index}.desc`}
+                      onChange={field.onChange}
+                      value={field.value}
+                      className="w-full flex items-center justify-center outline-none border-b-[3px] border-b-grayscale-dark bg-opacity-0 bg-theme-white-light"
+                      placeholder="Description"
+                    />
+                    {fieldState?.invalid && (
+                      <span className="text-red-500">
+                        This field is required
+                      </span>
+                    )}
+                  </div>
+                )}
+              />
+              <CircleBtn
+                type="button"
+                btnType="delete"
+                onClick={() => remove(index)}
+              ></CircleBtn>
+            </Box>
+          </AnimationBox>
         </div>
       ))}
     </>
