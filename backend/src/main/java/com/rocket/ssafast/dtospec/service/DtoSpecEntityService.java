@@ -30,6 +30,7 @@ public class DtoSpecEntityService {
 
     private final DtoSpecDocumentService dtoSpecDocumentService;
     private final ChildDtoEntityService childDtoEntityService;
+    private final ParentDtoEntityService parentDtoEntityService;
 
     private final DtoSpecEntityRepository dtoSpecEntityRepository;
     private final ChildDtoEntityRepository childDtoEntityRepository;
@@ -135,13 +136,6 @@ public class DtoSpecEntityService {
         return results;
     }
 
-    public DtoSpecEntity getDtoSpecEntityById(Long dtoId){
-        Optional<DtoSpecEntity> dto = dtoSpecEntityRepository.findById(dtoId);
-        if(!optionalObjectIsAvailable(dto)){
-            throw new CustomException(ErrorCode.DTO_NOT_FOUND);
-        }
-        return dto.get();
-    }
 
     public UpdateDtoSpecDto updateDtoEntity(Long dtoId, UpdateDtoSpecDto updateDtoSpecDto){
 
@@ -212,13 +206,22 @@ public class DtoSpecEntityService {
         dtoSpecEntityRepository.save(updateEntity);
 
         //4. parent, child table update 해야함
-        //4.1 update 된 dto 의 자식관계 업데이트
-        childDtoEntityService.updateChildDtoEntityInfoCascade(dtoId, childKeyList);
-        //4.2 update 된 dto 들의 부모관계 업데이트
-
-        //필요 한 것 : parent, child dto id
+        if(hasChild){
+            //4.1 update 된 dto 의 자식관계 업데이트
+            childDtoEntityService.updateChildDtoEntityInfoCascade(dtoId, childKeyList);
+            //4.2 update 된 dto 들의 부모관계 업데이트
+            parentDtoEntityService.updateParentDtoEntityInfoCascade(dtoId, childKeyList);
+        }
 
         return updateDtoSpecDto;
+    }
+
+    public DtoSpecEntity getDtoSpecEntityById(Long dtoId){
+        Optional<DtoSpecEntity> dto = dtoSpecEntityRepository.findById(dtoId);
+        if(!optionalObjectIsAvailable(dto)){
+            throw new CustomException(ErrorCode.DTO_NOT_FOUND);
+        }
+        return dto.get();
     }
 
     public boolean childDtoIsExist(Long key){
