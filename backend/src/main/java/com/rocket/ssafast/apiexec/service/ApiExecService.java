@@ -327,7 +327,23 @@ public class ApiExecService {
 		if(detailResult == null) {
 			throw new CustomException(ErrorCode.DETAIL_RESULT_NOT_FOUND);
 		}
+
 		return detailResult;
+	}
+
+	@Transactional
+	public void deleteApiExecResult(Long resId) {
+		if(!apiTestResultEntityRepository.findById(resId).isPresent()) {
+			throw new CustomException(ErrorCode.API_NOT_FOUND);
+		}
+
+		// entity 삭제
+		apiTestResultEntityRepository.deleteById(resId);
+
+		// document 삭제
+		ApiTestResultDocument document = apiTestResultDocRepository.findById(SSAFAST_TEST_ID).get();
+		document.getResults().remove(resId);
+		apiTestResultDocRepository.save(document);
 	}
 
 	static {
