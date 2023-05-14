@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.rocket.ssafast.usecase.dto.response.ResUsecaseSummaryDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,7 +38,7 @@ public class UsecaseEntity {
 	String name;
 
 	@Column(name = "description")
-	String description;
+	String desc;
 
 	@Column(name = "workspace_id")
 	Long workspaceId;
@@ -44,4 +46,12 @@ public class UsecaseEntity {
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "usecase_test_id")
 	List<UsecaseDtoEntity> usecaseTestDtoEntities = new ArrayList<>();
+
+	public ResUsecaseSummaryDto toResSummaryDto() {
+		return ResUsecaseSummaryDto.builder()
+			.id(id)
+			.name(name)
+			.desc(desc)
+			.build();
+	}
 }

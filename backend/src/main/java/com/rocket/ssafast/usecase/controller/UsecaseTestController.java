@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +24,7 @@ import com.rocket.ssafast.exception.ErrorCode;
 import com.rocket.ssafast.usecase.domain.document.element.UsecaseInfo;
 import com.rocket.ssafast.usecase.dto.request.ReqUsecaseEntityDto;
 import com.rocket.ssafast.usecase.dto.response.ResUsecasePrevResponseDto;
+import com.rocket.ssafast.usecase.dto.response.ResUsecaseSummaryDto;
 import com.rocket.ssafast.usecase.service.UsecaseTestService;
 
 import lombok.RequiredArgsConstructor;
@@ -79,6 +81,36 @@ public class UsecaseTestController {
 		try {
 			Map<String, List<ResUsecasePrevResponseDto>> result = new HashMap<>();
 			result.put("prevResponses", usecaseTestService.getPrevResponses(apiIds));
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		} catch (CustomException e){
+			return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
+		} catch (Exception e) {
+			log.error("error: ", e);
+			ErrorCode error = ErrorCode.INTERNAL_SERVER_ERROR;
+			return new ResponseEntity<>(error.getMessage(), error.getHttpStatus());
+		}
+	}
+
+	@GetMapping("/list")
+	ResponseEntity<?> getTestList(@RequestParam("workspaceId") Long workspaceId) {
+		try {
+			Map<String, List<ResUsecaseSummaryDto>> result = new HashMap<>();
+			result.put("usecaseTestList", usecaseTestService.getTestList(workspaceId));
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		} catch (CustomException e){
+			return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
+		} catch (Exception e) {
+			log.error("error: ", e);
+			ErrorCode error = ErrorCode.INTERNAL_SERVER_ERROR;
+			return new ResponseEntity<>(error.getMessage(), error.getHttpStatus());
+		}
+	}
+
+	@GetMapping("/{usecaseId}")
+	ResponseEntity<?> getDetailTest(@PathVariable("usecaseId") Long usecaseId) {
+		try {
+			Map<String, UsecaseInfo> result = new HashMap<>();
+			result.put("usecaseTest", usecaseTestService.getDetailTest(usecaseId));
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch (CustomException e){
 			return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());

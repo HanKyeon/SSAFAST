@@ -45,6 +45,7 @@ import com.rocket.ssafast.usecase.domain.entity.UsecaseEntity;
 import com.rocket.ssafast.usecase.dto.request.ReqUsecaseEntityDto;
 import com.rocket.ssafast.usecase.dto.response.ResUsecaseDto;
 import com.rocket.ssafast.usecase.dto.response.ResUsecasePrevResponseDto;
+import com.rocket.ssafast.usecase.dto.response.ResUsecaseSummaryDto;
 import com.rocket.ssafast.usecase.repository.UsecaseTestDocsRepository;
 import com.rocket.ssafast.usecase.repository.UsecaseTestEntityRepository;
 import com.rocket.ssafast.workspace.repository.BaseurlRepository;
@@ -92,7 +93,7 @@ public class UsecaseTestService {
 		
 		// 1. UsecaseTest 정보
 		String nowApiId = usecaseTestInfo.getRootApiId();										// 시작 api id
-		Map<String, UsecaseDetailInfo> testDetails = usecaseTestInfo.getTestDetails();	// usecase test 정보
+		Map<String, UsecaseDetailInfo> testDetails = usecaseTestInfo.getTestDetails();			// usecase test 정보
 
 		ReqApiTestResultResponseDto reqApiTestResultResponseDto = null;							// api 응답 저장 객체
 
@@ -287,14 +288,9 @@ public class UsecaseTestService {
 
 
 		// 12. usecase test 정보 업데이트
-		Map<Long, UsecaseInfo> usecaseTest = new HashMap<>();
-		usecaseTest.put(usecaseTestId, usecaseTestInfo);
-
-		usecaseTestDocsRepository.save(
-			UsecaseDocument.builder()
-				.id(SSAFAST_USECASE_TEST)
-				.usecaseTest(usecaseTest)
-				.build());
+		UsecaseDocument usecaseDocument = usecaseTestDocsRepository.findById(SSAFAST_USECASE_TEST);
+		usecaseDocument.getUsecaseTest().put(usecaseTestId, usecaseTestInfo);
+		usecaseTestDocsRepository.save(usecaseDocument);
 
 
 		// 13. usecase test에 포함된 dto 정보 업데이트
@@ -475,5 +471,27 @@ public class UsecaseTestService {
 		});
 
 		return prevResponseDtos;
+	}
+
+	public List<ResUsecaseSummaryDto> getTestList(Long workspaceId) {
+		if(!workspaceRepository.findById(workspaceId).isPresent()) {
+			throw new CustomException(ErrorCode.WORKSPACE_NOT_FOUND);
+		}
+
+		List<ResUsecaseSummaryDto> usecaseSummarList = new ArrayList<>();
+
+		List<UsecaseEntity> usecaseEntityList = usecaseTestEntityRepository.findAllByWorkspaceId(workspaceId);
+		usecaseEntityList.forEach(usecaseEntity -> {
+			usecaseSummarList.add(usecaseEntity.toResSummaryDto());
+		});
+
+		return usecaseSummarList;
+	}
+
+	public UsecaseInfo getDetailTest(Long usecaseId) {
+		if(!usecaseTestEntityRepository.findById(usecaseId).isPresent()) {
+			throw new CustomException(ErrorCode.USECASETEST_NOT_FOUND);
+		}
+		return usecaseTestDocsRepository.findTestById(SSAFAST_USECASE_TEST, usecaseId);
 	}
 }

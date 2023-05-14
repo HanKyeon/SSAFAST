@@ -1,8 +1,5 @@
 package com.rocket.ssafast.usecase.repository;
 
-import java.util.Map;
-
-import org.bson.Document;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -23,26 +20,17 @@ public class UsecaseTestDocsRepository {
 		return mongoTemplate.save(document);
 	}
 
-	public UsecaseInfo findTestById(String id, long usecaseTestId) {
-		Query query = Query.query(
-			Criteria.where("_id").is(id)
-				.and("usecaseTest." + usecaseTestId).exists(true));
-		Document doc = mongoTemplate.findOne(query, Document.class, "usecase_test_docs");
-		return ((Map<String, UsecaseInfo>) doc.get("usecaseTest")).get(usecaseTestId);
+	public UsecaseDocument findById(String id) {
+		Query query = new Query(Criteria.where("_id").is(id));
+		return mongoTemplate.findOne(query, UsecaseDocument.class);
 	}
 
-	// public Optional<UsecaseTestDocument> findById(String id, String usecaseTestid) {
-	// 	Query query = new Query(Criteria.where("_id").is(id));
-	// 	return Optional.ofNullable(mongoTemplate.findOne(query, UsecaseTestDocument.class));
-	// }
-	/*
-	public Map<String, Object> findResultsByIdAndKey(String id, long resId) {
-		Query query = Query.query(
-			Criteria.where("_id").is(id)
-				.and("results." + resId).exists(true));
-		Document doc = mongoTemplate.findOne(query, Document.class, "api_test_result_docs");
-		Map<String, Object> results = (Map<String, Object>) doc.get("results");
-		return (Map<String, Object>) results.get(Long.toString(resId));
+	public UsecaseInfo findTestById(String id, long usecaseTestId) {
+		Query query = Query.query(Criteria.where("_id").is(id));
+
+		UsecaseDocument doc = mongoTemplate.findOne(query, UsecaseDocument.class, "usecase_test_docs");
+
+		System.out.println(doc);
+		return doc.getUsecaseTest().get(usecaseTestId);
 	}
-	 */
 }
