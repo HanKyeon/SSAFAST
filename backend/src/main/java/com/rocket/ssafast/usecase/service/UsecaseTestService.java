@@ -494,4 +494,19 @@ public class UsecaseTestService {
 		}
 		return usecaseTestDocsRepository.findTestById(SSAFAST_USECASE_TEST, usecaseId);
 	}
+
+	@Transactional
+	public void deleteDetailTest(Long usecaseId) {
+		if(!usecaseTestEntityRepository.findById(usecaseId).isPresent()) {
+			throw new CustomException(ErrorCode.USECASETEST_NOT_FOUND);
+		}
+
+		// entity 삭제
+		usecaseTestEntityRepository.deleteById(usecaseId);
+		
+		// document 삭제
+		UsecaseDocument document = usecaseTestDocsRepository.findById(SSAFAST_USECASE_TEST);
+		document.getUsecaseTest().remove(usecaseId);
+		usecaseTestDocsRepository.save(document);
+	}
 }
