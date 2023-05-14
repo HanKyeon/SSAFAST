@@ -23,7 +23,7 @@ public class ReqUsecaseEntityDto {
 	public UsecaseEntity toEntity() {
 		return UsecaseEntity.builder()
 			.name(name)
-			.description(description)
+			.desc(description)
 			.workspaceId(workspaceId)
 			.build();
 	}
