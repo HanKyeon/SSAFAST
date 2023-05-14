@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -102,6 +103,20 @@ public class ApiExecController {
 	ResponseEntity<?> getAPIExecDetailResult(@RequestParam Long resId) {
 		try {
 			return new ResponseEntity<>(apiExecService.getAPIExecDetailResult(resId), HttpStatus.OK);
+		} catch (CustomException e) {
+			return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
+		} catch (Exception e) {
+			log.error("error: ", e);
+			ErrorCode error = ErrorCode.INTERNAL_SERVER_ERROR;
+			return new ResponseEntity<>(error.getMessage(), error.getHttpStatus());
+		}
+	}
+
+	@DeleteMapping("/response")
+	ResponseEntity<?> deleteAPIExecResult(@RequestParam Long resId) {
+		try {
+			apiExecService.deleteApiExecResult(resId);
+			return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
 		} catch (CustomException e) {
 			return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
 		} catch (Exception e) {
