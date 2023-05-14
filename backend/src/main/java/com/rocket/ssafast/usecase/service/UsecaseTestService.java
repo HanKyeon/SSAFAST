@@ -20,13 +20,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.jayway.jsonpath.JsonPath;
 import com.rocket.ssafast.apispec.domain.Entity.ApiSpecEntity;
-import com.rocket.ssafast.apispec.domain.Enum.JavaType;
-import com.rocket.ssafast.apispec.dto.request.ApiExecReqMessageDto;
-import com.rocket.ssafast.apispec.dto.request.ApiExecReqMessageParamDto;
-import com.rocket.ssafast.apispec.dto.request.ApiTestResultResponseDto;
+import com.rocket.ssafast.apiexec.dto.request.ReqApiExecMessageDto;
+import com.rocket.ssafast.apiexec.dto.request.element.ReqApiExecMessageParamDto;
+import com.rocket.ssafast.apiexec.dto.request.ReqApiTestResultResponseDto;
 import com.rocket.ssafast.apispec.repository.ApiSpecMongoTempRepository;
 import com.rocket.ssafast.apispec.repository.ApiSpecRepository;
-import com.rocket.ssafast.apispec.service.ApiExecService;
+import com.rocket.ssafast.apiexec.service.ApiExecService;
 import com.rocket.ssafast.dtospec.domain.ApiHasDtoEntity;
 import com.rocket.ssafast.dtospec.repository.ApiHasDtoEntityRepository;
 import com.rocket.ssafast.exception.CustomException;
@@ -50,7 +49,6 @@ import com.rocket.ssafast.usecase.repository.UsecaseTestDocsRepository;
 import com.rocket.ssafast.usecase.repository.UsecaseTestEntityRepository;
 import com.rocket.ssafast.workspace.repository.BaseurlRepository;
 import com.rocket.ssafast.workspace.repository.WorkspaceRepository;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import lombok.RequiredArgsConstructor;
 
@@ -96,7 +94,7 @@ public class UsecaseTestService {
 		String nowApiId = usecaseTestInfo.getRootApiId();										// 시작 api id
 		Map<String, UsecaseDetailInfo> testDetails = usecaseTestInfo.getTestDetails();	// usecase test 정보
 
-		ApiTestResultResponseDto apiTestResultResponseDto = null;							// api 응답 저장 객체
+		ReqApiTestResultResponseDto reqApiTestResultResponseDto = null;							// api 응답 저장 객체
 
 		Gson gson = new Gson();																// json 파싱 객체
 
@@ -170,20 +168,20 @@ public class UsecaseTestService {
 
 			// 8. query params 정보
 			Map<String, UsecaseReqParamFieldDetail> nowParams = nowRequest.getParams();	// 현재 순서 api의 query params 정보
-			Map<String, ApiExecReqMessageParamDto> params;
+			Map<String, ReqApiExecMessageParamDto> params;
 
 			if(nowParams != null) {
 				params = new HashMap<>();
 				nowParams.forEach((key, param) -> {
 					if(!param.isMapped()) {
 						params.put(key,
-							ApiExecReqMessageParamDto.builder()
+							ReqApiExecMessageParamDto.builder()
 								.itera(param.isItera())
 								.value(param.getValue())
 								.build());
 					} else {
 						params.put(key,
-							ApiExecReqMessageParamDto.builder()
+							ReqApiExecMessageParamDto.builder()
 								.itera(param.isItera())
 								.value(String.valueOf(getMappedValue(results.toString(), String.valueOf(param.getValue()))))
 								.build()
@@ -243,7 +241,7 @@ public class UsecaseTestService {
 
 
 			// 10. 요청 메시지 DTO 생성
-			ApiExecReqMessageDto apiExecReqMessageDto = ApiExecReqMessageDto.builder()
+			ReqApiExecMessageDto reqApiExecMessageDto = ReqApiExecMessageDto.builder()
 				.url(url)
 				.method(method)
 				.headers(headers)
@@ -252,15 +250,15 @@ public class UsecaseTestService {
 				.body(body)
 				.build();
 
-			System.out.println("요청 :" + apiExecReqMessageDto);
+			System.out.println("요청 :" + reqApiExecMessageDto);
 			
 			// 11. API 요청 전송
 			try {
-				apiTestResultResponseDto = apiExecService.requestAPI(apiExecReqMessageDto, files, filesArrs, filekeys, filesArrKeys);
+				reqApiTestResultResponseDto = apiExecService.requestAPI(reqApiExecMessageDto, files, filesArrs, filekeys, filesArrKeys);
 
-				System.out.println("결과: "+apiTestResultResponseDto);
+				System.out.println("결과: "+ reqApiTestResultResponseDto);
 
-				results.add(nowApiId, gson.toJsonTree(apiTestResultResponseDto));		// 응답 축적
+				results.add(nowApiId, gson.toJsonTree(reqApiTestResultResponseDto));		// 응답 축적
 				System.out.println("축적: "+results);
 
 				if(testDetails.get(nowApiId).getChild() == null) {
@@ -270,7 +268,7 @@ public class UsecaseTestService {
 
 			} catch (HttpClientErrorException | HttpServerErrorException e){
 
-				ApiTestResultResponseDto errorResponstDto = ApiTestResultResponseDto.builder()
+				ReqApiTestResultResponseDto errorResponstDto = ReqApiTestResultResponseDto.builder()
 					.statusCodeValue(e.getStatusCode().value())
 					.statusCode(e.getStatusCode().name())
 					.body(e.getMessage())
@@ -330,7 +328,7 @@ public class UsecaseTestService {
 		return ResUsecaseDto.builder()
 			.success(true)
 			.lastApiId(lastApiId)
-			.lastApiResponse(apiTestResultResponseDto)
+			.lastApiResponse(reqApiTestResultResponseDto)
 			.build();
 	}
 

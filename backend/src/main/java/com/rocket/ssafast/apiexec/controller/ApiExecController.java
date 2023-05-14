@@ -1,4 +1,4 @@
-package com.rocket.ssafast.apispec.controller;
+package com.rocket.ssafast.apiexec.controller;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,11 +21,11 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.rocket.ssafast.apispec.dto.request.ApiExecReqMessageDto;
-import com.rocket.ssafast.apispec.dto.request.ApiTestResultDto;
-import com.rocket.ssafast.apispec.dto.request.ApiTestResultResponseDto;
-import com.rocket.ssafast.apispec.dto.response.ApiTestResultSummaryDto;
-import com.rocket.ssafast.apispec.service.ApiExecService;
+import com.rocket.ssafast.apiexec.dto.request.ReqApiExecMessageDto;
+import com.rocket.ssafast.apiexec.dto.request.ReqApiTestResultSaveDto;
+import com.rocket.ssafast.apiexec.dto.request.ReqApiTestResultResponseDto;
+import com.rocket.ssafast.apiexec.dto.response.ResApiTestResultSummaryDto;
+import com.rocket.ssafast.apiexec.service.ApiExecService;
 import com.rocket.ssafast.tmp.dto.TmpUserDto;
 import com.rocket.ssafast.auth.domain.UserDetailsImpl;
 import com.rocket.ssafast.exception.CustomException;
@@ -47,20 +47,20 @@ public class ApiExecController {
 		@RequestPart(value = "filesArrs", required = false) MultipartFile[][] filesArrs,	// 다건 파일들
 		@RequestPart(value = "filekeys", required = false) String[] filekeys,				// 단건 파일 키들
 		@RequestPart(value = "filesArrKeys", required = false) String[] filesArrKeys,		// 다건 파일 키들
-		@Valid @RequestPart("execReqData") ApiExecReqMessageDto apiExecReqMessageDto) {		// json 데이터
+		@Valid @RequestPart("execReqData") ReqApiExecMessageDto reqApiExecMessageDto) {		// json 데이터
 
 		try {
-			return new ResponseEntity<>(apiExecService.requestAPI(apiExecReqMessageDto, files, filesArrs, filekeys, filesArrKeys), HttpStatus.OK);
+			return new ResponseEntity<>(apiExecService.requestAPI(reqApiExecMessageDto, files, filesArrs, filekeys, filesArrKeys), HttpStatus.OK);
 		} catch (CustomException e) {
 			return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
 		} catch (HttpServerErrorException | HttpClientErrorException e) {
 
-			ApiTestResultResponseDto apiTestResultResponseDto = ApiTestResultResponseDto.builder()
+			ReqApiTestResultResponseDto reqApiTestResultResponseDto = ReqApiTestResultResponseDto.builder()
 				.statusCodeValue(e.getStatusCode().value())
 				.statusCode(e.getStatusCode().name())
 				.body(e.getMessage())
 				.build();
-			return new ResponseEntity<>(apiTestResultResponseDto, HttpStatus.OK);
+			return new ResponseEntity<>(reqApiTestResultResponseDto, HttpStatus.OK);
 		} catch (Exception e) {
 			log.error("error: ", e);
 			ErrorCode error = ErrorCode.INTERNAL_SERVER_ERROR;
@@ -69,10 +69,10 @@ public class ApiExecController {
 	}
 
 	@PostMapping("/response")
-	ResponseEntity<?> saveAPIExecResult(@AuthenticationPrincipal UserDetailsImpl userDetails, @Valid @RequestBody ApiTestResultDto apiTestResultDto) {
+	ResponseEntity<?> saveAPIExecResult(@AuthenticationPrincipal UserDetailsImpl userDetails, @Valid @RequestBody ReqApiTestResultSaveDto reqApiTestResultSaveDto) {
 		try {
-			apiTestResultDto.setMember(userDetails.getMember().toResDto());
-			apiExecService.saveApiTestResult(apiTestResultDto);
+			reqApiTestResultSaveDto.setMember(userDetails.getMember().toResDto());
+			apiExecService.saveApiTestResult(reqApiTestResultSaveDto);
 			return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
 		} catch (CustomException e) {
 			return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
@@ -86,7 +86,7 @@ public class ApiExecController {
 	@GetMapping("/response/list")
 	ResponseEntity<?> getAPIExecResults(@RequestParam Long apiId) {
 		try {
-			Map<String, List<ApiTestResultSummaryDto>> result = new HashMap<>();
+			Map<String, List<ResApiTestResultSummaryDto>> result = new HashMap<>();
 			result.put("resultList", apiExecService.getAPIExecResults(apiId));
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch (CustomException e) {

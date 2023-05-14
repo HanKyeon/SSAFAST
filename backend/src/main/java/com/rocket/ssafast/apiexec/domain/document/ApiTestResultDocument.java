@@ -1,11 +1,11 @@
-package com.rocket.ssafast.apispec.domain.Document;
+package com.rocket.ssafast.apiexec.domain.document;
 
 import java.util.Map;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.rocket.ssafast.apispec.domain.Document.element.ApiTestResultInfo;
+import com.rocket.ssafast.apiexec.domain.document.element.ApiTestResultInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

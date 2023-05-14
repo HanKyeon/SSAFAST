@@ -1,4 +1,4 @@
-package com.rocket.ssafast.apispec.dto.request;
+package com.rocket.ssafast.apiexec.dto.request.element;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ApiExecReqMessageParamDto {
+public class ReqApiExecMessageParamDto {
 
 	Boolean itera;
 

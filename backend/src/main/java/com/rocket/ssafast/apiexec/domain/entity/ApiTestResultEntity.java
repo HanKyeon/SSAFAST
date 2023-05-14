@@ -1,6 +1,6 @@
-package com.rocket.ssafast.apispec.domain.Entity;
+package com.rocket.ssafast.apiexec.domain.entity;
 
-import com.rocket.ssafast.apispec.dto.response.ApiTestResultSummaryDto;
+import com.rocket.ssafast.apiexec.dto.response.ResApiTestResultSummaryDto;
 import com.rocket.ssafast.member.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,8 +38,8 @@ public class ApiTestResultEntity {
     @Column(name = "api_info_id")
     private Long apiInfoId;
 
-    public ApiTestResultSummaryDto toSummaryDto() {
-        return ApiTestResultSummaryDto.builder()
+    public ResApiTestResultSummaryDto toSummaryDto() {
+        return ResApiTestResultSummaryDto.builder()
             .id(id)
             .name(name)
             .member(member.toResSummaryDto())

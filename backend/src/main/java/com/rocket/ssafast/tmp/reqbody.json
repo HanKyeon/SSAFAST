@@ -67,7 +67,7 @@
                     },
                     "nestedDtos" : {
                         "address": {
-                            "dtoName": "Address",
+                            "name": "Address",
                             "desc": "사용자 주소",
                             "fields" : {
                                 "street": {
@@ -106,7 +106,7 @@
                     "nestedDtoLists": {
                         "orderList": [
                             {
-                                "dtoName": "Order",
+                                "name": "Order",
                                 "desc": "사용자 주문",
                                 "fields": {
                                     "num": {
@@ -122,7 +122,7 @@
                                 }
                             },
                             {
-                                "dtoName": "Order",
+                                "name": "Order",
                                 "desc": "사용자 주문",
                                 "fields": {
                                     "num": {
@@ -151,7 +151,7 @@
                 "body": {
                     "nestedDtos": {
                         "user": {
-                            "dtoName": "User",
+                            "name": "User",
                             "desc": "사용자 정보",
                             "fields" : {
                                 "name": {
@@ -167,7 +167,7 @@
                             },
                             "nestedDtos" : {
                                 "address": {
-                                    "dtoName": "Address",
+                                    "name": "Address",
                                     "desc": "사용자 주소",
                                     "fields" : {
                                         "street": {
@@ -191,7 +191,7 @@
                             "nestedDtoLists": {
                                 "orderList": [
                                     {
-                                        "dtoName": "Order",
+                                        "name": "Order",
                                         "desc": "사용자 주문",
                                         "fields": {
                                             "num": {
@@ -202,7 +202,7 @@
                                         }
                                     },
                                     {
-                                        "dtoName": "Order",
+                                        "name": "Order",
                                         "desc": "사용자 주문",
                                         "fields": {
                                             "num": {
@@ -275,7 +275,7 @@
                     "nestedDtoLists" : {
                         "orderItemList" : [
                             {
-                                "dtoName": "OrderItem",
+                                "name": "OrderItem",
                                 "desc": "사용자 주문 상품",
                                 "fields": {
                                     "orderId": {
@@ -311,7 +311,7 @@
                                 }
                             },
                             {
-                                "dtoName": "OrderItem",
+                                "name": "OrderItem",
                                 "desc": "사용자 주문 상품",
                                 "fields": {
                                     "orderId": {
@@ -361,7 +361,7 @@
                     "nestedDtoLists": {
                         "orderItemList": [
                             {
-                                "dtoName": "OrderItem",
+                                "name": "OrderItem",
                                 "desc": "사용자 주문 상품",
                                 "fields": {
                                     "id": {
@@ -387,7 +387,7 @@
                                 }
                             },
                             {
-                                "dtoName": "OrderItem",
+                                "name": "OrderItem",
                                 "desc": "사용자 주문 상품",
                                 "fields": {
                                     "id": {
@@ -457,7 +457,7 @@
                 "body":{
                     "nestedDtos":{
                         "orderItem": {
-                            "dtoName": "OrderItem",
+                            "name": "OrderItem",
                             "desc": "사용자 주문 상품",
                             "fields": {
                                 "id": {

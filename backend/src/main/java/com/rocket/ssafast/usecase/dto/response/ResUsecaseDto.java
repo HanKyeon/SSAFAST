@@ -1,6 +1,6 @@
 package com.rocket.ssafast.usecase.dto.response;
 
-import com.rocket.ssafast.apispec.dto.request.ApiTestResultResponseDto;
+import com.rocket.ssafast.apiexec.dto.request.ReqApiTestResultResponseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,5 +17,5 @@ public class ResUsecaseDto {
 
 	Long lastApiId;
 
-	ApiTestResultResponseDto lastApiResponse;
+	ReqApiTestResultResponseDto lastApiResponse;
 }

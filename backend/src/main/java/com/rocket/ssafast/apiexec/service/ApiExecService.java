@@ -1,4 +1,4 @@
-package com.rocket.ssafast.apispec.service;
+package com.rocket.ssafast.apiexec.service;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -30,19 +30,22 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rocket.ssafast.apispec.domain.Document.ApiTestResultDocument;
-import com.rocket.ssafast.apispec.domain.Entity.ApiTestResultEntity;
+import com.rocket.ssafast.apiexec.domain.document.ApiTestResultDocument;
+import com.rocket.ssafast.apiexec.domain.entity.ApiTestResultEntity;
+import com.rocket.ssafast.apispec.domain.Entity.ApiSpecEntity;
 import com.rocket.ssafast.apispec.domain.Enum.HTTPMethod;
-import com.rocket.ssafast.apispec.dto.request.ApiExecReqMessageDto;
-import com.rocket.ssafast.apispec.dto.request.ApiTestResultDto;
-import com.rocket.ssafast.apispec.dto.request.ApiTestResultResponseDto;
-import com.rocket.ssafast.apispec.dto.response.ApiTestResultResponseRawDto;
-import com.rocket.ssafast.apispec.dto.response.ApiTestResultSummaryDto;
+import com.rocket.ssafast.apiexec.dto.request.ReqApiExecMessageDto;
+import com.rocket.ssafast.apiexec.dto.request.ReqApiTestResultSaveDto;
+import com.rocket.ssafast.apiexec.dto.request.ReqApiTestResultResponseDto;
+import com.rocket.ssafast.apiexec.dto.response.ResApiTestResultResponseRawDto;
+import com.rocket.ssafast.apiexec.dto.response.ResApiTestResultSummaryDto;
 import com.rocket.ssafast.apispec.repository.ApiSpecRepository;
-import com.rocket.ssafast.apispec.repository.ApiTestResultDocRepository;
-import com.rocket.ssafast.apispec.repository.ApiTestResultEntityRepository;
+import com.rocket.ssafast.apiexec.repository.ApiTestResultDocRepository;
+import com.rocket.ssafast.apiexec.repository.ApiTestResultEntityRepository;
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
+import com.rocket.ssafast.workspace.domain.Baseurl;
+import com.rocket.ssafast.workspace.repository.BaseurlRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -56,20 +59,21 @@ public class ApiExecService {
 	private final ApiTestResultDocRepository apiTestResultDocRepository;
 	private final ApiTestResultEntityRepository apiTestResultEntityRepository;
 	private final ApiSpecRepository apiSpecRepository;
+	private final BaseurlRepository baseurlRepository;
 
-	public ApiTestResultResponseDto requestAPI(
-		ApiExecReqMessageDto apiExecReqMessageDto,
+	public ReqApiTestResultResponseDto requestAPI(
+		ReqApiExecMessageDto reqApiExecMessageDto,
 		MultipartFile[] files, MultipartFile[][] filesArr,
 		String[] filekeys, String[] filesArrKeys) throws IOException {
 
-		if (HTTPMethod.getMethodByNumber(apiExecReqMessageDto.getMethod()) == null) {
+		if (HTTPMethod.getMethodByNumber(reqApiExecMessageDto.getMethod()) == null) {
 			throw new CustomException(ErrorCode.HTTPMETHOD_NOT_FOUND);
 		}
 
-		System.out.println("API TEST 서비스:"+ apiExecReqMessageDto);
+		System.out.println("API TEST 서비스:"+ reqApiExecMessageDto);
 		// 1. Headers 셋팅
 		HttpHeaders headers = new HttpHeaders();
-		Map<String, String> reqHeaders = apiExecReqMessageDto.getHeaders();
+		Map<String, String> reqHeaders = reqApiExecMessageDto.getHeaders();
 
 		if (reqHeaders != null) {
 			reqHeaders.forEach((key, value) -> {
@@ -79,10 +83,10 @@ public class ApiExecService {
 
 
 		// 2. URL에 Path Variable 셋팅
-		Map<String, String> reqPathVars = apiExecReqMessageDto.getPathVars();
+		Map<String, String> reqPathVars = reqApiExecMessageDto.getPathVars();
 		StringBuilder sb = new StringBuilder();
 
-		String[] splitedUrl = apiExecReqMessageDto.getUrl().split("/");
+		String[] splitedUrl = reqApiExecMessageDto.getUrl().split("/");
 
 		for (String urlWord : splitedUrl) {
 
@@ -100,8 +104,8 @@ public class ApiExecService {
 
 		// 3. params 셋팅
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-		if (apiExecReqMessageDto.getParams() != null) {
-			apiExecReqMessageDto.getParams().forEach((key, param) -> {
+		if (reqApiExecMessageDto.getParams() != null) {
+			reqApiExecMessageDto.getParams().forEach((key, param) -> {
 				if(!param.getItera()) {
 					params.add(key, param.getValue());
 				}
@@ -124,7 +128,7 @@ public class ApiExecService {
 		HttpEntity<?> entity = null;
 
 		MultiValueMap<String, Object> body = null;
-		if (apiExecReqMessageDto.getBody() == null) {
+		if (reqApiExecMessageDto.getBody() == null) {
 			if(files == null && filesArr == null) {
 				entity = new HttpEntity<>(headers);
 			}
@@ -143,7 +147,7 @@ public class ApiExecService {
 		} else {
 			// json data
 			if (files == null && filesArr == null) {
-				entity = new HttpEntity<>(apiExecReqMessageDto.getBody(), headers);
+				entity = new HttpEntity<>(reqApiExecMessageDto.getBody(), headers);
 			}
 
 			// json data + form data
@@ -168,7 +172,7 @@ public class ApiExecService {
 
 				// json 용 엔티티에 데이터랑 헤더
 				ObjectMapper objectMapper = new ObjectMapper();
-				Map<String, Object> map = objectMapper.readValue(apiExecReqMessageDto.getBody(), Map.class);
+				Map<String, Object> map = objectMapper.readValue(reqApiExecMessageDto.getBody(), Map.class);
 
 				// 첫 번째 JSON 키와 그 값을 Java Map 객체로 추출
 				Map.Entry<String, Object> entry = map.entrySet().iterator().next();
@@ -190,7 +194,7 @@ public class ApiExecService {
 			System.out.println("API EXEC SERVICE 요청 바디:"+entity);
 			ResponseEntity<?> response =  restTemplate.exchange(
 				uri.toUriString(),
-				HTTPMethod.getMethodByNumber(apiExecReqMessageDto.getMethod()),
+				HTTPMethod.getMethodByNumber(reqApiExecMessageDto.getMethod()),
 				entity,
 				new ParameterizedTypeReference<Object>() {
 				});
@@ -199,7 +203,7 @@ public class ApiExecService {
 			Map<String, List> resHeader = new HashMap<>();
 			httpHeaders.forEach((key, value) -> resHeader.put(key, value));
 
-			return ApiTestResultResponseRawDto.builder()
+			return ResApiTestResultResponseRawDto.builder()
 				.headers(resHeader)
 				.body(response.getBody())
 				.statusCode(response.getStatusCode().name())
@@ -261,18 +265,33 @@ public class ApiExecService {
 	}
 
 	@Transactional
-	public void saveApiTestResult(ApiTestResultDto apiTestResultDto) {
-		if(apiTestResultDto.getName() == null || apiTestResultDto.getMember() == null || apiTestResultDto.getApiInfoId() == null) {
+	public void saveApiTestResult(ReqApiTestResultSaveDto reqApiTestResultSaveDto) {
+		if(reqApiTestResultSaveDto.getName() == null || reqApiTestResultSaveDto.getMember() == null || reqApiTestResultSaveDto.getApiInfoId() == null) {
 			throw new CustomException(ErrorCode.BAD_REQUEST);
 		}
-		if(!apiSpecRepository.findById(apiTestResultDto.getApiInfoId()).isPresent()) {
+
+		// api 객체 가져오기 -> method 셋팅
+		Optional<ApiSpecEntity> apiSpec = apiSpecRepository.findById(reqApiTestResultSaveDto.getApiInfoId());
+		if(!apiSpec.isPresent()) {
 			throw new CustomException(ErrorCode.API_NOT_FOUND);
 		}
-		long resultId = apiTestResultEntityRepository.save(apiTestResultDto.toEntity()).getId();
+		reqApiTestResultSaveDto.setMethod(apiSpec.get().getMethod());
 
+		// base url 객체 가져오기 -> baseurl 셋팅
+		Optional<Baseurl> baseurl = baseurlRepository.findById(apiSpec.get().getBaseurlId());
+		if(!baseurl.isPresent()) {
+			throw new CustomException(ErrorCode.BASEURL_NOT_FOUND);
+		}
+		reqApiTestResultSaveDto.setBaseUrl(baseurl.get().getUrl());
+
+		// api 테스트 결과 entity 저장
+		long resultId = apiTestResultEntityRepository.save(reqApiTestResultSaveDto.toEntity()).getId();
+
+		// api 테스트 결과 document 저장
 		ApiTestResultDocument document = createOrFinResultsIfExists();
-		document.getResults().put(resultId, apiTestResultDto.toInfo());
+		document.getResults().put(resultId, reqApiTestResultSaveDto.toInfo());
 
+		System.out.println("documentdocumentdocument: "+document);
 		apiTestResultDocRepository.save(document);
 	}
 
@@ -285,12 +304,12 @@ public class ApiExecService {
 		return new ApiTestResultDocument(SSAFAST_TEST_ID, new HashMap<>());
 	}
 
-	public List<ApiTestResultSummaryDto> getAPIExecResults(long apiId) {
+	public List<ResApiTestResultSummaryDto> getAPIExecResults(long apiId) {
 		if(!apiSpecRepository.findById(apiId).isPresent()) {
 			throw new CustomException(ErrorCode.API_NOT_FOUND);
 		}
 
-		List<ApiTestResultSummaryDto> results = new ArrayList<>();
+		List<ResApiTestResultSummaryDto> results = new ArrayList<>();
 
 		List<ApiTestResultEntity> entities = apiTestResultEntityRepository.findAllByApiInfoId(apiId);
 		for(ApiTestResultEntity entity : entities) {

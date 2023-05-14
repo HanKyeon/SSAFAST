@@ -1,6 +1,5 @@
-package com.rocket.ssafast.apispec.domain.Document.element;
+package com.rocket.ssafast.apiexec.domain.document.element;
 
-import java.util.List;
 import java.util.Map;
 
 import lombok.Builder;
