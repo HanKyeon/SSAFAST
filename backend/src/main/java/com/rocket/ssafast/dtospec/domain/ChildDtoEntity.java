@@ -23,7 +23,8 @@ public class ChildDtoEntity {
     @Column(name = "dto_id")
     private Long dtoId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    //부모 혹은 자식이 삭제 되었을 때, 같이 지워져야 해서 필요함
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "child_dto_id")
     private DtoSpecEntity dtoSpecEntity;
 }
