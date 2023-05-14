@@ -1,5 +1,6 @@
-package com.rocket.ssafast.apispec.domain.Entity;
+package com.rocket.ssafast.apiexec.domain.entity;
 
+import com.rocket.ssafast.apiexec.dto.response.ResApiTestResultSummaryDto;
 import com.rocket.ssafast.member.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -31,10 +31,20 @@ public class ApiTestResultEntity {
     @CreationTimestamp
     private LocalDateTime createdTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     @Column(name = "api_info_id")
     private Long apiInfoId;
+
+    public ResApiTestResultSummaryDto toSummaryDto() {
+        return ResApiTestResultSummaryDto.builder()
+            .id(id)
+            .name(name)
+            .member(member.toResSummaryDto())
+            .apiInfoId(apiInfoId)
+            .createdTime(createdTime)
+            .build();
+    }
 }

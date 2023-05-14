@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 public class JavaPoetFieldDto {
 	private String key;
-	private String type;
+	private Long type;
 	private Boolean itera;
 	private List<String> constraints;
 }

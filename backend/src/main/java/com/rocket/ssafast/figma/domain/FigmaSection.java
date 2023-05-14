@@ -1,6 +1,6 @@
 package com.rocket.ssafast.figma.domain;
 
-import com.rocket.ssafast.apispec.domain.Entity.FigmaSectionApiEntity;
+import com.rocket.ssafast.apispec.domain.Entity.FigmaSectionApi;
 import com.rocket.ssafast.workspace.domain.Workspace;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,8 +35,9 @@ public class FigmaSection {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, targetEntity = FigmaSectionApiEntity.class)
-    private List<FigmaSectionApiEntity> figmaSectionApiEntities;
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "figma_section_id")
+    private List<FigmaSectionApi> figmaSectionApiEntities;
 
     public void updateWorkspace(Workspace workspace) {
         this.workspace = workspace;

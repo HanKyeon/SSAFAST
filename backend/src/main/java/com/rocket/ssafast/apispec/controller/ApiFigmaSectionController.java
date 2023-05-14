@@ -34,9 +34,9 @@ public class ApiFigmaSectionController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> getApiFigmaSection(@RequestParam Long figmaSectionId, @RequestParam int method, @RequestParam String name){
+    public ResponseEntity<?> getApiFigmaSection(@RequestParam Long figmaSectionId){
         try {
-            return new ResponseEntity<>(figmaSectionApiService.getApiFigmaSecton(figmaSectionId, method, name), HttpStatus.OK);
+            return new ResponseEntity<>(figmaSectionApiService.getApiFigmaSection(figmaSectionId), HttpStatus.OK);
         } catch (CustomException e){
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
         } catch (Exception e) {
@@ -46,7 +46,7 @@ public class ApiFigmaSectionController {
     }
 
     @DeleteMapping("")
-    public ResponseEntity<?> getApiFigmaSection(@RequestParam Long figmaSectionId){
+    public ResponseEntity<?> deleteApiFigmaSection(@RequestParam Long figmaSectionId){
         try {
             figmaSectionApiService.deleteApiFigmaSection(figmaSectionId);
             return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
