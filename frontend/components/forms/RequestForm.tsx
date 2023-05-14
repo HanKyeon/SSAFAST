@@ -385,7 +385,7 @@ function ParamsFields({ control }: { control: any }) {
                                   name={`document.request.params.[${index}].constraints.${idx}`}
                                   onChange={field.onChange}
                                 >
-                                  s<option value={``}>선택하세욤 뿌우</option>
+                                  <option value={``}>선택하세욤 뿌우</option>
                                   <option value={`NotNull`}>NotNull</option>
                                   <option value={`NotOption`}>NotOption</option>
                                   <option value={`SomeOption`}>
