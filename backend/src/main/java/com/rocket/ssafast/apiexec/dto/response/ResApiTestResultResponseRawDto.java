@@ -1,10 +1,10 @@
-package com.rocket.ssafast.apispec.dto.response;
+package com.rocket.ssafast.apiexec.dto.response;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.rocket.ssafast.apispec.dto.request.ApiTestResultResponseDto;
+import com.rocket.ssafast.apiexec.dto.request.ReqApiTestResultResponseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ApiTestResultResponseRawDto {
+public class ResApiTestResultResponseRawDto {
 	Map<String, List> headers;
 
 	Object body;
@@ -24,14 +24,14 @@ public class ApiTestResultResponseRawDto {
 
 	Integer statusCodeValue;
 
-	public ApiTestResultResponseDto toResponseDto() {
+	public ReqApiTestResultResponseDto toResponseDto() {
 		Map<String, String> dtoHeaders = new HashMap<>();
 
 		headers.forEach((key, valueList) -> {
 			dtoHeaders.put(key, String.join(", ", valueList));
 		});
 
-		return ApiTestResultResponseDto.builder()
+		return ReqApiTestResultResponseDto.builder()
 			.headers(dtoHeaders)
 			.body(body)
 			.statusCode(statusCode)

@@ -1,11 +1,11 @@
-package com.rocket.ssafast.apispec.dto.request;
+package com.rocket.ssafast.apiexec.dto.request;
 
 import java.util.Map;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import com.rocket.ssafast.apispec.domain.Document.element.ApiTestResultRequest;
+import com.rocket.ssafast.apiexec.dto.request.element.ReqApiExecMessageParamDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +18,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class ApiExecReqMessageDto {
+public class ReqApiExecMessageDto {
 
 	@NotEmpty
 	String url;
@@ -30,18 +30,7 @@ public class ApiExecReqMessageDto {
 
 	Map<String, String> pathVars;
 	
-	Map<String, ApiExecReqMessageParamDto> params;
+	Map<String, ReqApiExecMessageParamDto> params;
 
 	String body;
-
-	public ApiTestResultRequest toApiTestResultRequest() {
-		return ApiTestResultRequest.builder()
-			.url(url)
-			.method(method)
-			.headers(headers)
-			.pathVars(pathVars)
-			.params(params)
-			.body(body)
-			.build();
-	}
 }

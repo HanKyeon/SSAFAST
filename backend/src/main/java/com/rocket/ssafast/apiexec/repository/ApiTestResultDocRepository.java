@@ -1,4 +1,4 @@
-package com.rocket.ssafast.apispec.repository;
+package com.rocket.ssafast.apiexec.repository;
 
 import java.util.Map;
 import java.util.Optional;
@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import com.rocket.ssafast.apispec.domain.Document.ApiTestResultDocument;
+import com.rocket.ssafast.apiexec.domain.document.ApiTestResultDocument;
 
 import lombok.RequiredArgsConstructor;
 

@@ -50,7 +50,7 @@ const d = {
                     },
                     "nestedDtos": {     // 내부 객체
                         "키": {         // 내부 객체형 필드 이름 ex. blog
-                            "dtoName": "DTO 이름",                      // ex. Blog
+                            "name": "DTO 이름",                      // ex. Blog
                             "desc": "DTO 설명",
                             "fields": {
                                 "키": {                                 // 내부 객체의 필드 이름. ex. blogName 
@@ -65,7 +65,7 @@ const d = {
                             },
                             "nestedDtos": {
                                 "키": {
-                                    "dtoName": "DTO 이름",                      // ex. Blog
+                                    "name": "DTO 이름",                      // ex. Blog
                                     "desc": "DTO 설명",
                                     "fields": {
                                         "키": {                                 // 내부 객체의 필드 이름. ex. blogName 
@@ -84,7 +84,7 @@ const d = {
                             "nestedDtoLists": {
                                 "키": [
                                     {
-                                        "dtoName": "DTO 이름",                      // ex. Blog
+                                        "name": "DTO 이름",                      // ex. Blog
                                         "desc": "DTO 설명",
                                         "fields": {
                                             "키": {                                 // 내부 객체의 필드 이름 ex. title (게시글의 제목)
@@ -99,7 +99,7 @@ const d = {
                                         }
                                     },
                                     {
-                                        "dtoName": "DTO 이름",                      // ex. Blog
+                                        "name": "DTO 이름",                      // ex. Blog
                                         "desc": "DTO 설명",
                                         "fields": {
                                             "키": {                                 // 내부 객체의 필드 이름 ex. title (게시글의 제목)
@@ -122,7 +122,7 @@ const d = {
                     "nestedDtoLists": {      // 내부 객체 리스트
                         "키": [             // 내부 객체 리스트형 필드 이름
                             {
-                                "dtoName": "DTO 이름",                      // ex. Blog
+                                "name": "DTO 이름",                      // ex. Blog
                                 "desc": "DTO 설명",
                                 "fields": {
                                     "키": {                                 // 내부 객체의 필드 이름 ex. title (게시글의 제목)
@@ -137,7 +137,7 @@ const d = {
                                 },
                                 "nestedDtos": {
                                     "키": {
-                                        "dtoName": "DTO 이름",                      // ex. Blog
+                                        "name": "DTO 이름",                      // ex. Blog
                                         "desc": "DTO 설명",
                                         "fields": {
                                             "키": {                                 // 내부 객체의 필드 이름. ex. blogName 
@@ -156,7 +156,7 @@ const d = {
                                 "nestedDtoLists": {
                                     "키": [
                                         {
-                                            "dtoName": "DTO 이름",                      // ex. Blog
+                                            "name": "DTO 이름",                      // ex. Blog
                                             "desc": "DTO 설명",
                                             "fields": {
                                                 "키": {                                 // 내부 객체의 필드 이름 ex. title (게시글의 제목)
@@ -171,7 +171,7 @@ const d = {
                                             }
                                         },
                                         {
-                                            "dtoName": "DTO 이름",                      // ex. Blog
+                                            "name": "DTO 이름",                      // ex. Blog
                                             "desc": "DTO 설명",
                                             "fields": {
                                                 "키": {                                 // 내부 객체의 필드 이름 ex. title (게시글의 제목)
@@ -215,7 +215,7 @@ const d = {
                     }, 
                     "nestedDtos": {         // 내부 객체
                         "키": {             // 내부 객체형 필드 이름. ex. blog
-                            "dtoName": "DTO이름",
+                            "name": "DTO이름",
                             "desc": "DTO 설명",
                             "fields": {
                                 "키": {                 // 내부 객체의 필드 이름. ex. 블로그이름 
@@ -227,7 +227,7 @@ const d = {
                             },
                             "nestedDtos": {
                                 "키": {
-                                    "dtoName": "DTO 이름",                      // ex. Blog
+                                    "name": "DTO 이름",                      // ex. Blog
                                     "desc": "DTO 설명",
                                     "fields": {
                                         "키": {                                 // 내부 객체의 필드 이름. ex. blogName 
@@ -243,7 +243,7 @@ const d = {
                             "nestedDtoLists": {
                                 "키": [
                                     {
-                                        "dtoName": "DTO 이름",                      // ex. Blog
+                                        "name": "DTO 이름",                      // ex. Blog
                                         "desc": "DTO 설명",
                                         "fields": {
                                             "키": {                                 // 내부 객체의 필드 이름 ex. title (게시글의 제목)
@@ -255,7 +255,7 @@ const d = {
                                         }
                                     },
                                     {
-                                        "dtoName": "DTO 이름",                      // ex. Blog
+                                        "name": "DTO 이름",                      // ex. Blog
                                         "desc": "DTO 설명",
                                         "fields": {
                                             "키": {                                 // 내부 객체의 필드 이름 ex. title (게시글의 제목)
@@ -285,7 +285,7 @@ const d = {
                                 },
                                 "nestedDtos": {
                                     "키": {
-                                        "dtoName": "DTO 이름",                      // ex. Blog
+                                        "name": "DTO 이름",                      // ex. Blog
                                         "desc": "DTO 설명",
                                         "fields": {
                                             "키": {                                 // 내부 객체의 필드 이름. ex. blogName 
@@ -301,7 +301,7 @@ const d = {
                                 "nestedDtoLists": {
                                     "키": [
                                         {
-                                            "dtoName": "DTO 이름",                      // ex. Blog
+                                            "name": "DTO 이름",                      // ex. Blog
                                             "desc": "DTO 설명",
                                             "fields": {
                                                 "키": {                                 // 내부 객체의 필드 이름 ex. title (게시글의 제목)
@@ -313,7 +313,7 @@ const d = {
                                             }
                                         },
                                         {
-                                            "dtoName": "DTO 이름",                      // ex. Blog
+                                            "name": "DTO 이름",                      // ex. Blog
                                             "desc": "DTO 설명",
                                             "fields": {
                                                 "키": {                                 // 내부 객체의 필드 이름 ex. title (게시글의 제목)

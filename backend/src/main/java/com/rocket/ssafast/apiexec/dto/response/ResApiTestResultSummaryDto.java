@@ -1,4 +1,4 @@
-package com.rocket.ssafast.apispec.dto.response;
+package com.rocket.ssafast.apiexec.dto.response;
 
 import java.time.LocalDateTime;
 
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ApiTestResultSummaryDto {
+public class ResApiTestResultSummaryDto {
 	private Long id;
 	private String name;
 	private Long apiInfoId;

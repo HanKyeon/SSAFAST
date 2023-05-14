@@ -1,24 +1,12 @@
-package com.rocket.ssafast.apispec.dto.request;
+package com.rocket.ssafast.apiexec.dto.request;
 
-import java.time.LocalDateTime;
-import java.util.Map;
-
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.CreationTimestamp;
-
-import com.rocket.ssafast.apispec.domain.Document.element.ApiTestResultInfo;
-import com.rocket.ssafast.apispec.domain.Entity.ApiTestResultEntity;
-import com.rocket.ssafast.member.domain.Member;
+import com.rocket.ssafast.apiexec.domain.document.element.ApiTestResultInfo;
+import com.rocket.ssafast.apiexec.domain.document.element.ApiTestResultRequest;
+import com.rocket.ssafast.apiexec.domain.entity.ApiTestResultEntity;
 import com.rocket.ssafast.member.dto.response.ResMemberDto;
 
 import lombok.Getter;
@@ -30,7 +18,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public class ApiTestResultDto {
+public class ReqApiTestResultSaveDto {
 
 	@NotEmpty
 	private String name;
@@ -40,17 +28,26 @@ public class ApiTestResultDto {
 	@NotNull
 	private Long apiInfoId;
 
-	@Valid
-	@NotNull
-	ApiExecReqMessageDto request;
+	private int method;
+
+	String baseUrl;
 
 	@Valid
 	@NotNull
-	ApiTestResultResponseDto response;
+	private ApiTestResultRequest request;
+
+	@Valid
+	@NotNull
+	ReqApiTestResultResponseDto response;
 
 	public ApiTestResultInfo toInfo() {
 		return ApiTestResultInfo.builder()
-			.request(request.toApiTestResultRequest())
+			.apiInfoId(apiInfoId)
+			.name(name)
+			.member(member)
+			.method(method)
+			.baseUrl(baseUrl)
+			.request(request)
 			.response(response.toApiTestResultResponse())
 			.build();
 	}

@@ -22,6 +22,7 @@ import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
 import com.rocket.ssafast.usecase.domain.document.element.UsecaseInfo;
 import com.rocket.ssafast.usecase.dto.request.ReqUsecaseEntityDto;
+import com.rocket.ssafast.usecase.dto.response.ResUsecasePrevResponseDto;
 import com.rocket.ssafast.usecase.service.UsecaseTestService;
 
 import lombok.RequiredArgsConstructor;
@@ -76,7 +77,9 @@ public class UsecaseTestController {
 	@GetMapping("/prev-responses")
 	ResponseEntity<?> getPrevResponses(@RequestParam("apiIds") List<Long> apiIds) {
 		try {
-			return new ResponseEntity<>(usecaseTestService.getPrevResponses(apiIds), HttpStatus.OK);
+			Map<String, List<ResUsecasePrevResponseDto>> result = new HashMap<>();
+			result.put("prevResponses", usecaseTestService.getPrevResponses(apiIds));
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch (CustomException e){
 			return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
 		} catch (Exception e) {
