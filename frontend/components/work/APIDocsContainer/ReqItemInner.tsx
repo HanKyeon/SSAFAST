@@ -77,8 +77,6 @@ const ReqItemInner = function ({
   };
   return (
     <>
-      {/* header, params, pathvar : itera 키 없음 */}
-      {/* header, body에 dto : constraints 키 없음 */}
       {item && (
         <div className={`${styles['innerBox']} ${className}`}>
           <div className={`${styles['key']}`}>
@@ -98,7 +96,7 @@ const ReqItemInner = function ({
               : item.name}
           </div>
           <div className={`${styles['value']}`}>
-            {'keyName' in item && (
+            {'type' in item && (
               <Controller
                 name={`${formName}.value`}
                 control={control}

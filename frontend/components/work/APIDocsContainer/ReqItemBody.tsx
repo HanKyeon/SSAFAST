@@ -71,11 +71,11 @@ const ReqItemBody = function ({
         {item.fields?.map((item: FieldsType, idx: number) => (
           <Controller
             key={`${Math.random()}`}
-            name={`${formName}.field.${idx}`}
+            name={`${formName}.fields.${idx}`}
             control={control}
             render={({ field }) => (
               <ReqItemInner
-                formName={`${formName}.field.${idx}`}
+                formName={`${formName}.fields.${idx}`}
                 field={field}
                 key={item.keyName}
                 item={item}
@@ -95,11 +95,11 @@ const ReqItemBody = function ({
                 <>
                   <Controller
                     key={`${Math.random()}`}
-                    name={`${formName}.dto.${dtoId}`}
+                    name={`${formName}.nestedDtos.${dtoId}`}
                     control={control}
                     render={({ field }) => (
                       <ReqItemInner
-                        formName={`${formName}.dto.${dtoId}`}
+                        formName={`${formName}.nestedDtos.${dtoId}`}
                         field={field}
                         key={`${Math.random()}`}
                         item={dtoItem}
@@ -117,11 +117,11 @@ const ReqItemBody = function ({
                       (item: FieldsType, idx: number) => (
                         <Controller
                           key={`${Math.random()}`}
-                          name={`${formName}.dto.${dtoId}.fields.${idx}`}
+                          name={`${formName}.nestedDtos.${dtoId}.fields.${idx}`}
                           control={control}
                           render={({ field }) => (
                             <ReqItemInner
-                              formName={`${formName}.dto.${dtoId}.fields.${idx}`}
+                              formName={`${formName}.nestedDtos.${dtoId}.fields.${idx}`}
                               field={field}
                               key={`${Math.random()}`}
                               item={item}
@@ -144,11 +144,11 @@ const ReqItemBody = function ({
                             <>
                               <Controller
                                 key={`${Math.random()}`}
-                                name={`${formName}.dto.${dtoId}.ndto.${nDtoId}`}
+                                name={`${formName}.nestedDtos.${dtoId}.nestedDtos.${nDtoId}`}
                                 control={control}
                                 render={({ field }) => (
                                   <ReqItemInner
-                                    formName={`${formName}.dto.${dtoId}.ndto.${nDtoId}`}
+                                    formName={`${formName}.nestedDtos.${dtoId}.nestedDtos.${nDtoId}`}
                                     field={field}
                                     key={`${Math.random()}`}
                                     item={nDtoItem}
@@ -163,11 +163,11 @@ const ReqItemBody = function ({
                                   (item: FieldsType, idx: number) => (
                                     <Controller
                                       key={`${Math.random()}`}
-                                      name={`${formName}.dto.${dtoId}.ndto.${nDtoId}.fields.${idx}`}
+                                      name={`${formName}.nestedDtos.${dtoId}.nestedDtos.${nDtoId}.fields.${idx}`}
                                       control={control}
                                       render={({ field }) => (
                                         <ReqItemInner
-                                          formName={`${formName}.dto.${dtoId}.ndto.${nDtoId}.fields.${idx}`}
+                                          formName={`${formName}.nestedDtos.${dtoId}.nestedDtos.${nDtoId}.fields.${idx}`}
                                           field={field}
                                           key={`${Math.random()}`}
                                           item={item}
@@ -191,6 +191,7 @@ const ReqItemBody = function ({
             }
           }
         )}
+        {/* 첫번째 DTOlist */}
       </div>
       {/* )} */}
     </div>
