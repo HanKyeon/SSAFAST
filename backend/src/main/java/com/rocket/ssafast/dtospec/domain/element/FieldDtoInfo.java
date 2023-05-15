@@ -6,17 +6,15 @@ import java.util.List;
 import java.util.Map;
 
 @Getter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Builder
-public class DtoInfo {
-
-    private String name;
+public class FieldDtoInfo {
     private String keyName;
+    private Long type;
     private String desc;
     private boolean itera;
-    private List<FieldInfo> fields;
+    private String[] constraints;
     private Map<Long, List<FieldDtoInfo>> nestedDtos;
-
 }

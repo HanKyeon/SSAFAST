@@ -110,84 +110,84 @@ public class ApiSpecService {
                         .build();
     }
 
-    public DetailApiSpecInfoDto getApiSpecDetail(Long apiId){
-        Optional<ApiSpecEntity> apiSpec = apiSpecRepository.findById(apiId);
-        ApiDoc apiDoc = apiSpecDocumentService.getApiSpecDocs(apiId);
-
-        if(!apiSpec.isPresent()){ throw new CustomException(ErrorCode.API_NOT_FOUND); }
-        ApiSpecEntity presentApiSpec = apiSpec.get();
-
-        //nestedDto 안에서 itera 속성이 true인 애들 추출
-        Map<Long, DtoInfo> nestedDtos = new HashMap<>();
-        Map<Long, DtoInfo> nestedDtoList = new HashMap<>();
-        for(Map.Entry<Long, DtoInfo> entry : apiDoc.getRequest().getBody().getNestedDtos().entrySet()){
-            Long key = entry.getKey();
-            DtoInfo value = entry.getValue();
-            //get name and desc
-            Optional<DtoSpecEntity> dto = dtoSpecEntityRepository.findById(key);
-            if(!dto.isPresent()){ throw new CustomException(ErrorCode.DTO_NOT_FOUND); }
-
-            //nestedDto 가 가진 dto 들의 정보에 name + desc 를 넣어주기 위한 맵 생성
-            Map<Long, DtoInfo> transferNestedDto = new HashMap<>();
-
-            //nestedDto 가 가진 dto 들의 정보 순회 및 데이터 조회
-            for(Map.Entry<Long, DtoInfo> nestedDtoEntry : value.getNestedDtos().entrySet()){
-                Long nestedDtoKey = nestedDtoEntry.getKey();
-                DtoInfo nestedDtoValue = nestedDtoEntry.getValue();
-
-                Optional<DtoSpecEntity> nestedDtoEntity = dtoSpecEntityRepository.findById(nestedDtoKey);
-                if(!nestedDtoEntity.isPresent()){
-                    throw new CustomException(ErrorCode.DTO_NOT_FOUND);
-                }
-                // make new dtoinfo for transfer
-                DtoInfo dtoWithNameAndDesc =
-                        DtoInfo.builder()
-                                .name(nestedDtoEntity.get().getName())
-                                .desc(nestedDtoEntity.get().getDescription())
-                                .itera(nestedDtoValue.isItera())
-                                .fields(nestedDtoValue.getFields())
-                                .nestedDtos(nestedDtoValue.getNestedDtos())
-                                .build();
-                transferNestedDto.put(nestedDtoKey, dtoWithNameAndDesc);
-            }
-
-            //make dto for transfer
-            DtoInfo transferDto =
-                    DtoInfo.builder()
-                            .name(dto.get().getName())
-                            .desc(dto.get().getDescription())
-                            .itera(value.isItera())
-                            .fields(value.getFields())
-                            .nestedDtos(transferNestedDto)
-                            .build();
-
-            if(value.isItera()){
-                nestedDtoList.put(key, transferDto);
-            }
-            else{
-                nestedDtos.put(key, transferDto);
-            }
-        }
-
-        //api 작성자 정보 get
-        ResMemberDto memberDto = findApiSpecWriterByApiId(apiId);
-
-        apiDoc.getRequest().getBody().setNestedDtos(nestedDtos);
-        apiDoc.getRequest().getBody().setNestedDtoList(nestedDtoList);
-
-        return DetailApiSpecInfoDto.builder()
-                .apiId(apiId)
-                .name(presentApiSpec.getName())
-                .description(presentApiSpec.getDescription())
-                .method(presentApiSpec.getMethod())
-                .status(presentApiSpec.getStatus())
-                .baseurlId(presentApiSpec.getBaseurlId())
-                .categoryId(presentApiSpec.getCategory().getId())
-                .member(memberDto)
-                .createdTime(presentApiSpec.getCreatedTime())
-                .document(apiDoc)
-                .build();
-    }
+//    public DetailApiSpecInfoDto getApiSpecDetail(Long apiId){
+//        Optional<ApiSpecEntity> apiSpec = apiSpecRepository.findById(apiId);
+//        ApiDoc apiDoc = apiSpecDocumentService.getApiSpecDocs(apiId);
+//
+//        if(!apiSpec.isPresent()){ throw new CustomException(ErrorCode.API_NOT_FOUND); }
+//        ApiSpecEntity presentApiSpec = apiSpec.get();
+//
+//        //nestedDto 안에서 itera 속성이 true인 애들 추출
+//        Map<Long, DtoInfo> nestedDtos = new HashMap<>();
+//        Map<Long, DtoInfo> nestedDtoList = new HashMap<>();
+//        for(Map.Entry<Long, DtoInfo> entry : apiDoc.getRequest().getBody().getNestedDtos().entrySet()){
+//            Long key = entry.getKey();
+//            DtoInfo value = entry.getValue();
+//            //get name and desc
+//            Optional<DtoSpecEntity> dto = dtoSpecEntityRepository.findById(key);
+//            if(!dto.isPresent()){ throw new CustomException(ErrorCode.DTO_NOT_FOUND); }
+//
+//            //nestedDto 가 가진 dto 들의 정보에 name + desc 를 넣어주기 위한 맵 생성
+//            Map<Long, DtoInfo> transferNestedDto = new HashMap<>();
+//
+//            //nestedDto 가 가진 dto 들의 정보 순회 및 데이터 조회
+//            for(Map.Entry<Long, DtoInfo> nestedDtoEntry : value.getNestedDtos().entrySet()){
+//                Long nestedDtoKey = nestedDtoEntry.getKey();
+//                DtoInfo nestedDtoValue = nestedDtoEntry.getValue();
+//
+//                Optional<DtoSpecEntity> nestedDtoEntity = dtoSpecEntityRepository.findById(nestedDtoKey);
+//                if(!nestedDtoEntity.isPresent()){
+//                    throw new CustomException(ErrorCode.DTO_NOT_FOUND);
+//                }
+//                // make new dtoinfo for transfer
+//                DtoInfo dtoWithNameAndDesc =
+//                        DtoInfo.builder()
+//                                .name(nestedDtoEntity.get().getName())
+//                                .desc(nestedDtoEntity.get().getDescription())
+//                                .itera(nestedDtoValue.isItera())
+//                                .fields(nestedDtoValue.getFields())
+//                                .nestedDtos(nestedDtoValue.getNestedDtos())
+//                                .build();
+//                transferNestedDto.put(nestedDtoKey, dtoWithNameAndDesc);
+//            }
+//
+//            //make dto for transfer
+//            DtoInfo transferDto =
+//                    DtoInfo.builder()
+//                            .name(dto.get().getName())
+//                            .desc(dto.get().getDescription())
+//                            .itera(value.isItera())
+//                            .fields(value.getFields())
+//                            .nestedDtos(transferNestedDto)
+//                            .build();
+//
+//            if(value.isItera()){
+//                nestedDtoList.put(key, transferDto);
+//            }
+//            else{
+//                nestedDtos.put(key, transferDto);
+//            }
+//        }
+//
+//        //api 작성자 정보 get
+//        ResMemberDto memberDto = findApiSpecWriterByApiId(apiId);
+//
+//        apiDoc.getRequest().getBody().setNestedDtos(nestedDtos);
+//        apiDoc.getRequest().getBody().setNestedDtoList(nestedDtoList);
+//
+//        return DetailApiSpecInfoDto.builder()
+//                .apiId(apiId)
+//                .name(presentApiSpec.getName())
+//                .description(presentApiSpec.getDescription())
+//                .method(presentApiSpec.getMethod())
+//                .status(presentApiSpec.getStatus())
+//                .baseurlId(presentApiSpec.getBaseurlId())
+//                .categoryId(presentApiSpec.getCategory().getId())
+//                .member(memberDto)
+//                .createdTime(presentApiSpec.getCreatedTime())
+//                .document(apiDoc)
+//                .build();
+//    }
 
     public ApiSpecInfoDto updateApiSpec(Long apiId, Long memberId, ApiSpecInfoDto apiSpecInfoDto){
         //mysql api table update
