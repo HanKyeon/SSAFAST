@@ -64,7 +64,7 @@ public class DtoSpecController {
     @GetMapping(value = "/list")
     public ResponseEntity<?> getDtoLists(@RequestParam Long workspaceId){
         try{
-            return new ResponseEntity<>(workspaceId, HttpStatus.OK);
+            return new ResponseEntity<>(dtoSpecEntityService.getDtoListByWorkspaceId(workspaceId), HttpStatus.OK);
         }
         catch (CustomException c){
             return new ResponseEntity<>(c.getMessage(), c.getHttpStatus());

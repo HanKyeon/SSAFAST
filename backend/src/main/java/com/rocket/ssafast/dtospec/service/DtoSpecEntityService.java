@@ -7,6 +7,7 @@ import com.rocket.ssafast.dtospec.domain.element.DtoInfo;
 import com.rocket.ssafast.dtospec.domain.element.FieldDtoInfo;
 import com.rocket.ssafast.dtospec.dto.request.AddDtoSpecDto;
 import com.rocket.ssafast.dtospec.dto.request.UpdateDtoSpecDto;
+import com.rocket.ssafast.dtospec.dto.response.ResponseDtoListItem;
 import com.rocket.ssafast.dtospec.repository.ChildDtoEntityRepository;
 import com.rocket.ssafast.dtospec.repository.DtoSpecEntityRepository;
 import com.rocket.ssafast.dtospec.repository.ParentDtoEntityRepository;
@@ -241,22 +242,20 @@ public class DtoSpecEntityService {
                 .build();
     }
 
-//    public List<DtoInfo> getDtoListByWorkspaceId(Long workspaceId){
-//        List<DtoSpecEntity> dtoEntityList = dtoSpecEntityRepository.findByWorkspaceId(workspaceId);
-//        List<DtoInfo> results = new ArrayList<>();
-//        if(dtoEntityList == null || dtoEntityList.size() < 1){
-//            return results;
-//        }
-//
-//        for(DtoSpecEntity dtoSpecEntity : dtoEntityList){
-//            DtoInfo dtoDoc = dtoSpecDocumentService.findByDtoId(dtoSpecEntity.getId());
-//            results.add(
-//                    DtoInfo.builder()
-//                            .build()
-//            );
-//        }
-//
-//    }
+    public List<ResponseDtoListItem> getDtoListByWorkspaceId(Long workspaceId){
+        List<DtoSpecEntity> dtoEntityList = dtoSpecEntityRepository.findByWorkspaceId(workspaceId);
+        List<ResponseDtoListItem> results = new ArrayList<>();
+        for(DtoSpecEntity dtoSpecEntity : dtoEntityList){
+            results.add(
+                    ResponseDtoListItem.builder()
+                            .id(dtoSpecEntity.getId())
+                            .name(dtoSpecEntity.getName())
+                            .desc(dtoSpecEntity.getDescription())
+                            .build()
+            );
+        }
+        return results;
+    }
 
     public DtoSpecEntity getDtoSpecEntityById(Long dtoId){
         Optional<DtoSpecEntity> dto = dtoSpecEntityRepository.findById(dtoId);
