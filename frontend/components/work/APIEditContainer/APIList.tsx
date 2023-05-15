@@ -16,7 +16,10 @@ import {
   useSectionsApi,
   useSpaceApis,
 } from '@/hooks/queries/queries';
-import { useUpdateCategory } from '@/hooks/queries/mutations';
+import {
+  useDeleteCategory,
+  useUpdateCategory,
+} from '@/hooks/queries/mutations';
 import Modal from '@/components/common/Modal';
 import AnimationBox from '@/components/common/AnimationBox';
 import { Box, Button, Input } from '@/components/common';
@@ -43,6 +46,8 @@ const APIList = function ({
   const { spaceId } = router.query as SpaceParams;
   const [curCateIdx, setCurCateIdx] = useState<number>(0);
   const [isModal, setIsModal] = useState<boolean>(false);
+  const [isDeleteModal, setIsDeleteModal] = useState<boolean>(false);
+  const [isUpdateModal, setIsUpdateModal] = useState<boolean>(false);
 
   const closeModal = useCallback(function () {
     setIsModal(() => false);
@@ -50,6 +55,22 @@ const APIList = function ({
 
   const openModal = useCallback(function () {
     setIsModal(() => true);
+  }, []);
+
+  const closeUpdateModal = useCallback(function () {
+    setIsUpdateModal(() => false);
+  }, []);
+
+  const openUpdateModal = useCallback(function () {
+    setIsUpdateModal(() => true);
+  }, []);
+
+  const closeDeleteModal = useCallback(function () {
+    setIsDeleteModal(() => false);
+  }, []);
+
+  const openDeleteModal = useCallback(function () {
+    setIsDeleteModal(() => true);
   }, []);
 
   const categoryRef = useRef<HTMLInputElement>(null);
@@ -68,13 +89,22 @@ const APIList = function ({
     setCurCateIdx(cateIdx);
   };
 
-  const { mutate, mutateAsync } = useUpdateCategory(parseInt(spaceId));
+  const { mutate: updateMutate, mutateAsync: updateMutateAsync } =
+    useUpdateCategory(parseInt(spaceId));
+  const { mutate: deleteMutate, mutateAsync: deleteMytateAsync } =
+    useDeleteCategory(parseInt(spaceId));
 
   const categoryUpdate = function (categoryId: number) {
     console.log(categoryInput);
-    mutate({ categoryId: categoryId, categoryName: categoryInput });
-    closeModal();
+    updateMutate({ categoryId: categoryId, categoryName: categoryInput });
+    closeUpdateModal();
   };
+
+  const categoryDelete = function (categoryId: number) {
+    deleteMutate(categoryId);
+    closeDeleteModal();
+  };
+
   return (
     <>
       <ul
@@ -82,8 +112,11 @@ const APIList = function ({
       >
         {spaceApiList?.apiCategories?.map((cate, cateIdx) => (
           <>
-            {isModal && (
-              <Modal closeModal={closeModal} parentClasses="h-[50%] w-[50%]">
+            {isUpdateModal && (
+              <Modal
+                closeModal={closeUpdateModal}
+                parentClasses="h-[50%] w-[50%]"
+              >
                 <AnimationBox className="w-full h-full">
                   <Box className="flex flex-col gap-4 w-full h-full p-5 items-center justify-center">
                     <div className="text-[24px]">
@@ -92,16 +125,15 @@ const APIList = function ({
                     <div className="min-w-[220px]">
                       <Input
                         className="text-center"
-                        type="text"
                         value={cate.categoryName}
                         inputref={categoryRef}
                         onChange={categoryChange}
-                        placeholder="카테고리를 입력해 주세요"
+                        placeholder={cate.categoryName}
                       />
                     </div>
                     <div className="flex gap-4">
                       <Button
-                        className="flex items-center justify-center cursor-pointer text-center rounded-[8px]"
+                        className="flex items-center justify-center text-center rounded-[8px]"
                         onClick={(e) => {
                           e.preventDefault();
                           categoryUpdate(cate.categoryId);
@@ -110,11 +142,44 @@ const APIList = function ({
                         생성
                       </Button>
                       <Button
-                        className="cursor-pointer text-center rounded-[8px] border !border-red-500 !bg-red-500"
-                        onClick={closeModal}
+                        className="text-center rounded-[8px] border !border-red-500 !bg-red-500"
+                        onClick={closeUpdateModal}
                       >
                         닫기
                       </Button>
+                    </div>
+                  </Box>
+                </AnimationBox>
+              </Modal>
+            )}
+            {isDeleteModal && (
+              <Modal
+                closeModal={closeDeleteModal}
+                parentClasses="h-[50%] w-[50%]"
+              >
+                <AnimationBox className="w-full h-full">
+                  <Box className="flex flex-col gap-4 w-full h-full p-5 items-center justify-center">
+                    <div className="text-[24px]">
+                      카테고리를 정말 삭제 하시겠습니까?
+                    </div>
+
+                    <div className="flex gap-4">
+                      <Button
+                        className="flex items-center justify-center text-center rounded-[8px] border !border-red-500 !bg-red-500"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          categoryDelete(cate.categoryId);
+                        }}
+                      >
+                        삭제
+                      </Button>
+                      <Box
+                        variant="three"
+                        className="text-center rounded-[8px] cursor-pointer "
+                        onClick={closeDeleteModal}
+                      >
+                        닫기
+                      </Box>
                     </div>
                   </Box>
                 </AnimationBox>
@@ -140,6 +205,26 @@ const APIList = function ({
                   className={`text-grayscale-dark hover:text-theme-white-strong`}
                   onClick={openModal}
                 />
+                {isModal && (
+                  <ul
+                    className={`absolute z-10 bg-grayscale-deepdarkdeep rounded-[8px] w-full shadow-lg`}
+                  >
+                    <li
+                      key={`${cate.categoryId}_${cateIdx}_update`}
+                      className={`text-center py-1 border-t-[1px] border-grayscale-dark first:border-none cursor-pointer`}
+                      onClick={openUpdateModal}
+                    >
+                      수정
+                    </li>
+                    <li
+                      key={`${cate.categoryId}_${cateIdx}_delete`}
+                      className={`text-center py-1 border-t-[1px] border-grayscale-dark first:border-none cursor-pointer`}
+                      onClick={openDeleteModal}
+                    >
+                      삭제
+                    </li>
+                  </ul>
+                )}
               </div>
               {/* api 목록 */}
               <ul

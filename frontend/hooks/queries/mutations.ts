@@ -326,7 +326,10 @@ export const useCreateCategory = function (spaceId: string | number) {
     },
     onError: function () {
       dispatch(
-        DispatchToast('카테고리 생성에 실패했습니다. 다시 시도해주세요.', false)
+        DispatchToast(
+          '카테고리의 이름이 중복되었습니다. 다시 시도해주세요.',
+          false
+        )
       );
     },
   });
@@ -363,6 +366,33 @@ export const useUpdateCategory = function (spaceId: string | number) {
     onError: function () {
       dispatch(
         DispatchToast('카테고리 수정에 실패했습니다. 다시 시도해주세요.', false)
+      );
+    },
+  });
+};
+
+export const useDeleteCategory = function (spaceId: string | number) {
+  const dispatch = useStoreDispatch();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async function (categoryId: number) {
+      return apiRequest({
+        method: `delete`,
+        url: `/api/api-pre/category/${categoryId}}`,
+        params: {
+          workspaceId: spaceId,
+        },
+      });
+    },
+    onSuccess: function () {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.spaceApi(spaceId),
+      });
+      dispatch(DispatchToast('카테고리가 삭제되었습니다.', true));
+    },
+    onError: function () {
+      dispatch(
+        DispatchToast('카테고리 삭제에 실패했습니다. 다시 시도해주세요.', false)
       );
     },
   });
