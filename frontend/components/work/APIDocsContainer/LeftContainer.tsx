@@ -2,7 +2,13 @@ import { useState } from 'react';
 import APIList from '../APIEditContainer/APIList';
 import FigmaList from '../FigmaList';
 import FigmaListItem from '../FigmaListItem';
-import { EachCateApi, SpaceApiList } from '@/hooks/queries/queries';
+import {
+  EachCateApi,
+  SpaceApiList,
+  useSpaceApis,
+} from '@/hooks/queries/queries';
+import { useRouter } from 'next/router';
+import { SpaceParams } from '@/pages/space';
 
 const mockupAPIList: SpaceApiList = {
   apiCategories: [
@@ -139,11 +145,14 @@ const LeftContainer = function ({
   selectedId,
   changeSelectedId,
 }: LeftContainerPropsType): JSX.Element {
+  const router = useRouter();
+  const { spaceId } = router.query as SpaceParams;
   const [curTab, setCurTab] = useState<'Figma' | 'All'>('Figma');
 
   const ToggleTab = (selected: 'Figma' | 'All'): void => {
     setCurTab(selected);
   };
+  const { data: spaceApis } = useSpaceApis(parseInt(spaceId));
 
   return (
     <div className={`flex flex-col h-full w-full`}>
@@ -173,7 +182,7 @@ const LeftContainer = function ({
         ) : (
           //   전체 api
           <APIList
-            apiList={mockupAPIList}
+            apiList={spaceApis || { apiCategories: [] }}
             setSelectedIdHandler={changeSelectedId}
           />
         )}
