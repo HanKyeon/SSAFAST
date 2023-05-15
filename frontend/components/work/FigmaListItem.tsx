@@ -12,6 +12,7 @@ interface Props {
   figmaData: SpaceFigma;
   activeIdx: number | null;
   idx: number;
+  headerIdx: number;
   setActive: (idx: number | null) => void;
 }
 
@@ -20,6 +21,7 @@ const FigmaListItem = function ({
   figmaData,
   activeIdx,
   idx,
+  headerIdx,
   setActive,
 }: Props) {
   const [isExpand, setIsExpand] = useState<boolean>(activeIdx === idx);
@@ -84,7 +86,7 @@ const FigmaListItem = function ({
           className="w-full text-ellipsis overflow-hidden text-header py-3"
           onClick={expandHandler}
         >
-          #{idx + 1} {figmaData.name}
+          #{headerIdx + 1} {figmaData.name}
         </div>
         {/* <Button className="text-[1.2rem]" onClick={deleteHandler}>
             삭제

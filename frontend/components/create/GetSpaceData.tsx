@@ -215,7 +215,7 @@ const GetSpaceData = function ({
               ref={imgurlRef}
               onChange={imgUrlChange}
               id="create-input1"
-              placeholder="이미지 주소를 입력해주세요."
+              placeholder="이미지 url를 입력해주세요."
               className={`px-[3.3px] py-[3px] w-[67%] bg-opacity-0 border-b-[3px] box-border ${
                 dark
                   ? 'bg-theme-white-light border-theme-white-normal'
@@ -352,13 +352,13 @@ const GetSpaceData = function ({
           </div>
           <div className="w-full px-[10%] flex flex-row gap-3">
             <label className="w-[33%]" htmlFor="create-baseUrl">
-              프로젝트 사용 주소
+              프로젝트 사용 url
             </label>
             <textarea
               ref={baseUrlInputRef}
               onChange={baseUrlInputChange}
               id="create-baseUrl"
-              placeholder="기본 주소를 입력해주세요."
+              placeholder="기본 url를 입력해주세요."
               cols={3}
               maxLength={6000}
               className={`px-3 py-2 w-[67%] bg-opacity-0 border-[3px] box-border rounded-[8px] ${

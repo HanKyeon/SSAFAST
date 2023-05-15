@@ -22,6 +22,14 @@ user                                  // 로그인or로그아웃 시 invalidate
             ㄴdto
         ㄴsectionApi, [sectionId]
         ㄴcategoryApi, [categoryId]
+        ㄴusecase
+          ㄴlist
+          ㄴdetail, [usecaseId]
+            ㄴresponses
+        ㄴoverload
+          ㄴauth // 인증 확인
+          ㄴlist // 결과 목록
+          ㄴdetail, [overloadId] // 성능테스트 상세 조회
       ㄴdto
         ㄴlist
         ㄴdetail, [dtoId]
@@ -87,6 +95,32 @@ export const queryKeys = {
   // api code => 사용
   spaceApiCodeFE: (spaceId: string | number, apiId: string | number) =>
     [...queryKeys.spaceApiDetail(spaceId, apiId), `front`] as const,
+
+  // invalidate 용
+  usecase: (spaceId: string | number) =>
+    [...queryKeys.spaceApi(spaceId), `usecase`] as const,
+  // usecase list
+  usecaseList: (spaceId: string | number) =>
+    [...queryKeys.usecase(spaceId), `list`] as const,
+  // usecase detail
+  usecaseDetail: (spaceId: string | number, usecaseId: string | number) =>
+    [...queryKeys.usecase(spaceId), `detail`, `${usecaseId}`] as const,
+  // response 응답
+  usecaseResponses: (spaceId: string | number, ids: string) =>
+    [...queryKeys.usecase(spaceId), `detail`, `${ids}`] as const,
+
+  // 부하 테스트
+  overload: (spaceId: number | string) =>
+    [...queryKeys.spaceApi(spaceId), `overload`] as const,
+  // 오버로드 성능테스트 목록
+  overloadList: (spaceId: number | string) =>
+    [...queryKeys.overload(spaceId), `list`] as const,
+  // 오버로드 상세 조회
+  overloadDetail: (spaceId: number | string, overloadId: string | number) =>
+    [...queryKeys.overload(spaceId), `detail`, `${overloadId}`] as const,
+  // 오버로드 인증 url 리스트
+  overloadCertUrlList: (spaceId: number | string) =>
+    [...queryKeys.overload(spaceId), `auth`, `list`] as const,
 
   // space의 dto
   spaceDto: (spaceId: string | number) =>

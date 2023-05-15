@@ -70,9 +70,10 @@ const FigmaList = function ({
   const { data: figmaFrameList } = useSpaceFrames(parseInt(spaceId));
 
   const changeIdxHandler = function (idx: number | null) {
+    console.log(activeIdx);
     setActiveIdx(() => idx);
     if (onChangeSection && idx) {
-      onChangeSection(figmaY.get(idx).sectionId);
+      onChangeSection(idx);
     }
   };
 
@@ -117,6 +118,7 @@ const FigmaList = function ({
               <FigmaListItem
                 apiData={apiData}
                 figmaData={figmaData}
+                headerIdx={idx}
                 idx={figmaData.id as number}
                 activeIdx={activeIdx}
                 setActive={changeIdxHandler}
