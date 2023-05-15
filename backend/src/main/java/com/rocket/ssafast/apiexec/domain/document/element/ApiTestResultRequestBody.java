@@ -18,7 +18,7 @@ public class ApiTestResultRequestBody {
 
     private List<FieldInfo> fields;
 
-    private Map<Long, ApiTestResultRequestNestedDto> nestedDtos;
+    private Map<Long, List<ApiTestResultRequestNestedDto>> nestedDtos;
 
-    private Map<Long, ApiTestResultRequestNestedDtoList> nestedDtoLists;
+    private Map<Long, List<ApiTestResultRequestNestedDtoList>> nestedDtoLists;
 }
