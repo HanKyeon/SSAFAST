@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class UsecaseReqNestedDto {
 
 	@NotEmpty
-	String dtoName;
+	String name;
 
 	String desc;
 
