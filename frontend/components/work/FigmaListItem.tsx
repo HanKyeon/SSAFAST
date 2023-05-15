@@ -116,7 +116,7 @@ const FigmaListItem = function ({
               className={`w-[95%] my-0 mx-auto flex flex-col gap-1 duration-[0.33s]`}
             >
               {apiData?.map((api) => (
-                <APIlistItem key={api.id} item={api} />
+                <APIlistItem key={`figma-${idx}-${api.id}-api`} item={api} />
               ))}
             </ul>
           )}

@@ -14,6 +14,8 @@ import {
   useSectionsApi,
   useSpaceApis,
 } from '@/hooks/queries/queries';
+import { useStoreDispatch } from '@/hooks/useStore';
+import { DispatchToast } from '@/store';
 
 const checkedMok: SpaceApiList = {
   apiCategories: [
@@ -105,6 +107,7 @@ const RightContainer = function ({
   sectionId,
 }: RightContainerPropsType): JSX.Element {
   const router = useRouter();
+  const dispatch = useStoreDispatch();
   const { spaceId } = router.query as SpaceParams;
   const {
     data: checkedAPIList,
@@ -116,7 +119,7 @@ const RightContainer = function ({
     //  isLoading,
     //   isError,
   } = useSpaceApis(spaceId);
-  const { mutate } = useMappingApi(spaceId, sectionId);
+  const { mutate, mutateAsync } = useMappingApi(spaceId, sectionId);
 
   const [filterIdx, setFilterIdx] = useState<number>(0);
   const [isSaved, setIsSaved] = useState<boolean>(true);
@@ -128,18 +131,20 @@ const RightContainer = function ({
     e.preventDefault();
     if (saveBtn) {
       // refinedCheckList DB에 날려!
-      mutate(refinedCheckedList);
+      mutateAsync(refinedCheckedList)
+        .then((res) => {
+          dispatch(DispatchToast('매핑 완료!', true));
+        })
+        .catch((err) => {
+          dispatch(DispatchToast('매핑 실패! 재시도 바랍니다.', false));
+        });
     }
     setIsSaved((prev) => !prev);
   };
 
-  useEffect(() => {
-    console.log(refinedCheckedList, '<<<<<<<<<<<<<<<<<<<<<');
-  }, [refinedCheckedList]);
-
   const onToggleCheck = (apiId: number | string, check: boolean): void => {
     setRefinedCheckedList((prev) =>
-      check ? [...prev, apiId] : [...prev.filter((id) => id !== apiId)]
+      check ? [...prev, apiId] : prev.filter((id) => id !== apiId)
     );
   };
 
