@@ -40,59 +40,77 @@ public class DtoSpecController {
         }
         catch (Exception e){
             log.info("error : " + e.getMessage());
-//            e.printStackTrace();
+            e.printStackTrace();
         }
         return new ResponseEntity<>(ErrorCode.INTERNAL_SERVER_ERROR.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus());
     }
 
-    //수정 필요,,ㅎ,,
     @GetMapping(value = "/{dtoId}")
     public ResponseEntity<?> getDetailDtoInfo(@PathVariable Long dtoId) {
         try{
-            return new ResponseEntity<>(dtoSpecDocumentService.findByDtoId(dtoId), HttpStatus.OK);
-        } catch (Exception e){
+            return new ResponseEntity<>(dtoSpecEntityService.getDtoSpecEntity(dtoId), HttpStatus.OK);
+        }
+        catch (CustomException c){
+            return new ResponseEntity<>(c.getMessage(), c.getHttpStatus());
+        }
+        catch (Exception e){
             log.info("error : ", e.getMessage());
+            e.printStackTrace();
         }
         return new ResponseEntity<>(ErrorCode.INTERNAL_SERVER_ERROR.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus());
 
     }
 
-    @PutMapping(value = "/{dtoId}")
-    public ResponseEntity<?> updateDtoInfo(@PathVariable Long dtoId, @RequestBody UpdateDtoSpecDto updateDtoSpecDto){
+    @GetMapping(value = "/list")
+    public ResponseEntity<?> getDtoLists(@RequestParam Long workspaceId){
         try{
-            boolean hasParent = false;
-            boolean hasChild = false;
-            //1. get entity for check relation for other dtos(parent, child info)
-            DtoSpecEntity dtoSpecEntity = dtoSpecEntityService.getDtoSpecEntityById(dtoId);
-
-            Map<Long, DtoInfo> childDto = updateDtoSpecDto.getDocument().getNestedDtos();
-            hasParent = dtoSpecEntity.isHasParent();
-            hasChild = childDto!=null || childDto.size() > 0;
-
-            //child has child
-            for(Long childKey : childDto.keySet()){
-                if(dtoSpecEntityService.childDtoIsExist(childKey)){
-                    return new ResponseEntity<>(ErrorCode.DTO_DEPTH_OVER.getMessage(), ErrorCode.DTO_DEPTH_OVER.getHttpStatus());
-                }
-            }
-
-            //current dto has parent and child
-            if(hasChild && hasParent){
-                return new ResponseEntity<>(ErrorCode.DTO_DEPTH_OVER.getMessage(), ErrorCode.DTO_DEPTH_OVER.getHttpStatus());
-            }
-
-            dtoSpecEntityService.updateDtoEntity(dtoId, updateDtoSpecDto);
-
+            return new ResponseEntity<>(workspaceId, HttpStatus.OK);
         }
-        catch (CustomException customException){
-            return new ResponseEntity<>(customException.getMessage(), customException.getHttpStatus());
+        catch (CustomException c){
+            return new ResponseEntity<>(c.getMessage(), c.getHttpStatus());
         }
-
-        //dto depth 가 2를 벗어나는지 확인하는 로직 필요 - mysql
-        //3. update entity
-        //4. update document
-        return new ResponseEntity<>(updateDtoSpecDto, HttpStatus.OK);
+        catch (Error e){
+            log.info("error : " + e.getMessage());
+            return new ResponseEntity<>(ErrorCode.INTERNAL_SERVER_ERROR.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus());
+        }
     }
+
+//    @PutMapping(value = "/{dtoId}")
+//    public ResponseEntity<?> updateDtoInfo(@PathVariable Long dtoId, @RequestBody UpdateDtoSpecDto updateDtoSpecDto){
+//        try{
+//            boolean hasParent = false;
+//            boolean hasChild = false;
+//            //1. get entity for check relation for other dtos(parent, child info)
+//            DtoSpecEntity dtoSpecEntity = dtoSpecEntityService.getDtoSpecEntityById(dtoId);
+//
+//            Map<Long, DtoInfo> childDto = updateDtoSpecDto.getDocument().getNestedDtos();
+//            hasParent = dtoSpecEntity.isHasParent();
+//            hasChild = childDto!=null || childDto.size() > 0;
+//
+//            //child has child
+//            for(Long childKey : childDto.keySet()){
+//                if(dtoSpecEntityService.childDtoIsExist(childKey)){
+//                    return new ResponseEntity<>(ErrorCode.DTO_DEPTH_OVER.getMessage(), ErrorCode.DTO_DEPTH_OVER.getHttpStatus());
+//                }
+//            }
+//
+//            //current dto has parent and child
+//            if(hasChild && hasParent){
+//                return new ResponseEntity<>(ErrorCode.DTO_DEPTH_OVER.getMessage(), ErrorCode.DTO_DEPTH_OVER.getHttpStatus());
+//            }
+//
+//            dtoSpecEntityService.updateDtoEntity(dtoId, updateDtoSpecDto);
+//
+//        }
+//        catch (CustomException customException){
+//            return new ResponseEntity<>(customException.getMessage(), customException.getHttpStatus());
+//        }
+//
+//        //dto depth 가 2를 벗어나는지 확인하는 로직 필요 - mysql
+//        //3. update entity
+//        //4. update document
+//        return new ResponseEntity<>(updateDtoSpecDto, HttpStatus.OK);
+//    }
 
 
 }

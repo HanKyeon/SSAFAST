@@ -4,6 +4,7 @@ import com.rocket.ssafast.dtospec.domain.ChildDtoEntity;
 import com.rocket.ssafast.dtospec.domain.DtoSpecEntity;
 import com.rocket.ssafast.dtospec.domain.ParentDtoEntity;
 import com.rocket.ssafast.dtospec.domain.element.DtoInfo;
+import com.rocket.ssafast.dtospec.domain.element.FieldDtoInfo;
 import com.rocket.ssafast.dtospec.dto.request.AddDtoSpecDto;
 import com.rocket.ssafast.dtospec.dto.request.UpdateDtoSpecDto;
 import com.rocket.ssafast.dtospec.repository.ChildDtoEntityRepository;
@@ -41,7 +42,7 @@ public class DtoSpecEntityService {
 
         // 1. 자식 관계 확인
         List<Long> childKeyList = getNestedDtoKeyList(addDtoSpecDto.getDocument());
-        if(childKeyList.size()>0 && childKeyList!= null){
+        if(childKeyList!= null && childKeyList.size()>0){
             hasChild = true;
         }
 
@@ -61,7 +62,6 @@ public class DtoSpecEntityService {
         Long createdDtoId = dtoSpecEntity.getId();
         for(Long childKey : childKeyList){
             DtoSpecEntity childDto = dtoSpecEntityRepository.findById(childKey).get();
-
 
             childDtoEntityRepository.save(
                     ChildDtoEntity.builder()
@@ -97,6 +97,7 @@ public class DtoSpecEntityService {
         // 5. mongodb 저장
         DtoInfo dtoInfo =
                 DtoInfo.builder()
+                        .itera(addDtoSpecDto.getDocument().isItera())
                         .fields(addDtoSpecDto.getDocument().getFields())
                         .nestedDtos(addDtoSpecDto.getDocument().getNestedDtos())
                         .build();
@@ -113,9 +114,13 @@ public class DtoSpecEntityService {
          * */
         List<Long> results = new ArrayList<>();
 
-        for(Map.Entry<Long, DtoInfo> entries : nestedDto.getNestedDtos().entrySet()){
+        if(nestedDto.getNestedDtos() == null || nestedDto.getNestedDtos().size() <1){
+            return results;
+        }
+
+        for(Map.Entry<Long, List<FieldDtoInfo>> entries : nestedDto.getNestedDtos().entrySet()){
             Long key = entries.getKey();
-            Map<Long, DtoInfo> dto = entries.getValue().getNestedDtos();
+            List<FieldDtoInfo> dtos = entries.getValue();
 
             //db에 저장된 값이 없는 dto인 경우
             Optional<DtoSpecEntity> getOptionalChildDto = dtoSpecEntityRepository.findById(key);
@@ -123,98 +128,135 @@ public class DtoSpecEntityService {
                 throw new CustomException(ErrorCode.DTO_NOT_FOUND);
             }
             //user input 으로 들어온 dto 검증 및 database 정보 검증
-            if(dto.size() >0 ||
-                    dto !=null ||
-                    childDtoIsExist(key) ||
-                    getOptionalChildDto.get().isHasChild()){
-                throw new CustomException(ErrorCode.DTO_DEPTH_OVER);
+            for(FieldDtoInfo userInputNestedDto : dtos) {
+                log.info(dtos.toString());
+                if (userInputNestedDto.getNestedDtos() == null
+                        || userInputNestedDto.getNestedDtos().size() < 1
+                        || !getOptionalChildDto.get().isHasChild()) {
+                    results.add(key);
+                }
+                else{
+                    throw new CustomException(ErrorCode.DTO_DEPTH_OVER);
+                }
             }
-
-            results.add(key);
         }
 
         return results;
     }
 
 
-    public UpdateDtoSpecDto updateDtoEntity(Long dtoId, UpdateDtoSpecDto updateDtoSpecDto){
+//    public UpdateDtoSpecDto updateDtoEntity(Long dtoId, UpdateDtoSpecDto updateDtoSpecDto){
+//
+//        //1. check if dto not exists
+//        Optional<DtoSpecEntity> dtoSpecEntity = dtoSpecEntityRepository.findById(dtoId);
+//        if(!optionalObjectIsAvailable(dtoSpecEntity)){
+//            throw new CustomException(ErrorCode.DTO_NOT_FOUND);
+//        }
+//
+//        //1.1 자식 dto 정보 가져오기
+//        Map<Long, DtoInfo> childDtos = updateDtoSpecDto.getDocument().getNestedDtos();
+//
+//        //2. check dto's depth available
+//        DtoSpecEntity currentDtoEntity = dtoSpecEntity.get();
+//        boolean hasParent = currentDtoEntity.isHasParent();
+//        boolean hasChild = currentDtoEntity.isHasChild();
+//        boolean isChildDtoNested = (childDtos!=null || childDtos.size() > 0)? true:false;
+//        boolean savable = !hasParent & isChildDtoNested;
+//
+//        //2.1 부모도 있고 입력 받은 데이터가 자식도 있는경우(db에 부모도 자식도 있는 경우는 없음)
+//        if(savable){
+//            throw new CustomException(ErrorCode.DTO_DEPTH_OVER);
+//        }
+//
+//        // 이 아래는 부모는 있으나 자식 dto가 없는 경우이거나, 부모가 없고 자식이 있는 경우이다.
+//
+//        //2.2 부모가 없고 자식이 있는 경우
+//        List<Long> childKeyList = getNestedDtoKeyList(updateDtoSpecDto.getDocument());
+//        if(childKeyList.size()>0 && childKeyList!= null){
+//            hasChild = true;
+//        }
+//
+//        //2.2.1 (데이터베이스) 자식이 다른 자식을 가지고 있는 경우 & 자식이 없는 경우는 true 유지
+//        for(Long key : childKeyList){
+//            List<ChildDtoEntity> childHasChildList = childDtoEntityRepository.findByDtoId(key);
+//            if(childHasChildList.size() >0){
+//                savable = false;
+//                break;
+//            }
+//        }
+//
+//        //2.2.2 (사용자 인풋)자식이 다른 자식을 가지고 있는 경우 & 자식이 없는 경우는 true 유지
+//        for(Map.Entry<Long, DtoInfo> entries : childDtos.entrySet()){
+//            Long _key = entries.getKey();
+//            Map<Long, DtoInfo> value = entries.getValue().getNestedDtos();
+//
+//            if(value !=null || value.size() >0){
+//                savable = false;
+//                break;
+//            }
+//        }
+//
+//        //2.2.* 를 거쳐 저장 결과에 따른 로직 실행
+//        if(!savable){
+//            throw new CustomException(ErrorCode.DTO_DEPTH_OVER);
+//        }
+//
+//        //3. update dto entity info
+//        DtoSpecEntity updateEntity
+//                = DtoSpecEntity.builder()
+//                    .id(dtoId)
+//                    .name(updateDtoSpecDto.getName())
+//                    .description(updateDtoSpecDto.getDescription())
+//                    .hasParent(hasParent)
+//                    .hasChild(hasChild)
+//                    .build();
+//
+//        dtoSpecEntityRepository.save(updateEntity);
+//
+//        //4. parent, child table update 해야함
+//        if(hasChild){
+//            //4.1 update 된 dto 의 자식관계 업데이트
+//            childDtoEntityService.updateChildDtoEntityInfoCascade(dtoId, childKeyList);
+//            //4.2 update 된 dto 들의 부모관계 업데이트
+//            parentDtoEntityService.updateParentDtoEntityInfoCascade(dtoId, childKeyList);
+//        }
+//
+//        return updateDtoSpecDto;
+//    }
 
-        //1. check if dto not exists
-        Optional<DtoSpecEntity> dtoSpecEntity = dtoSpecEntityRepository.findById(dtoId);
-        if(!optionalObjectIsAvailable(dtoSpecEntity)){
+    public DtoInfo getDtoSpecEntity(Long dtoId){
+        DtoInfo dtoDocs = dtoSpecDocumentService.findByDtoId(dtoId);
+        Optional<DtoSpecEntity> dtoEntity = dtoSpecEntityRepository.findById(dtoId);
+        if(!dtoEntity.isPresent()){
             throw new CustomException(ErrorCode.DTO_NOT_FOUND);
         }
 
-        //1.1 자식 dto 정보 가져오기
-        Map<Long, DtoInfo> childDtos = updateDtoSpecDto.getDocument().getNestedDtos();
-
-        //2. check dto's depth available
-        DtoSpecEntity currentDtoEntity = dtoSpecEntity.get();
-        boolean hasParent = currentDtoEntity.isHasParent();
-        boolean hasChild = currentDtoEntity.isHasChild();
-        boolean isChildDtoNested = (childDtos!=null || childDtos.size() > 0)? true:false;
-        boolean savable = !hasParent & isChildDtoNested;
-
-        //2.1 부모도 있고 입력 받은 데이터가 자식도 있는경우(db에 부모도 자식도 있는 경우는 없음)
-        if(savable){
-            throw new CustomException(ErrorCode.DTO_DEPTH_OVER);
-        }
-
-        // 이 아래는 부모는 있으나 자식 dto가 없는 경우이거나, 부모가 없고 자식이 있는 경우이다.
-
-        //2.2 부모가 없고 자식이 있는 경우
-        List<Long> childKeyList = getNestedDtoKeyList(updateDtoSpecDto.getDocument());
-        if(childKeyList.size()>0 && childKeyList!= null){
-            hasChild = true;
-        }
-
-        //2.2.1 (데이터베이스) 자식이 다른 자식을 가지고 있는 경우 & 자식이 없는 경우는 true 유지
-        for(Long key : childKeyList){
-            List<ChildDtoEntity> childHasChildList = childDtoEntityRepository.findByDtoId(key);
-            if(childHasChildList.size() >0){
-                savable = false;
-                break;
-            }
-        }
-
-        //2.2.2 (사용자 인풋)자식이 다른 자식을 가지고 있는 경우 & 자식이 없는 경우는 true 유지
-        for(Map.Entry<Long, DtoInfo> entries : childDtos.entrySet()){
-            Long _key = entries.getKey();
-            Map<Long, DtoInfo> value = entries.getValue().getNestedDtos();
-
-            if(value !=null || value.size() >0){
-                savable = false;
-                break;
-            }
-        }
-
-        //2.2.* 를 거쳐 저장 결과에 따른 로직 실행
-        if(!savable){
-            throw new CustomException(ErrorCode.DTO_DEPTH_OVER);
-        }
-
-        //3. update dto entity info
-        DtoSpecEntity updateEntity
-                = DtoSpecEntity.builder()
-                    .id(dtoId)
-                    .name(updateDtoSpecDto.getName())
-                    .description(updateDtoSpecDto.getDescription())
-                    .hasParent(hasParent)
-                    .hasChild(hasChild)
-                    .build();
-
-        dtoSpecEntityRepository.save(updateEntity);
-
-        //4. parent, child table update 해야함
-        if(hasChild){
-            //4.1 update 된 dto 의 자식관계 업데이트
-            childDtoEntityService.updateChildDtoEntityInfoCascade(dtoId, childKeyList);
-            //4.2 update 된 dto 들의 부모관계 업데이트
-            parentDtoEntityService.updateParentDtoEntityInfoCascade(dtoId, childKeyList);
-        }
-
-        return updateDtoSpecDto;
+        return DtoInfo.builder()
+                .name(dtoEntity.get().getName())
+                .keyName(dtoDocs.getKeyName())
+                .desc(dtoEntity.get().getDescription())
+                .itera(dtoDocs.isItera())
+                .fields(dtoDocs.getFields())
+                .nestedDtos(dtoDocs.getNestedDtos())
+                .build();
     }
+
+//    public List<DtoInfo> getDtoListByWorkspaceId(Long workspaceId){
+//        List<DtoSpecEntity> dtoEntityList = dtoSpecEntityRepository.findByWorkspaceId(workspaceId);
+//        List<DtoInfo> results = new ArrayList<>();
+//        if(dtoEntityList == null || dtoEntityList.size() < 1){
+//            return results;
+//        }
+//
+//        for(DtoSpecEntity dtoSpecEntity : dtoEntityList){
+//            DtoInfo dtoDoc = dtoSpecDocumentService.findByDtoId(dtoSpecEntity.getId());
+//            results.add(
+//                    DtoInfo.builder()
+//                            .build()
+//            );
+//        }
+//
+//    }
 
     public DtoSpecEntity getDtoSpecEntityById(Long dtoId){
         Optional<DtoSpecEntity> dto = dtoSpecEntityRepository.findById(dtoId);

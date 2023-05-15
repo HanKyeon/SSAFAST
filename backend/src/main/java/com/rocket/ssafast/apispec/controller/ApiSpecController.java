@@ -50,19 +50,19 @@ public class ApiSpecController {
         }
     }
 
-    @GetMapping("/{apiId}/detail")
-    public ResponseEntity<?> getApiSpecDetail(Long apiId){
-        try{
-            DetailApiSpecInfoDto result = apiSpecService.getApiSpecDetail(apiId);
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }
-        catch (CustomException c){
-            return new ResponseEntity<>(c.getMessage(), c.getHttpStatus());
-        }
-        catch (Error e){
-            return new ResponseEntity<>(ErrorCode.INTERNAL_SERVER_ERROR.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus());
-        }
-    }
+//    @GetMapping("/{apiId}/detail")
+//    public ResponseEntity<?> getApiSpecDetail(Long apiId){
+//        try{
+//            DetailApiSpecInfoDto result = apiSpecService.getApiSpecDetail(apiId);
+//            return new ResponseEntity<>(result, HttpStatus.OK);
+//        }
+//        catch (CustomException c){
+//            return new ResponseEntity<>(c.getMessage(), c.getHttpStatus());
+//        }
+//        catch (Error e){
+//            return new ResponseEntity<>(ErrorCode.INTERNAL_SERVER_ERROR.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus());
+//        }
+//    }
 
     @PutMapping("/{apiId}")
     public ResponseEntity<?> updateApiSpec(@AuthenticationPrincipal ResMemberDto memberDto, Long apiId, @RequestBody ApiSpecInfoDto apiSpecInfoDto){
