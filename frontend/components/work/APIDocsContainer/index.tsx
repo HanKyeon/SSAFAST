@@ -36,24 +36,18 @@ export interface ApiTestForm {
     body: BodyType; // request.body
   };
 }
-export type MockupDataItemType = {
-  key: string;
-  type: string;
-  desc: string;
-  obj?: MockupDataItemType[] | null;
-};
 export type HeadersType = {
-  key: string;
-  type: string;
+  keyName: string;
+  type: string | number;
   desc: string;
   value: null;
 };
 export type FieldsType = {
-  key: string;
-  type: string;
+  keyName: string;
+  type: string | number;
   desc: string;
-  constraints: string[];
   itera?: boolean;
+  constraints: string[];
   value?: null | any;
 };
 
@@ -61,21 +55,26 @@ export type NestedDtosType = {
   [key: string | number]: BodyType;
 };
 export type BodyType = {
+  name?: string;
+  keyName?: string | null;
+  desc?: string;
+  itera?: boolean;
   fields: FieldsType[];
   nestedDtos?: NestedDtosType | NestedDtosType[];
+  nestedDtoList?: NestedDtosType | NestedDtosType[];
 };
 
 const mockupData2: MockupData2Type = {
   request: {
     headers: [
       {
-        key: 'Content-Type',
+        keyName: 'Content-Type',
         type: 'String',
         desc: 'Define request data type',
         value: null,
       },
       {
-        key: 'Age',
+        keyName: 'Age',
         type: 'Integer',
         desc: 'Fields for cashing',
         value: null,
@@ -84,67 +83,91 @@ const mockupData2: MockupData2Type = {
     body: {
       fields: [
         {
-          key: 'ID',
-          type: 'String',
-          desc: 'Login User ID',
+          keyName: 'ID',
+          type: 1,
+          desc: '사용자 ID',
           itera: false,
-          constraints: ['NotBlank', 'Size(min=4, max=10)', 'NotNull'],
+          constraints: ['NotNull'],
           value: null,
         },
         {
-          key: 'telephones',
-          type: 'String',
-          desc: 'cell-phone numbers with candidates',
-          itera: true,
-          constraints: ['NotBlank', 'NotNull', 'Length(min=2, max=5)'],
+          keyName: 'PW',
+          type: 1,
+          desc: '사용자 PW',
+          itera: false,
+          constraints: ['NotNull'],
           value: null,
         },
       ],
       nestedDtos: {
-        //dto id
-        '15': {
+        '11': {
+          name: 'UserInfo', // 실제 dto class 이름
+          keyName: '11Dto', // 사용자가 지정한 변수명 e.g) Test test2;
+          desc: '사용자 정보를 저장하는 class',
+          itera: false,
           fields: [
             {
-              key: 'ID',
-              type: 'String',
-              desc: 'User Identify Info',
+              keyName: 'userID',
+              type: 1,
+              desc: '추천인ID',
+              value: null,
               itera: false,
-              constraints: ['notNull'],
+              constraints: ['NotNull'],
+            },
+            {
+              keyName: 'userPW',
+              type: 1,
+              desc: '추천인PW',
+              value: null,
+              itera: false,
+              constraints: ['NotNull'],
+            },
+          ],
+          nestedDtos: {},
+        },
+        '8': {
+          name: 'UserInfo', // 실제 dto class 이름
+          keyName: '8Dto', // 사용자가 지정한 변수명 e.g) Test test2;
+          desc: '사용자 정보를 저장하는 class',
+          itera: false,
+          fields: [
+            {
+              keyName: 'userID',
+              type: 1,
+              desc: '추천인ID',
+              value: null,
+              itera: false,
+              constraints: ['NotNull'],
+            },
+            {
+              keyName: 'userPW',
+              type: 1,
+              desc: '추천인PW',
+              value: null,
+              itera: false,
+              constraints: ['NotNull'],
             },
           ],
           nestedDtos: {
-            '5': {
+            '7': {
+              name: 'UserInfo', // 실제 dto class 이름
+              keyName: '7Dto', // 사용자가 지정한 변수명 e.g) Test test2;
+              desc: '사용자 정보를 저장하는 class',
+              itera: false,
               fields: [
                 {
-                  key: 'content',
-                  type: 'String',
-                  desc: 'comment for user',
-                  itera: true,
-                  constraints: ['NotNull', 'NotEmpty'],
-                },
-                {
-                  key: 'CreatedDate',
-                  type: 'Date',
-                  desc: 'Sign up date',
+                  keyName: 'userID',
+                  type: 1,
+                  desc: '추천인ID',
+                  value: null,
                   itera: false,
                   constraints: ['NotNull'],
                 },
-              ],
-              nestedDtos: {},
-            },
-            '3': {
-              fields: [
                 {
-                  key: 'content',
-                  type: 'String',
-                  desc: 'comment for user',
-                  itera: true,
-                  constraints: ['NotNull', 'NotEmpty'],
-                },
-                {
-                  key: 'CreatedDate',
-                  type: 'Date',
-                  desc: 'Sign up date',
+                  keyName: 'userPW',
+                  type: 1,
+                  desc: '추천인PW',
+                  value: null,
                   itera: false,
                   constraints: ['NotNull'],
                 },
@@ -153,15 +176,21 @@ const mockupData2: MockupData2Type = {
             },
           },
         },
-        //dto id
-        '8': {
+      },
+      nestedDtoList: {
+        '12': {
+          name: 'RecUserInfo',
+          keyName: null,
+          desc: '추천한 사용자들의 정보를 담는 class',
+          itera: true,
           fields: [
             {
-              key: 'ID',
-              type: 'String',
-              desc: 'User Identify Info',
+              keyName: 'userID',
+              type: 1,
+              desc: '추천인ID',
+              value: null,
               itera: false,
-              constraints: ['notNull'],
+              constraints: ['NotNull'],
             },
           ],
           nestedDtos: {},
@@ -170,7 +199,7 @@ const mockupData2: MockupData2Type = {
     },
     pathVars: [
       {
-        key: 'userid',
+        keyName: 'userid',
         type: 'String',
         desc: 'for login',
         constraints: ['NotNull'],
@@ -179,7 +208,7 @@ const mockupData2: MockupData2Type = {
     ],
     params: [
       {
-        key: 'age',
+        keyName: 'age',
         type: 'int',
         desc: 'user age',
         constraints: ['NotNull'],

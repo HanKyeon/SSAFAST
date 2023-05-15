@@ -4,10 +4,10 @@ import { HiChatBubbleBottomCenterText } from 'react-icons/hi2';
 import Input from '@/components/common/Input';
 import { DtoInfoType } from './ReqItemBody';
 import { Controller } from 'react-hook-form';
-import { HeadersType, FieldsType } from '.';
+import { HeadersType, FieldsType, BodyType } from '.';
 
 interface ReqItemInnerPropsType {
-  item: HeadersType | FieldsType | DtoInfoType;
+  item: HeadersType | FieldsType | BodyType;
   className?: string;
   depth?: 0 | 1 | 2;
   control?: any;
@@ -80,20 +80,20 @@ const ReqItemInner = function ({
       {item && (
         <div className={`${styles['innerBox']} ${className}`}>
           <div className={`${styles['key']}`}>
-            <div>{'key' in item ? item.key : item.name}</div>
+            <div>{item.keyName ? item.keyName : (item as BodyType).name}</div>
             <div className={`${styles['desc']}`}>
               <i>
                 <HiChatBubbleBottomCenterText
                   className={`${styles['descIcon']}`}
                 />
               </i>
-              <p className={`truncate text-ellipsis`}>
-                {'desc' in item ? item.desc : item.description}
-              </p>
+              <p className={`truncate text-ellipsis`}>{item.desc}</p>
             </div>
           </div>
           <div className={`${styles['type']}`}>
-            {'type' in item ? item.type : item.name}
+            {'type' in item
+              ? (item as FieldsType | HeadersType).type
+              : item.name}
           </div>
           <div className={`${styles['value']}`}>
             {'type' in item && (
