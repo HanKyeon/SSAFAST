@@ -17,8 +17,8 @@ import java.util.Map;
 public class Body {
 
     private List<FieldInfo> fields;
-    private Map<Long, DtoInfo> nestedDtos;
-    private Map<Long, DtoInfo> nestedDtoList;
+    private Map<Long, List<DtoInfo>> nestedDtos;
+    private Map<Long, List<DtoInfo>> nestedDtoLists;
 
 
 }

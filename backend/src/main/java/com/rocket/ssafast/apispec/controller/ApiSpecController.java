@@ -26,7 +26,7 @@ public class ApiSpecController {
     @PostMapping
     public ResponseEntity<?> createApiSpec(@AuthenticationPrincipal UserDetailsImpl userInfo, @RequestBody ApiSpecInfoDto apiSpecInfoDto){
         try{
-            apiSpecService.createApiSpec(userInfo.getMemberId(),apiSpecInfoDto);
+            apiSpecService.createApiSpec(userInfo.getMemberId(), apiSpecInfoDto);
             return new ResponseEntity<>(apiSpecInfoDto, HttpStatus.OK);
         }
         catch(CustomException c){
@@ -38,7 +38,7 @@ public class ApiSpecController {
     }
 
     @GetMapping("/{apiId}")
-    public ResponseEntity<?> getApiSpec(Long apiId){
+    public ResponseEntity<?> getApiSpec(@PathVariable Long apiId){
         try{
             return new ResponseEntity<>(apiSpecService.getApiSpec(apiId), HttpStatus.OK);
         }
@@ -67,8 +67,9 @@ public class ApiSpecController {
     @PutMapping("/{apiId}")
     public ResponseEntity<?> updateApiSpec(@AuthenticationPrincipal ResMemberDto memberDto, Long apiId, @RequestBody ApiSpecInfoDto apiSpecInfoDto){
         try{
-            ApiSpecInfoDto result = apiSpecService.updateApiSpec(apiId, memberDto.getId(), apiSpecInfoDto);
-            return new ResponseEntity<>(result, HttpStatus.OK);
+//            ApiSpecInfoDto result = apiSpecService.updateApiSpec(apiId, memberDto.getId(), apiSpecInfoDto);
+//            return new ResponseEntity<>(result, HttpStatus.OK);
+            return new ResponseEntity<>(apiSpecInfoDto, HttpStatus.OK);
         }
         catch (CustomException c){
             return new ResponseEntity<>(c.getMessage(), c.getHttpStatus());

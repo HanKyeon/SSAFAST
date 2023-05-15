@@ -1,7 +1,7 @@
 package com.rocket.ssafast.apispec.service;
 
 import com.rocket.ssafast.apispec.domain.Document.ApiSpecDocument;
-import com.rocket.ssafast.apispec.domain.Document.element.ApiDoc;
+import com.rocket.ssafast.apispec.domain.Document.temp.ApiSpecDoc;
 import com.rocket.ssafast.apispec.repository.ApiSpecDocRepository;
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
@@ -25,20 +25,20 @@ public class ApiSpecDocumentService {
     private final ApiSpecDocRepository apiSpecDocRepository;
 
 
-    public ApiDoc getApiSpecDocs(Long apiId){
+    public ApiSpecDoc getApiSpecDocs(Long apiId){
         ApiSpecDocument document = createOrFindApiSpecsIfExists();
-        ApiDoc target = document.getApis().get(apiId);
+        ApiSpecDoc target = document.getApis().get(apiId);
         return target;
     }
 
-    public ApiDoc createApiSpec(Long apiId, ApiDoc apiSpec){
+    public ApiSpecDoc createApiSpec(Long apiId, ApiSpecDoc apiSpec){
         ApiSpecDocument document = createOrFindApiSpecsIfExists();
         document.getApis().put(apiId, apiSpec);
         apiSpecDocRepository.save(document);
         return document.getApis().get(apiId);
     }
 
-    public ApiDoc updateApiSpec(Long apiId, ApiDoc apiSpec){
+    public ApiSpecDoc updateApiSpec(Long apiId, ApiSpecDoc apiSpec){
         ApiSpecDocument document = createOrFindApiSpecsIfExists();
         document.getApis().put(apiId, apiSpec);
         apiSpecDocRepository.save(document);
