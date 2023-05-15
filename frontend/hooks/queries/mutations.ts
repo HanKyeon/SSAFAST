@@ -302,6 +302,7 @@ export const useDeleteMember = function (spaceId: string | number) {
   });
 };
 
+// 카테고리 생성
 export const useCreateCategory = function (spaceId: string | number) {
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
@@ -335,6 +336,7 @@ export const useCreateCategory = function (spaceId: string | number) {
   });
 };
 
+// 카테고리 수정
 export const useUpdateCategory = function (spaceId: string | number) {
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
@@ -371,6 +373,7 @@ export const useUpdateCategory = function (spaceId: string | number) {
   });
 };
 
+// 카테고리 삭제
 export const useDeleteCategory = function (spaceId: string | number) {
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
@@ -444,9 +447,8 @@ export const useUserMutation = function () {
   });
 };
 
-// const Asd = function () {
-//   const { mutate, mutateAsync } = useSectionsApiPost(spaceId, seectionId);
-export const useAddApi = function (spaceId: string | number) {
+// Api 명세 생성
+export const useCreateApi = function (spaceId: string | number) {
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
 
@@ -454,7 +456,7 @@ export const useAddApi = function (spaceId: string | number) {
     mutationFn: function (data: any) {
       return apiRequest({
         method: `post`,
-        url: `api/api`,
+        url: `/api/api`,
         data,
       });
     },
@@ -471,6 +473,7 @@ export const useAddApi = function (spaceId: string | number) {
   });
 };
 
+// Api 명세 수정
 export const useUpdateApi = function (spaceId: string | number) {
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
@@ -479,7 +482,7 @@ export const useUpdateApi = function (spaceId: string | number) {
     mutationFn: function (data: any) {
       return apiRequest({
         method: `put`,
-        url: `api/api/${data.apiId}`,
+        url: `/api/api/${data.apiId}`,
         data: data.data,
       });
     },
@@ -496,6 +499,7 @@ export const useUpdateApi = function (spaceId: string | number) {
   });
 };
 
+// Api 명세 삭제
 export const useDeleteApi = function (spaceId: string | number) {
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
@@ -504,7 +508,7 @@ export const useDeleteApi = function (spaceId: string | number) {
     mutationFn: function (apiId: number) {
       return apiRequest({
         method: `delete`,
-        url: `api/api/${apiId}`,
+        url: `/api/api/${apiId}`,
       });
     },
     onSuccess: function () {
@@ -512,12 +516,59 @@ export const useDeleteApi = function (spaceId: string | number) {
         queryKey: queryKeys.spaceApiList(spaceId),
       });
 
-      dispatch(DispatchToast('작성중이던 API가 삭제되었습니다!', true));
+      dispatch(DispatchToast('API가 성공적으로 삭제되었습니다!', true));
     },
     onError: function () {
       dispatch(
         DispatchToast('삭제를 실패하였습니다. 다시 시도해주세요!', false)
       );
+    },
+  });
+};
+
+// Api 단일 테스트 요청
+export const useSingleApiTest = function () {
+  const dispatch = useStoreDispatch();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: function (data: any) {
+      return apiRequest({
+        method: `put`,
+        url: `/api/api-exec`,
+        data: data.execReqData,
+      });
+    },
+    onSuccess: function () {
+      dispatch(DispatchToast('Api가 성공적으로 실행되었습니다!', true));
+    },
+    onError: function () {
+      dispatch(
+        DispatchToast('요구사항에 맞지 않는 데이터를 입력하셨습니다!', false)
+      );
+    },
+  });
+};
+
+// Api 단일테스트 결과 저장
+export const useSaveSingleApiTest = function (spaceId: string | number) {
+  const dispatch = useStoreDispatch();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: function (data: any) {
+      return apiRequest({
+        method: `put`,
+        url: `/api/api-exec/response`,
+        data: data.data,
+      });
+    },
+    onSuccess: function () {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.spaceApiList(spaceId),
+      });
+      dispatch(DispatchToast('Api 테스트 결과가 저장되었습니다.', true));
+    },
+    onError: function () {
+      dispatch(DispatchToast('Api 테스트 결과 저장에 실패하였습니다.', false));
     },
   });
 };

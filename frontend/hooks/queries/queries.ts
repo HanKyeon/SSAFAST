@@ -425,8 +425,7 @@ interface CategoryList {
   categorys: { id: number | string; name: string }[];
 }
 
-// ??
-// 카테고리 조회
+// 카테고리 목록 조회
 export const useSpaceCategory = function (spaceId: string | number) {
   return useQuery<CategoryList>({
     queryKey: queryKeys.spaceCategoryList(spaceId),
@@ -801,3 +800,64 @@ export const useFigmaSections = function (figmaId: string, ids: string) {
     keepPreviousData: false,
   });
 };
+
+// Api 상세 조회 (성민이의 요청에 따라 바뀔 수 있음. 일단 params에 workSpaceId 붙여달라함)
+export const getApiDetail = async function (apiId: number) {
+  return apiRequest({
+    method: `get`,
+    url: `/api/api/${apiId}`,
+  });
+};
+
+export const useApiDetail = function (spaceId: string | number, apiId: number) {
+  return useQuery<any>({
+    queryKey: queryKeys.spaceApiDetail(spaceId, apiId),
+    queryFn: async function () {
+      return getApiDetail(apiId).then((res) => res.data);
+    },
+    enabled: !!spaceId && !!apiId,
+  });
+};
+
+// // Api 단일 테스트용 상세 조회
+// export const getApiSingleTestDetail = async function (apiId: number) {
+//   return apiRequest({
+//     method: `get`,
+//     url: `/api/api/${apiId}/detail`,
+//   });
+// };
+
+// export const useApiSingleTestDetail = function (
+//   spaceId: string | number,
+//   apiId: number
+// ) {
+//   return useQuery<any>({
+//     queryKey: queryKeys.spaceApiDetail(spaceId, apiId),
+//     queryFn: async function () {
+//       return getApiSingleTestDetail(apiId).then((res) => res.data);
+//     },
+//     enabled: !!spaceId && !!apiId,
+//   });
+// };
+
+// // Api 단일테스트 결과 목록 조회
+// export const getApiSingleTestResult = function (apiId: number) {
+//   return apiRequest({
+//     method: `get`,
+//     url: `/api/api-exec/response/list`,
+//     params: apiId,
+//   });
+// };
+
+// export const useApiSingleTestResult = function (
+//   spaceId: string | number,
+//   apiId: number
+// ) {
+//   return useQuery<any>({
+//     queryKey: queryKeys.spaceApiDetail(spaceId, apiId),
+//     queryFn: async function () {
+//       return getApiSingleTestResult(apiId).then((res) => res.data);
+//     },
+//     enabled: !!spaceId && !!apiId,
+//   });
+// };
