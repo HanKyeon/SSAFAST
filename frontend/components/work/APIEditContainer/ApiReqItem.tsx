@@ -61,7 +61,7 @@ const ApiReqItem = function ({
             render={({ field }) => {
               return (
                 <div
-                  key={item.key}
+                  key={`${item.keyName}-${item.type}`}
                   className={`w-[87%] rounded-[13px] overflow-hidden mt-0 mb-3 mx-auto text-content duration-[0.33s]`}
                 >
                   <ApiReqItemInner
