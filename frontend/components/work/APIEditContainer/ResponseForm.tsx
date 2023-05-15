@@ -339,17 +339,18 @@ function HeaderFields({
                             </option>
                           );
                         })}
-                        {dtoListData?.dtoList.map((dto) => {
-                          return (
-                            <option
-                              key={`${dto.id}-dtoType-${index}`}
-                              value={dto.id}
-                              title={dto.desc}
-                            >
-                              {dto.name}
-                            </option>
-                          );
-                        })}
+                        {dtoListData &&
+                          dtoListData?.dtoList.map((dto) => {
+                            return (
+                              <option
+                                key={`${dto.id}-dtoType-${index}`}
+                                value={dto.id}
+                                title={dto.desc}
+                              >
+                                {dto.name}
+                              </option>
+                            );
+                          })}
                       </select>
                       {fieldState?.invalid && (
                         <span className="text-red-500">
@@ -518,17 +519,18 @@ function BodyFields({
                           </option>
                         );
                       })}
-                      {dtoListData?.dtoList.map((dto) => {
-                        return (
-                          <option
-                            key={`${dto.id}-dtoType-${index}`}
-                            value={dto.id}
-                            title={dto.desc}
-                          >
-                            {dto.name}
-                          </option>
-                        );
-                      })}
+                      {dtoListData &&
+                        dtoListData?.dtoList.map((dto) => {
+                          return (
+                            <option
+                              key={`${dto.id}-dtoType-${index}`}
+                              value={dto.id}
+                              title={dto.desc}
+                            >
+                              {dto.name}
+                            </option>
+                          );
+                        })}
                     </select>
                     {fieldState?.invalid && (
                       <span className="text-red-500">

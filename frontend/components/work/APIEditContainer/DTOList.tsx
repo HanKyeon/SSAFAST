@@ -14,7 +14,7 @@ const DTOList = function ({ setSelected }: Props) {
 
   return (
     <div className="w-full h-[92%] overflow-y-scroll flex flex-col gap-3">
-      {DtoListData?.dtoList &&
+      {DtoListData &&
         DtoListData?.dtoList.map((dto) => {
           return (
             <DTOListItem

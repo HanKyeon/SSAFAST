@@ -85,17 +85,18 @@ const HeaderController = function ({ item, index, formName, remove }: Props) {
                     </option>
                   );
                 })}
-                {dtoListData?.dtoList.map((dto) => {
-                  return (
-                    <option
-                      key={`${dto.id}-dtoType-${index}`}
-                      value={dto.id}
-                      title={dto.desc}
-                    >
-                      {dto.name}
-                    </option>
-                  );
-                })}
+                {dtoListData &&
+                  dtoListData?.dtoList.map((dto) => {
+                    return (
+                      <option
+                        key={`${dto.id}-dtoType-${index}`}
+                        value={dto.id}
+                        title={dto.desc}
+                      >
+                        {dto.name}
+                      </option>
+                    );
+                  })}
               </select>
             </div>
           )}
