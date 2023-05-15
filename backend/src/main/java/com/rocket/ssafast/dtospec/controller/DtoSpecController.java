@@ -5,6 +5,7 @@ import com.rocket.ssafast.dtospec.domain.DtoSpecEntity;
 import com.rocket.ssafast.dtospec.domain.element.DtoInfo;
 import com.rocket.ssafast.dtospec.dto.request.AddDtoSpecDto;
 import com.rocket.ssafast.dtospec.dto.request.UpdateDtoSpecDto;
+import com.rocket.ssafast.dtospec.dto.response.ResponseDtoListItem;
 import com.rocket.ssafast.dtospec.service.DtoSpecDocumentService;
 import com.rocket.ssafast.dtospec.service.DtoSpecEntityService;
 import com.rocket.ssafast.exception.CustomException;
@@ -16,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -64,7 +67,9 @@ public class DtoSpecController {
     @GetMapping(value = "/list")
     public ResponseEntity<?> getDtoLists(@RequestParam Long workspaceId){
         try{
-            return new ResponseEntity<>(dtoSpecEntityService.getDtoListByWorkspaceId(workspaceId), HttpStatus.OK);
+            Map<String, List<ResponseDtoListItem>> results = new HashMap<>();
+            results.put("dtoList", dtoSpecEntityService.getDtoListByWorkspaceId(workspaceId));
+            return new ResponseEntity<>(results, HttpStatus.OK);
         }
         catch (CustomException c){
             return new ResponseEntity<>(c.getMessage(), c.getHttpStatus());
