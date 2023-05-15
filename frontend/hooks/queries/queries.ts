@@ -217,7 +217,6 @@ export interface DtoListItem {
   name: string;
   keyName: string;
   desc: string;
-  detail: any;
 }
 
 export interface WonsiAttr {
