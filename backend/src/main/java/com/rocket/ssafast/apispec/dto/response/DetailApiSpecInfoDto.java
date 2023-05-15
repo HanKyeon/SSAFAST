@@ -1,6 +1,7 @@
 package com.rocket.ssafast.apispec.dto.response;
 
 import com.rocket.ssafast.apispec.domain.Document.element.ApiDoc;
+import com.rocket.ssafast.apispec.domain.Document.temp.ApiSpecDoc;
 import com.rocket.ssafast.member.dto.response.ResMemberDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,5 +24,5 @@ public class DetailApiSpecInfoDto {
     private Long categoryId;
     private ResMemberDto member;
     private LocalDateTime createdTime;
-    private ApiDoc document;
+    private ApiSpecDoc document;
 }

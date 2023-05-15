@@ -1,6 +1,6 @@
 package com.rocket.ssafast.apispec.dto.request;
 
-import com.rocket.ssafast.apispec.domain.Document.element.ApiDoc;
+import com.rocket.ssafast.apispec.domain.Document.temp.ApiSpecDoc;
 import lombok.*;
 
 @Getter
@@ -16,5 +16,5 @@ public class ApiSpecInfoDto {
     private Long baseUrl;
     private Long categoryId;
     private int status;
-    private ApiDoc document;
+    private ApiSpecDoc document;
 }

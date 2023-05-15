@@ -1,6 +1,8 @@
 package com.rocket.ssafast.apispec.service;
 
 import com.rocket.ssafast.apispec.domain.Document.element.ApiDoc;
+import com.rocket.ssafast.apispec.domain.Document.temp.ApiSpecDoc;
+import com.rocket.ssafast.apispec.domain.Document.temp.BodyField;
 import com.rocket.ssafast.apispec.domain.Entity.ApiSpecEntity;
 import com.rocket.ssafast.apispec.domain.Entity.CategoryEntity;
 import com.rocket.ssafast.apispec.dto.request.ApiSpecInfoDto;
@@ -8,9 +10,11 @@ import com.rocket.ssafast.apispec.dto.response.DetailApiSpecInfoDto;
 import com.rocket.ssafast.apispec.repository.ApiSpecRepository;
 import com.rocket.ssafast.apispec.repository.CategoryEntityRepository;
 import com.rocket.ssafast.dtospec.domain.ApiHasDtoEntity;
+import com.rocket.ssafast.dtospec.domain.ChildDtoEntity;
 import com.rocket.ssafast.dtospec.domain.DtoSpecEntity;
 import com.rocket.ssafast.dtospec.domain.element.DtoInfo;
 import com.rocket.ssafast.dtospec.repository.ApiHasDtoEntityRepository;
+import com.rocket.ssafast.dtospec.repository.ChildDtoEntityRepository;
 import com.rocket.ssafast.dtospec.repository.DtoSpecEntityRepository;
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
@@ -23,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -37,6 +42,7 @@ public class ApiSpecService {
     private final DtoSpecEntityRepository dtoSpecEntityRepository;
     private final ApiHasDtoEntityRepository apiHasDtoEntityRepository;
     private final CategoryEntityRepository categoryEntityRepository;
+    private final ChildDtoEntityRepository childDtoEntityRepository;
 
     private final ApiSpecDocumentService apiSpecDocumentService;
     public Long createApiSpec(Long memberId, ApiSpecInfoDto apiSpecInfoDto){
@@ -68,11 +74,21 @@ public class ApiSpecService {
         );
 
         //update api has dto table
-        Map<Long, DtoInfo> inputHasDto = apiSpecInfoDto.getDocument().getRequest().getBody().getNestedDtos();
-        if(inputHasDto!=null || inputHasDto.size() >0){
+        Map<Long, List<BodyField>> inputHasDto = apiSpecInfoDto.getDocument().getRequest().getBody().getNestedDtos();
+        //nestedDto 가 없는 경우도 있다.
+        if(inputHasDto == null){
+            //pass
+        }
+        else if(inputHasDto!=null || inputHasDto.size() >0){
             for(Long dtoId : inputHasDto.keySet()){
+                //dto 가 존재하지 않는 경우 쳐내기
                 Optional<DtoSpecEntity> dto = dtoSpecEntityRepository.findById(dtoId);
                 if(!dto.isPresent()) { throw new CustomException(ErrorCode.DTO_NOT_FOUND); }
+                //depth 검증의 시간( 2 이상 쳐내기)
+                if(!isDtoOverLimitDepth(dtoId, dto.get())){
+                    throw new CustomException(ErrorCode.DTO_DEPTH_OVER);
+                }
+                //api가 가지고 있는 dto 정보 저장
                 apiHasDtoEntityRepository.save(
                         ApiHasDtoEntity.builder()
                                 .apiSpecEntity(apiSpec)
@@ -88,12 +104,32 @@ public class ApiSpecService {
         return apiSpec.getId();
     }
 
+    public boolean isDtoOverLimitDepth(Long dtoId, DtoSpecEntity dto){
+
+        //자식이 선을 넘은 경우부터 파악
+        if(dto.isHasChild()){
+            //부모도 자식도 가지고 있는 경우
+            if(dto.isHasParent()){
+                return false;
+            }
+            else{
+                //부모가 없지만 슬하에 자식이 자식을 가진 경우를 검증해야함
+                List<ChildDtoEntity> hasChildList = childDtoEntityRepository.findByDtoId(dtoId);
+                for(ChildDtoEntity hasChildEntity : hasChildList){
+                    if(hasChildEntity.getDtoSpecEntity().isHasChild()){
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     public DetailApiSpecInfoDto getApiSpec(Long apiId){
         Optional<ApiSpecEntity> apiSpec = apiSpecRepository.findById(apiId);
-        ApiDoc apiDoc = apiSpecDocumentService.getApiSpecDocs(apiId);
+        ApiSpecDoc apiDoc = apiSpecDocumentService.getApiSpecDocs(apiId);
 
         if(!apiSpec.isPresent()){ throw new CustomException(ErrorCode.API_NOT_FOUND); }
-        ApiSpecEntity presentApiSpec = apiSpec.get();
 
         ResMemberDto memberDto = findApiSpecWriterByApiId(apiId);
 
@@ -189,73 +225,73 @@ public class ApiSpecService {
 //                .build();
 //    }
 
-    public ApiSpecInfoDto updateApiSpec(Long apiId, Long memberId, ApiSpecInfoDto apiSpecInfoDto){
-        //mysql api table update
-        Optional<ApiSpecEntity> apiEntity = apiSpecRepository.findById(apiId);
-        if(!apiEntity.isPresent()){ throw new CustomException(ErrorCode.API_NOT_FOUND); }
-        apiSpecRepository.save(
-                ApiSpecEntity.builder()
-                        .id(apiEntity.get().getId())
-                        .name(apiSpecInfoDto.getName())
-                        .description(apiSpecInfoDto.getDesc())
-                        .method(apiSpecInfoDto.getMethod())
-                        .status(apiSpecInfoDto.getStatus())
-                        .baseurlId(apiSpecInfoDto.getBaseUrl())
-                        .category(categoryEntityRepository.findById(apiSpecInfoDto.getCategoryId()).get())
-                        .member(memberRepository.findById(memberId).get())
-                        .figmaSectionApiEntities(apiEntity.get().getFigmaSectionApiEntities())
-                        .build()
-        );
-
-        //update 된 내용 받아올라나 싶어서 일단 해둠
-        apiEntity = apiSpecRepository.findById(apiId);
-
-        //mysql api has dto table remove
-        for(ApiHasDtoEntity apiHasDto : apiHasDtoEntityRepository.findAllByApiSpecEntity(apiEntity.get())){
-            apiHasDtoEntityRepository.delete(apiHasDto);
-        }
-        //mysql api has dto table update
-        for(Map.Entry<Long, DtoInfo> entry : apiSpecInfoDto.getDocument().getRequest().getBody().getNestedDtos().entrySet()){
-            Long key = entry.getKey();
-            DtoInfo value = entry.getValue();
-
-            for(Long childKey : value.getNestedDtos().keySet()){
-                Optional<DtoSpecEntity> dtoSpec = dtoSpecEntityRepository.findById(childKey);
-                if(!dtoSpec.isPresent()){
-                    throw new CustomException(ErrorCode.DTO_NOT_FOUND);
-                }
-                apiHasDtoEntityRepository.save(
-                        ApiHasDtoEntity.builder()
-                                .apiSpecEntity(apiEntity.get())
-                                .dtoSpecEntity(dtoSpec.get())
-                                .build()
-                );
-            }
-
-            Optional<DtoSpecEntity> dtoSpec = dtoSpecEntityRepository.findById(key);
-            if(!dtoSpec.isPresent()){ throw new CustomException(ErrorCode.DTO_NOT_FOUND); }
-
-            apiHasDtoEntityRepository.save(
-                    ApiHasDtoEntity.builder()
-                            .apiSpecEntity(apiEntity.get())
-                            .dtoSpecEntity(dtoSpec.get())
-                            .build()
-            );
-        }
-        //mongodb collection update
-        apiSpecDocumentService.updateApiSpec(apiId, apiSpecInfoDto.getDocument());
-
-        return
-                ApiSpecInfoDto.builder()
-                        .name(apiEntity.get().getName())
-                        .desc(apiEntity.get().getDescription())
-                        .method(apiEntity.get().getMethod())
-                        .baseUrl(apiEntity.get().getBaseurlId())
-                        .categoryId(apiEntity.get().getCategory().getId())
-                        .status(apiEntity.get().getStatus())
-                        .document(apiSpecDocumentService.getApiSpecDocs(apiId))
-                        .build();
-    }
+//    public ApiSpecInfoDto updateApiSpec(Long apiId, Long memberId, ApiSpecInfoDto apiSpecInfoDto){
+//        //mysql api table update
+//        Optional<ApiSpecEntity> apiEntity = apiSpecRepository.findById(apiId);
+//        if(!apiEntity.isPresent()){ throw new CustomException(ErrorCode.API_NOT_FOUND); }
+//        apiSpecRepository.save(
+//                ApiSpecEntity.builder()
+//                        .id(apiEntity.get().getId())
+//                        .name(apiSpecInfoDto.getName())
+//                        .description(apiSpecInfoDto.getDesc())
+//                        .method(apiSpecInfoDto.getMethod())
+//                        .status(apiSpecInfoDto.getStatus())
+//                        .baseurlId(apiSpecInfoDto.getBaseUrl())
+//                        .category(categoryEntityRepository.findById(apiSpecInfoDto.getCategoryId()).get())
+//                        .member(memberRepository.findById(memberId).get())
+//                        .figmaSectionApiEntities(apiEntity.get().getFigmaSectionApiEntities())
+//                        .build()
+//        );
+//
+//        //update 된 내용 받아올라나 싶어서 일단 해둠
+//        apiEntity = apiSpecRepository.findById(apiId);
+//
+//        //mysql api has dto table remove
+//        for(ApiHasDtoEntity apiHasDto : apiHasDtoEntityRepository.findAllByApiSpecEntity(apiEntity.get())){
+//            apiHasDtoEntityRepository.delete(apiHasDto);
+//        }
+//        //mysql api has dto table update
+//        for(Map.Entry<Long, DtoInfo> entry : apiSpecInfoDto.getDocument().getRequest().getBody().getNestedDtos().entrySet()){
+//            Long key = entry.getKey();
+//            DtoInfo value = entry.getValue();
+//
+//            for(Long childKey : value.getNestedDtos().keySet()){
+//                Optional<DtoSpecEntity> dtoSpec = dtoSpecEntityRepository.findById(childKey);
+//                if(!dtoSpec.isPresent()){
+//                    throw new CustomException(ErrorCode.DTO_NOT_FOUND);
+//                }
+//                apiHasDtoEntityRepository.save(
+//                        ApiHasDtoEntity.builder()
+//                                .apiSpecEntity(apiEntity.get())
+//                                .dtoSpecEntity(dtoSpec.get())
+//                                .build()
+//                );
+//            }
+//
+//            Optional<DtoSpecEntity> dtoSpec = dtoSpecEntityRepository.findById(key);
+//            if(!dtoSpec.isPresent()){ throw new CustomException(ErrorCode.DTO_NOT_FOUND); }
+//
+//            apiHasDtoEntityRepository.save(
+//                    ApiHasDtoEntity.builder()
+//                            .apiSpecEntity(apiEntity.get())
+//                            .dtoSpecEntity(dtoSpec.get())
+//                            .build()
+//            );
+//        }
+//        //mongodb collection update
+//        apiSpecDocumentService.updateApiSpec(apiId, apiSpecInfoDto.getDocument());
+//
+//        return
+//                ApiSpecInfoDto.builder()
+//                        .name(apiEntity.get().getName())
+//                        .desc(apiEntity.get().getDescription())
+//                        .method(apiEntity.get().getMethod())
+//                        .baseUrl(apiEntity.get().getBaseurlId())
+//                        .categoryId(apiEntity.get().getCategory().getId())
+//                        .status(apiEntity.get().getStatus())
+//                        .document(apiSpecDocumentService.getApiSpecDocs(apiId))
+//                        .build();
+//    }
 
     public void deleteApiSpec(Long apiId){
         //mysql entity update
