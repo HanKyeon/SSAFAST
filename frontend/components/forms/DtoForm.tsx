@@ -226,9 +226,9 @@ const DtoForm = function ({
           url: `/api/dto/${dtoId}`,
         }).then((res) => {
           data = {
-            keyName: res.data.keyName,
-            type: res.data.name,
-            desc: res.data.desc,
+            keyName: field.keyName,
+            type: dtoId,
+            desc: field.desc,
             itera: res.data.itera,
             constraints: [...res.data.constraints],
             nestedDtos: { ...res.data.nestedDtos },
