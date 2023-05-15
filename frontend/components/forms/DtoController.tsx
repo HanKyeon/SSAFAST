@@ -121,17 +121,18 @@ const DtoController = function ({ item, idx, remove }: Props) {
                     </option>
                   );
                 })}
-                {dtoListData?.dtoList.map((dto) => {
-                  return (
-                    <option
-                      key={`${dto.id}-dtoType-${idx}`}
-                      value={dto.id}
-                      title={dto.desc}
-                    >
-                      {dto.name}
-                    </option>
-                  );
-                })}
+                {dtoListData &&
+                  dtoListData?.dtoList.map((dto) => {
+                    return (
+                      <option
+                        key={`${dto.id}-dtoType-${idx}`}
+                        value={dto.id}
+                        title={dto.desc}
+                      >
+                        {dto.name}
+                      </option>
+                    );
+                  })}
               </select>
             </div>
           )}
