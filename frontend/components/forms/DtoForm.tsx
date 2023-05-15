@@ -133,6 +133,9 @@ const DtoForm = function ({
   // 이 부분은 확신이 없음!
   useEffect(
     function () {
+      if (!dtoListData) {
+        return;
+      }
       dtoListData?.dtoList.forEach((dto) => {
         queryClient.setQueryData(
           queryKeys.spaceDtoDetail(spaceId, dto.id),

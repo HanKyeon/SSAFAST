@@ -49,7 +49,12 @@ const DtoController = function ({ item, idx, remove }: Props) {
     name: `fields.${idx}.constraints`,
   });
   const appendConstraint = function () {
-    constraintsAppend({ mainName: ``, minV: null, maxV: null });
+    constraintsAppend({
+      mainName: ``,
+      minV: null,
+      maxV: null,
+      validateReg: ``,
+    });
   };
   const { data: dtoListData } = useDtoList(spaceId);
   const removeHandler = function () {
