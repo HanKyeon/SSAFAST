@@ -215,7 +215,8 @@ export interface SpaceFigmaToken {
 export interface DtoListItem {
   id: number | string;
   name: string;
-  description: string;
+  keyName: string;
+  desc: string;
   detail: any;
 }
 

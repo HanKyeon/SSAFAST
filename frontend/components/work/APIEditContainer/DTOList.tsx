@@ -18,7 +18,7 @@ const DTOList = function ({ setSelected }: Props) {
         return (
           <DTOListItem
             key={`${dto.id}-dto-list-item`}
-            dtoDesc={dto.description}
+            dtoDesc={dto.desc}
             dtoName={dto.name}
             dtoId={dto.id}
             setSelected={setSelected}

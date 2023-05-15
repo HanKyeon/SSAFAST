@@ -90,7 +90,7 @@ const HeaderController = function ({ item, index, formName, remove }: Props) {
                     <option
                       key={`${dto.id}-dtoType-${index}`}
                       value={dto.id}
-                      title={dto.description}
+                      title={dto.desc}
                     >
                       {dto.name}
                     </option>

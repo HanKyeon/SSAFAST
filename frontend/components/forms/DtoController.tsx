@@ -121,7 +121,7 @@ const DtoController = function ({ item, idx, remove }: Props) {
                     <option
                       key={`${dto.id}-dtoType-${idx}`}
                       value={dto.id}
-                      title={dto.description}
+                      title={dto.desc}
                     >
                       {dto.name}
                     </option>

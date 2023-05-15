@@ -129,7 +129,7 @@ const NonHeaderController = function ({
                     <option
                       key={`${dto.id}-dtoType-${index}`}
                       value={dto.id}
-                      title={dto.description}
+                      title={dto.desc}
                     >
                       {dto.name}
                     </option>
