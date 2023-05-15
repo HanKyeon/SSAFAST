@@ -131,26 +131,26 @@ const DtoForm = function ({
   const { data: dtoListData } = useDtoList(spaceId);
 
   // 이 부분은 확신이 없음!
-  useEffect(
-    function () {
-      if (!dtoListData) {
-        return;
-      }
-      dtoListData?.dtoList.forEach((dto) => {
-        queryClient.setQueryData(
-          queryKeys.spaceDtoDetail(spaceId, dto.id),
-          async (old) => {
-            let data;
-            await getDtoDetail(dto.id).then((res) => {
-              data = res.data;
-            });
-            return data;
-          }
-        );
-      });
-    },
-    [dtoListData]
-  );
+  // useEffect(
+  //   function () {
+  //     if (!dtoListData) {
+  //       return;
+  //     }
+  //     dtoListData?.dtoList.forEach((dto) => {
+  //       queryClient.setQueryData(
+  //         queryKeys.spaceDtoDetail(spaceId, dto.id),
+  //         async (old) => {
+  //           let data;
+  //           await getDtoDetail(dto.id).then((res) => {
+  //             data = res.data;
+  //           });
+  //           return data;
+  //         }
+  //       );
+  //     });
+  //   },
+  //   [dtoListData]
+  // );
 
   const [isModal, setIsModal] = useState<boolean>(false);
   const closeModal = useCallback(function () {
