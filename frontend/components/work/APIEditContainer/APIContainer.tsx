@@ -8,11 +8,18 @@ import { BsFilter, BsFolderPlus } from 'react-icons/bs';
 import { HiOutlineSearch, HiPencil } from 'react-icons/hi';
 import EomSelect from '@/components/common/EomSelect';
 import { ApiCreateForm } from '@/components/forms/';
-import { FormEvent, useState, useEffect } from 'react';
+import { FormEvent, useState, useEffect, useCallback, useRef } from 'react';
 import Select from '@/components/common/Select';
 import BoxHeader from '@/components/common/BoxHeader';
 import { SpaceApiList } from '@/hooks/queries/queries';
 import ApiWrite from './ApiWrite';
+import Modal from '@/components/common/Modal';
+import AnimationBox from '@/components/common/AnimationBox';
+import useInput from '@/hooks/useInput';
+import { useMutation } from '@tanstack/react-query';
+import { useCreateCategory } from '@/hooks/queries/mutations';
+import { useRouter } from 'next/router';
+import { SpaceParams } from '@/pages/space';
 
 const mockupAPIList: SpaceApiList = {
   apiCategories: [
@@ -401,13 +408,36 @@ interface Props {
 }
 
 const APIContainer = function ({ store }: Props) {
+  const router = useRouter();
+  const { spaceId } = router.query as SpaceParams;
   const [isAdd, setIsAdd] = useState<boolean>(false);
+  const [isModal, setIsModal] = useState<boolean>(false);
   const [selectedIdx, setSelectedIdx] = useState<number>(0);
   useEffect(() => {
     // selectedIdx가 바뀌면 api filter를 하든 뭐
   }, [selectedIdx]);
   const toggleAddHandler = function () {
     setIsAdd((v) => !v);
+  };
+  const closeModal = useCallback(function () {
+    setIsModal(() => false);
+  }, []);
+  const openModal = useCallback(function () {
+    setIsModal(() => true);
+  }, []);
+  const categoryRef = useRef<HTMLInputElement>(null);
+  const {
+    inputData: categoryInput,
+    onChangeHandler: categoryChange,
+    onResetHandler: categoryReset,
+  } = useInput(categoryRef);
+  const { mutate, mutateAsync } = useCreateCategory(parseInt(spaceId));
+
+  const categorySubmit = function (e: FormEvent) {
+    e.preventDefault();
+    console.log(categoryInput);
+    mutate(categoryInput);
+    closeModal();
   };
   return (
     <Box
@@ -439,36 +469,71 @@ const APIContainer = function ({ store }: Props) {
           // <ApiCreateForm toggleAddHandler={toggleAddHandler} />
           <ApiWrite toggleAddHandler={toggleAddHandler} />
         ) : (
-          <div className="p-5">
-            {/* 헤더 */}
-            <div className={`mb-5 flex items-center justify-between`}>
-              <div className={`flex items-center gap-2`}>
-                <BsFilter className={`text-[26px]`} />
-                <EomSelect
-                  type="methods"
-                  selectedIdx={selectedIdx}
-                  setSelectedIdx={setSelectedIdx}
+          <>
+            {isModal && (
+              <Modal closeModal={closeModal} parentClasses="h-[50%] w-[50%]">
+                <AnimationBox className="w-full h-full">
+                  <Box className="flex flex-col gap-4 w-full h-full p-5 items-center justify-center">
+                    <div className="text-[24px]">카테고리를 생성해 보세요.</div>
+                    <div className="min-w-[220px]">
+                      <Input
+                        className="text-center"
+                        type="text"
+                        inputref={categoryRef}
+                        onChange={categoryChange}
+                        placeholder="카테고리를 입력해 주세요"
+                      />
+                    </div>
+                    <div className="flex gap-4">
+                      <Button
+                        className="flex items-center justify-center cursor-pointer text-center rounded-[8px]"
+                        onClick={categorySubmit}
+                      >
+                        생성
+                      </Button>
+                      <Button
+                        className="cursor-pointer text-center rounded-[8px] border !border-red-500 !bg-red-500"
+                        onClick={closeModal}
+                      >
+                        닫기
+                      </Button>
+                    </div>
+                  </Box>
+                </AnimationBox>
+              </Modal>
+            )}
+            <div className="p-5">
+              {/* 헤더 */}
+              <div className={`mb-5 flex items-center justify-between`}>
+                <div className={`flex items-center gap-2`}>
+                  <BsFilter className={`text-[26px]`} />
+                  <EomSelect
+                    type="methods"
+                    selectedIdx={selectedIdx}
+                    setSelectedIdx={setSelectedIdx}
+                  />
+                </div>
+                <div className={`flex items-center gap-2`}>
+                  <Input placeholder="search" />
+                  <HiOutlineSearch className={`text-[22px] cursor-pointer`} />
+                </div>
+                <BsFolderPlus
+                  className={`text-[22px] cursor-pointer hover:text-mincho-strong duration-[0.33s]`}
+                  onClick={openModal}
                 />
+                <Button
+                  isEmpty
+                  className={`flex justify-center items-center gap-2 py-[4px] pr-[12px] pl-[25px]`}
+                  onClick={toggleAddHandler}
+                >
+                  Add API
+                  <HiPencil />
+                </Button>
               </div>
-              <div className={`flex items-center gap-2`}>
-                <Input placeholder="search" />
-                <HiOutlineSearch className={`text-[22px] cursor-pointer`} />
-              </div>
-              <BsFolderPlus
-                className={`text-[22px] cursor-pointer hover:text-mincho-strong duration-[0.33s]`}
-              />
-              <Button
-                isEmpty
-                className={`flex justify-center items-center gap-2 py-[4px] pr-[12px] pl-[25px]`}
-                onClick={toggleAddHandler}
-              >
-                Add API
-                <HiPencil />
-              </Button>
+              {/* api 목록 */}
+              <APIList apiList={mockupAPIList} />
             </div>
-            {/* api 목록 */}
-            <APIList apiList={mockupAPIList} />
-          </div>
+          </>
         )}
       </Box>
     </Box>
