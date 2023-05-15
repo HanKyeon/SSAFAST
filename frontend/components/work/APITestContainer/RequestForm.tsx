@@ -44,13 +44,13 @@ const RequestForm = function ({ toggleIsList }: Props) {
       url: '/api/:userid/comment/:commentid', // baseurl 외에 추가로 붙어야 하는 url 정보
       headers: [
         {
-          key: 'Content-Type',
+          keyName: 'Content-Type',
           type: 'String',
           desc: 'Define request data type',
           value: null,
         },
         {
-          key: 'Age',
+          keyName: 'Age',
           type: 'Integer',
           desc: 'Fields for cashing',
           value: null,
@@ -59,7 +59,7 @@ const RequestForm = function ({ toggleIsList }: Props) {
       body: {
         fields: [
           {
-            key: 'ID',
+            keyName: 'ID',
             type: 'String',
             desc: 'Login User ID',
             itera: false,
@@ -67,7 +67,7 @@ const RequestForm = function ({ toggleIsList }: Props) {
             value: null,
           },
           {
-            key: 'telephones',
+            keyName: 'telephones',
             type: 'String',
             desc: 'cell-phone numbers with candidates',
             itera: true,
@@ -80,7 +80,7 @@ const RequestForm = function ({ toggleIsList }: Props) {
           '15': {
             fields: [
               {
-                key: 'ID',
+                keyName: 'ID',
                 type: 'String',
                 desc: 'User Identify Info',
                 itera: false,
@@ -91,14 +91,14 @@ const RequestForm = function ({ toggleIsList }: Props) {
               '5': {
                 fields: [
                   {
-                    key: 'content',
+                    keyName: 'content',
                     type: 'String',
                     desc: 'comment for user',
                     itera: true,
                     constraints: ['NotNull', 'NotEmpty'],
                   },
                   {
-                    key: 'CreatedDate',
+                    keyName: 'CreatedDate',
                     type: 'Date',
                     desc: 'Sign up date',
                     itera: false,
@@ -113,14 +113,14 @@ const RequestForm = function ({ toggleIsList }: Props) {
       },
       pathVars: [
         {
-          key: 'userid',
+          keyName: 'userid',
           type: 'String',
           desc: 'for login',
           constraints: ['NotNull'],
           value: null,
         },
         {
-          key: 'userid',
+          keyName: 'userid',
           type: 'String',
           desc: 'for login',
           constraints: ['NotNull'],
@@ -129,7 +129,7 @@ const RequestForm = function ({ toggleIsList }: Props) {
       ],
       params: [
         {
-          key: 'age',
+          keyName: 'age',
           type: 'int',
           desc: 'user age',
           constraints: ['NotNull'],
@@ -184,7 +184,12 @@ const RequestForm = function ({ toggleIsList }: Props) {
               )}
 
               {data.request.body && (
-                <ReqItemBody name="body" item={data.request.body} />
+                <ReqItemBody
+                  formName={`request.body`}
+                  control={control}
+                  name="body"
+                  item={data.request.body}
+                />
               )}
               {data.request.pathVars && (
                 <ReqItem
