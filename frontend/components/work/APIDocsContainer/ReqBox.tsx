@@ -57,7 +57,12 @@ const ReqBox = function ({ data, control }: Props): JSX.Element {
           />
         )}
         {data.request.body && (
-          <ReqItemBody name="body" item={data.request.body} />
+          <ReqItemBody
+            formName={`request.body`}
+            control={control}
+            name="body"
+            item={data.request.body}
+          />
         )}
         {data.request.pathVars && (
           <ReqItem

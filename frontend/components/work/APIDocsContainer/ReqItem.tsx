@@ -35,23 +35,6 @@ const ReqItem = function ({
   return (
     <div className={`${styles1[`style`]} w-full`}>
       <ToggleableHeader title={name} isOpen={isOpen} setIsOpen={setisOpen} />
-      {/* {fields.map((iitem, idx) => {
-        return <Controller 
-          key={iitem.id}
-          name={`${formName}.${idx}`}
-          control={control}
-          render={({field}) => {
-            return <div
-            key={item.key}
-            className={`w-[87%] rounded-[13px] overflow-hidden mt-0 mb-3 mx-auto text-content ${
-              isOpen ? '' : 'hidden'
-            }`}
-          >
-            <ReqItemInner item={item} control={control} name={name} />
-          </div>
-          }}
-        />
-      })} */}
       <div className={`${Styles['style']}`}>
         {(item as HeadersType[] | FieldsType[])?.map((item, idx) => (
           <Controller
@@ -61,7 +44,7 @@ const ReqItem = function ({
             render={({ field }) => {
               return (
                 <div
-                  key={item.key}
+                  key={item.keyName}
                   className={`w-[87%] rounded-[13px] overflow-hidden mt-0 mb-3 mx-auto text-content duration-[0.33s]`}
                 >
                   <ReqItemInner

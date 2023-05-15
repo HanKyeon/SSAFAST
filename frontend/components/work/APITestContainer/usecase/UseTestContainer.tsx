@@ -4,14 +4,249 @@ import MappingContainer from './MappingContainer';
 import { HiPlusCircle } from 'react-icons/hi';
 import SideApiItem from './SideApiItem';
 import BoxHeader from '@/components/common/BoxHeader';
+import { FormProvider, useForm } from 'react-hook-form';
+import { ApiTestForm, MockupData2Type } from '../../APIDocsContainer';
+
+// const mockupData2: MockupData2Type = {
+//   request: {
+//     headers: [
+//       {
+//         keyName: 'Content-Type',
+//         type: 'String',
+//         desc: 'Define request data type',
+//         value: null,
+//       },
+//       {
+//         keyName: 'Age',
+//         type: 'Integer',
+//         desc: 'Fields for cashing',
+//         value: null,
+//       },
+//     ],
+//     body: {
+//       fields: [
+//         {
+//           keyName: 'ID',
+//           type: 1,
+//           desc: '사용자 ID',
+//           itera: false,
+//           constraints: ['NotNull'],
+//           value: null,
+//         },
+//         {
+//           keyName: 'PW',
+//           type: 1,
+//           desc: '사용자 PW',
+//           itera: false,
+//           constraints: ['NotNull'],
+//           value: null,
+//         },
+//       ],
+//       nestedDtos: {
+//         '11': {
+//           name: 'UserInfo', // 실제 dto class 이름
+//           keyName: '11Dto', // 사용자가 지정한 변수명 e.g) Test test2;
+//           desc: '사용자 정보를 저장하는 class',
+//           itera: false,
+//           fields: [
+//             {
+//               keyName: 'userID',
+//               type: 1,
+//               desc: '추천인ID',
+//               value: null,
+//               itera: false,
+//               constraints: ['NotNull'],
+//             },
+//             {
+//               keyName: 'userPW',
+//               type: 1,
+//               desc: '추천인PW',
+//               value: null,
+//               itera: false,
+//               constraints: ['NotNull'],
+//             },
+//           ],
+//           nestedDtos: {},
+//         },
+//         '8': {
+//           name: 'UserInfo', // 실제 dto class 이름
+//           keyName: '8Dto', // 사용자가 지정한 변수명 e.g) Test test2;
+//           desc: '사용자 정보를 저장하는 class',
+//           itera: false,
+//           fields: [
+//             {
+//               keyName: 'userID',
+//               type: 1,
+//               desc: '추천인ID',
+//               value: null,
+//               itera: false,
+//               constraints: ['NotNull'],
+//             },
+//             {
+//               keyName: 'userPW',
+//               type: 1,
+//               desc: '추천인PW',
+//               value: null,
+//               itera: false,
+//               constraints: ['NotNull'],
+//             },
+//           ],
+//           nestedDtos: {
+//             '7': {
+//               name: 'UserInfo', // 실제 dto class 이름
+//               keyName: '7Dto', // 사용자가 지정한 변수명 e.g) Test test2;
+//               desc: '사용자 정보를 저장하는 class',
+//               itera: false,
+//               fields: [
+//                 {
+//                   keyName: 'userID',
+//                   type: 1,
+//                   desc: '추천인ID',
+//                   value: null,
+//                   itera: false,
+//                   constraints: ['NotNull'],
+//                 },
+//                 {
+//                   keyName: 'userPW',
+//                   type: 1,
+//                   desc: '추천인PW',
+//                   value: null,
+//                   itera: false,
+//                   constraints: ['NotNull'],
+//                 },
+//               ],
+//               nestedDtos: {},
+//             },
+//           },
+//         },
+//       },
+//       nestedDtoList: {
+//         '12': {
+//           name: 'RecUserInfo',
+//           keyName: null,
+//           desc: '추천한 사용자들의 정보를 담는 class',
+//           itera: true,
+//           fields: [
+//             {
+//               keyName: 'userID',
+//               type: 1,
+//               desc: '추천인ID',
+//               value: null,
+//               itera: false,
+//               constraints: ['NotNull'],
+//             },
+//           ],
+//           nestedDtos: {},
+//         },
+//       },
+//     },
+//     pathVars: [
+//       {
+//         keyName: 'userid',
+//         type: 'String',
+//         desc: 'for login',
+//         constraints: ['NotNull'],
+//         value: null,
+//       },
+//     ],
+//     params: [
+//       {
+//         keyName: 'age',
+//         type: 'int',
+//         desc: 'user age',
+//         constraints: ['NotNull'],
+//         value: null,
+//       },
+//     ],
+//   },
+// };
+
+// export interface RequestItem{
+//           [key : string] : {
+//             type : number;
+//             desc : string;
+//             mapped: boolean;
+//             value: any;
+//             constraints?: string[];
+//             itera?: boolean;
+//           }
+// }
+
+// export interface RequestDtoItem{
+//   [key: string | number]:{
+//               dtoName: string;
+//               desc: string;
+//               fields: RequestItem;
+//             }
+// }
+
+// export interface ResponseItem{
+//    [key: string]:{
+//               type: number;
+//               desc: string;
+//               itera?: boolean;
+//    }
+// }
+
+// export interface UseTestForm {
+//   rootApiId: null,
+//   testDetails: {
+//     [key: string | number] : {
+//       additionalUrl : string;
+//       parent?: string | number;
+//       child?: string | number;
+//       request: {
+//         headers?: RequestItem;
+//         pathVars?: RequestItem;
+//         params?: RequestItem;
+//         body?: {
+//           fields?: RequestItem;
+//           nestedDtos?: RequestDtoItem;
+//           nestedDtoLists?: RequestDtoItem;
+//         }
+//       }
+//       response: {
+//         headers?:ResponseItem;
+//         body?: {
+//           nestedDtos?:
+//         }
+//       }
+//     }
+//   }
+//   request: {
+//     url: string; // request.url
+//     method: 1 | 2 | 3 | 4 | 5; // request.method
+
+//     // useFieldArray
+//     headers: HeadersType[]; // request.headers
+//     pathVars: FieldsType[]; // request.pathVars
+//     params: FieldsType[]; // request.params
+
+//     body: BodyType; // request.body
+//   };
+// }
+
 const UseTestContainer = function () {
   const { dark } = useStoreSelector((state) => state.dark);
+  // const methods = useForm<ApiTestForm>({
+  //   defaultValues: {
+  //   "rootApiId": null,
+  //   "testDetails": {
+  //   }}
+  // );
+  // const { control, handleSubmit } = methods;
+
+  const checkData = function (data: ApiTestForm) {
+    console.log(data);
+  };
+
   return (
-    <Box
-      variant="one"
-      fontType="header"
-      className="h-full w-full flex gap-[1.12%]"
-    >
+    <Box variant="one" fontType="header" className="h-full w-full">
+      {/* <FormProvider {...methods}>
+        <form
+          className="h-full w-full flex gap-[1.12%]"
+          onSubmit={handleSubmit(checkData)}
+        > */}
       {/* 왼쪽 사이드 */}
       <Box
         variant="two"
@@ -54,6 +289,8 @@ const UseTestContainer = function () {
       </Box>
       {/* Request랑 Response Container */}
       <MappingContainer />
+      {/* </form>
+      </FormProvider> */}
     </Box>
   );
 };
