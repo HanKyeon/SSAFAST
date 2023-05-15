@@ -332,6 +332,42 @@ export const useCreateCategory = function (spaceId: string | number) {
   });
 };
 
+export const useUpdateCategory = function (spaceId: string | number) {
+  const dispatch = useStoreDispatch();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async function ({
+      categoryName,
+      categoryId,
+    }: {
+      categoryName: string;
+      categoryId: number;
+    }) {
+      return apiRequest({
+        method: `put`,
+        url: `/api/api-pre/category/${categoryId}}`,
+        params: {
+          workspaceId: spaceId,
+        },
+        data: {
+          name: categoryName,
+        },
+      });
+    },
+    onSuccess: function () {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.spaceApi(spaceId),
+      });
+      dispatch(DispatchToast('카테고리 이름이 수정되었습니다.', true));
+    },
+    onError: function () {
+      dispatch(
+        DispatchToast('카테고리 수정에 실패했습니다. 다시 시도해주세요.', false)
+      );
+    },
+  });
+};
+
 // 섹션별 api 맵핑 정보 수정 (추가 및 삭제)
 export const useMappingApi = function (
   spaceId: string | number,
