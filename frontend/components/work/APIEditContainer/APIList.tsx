@@ -15,6 +15,8 @@ type APIListPropsType = {
   checkedIds?: (number | string)[];
   checkBox?: boolean;
   onToggleCheck?: (apiId: number | string, check: boolean) => void;
+  selectedId?: number;
+  setSelectedIdHandler?: (id: number) => void;
 };
 
 const APIList = function ({
@@ -22,6 +24,8 @@ const APIList = function ({
   checkedIds = [],
   checkBox = false, // checkbox===true이면 -> figma화면이랑 api 연결중!
   onToggleCheck,
+  selectedId,
+  setSelectedIdHandler,
 }: APIListPropsType): JSX.Element {
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
@@ -76,6 +80,7 @@ const APIList = function ({
                 className={`w-full duration-[0.33s] hover:scale-[101%]`}
                 // checkedList={checkBox ? refinedCheckedList : undefined}
                 onToggleCheck={onToggleCheck}
+                setSelectedIdHandler={setSelectedIdHandler}
               />
             ))}
           </ul>

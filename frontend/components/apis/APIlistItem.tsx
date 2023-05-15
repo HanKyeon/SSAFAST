@@ -19,6 +19,7 @@ interface APIlistItemPropsType {
   checked?: boolean;
   // checkedList?: (string | number)[];
   onToggleCheck?: (apiId: number | string, check: boolean) => void;
+  setSelectedIdHandler?: (id: number) => void;
 }
 
 const APIlistItem = function ({
@@ -28,6 +29,7 @@ const APIlistItem = function ({
   checkBox = false,
   checked = false,
   onToggleCheck,
+  setSelectedIdHandler,
 }: APIlistItemPropsType): JSX.Element {
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
@@ -35,6 +37,9 @@ const APIlistItem = function ({
   const onClickApiItem = (apiID: string | number): void => {
     if (!checkBox) {
       console.log(`${apiID}번 api : api 하나 dispatch!??`);
+    }
+    if (setSelectedIdHandler) {
+      setSelectedIdHandler(item.id);
     }
   };
   // const { data: spaceApiList, isLoading, isError } = useSpaceApis(spaceId);

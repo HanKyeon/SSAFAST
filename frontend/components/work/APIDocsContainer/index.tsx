@@ -9,7 +9,7 @@ import MethodBadge from '@/components/apis/MethodBadge';
 import ReqBox from './ReqBox';
 import ResBox from './ResBox';
 import LeftContainer from './LeftContainer';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { IoMdArrowDropright } from 'react-icons/io';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -205,6 +205,11 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
   });
   const { control, handleSubmit } = methods;
 
+  const [selectedId, setSelectedId] = useState<number>(0);
+  const changeSelectedIdHandler = useCallback(function (id: number) {
+    setSelectedId(() => id);
+  }, []);
+
   const checkData = function (data: ApiTestForm) {
     console.log(data);
   };
@@ -212,7 +217,11 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
     <div className="h-full flex justify-center items-center gap-3">
       {/* 왼쪽 화면 */}
       <Box className="h-full p-5 flex-1">
-        <LeftContainer store={store} />
+        <LeftContainer
+          store={store}
+          selectedId={selectedId}
+          changeSelectedId={changeSelectedIdHandler}
+        />
       </Box>
       {/* 오른쪽 화면 */}
       <div className="h-full flex-1 min-w-0">

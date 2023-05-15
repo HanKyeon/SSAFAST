@@ -43,6 +43,7 @@ export interface RefineDtoField {
   desc: string; // 설명
   itera: boolean; // 배열 여부
   constraints: string[]; // 제한 조건 들
+  value: any;
 }
 
 export interface DtoFieldInCompo {
@@ -211,6 +212,7 @@ const DtoForm = function ({
           itera: field.itera,
           type: field.type,
           keyName: field.keyName,
+          value: null,
         });
       } else {
         const dtoId = field.type;
@@ -223,6 +225,9 @@ const DtoForm = function ({
         //   data = res.data;
         //   return res;
         // });
+        if (!data) {
+          return;
+        }
         if (nestedDtos[dtoId]) {
           nestedDtos[dtoId].push(data);
         } else {

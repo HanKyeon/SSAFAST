@@ -130,10 +130,14 @@ const apiMok: EachCateApi[] = [
 
 type LeftContainerPropsType = {
   store?: any;
+  selectedId: number;
+  changeSelectedId: (idx: number) => void;
 };
 
 const LeftContainer = function ({
   store,
+  selectedId,
+  changeSelectedId,
 }: LeftContainerPropsType): JSX.Element {
   const [curTab, setCurTab] = useState<'Figma' | 'All'>('Figma');
 
@@ -168,7 +172,10 @@ const LeftContainer = function ({
           <FigmaList apiData={apiMok} />
         ) : (
           //   전체 api
-          <APIList apiList={mockupAPIList} />
+          <APIList
+            apiList={mockupAPIList}
+            setSelectedIdHandler={changeSelectedId}
+          />
         )}
       </div>
     </div>
