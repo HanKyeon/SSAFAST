@@ -216,22 +216,22 @@ const DtoForm = function ({
         });
       } else {
         const dtoId = field.type;
-        let data;
-        data = dtoListData?.dtoList.find((dto) => dto.id === dtoId);
-        // await apiRequest({
-        //   method: `get`,
-        //   url: `/api/dto/${dtoId}`,
-        // }).then((res) => {
-        //   data = res.data;
-        //   return res;
-        // });
+        let data: any;
+        // data = dtoListData?.dtoList.find((dto) => dto.id === dtoId);
+        await apiRequest({
+          method: `get`,
+          url: `/api/dto/${dtoId}`,
+        }).then((res) => {
+          data = res.data;
+          return res;
+        });
         if (!data) {
           return;
         }
         if (nestedDtos[dtoId]) {
           nestedDtos[dtoId].push(data);
         } else {
-          nestedDtos[dtoId] = [data];
+          nestedDtos[dtoId] = [{ ...data! }];
         }
       }
     });

@@ -14,17 +14,18 @@ const DTOList = function ({ setSelected }: Props) {
 
   return (
     <div className="w-full h-[92%] overflow-y-scroll flex flex-col gap-3">
-      {DtoListData?.dtoList.map((dto) => {
-        return (
-          <DTOListItem
-            key={`${dto.id}-dto-list-item`}
-            dtoDesc={dto.desc}
-            dtoName={dto.name}
-            dtoId={dto.id}
-            setSelected={setSelected}
-          />
-        );
-      })}
+      {DtoListData?.dtoList &&
+        DtoListData?.dtoList.map((dto) => {
+          return (
+            <DTOListItem
+              key={`${dto.id}-dto-list-item`}
+              dtoDesc={dto.desc}
+              dtoName={dto.name}
+              dtoId={dto.id}
+              setSelected={setSelected}
+            />
+          );
+        })}
     </div>
   );
 };
