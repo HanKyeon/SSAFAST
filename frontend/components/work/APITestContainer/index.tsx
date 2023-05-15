@@ -44,6 +44,10 @@ const TestContainer = function ({ store, serverSideStore }: Props) {
     setUSE1LOAD2(() => 1);
   };
   const goLoadTest = function () {
+    if (isAuthenticated === false) {
+      openModal();
+      return;
+    }
     setUSE1LOAD2(() => 2);
   };
 
@@ -55,17 +59,8 @@ const TestContainer = function ({ store, serverSideStore }: Props) {
   const isAccepted = function () {
     setIsAuthenticated(true);
     closeModal();
+    setUSE1LOAD2(() => 2);
   };
-  useEffect(
-    function () {
-      if (USE1LOAD2 === 2) {
-        if (isAuthenticated === false) {
-          openModal();
-        }
-      }
-    },
-    [USE1LOAD2]
-  );
 
   return (
     <>
