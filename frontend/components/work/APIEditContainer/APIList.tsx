@@ -24,23 +24,108 @@ import Modal from '@/components/common/Modal';
 import AnimationBox from '@/components/common/AnimationBox';
 import { Box, Button, Input } from '@/components/common';
 import useInput from '@/hooks/useInput';
+import { UseTestApiCompactType } from '../APITestContainer/usecase/UseTestContainer';
+
+const checkedMok: SpaceApiList = {
+  apiCategories: [
+    {
+      categoryId: 1,
+      categoryName: 'user',
+      apis: [
+        {
+          id: 1,
+          name: '전체 회원 목록',
+          description: '아무튼 다 가져오는거',
+          method: 1,
+          status: 1,
+          writter: {
+            id: 1,
+            name: '로사짱',
+            email: 'a@naver.com',
+            profileImg: 'anjanj.png',
+          },
+        },
+      ],
+    },
+    {
+      categoryId: 2,
+      categoryName: 'mypage',
+      apis: [
+        {
+          id: 4,
+          name: '내 정보 수정',
+          description: '내 정보를 막 수정해버려',
+          method: 2,
+          status: 1,
+          writter: {
+            id: 1,
+            name: '로사짱',
+            email: 'a@naver.com',
+            profileImg: 'anjanj.png',
+          },
+        },
+        {
+          id: 5,
+          name: '전체 회원 목록',
+          description: '아무튼 다 가져오는거',
+          method: 1,
+          status: 2,
+          writter: {
+            id: 1,
+            name: '로사짱',
+            email: 'a@naver.com',
+            profileImg: 'anjanj.png',
+          },
+        },
+        {
+          id: 7,
+          name: '회원가입',
+          description: '아무튼 가입',
+          method: 4,
+          status: 4,
+          writter: {
+            id: 1,
+            name: '로사짱',
+            email: 'a@naver.com',
+            profileImg: 'anjanj.png',
+          },
+        },
+        {
+          id: 8,
+          name: '전체 회원 목록',
+          description: '아무튼 다 가져오는거',
+          method: 3,
+          status: 3,
+          writter: {
+            id: 1,
+            name: '로사짱',
+            email: 'a@naver.com',
+            profileImg: 'anjanj.png',
+          },
+        },
+      ],
+    },
+  ],
+};
 
 type APIListPropsType = {
-  apiList: SpaceApiList;
+  apiList?: SpaceApiList;
   checkedIds?: (number | string)[];
   checkBox?: boolean;
   onToggleCheck?: (apiId: number | string, check: boolean) => void;
   selectedId?: number;
   setSelectedIdHandler?: (id: number) => void;
+  onClickApi?: (api: UseTestApiCompactType) => void;
 };
 
 const APIList = function ({
-  apiList = { apiCategories: [] },
+  apiList = checkedMok,
   checkedIds = [],
   checkBox = false, // checkbox===true이면 -> figma화면이랑 api 연결중!
   onToggleCheck,
   selectedId,
   setSelectedIdHandler,
+  onClickApi,
 }: APIListPropsType): JSX.Element {
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
@@ -224,6 +309,10 @@ const APIList = function ({
                     </li>
                   </ul>
                 )}
+                <span>{cate.categoryName}</span>
+                <AiOutlineMore
+                  className={`text-grayscale-dark hover:text-theme-white-strong`}
+                />
               </div>
               {/* api 목록 */}
               <ul
@@ -241,6 +330,7 @@ const APIList = function ({
                     // checkedList={checkBox ? refinedCheckedList : undefined}
                     onToggleCheck={onToggleCheck}
                     setSelectedIdHandler={setSelectedIdHandler}
+                    onClickApi={onClickApi ? onClickApi : undefined}
                   />
                 ))}
               </ul>

@@ -539,6 +539,85 @@ export const useSpaceApis = function (spaceId: string | number) {
   });
 };
 
+// api 상세 조회 (api 명세 부분에서 수정을 위한) (nestedDtoLists:{}를 만들 필요X)
+// export const useApiDetail = function (
+//   spaceId: string | number,
+//   apiId: string | number
+// ) {
+//   return useQuery<>({
+//     queryKey: queryKeys.spaceApiDetail(spaceId, apiId),
+//     queryFn: async function () {
+//       return apiRequest({
+//         method: `get`,
+//         url: ``,
+//       });
+//     },
+//   });
+// };
+
+export interface ApiDetailAtTestItem {
+  keyName: string;
+  type: number;
+  desc: string;
+  value: any;
+  itera?: boolean;
+  constraints?: string[];
+}
+
+export interface ApiDetailAtTestDto {
+  [key: string | number]: {
+    name: string;
+    keyName: string | null;
+    desc: string;
+    itera: boolean;
+    fields?: ApiDetailAtTestItem[];
+    nestedDtos?: ApiDetailAtTestDto;
+    nestedDtoList?: ApiDetailAtTestDto;
+  };
+}
+
+export interface ApiDetailAtTest {
+  request: {
+    additionalUrl: string;
+    headers?: ApiDetailAtTestItem[];
+    body?: {
+      fields?: ApiDetailAtTestItem[];
+      nestedDtos?: ApiDetailAtTestDto;
+      nestedDtoList?: ApiDetailAtTestDto;
+    };
+    pathVars?: ApiDetailAtTestItem;
+    params?: ApiDetailAtTestItem[];
+  };
+  response: {
+    statusCode: string | number;
+    desc: string;
+    headers?: ApiDetailAtTestItem[];
+    body?: {
+      fields?: ApiDetailAtTestItem[];
+      nestedDtos?: ApiDetailAtTestDto;
+      nestedDtoList?: ApiDetailAtTestDto;
+    };
+  }[];
+}
+
+// 상상 queries 희희
+// api 상세 조회 (단일테스트나 usecaseTest를 위한) (nestedDtoLists:{}가 필요)
+export const useApiDetailAtTest = function (
+  spaceId: string | number,
+  apiId: string | number
+) {
+  return useQuery<ApiDetailAtTest>({
+    queryKey: queryKeys.spaceApiDetail(spaceId, apiId), // 이거 key이름 수정필요!
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/api/${apiId}/detail`,
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId && !!apiId,
+  });
+};
+
 // ok
 // space baseUrl 목록
 export const useBaseUrl = function (spaceId: string | number) {
