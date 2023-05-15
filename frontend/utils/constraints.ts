@@ -1,13 +1,13 @@
 export const defaultTypes = [
-  { id: `String`, name: `String`, desc: `문자열 타입` },
-  { id: `int`, name: `Integer`, desc: `정수 타입` },
-  { id: `long`, name: `Long`, desc: `큰 수 타입` },
-  { id: `float`, name: `Float`, desc: `소수점이 있는 숫자 타입` },
-  { id: `double`, name: `Double`, desc: `짱 큰 수 타입` },
-  { id: `boolean`, name: `Boolean`, desc: `True/False 타입` },
-  { id: `MultipartFile`, name: `MultipartFile`, desc: `파일 타입` },
-  { id: `Date`, name: `Date`, desc: `날짜 타입` },
-  { id: `LocalDateTime`, name: `LocalDateTime`, desc: `로컬 날짜 타입` },
+  { id: 1, name: `String`, desc: `문자열 타입` },
+  { id: 2, name: `Integer`, desc: `정수 타입` },
+  { id: 3, name: `Long`, desc: `큰 수 타입` },
+  { id: 4, name: `Float`, desc: `소수점이 있는 숫자 타입` },
+  { id: 5, name: `Double`, desc: `짱 큰 수 타입` },
+  { id: 6, name: `Boolean`, desc: `True/False 타입` },
+  { id: 7, name: `MultipartFile`, desc: `파일 타입` },
+  { id: 8, name: `Date`, desc: `날짜 타입` },
+  { id: 9, name: `LocalDateTime`, desc: `로컬 날짜 타입` },
 ];
 
 export const valuedConstraints = {

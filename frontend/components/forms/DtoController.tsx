@@ -35,7 +35,7 @@ const DtoController = function ({ item, idx, remove }: Props) {
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
   const { dark } = useStoreSelector((state) => state.dark);
-  const [typeData, setTypeData] = useState<string | number>(``);
+  const [typeData, setTypeData] = useState<number>(0);
   // const { field: constraintField } = useController({
   //   control,
   //   name: `fields.${idx}.constraints`,
@@ -58,7 +58,7 @@ const DtoController = function ({ item, idx, remove }: Props) {
 
   const getTypeValue = function () {
     // console.log(getValues().fields[idx].type);
-    setTypeData(() => getValues().fields[idx].type);
+    setTypeData(() => parseInt(getValues().fields[idx].type));
   };
 
   return (
@@ -71,14 +71,14 @@ const DtoController = function ({ item, idx, remove }: Props) {
         className="px-3 py-2 flex flex-row gap-3 w-full items-center"
       >
         <Controller
-          key={`field-typeName-${idx}`}
-          name={`fields.${idx}.typeName`}
+          key={`field-keyName-${idx}`}
+          name={`fields.${idx}.keyName`}
           control={control}
           render={({ field }) => (
             <div className="flex flex-row gap-2 w-[23%]">
               {/* <label>이름</label> */}
               <input
-                name={`fields.${idx}.typeName`}
+                name={`fields.${idx}.keyName`}
                 onChange={field.onChange}
                 title={field.value}
                 placeholder="Key"
@@ -226,7 +226,7 @@ const DtoController = function ({ item, idx, remove }: Props) {
                                 </option>
                               );
                             })}
-                            {typeData === 'String' &&
+                            {typeData === 1 &&
                               stringConstraints.map((con) => {
                                 return (
                                   <option
@@ -238,7 +238,7 @@ const DtoController = function ({ item, idx, remove }: Props) {
                                   </option>
                                 );
                               })}
-                            {typeData === 'String' && (
+                            {typeData === 1 && (
                               <>
                                 <option
                                   key={`pattern-string-${iidx}`}
@@ -254,26 +254,17 @@ const DtoController = function ({ item, idx, remove }: Props) {
                                 </option>
                               </>
                             )}
-                            {(typeData === 'int' ||
-                              typeData === `long` ||
-                              typeData === `float` ||
-                              typeData === `double`) && (
+                            {typeData >= 2 && typeData <= 5 && (
                               <option key={`max-number-${iidx}`} value={`Max`}>
                                 Max
                               </option>
                             )}
-                            {(typeData === 'int' ||
-                              typeData === `long` ||
-                              typeData === `float` ||
-                              typeData === `double`) && (
+                            {typeData >= 2 && typeData <= 5 && (
                               <option key={`min-number-${iidx}`} value={`Min`}>
                                 Min
                               </option>
                             )}
-                            {(typeData === 'int' ||
-                              typeData === `long` ||
-                              typeData === `float` ||
-                              typeData === `double`) && (
+                            {typeData >= 2 && typeData <= 5 && (
                               <option
                                 key={`range-number-${iidx}`}
                                 value={`Range`}
@@ -311,8 +302,9 @@ const DtoController = function ({ item, idx, remove }: Props) {
                                     <input
                                       name={`fields.${idx}.constraints.${iidx}.maxV`}
                                       type="number"
-                                      step={typeData === `int` ? 1 : 0.01}
+                                      step={typeData === 2 ? 1 : 0.01}
                                       onChange={maxVField.onChange}
+                                      value={maxVField.value}
                                       placeholder="Maximum"
                                       className="text-grayscale-dark bg-grayscale-deeplightlight bg-opacity-0 border-b-[3px] border-b-grayscale-dark w-[33%]"
                                     />
@@ -331,8 +323,9 @@ const DtoController = function ({ item, idx, remove }: Props) {
                                     <input
                                       name={`fields.${idx}.constraints.${iidx}.minV`}
                                       type="number"
-                                      step={typeData === `int` ? 1 : 0.01}
+                                      step={typeData === 2 ? 1 : 0.01}
                                       onChange={minVField.onChange}
+                                      value={minVField.value}
                                       placeholder="Minimum"
                                       className="text-grayscale-dark bg-grayscale-deeplightlight bg-opacity-0 border-b-[3px] border-b-grayscale-dark w-[33%]"
                                     />
@@ -351,8 +344,9 @@ const DtoController = function ({ item, idx, remove }: Props) {
                                     <input
                                       name={`fields.${idx}.constraints.${iidx}.minV`}
                                       type="number"
-                                      step={typeData === `int` ? 1 : 0.01}
+                                      step={typeData === 2 ? 1 : 0.01}
                                       onChange={minVField.onChange}
+                                      value={minVField.value}
                                       placeholder="Minimum"
                                       className="text-grayscale-dark bg-grayscale-deeplightlight bg-opacity-0 border-b-[3px] border-b-grayscale-dark w-[33%]"
                                     />
@@ -367,8 +361,9 @@ const DtoController = function ({ item, idx, remove }: Props) {
                                     <input
                                       name={`fields.${idx}.constraints.${iidx}.maxV`}
                                       type="number"
-                                      step={typeData === `int` ? 1 : 0.01}
+                                      step={typeData === 2 ? 1 : 0.01}
                                       onChange={maxVField.onChange}
+                                      value={maxVField.value}
                                       placeholder="Maximum"
                                       className="text-grayscale-dark bg-grayscale-deeplightlight bg-opacity-0 border-b-[3px] border-b-grayscale-dark w-[33%]"
                                     />
@@ -388,6 +383,7 @@ const DtoController = function ({ item, idx, remove }: Props) {
                                       name={`fields.${idx}.constraints.${iidx}.minV`}
                                       type="number"
                                       onChange={minVField.onChange}
+                                      value={minVField.value}
                                       placeholder="Minimum"
                                       className="text-grayscale-dark bg-grayscale-deeplightlight bg-opacity-0 border-b-[3px] border-b-grayscale-dark w-[33%]"
                                     />
@@ -403,6 +399,7 @@ const DtoController = function ({ item, idx, remove }: Props) {
                                       name={`fields.${idx}.constraints.${iidx}.maxV`}
                                       type="number"
                                       onChange={maxVField.onChange}
+                                      value={maxVField.value}
                                       placeholder="Maximum"
                                       className="text-grayscale-dark bg-grayscale-deeplightlight bg-opacity-0 border-b-[3px] border-b-grayscale-dark w-[33%]"
                                     />

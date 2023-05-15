@@ -38,16 +38,16 @@ import AnimationBox from '../common/AnimationBox';
 import { valuedConstraints } from '@/utils/constraints';
 
 export interface RefineDtoField {
-  type: string | number; // 필드 타입. string 등
-  typeName: string;
+  type: number; // 필드 타입. string 등
+  keyName: string;
   desc: string; // 설명
   itera: boolean; // 배열 여부
   constraints: string[]; // 제한 조건 들
 }
 
 export interface DtoFieldInCompo {
-  type: string | number; // 필드 타입. string 등
-  typeName: string;
+  type: number; // 필드 타입. string 등
+  keyName: string;
   desc: string; // 설명
   itera: boolean; // 배열 여부
   constraints: {
@@ -170,17 +170,7 @@ const DtoForm = function ({
     let fields: RefineDtoField[] = [];
     let nestedDtos: any = {};
     data.fields.forEach(async (field) => {
-      if (
-        field.type === `String` ||
-        field.type === `int` ||
-        field.type === `long` ||
-        field.type === `float` ||
-        field.type === `double` ||
-        field.type === `boolean` ||
-        field.type === `MultipartFile` ||
-        field.type === `Data` ||
-        field.type === `LocalDateTime`
-      ) {
+      if (!!field.type && field.type < 11) {
         fields.push({
           constraints: [
             ...field.constraints
@@ -220,20 +210,24 @@ const DtoForm = function ({
           desc: field.desc,
           itera: field.itera,
           type: field.type,
-          typeName: field.typeName,
+          keyName: field.keyName,
         });
       } else {
         const dtoId = field.type;
         let data;
-        await apiRequest({
-          method: `get`,
-          url: `/api/dto/${dtoId}`,
-        }).then((res) => {
-          data = res.data;
-          return res;
-        });
-        nestedDtos[dtoId] = data;
-        return data;
+        data = dtoListData?.dtoList.find((dto) => dto.id === dtoId);
+        // await apiRequest({
+        //   method: `get`,
+        //   url: `/api/dto/${dtoId}`,
+        // }).then((res) => {
+        //   data = res.data;
+        //   return res;
+        // });
+        if (nestedDtos[dtoId]) {
+          nestedDtos[dtoId].push(data);
+        } else {
+          nestedDtos[dtoId] = [data];
+        }
       }
     });
     postMutateAsync({
@@ -242,9 +236,11 @@ const DtoForm = function ({
       description: desc,
       document: { fields, nestedDtos },
     }).then((res) => {
+      queryClient.invalidateQueries(queryKeys.spaceDtoList(parseInt(spaceId)));
       resetSelected();
       reset({ name: ``, desc: ``, fields: [] });
     });
+    console.log(data);
   };
 
   const deleteHandler = function () {
@@ -337,8 +333,13 @@ const DtoForm = function ({
               name={`name`}
               control={control}
               rules={{
-                required: true,
-                validate: (value, formValue) => !!value.length,
+                // required: true,
+                validate: (value, formValue) => {
+                  if (!value.length) {
+                    dispatch(DispatchToast('필수 값이 없습니다.', false));
+                  }
+                  return !!value.length;
+                },
               }}
               render={({ field }) => {
                 return (
@@ -399,8 +400,8 @@ const DtoForm = function ({
                 }`}
                 onClick={() => {
                   wonsiAppend({
-                    type: ``,
-                    typeName: ``,
+                    type: 0,
+                    keyName: ``,
                     desc: ``,
                     itera: false,
                     constraints: [],
