@@ -170,7 +170,7 @@ const DtoForm = function ({
     let desc = data.desc;
     let fields: RefineDtoField[] = [];
     let nestedDtos: any = {};
-    data.fields.forEach(async (field) => {
+    data?.fields.forEach(async (field) => {
       if (!!field.type && field.type < 11) {
         fields.push({
           constraints: [
@@ -222,7 +222,14 @@ const DtoForm = function ({
           method: `get`,
           url: `/api/dto/${dtoId}`,
         }).then((res) => {
-          data = res.data;
+          data = {
+            keyName: res.data.keyName,
+            type: res.data.name,
+            desc: res.data.desc,
+            itera: res.data.itera,
+            constraints: [...res.data.constraints],
+            nestedDtos: { ...res.data.nestedDtos },
+          };
           return res;
         });
         if (!data) {
