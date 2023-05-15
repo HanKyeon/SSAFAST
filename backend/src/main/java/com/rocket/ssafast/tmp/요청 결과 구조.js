@@ -46,92 +46,25 @@ const dd = {
                 { }
             ],
             "nestedDtos": {
-                "DTO ID": {                         // dto id ex. 1
-                    "keyName": "dto 키 이름",       // 문자열. ex. user
-                    "name": "dto 이름",             // 문자열. ex. UserDto
-                    "desc": "키 설명",              // 문자열
-                    "fields": [                     // 단순한 필드
-                        {
-                            "keyName": "키", 
-                            "type": "타입",
-                            "desc": "헤더 키 설명",
-                            "itera": true/false,        // 리스트 여부
-                            "constrains": ["NotNull"],  
-                            "value": "값"               // 아무타입 다 가능
-                        }, 
-                        { }
-                    ],
-                    "nestedDtos": {
-                        "DTO ID": {
-                            "keyName": "dto 키 이름",
-                            "name": "dto 이름",
-                            "desc": "키 설명",
-                            "fields": [                     // 단순한 필드
+                "DTO ID": [                     // dto id ex. 1
+                    {                         
+                        "keyName": "dto 키 이름",       // 문자열. ex. user
+                        "name": "dto 이름",             // 문자열. ex. UserDto
+                        "desc": "키 설명",              // 문자열
+                        "fields": [                     // 단순한 필드
+                            {
+                                "keyName": "키", 
+                                "type": "타입",
+                                "desc": "헤더 키 설명",
+                                "itera": true/false,        // 리스트 여부
+                                "constrains": ["NotNull"],  
+                                "value": "값"               // 아무타입 다 가능
+                            }, 
+                            { }
+                        ],
+                        "nestedDtos": {
+                            "DTO ID": [
                                 {
-                                    "keyName": "키", 
-                                    "type": "타입",
-                                    "desc": "헤더 키 설명",
-                                    "itera": true/false,        // 리스트 여부
-                                    "constrains": ["NotNull"],  
-                                    "value": "값"               // 아무타입 다 가능
-                                }, 
-                                { }
-                            ]
-                        },
-                        "DTO ID": {
-
-                        }
-                    },
-                    "nestedDtoLists": {
-                        "DTO ID": {
-                            "keyName": "키 이름",       // 문자열 ex. userList    
-                            "name": "dto 이름",         // 문자열 ex. UserDto
-                            "desc": "키 설명",
-                            "list": [
-                                {
-                                    "fields": [
-                                        {
-                                            "keyName": "키", 
-                                            "type": "타입",
-                                            "desc": "헤더 키 설명",
-                                            "itera": true/false,        // 리스트 여부
-                                            "constrains": ["NotNull"],  
-                                            "value": "값"               // 아무타입 다 가능
-                                        }, 
-                                        { }
-                                    ]
-                                },
-                                { }
-                            ]
-                        },
-                        "DTO ID": {
-
-                        }
-                    }
-                },
-                "DTO ID": {
-
-                }
-            },
-            "nestedDtoLists": {
-                "DTO ID": {
-                    "keyName": "키 이름",       // 문자열 ex. userList    
-                    "name": "dto 이름",         // 문자열 ex. UserDto
-                    "desc": "키 설명",
-                    "list": [
-                        {
-                            "fields": [
-                                {
-                                    "keyName": "키", 
-                                    "type": "타입",
-                                    "desc": "헤더 키 설명",
-                                    "itera": true/false,        // 리스트 여부
-                                    "constrains": ["NotNull"],  
-                                    "value": "값"               // 아무타입 다 가능
-                                }, 
-                            ],
-                            "nestedDtos": {
-                                "DTO ID": {
                                     "keyName": "dto 키 이름",
                                     "name": "dto 이름",
                                     "desc": "키 설명",
@@ -147,14 +80,17 @@ const dd = {
                                         { }
                                     ]
                                 },
-                                "DTO ID": {
+                                {
 
                                 }
-                            },
-                            "nestedDtoLists": {
-                                "DTO ID": {
-                                    "keyName": "키 이름",       // 문자열 ex. orderItemList    
-                                    "name": "dto 이름",         // 문자열 ex. OrderItem
+                            ],
+                            "DTO ID": []
+                        },
+                        "nestedDtoLists": {
+                            "DTO ID": [
+                                {
+                                    "keyName": "키 이름",       // 문자열 ex. userList    
+                                    "name": "dto 이름",         // 문자열 ex. UserDto
                                     "desc": "키 설명",
                                     "list": [
                                         {
@@ -167,22 +103,106 @@ const dd = {
                                                     "constrains": ["NotNull"],  
                                                     "value": "값"               // 아무타입 다 가능
                                                 }, 
+                                                { }
                                             ]
                                         },
                                         { }
                                     ]
-                                },
-                                "DTO ID": {
+                                }, 
+                                {
 
                                 }
-                            }
-                        },
-                        { }
-                    ]
-                },
-                "DTO ID": {
+                            ],
+                            "DTO ID": [
 
-                }
+                            ]
+                        }
+                    },
+                    { 
+
+                    }
+                ],
+                "DTO ID": []
+            },
+            "nestedDtoLists": {
+                "DTO ID": [
+                    {
+                        "keyName": "키 이름",       // 문자열 ex. userList    
+                        "name": "dto 이름",         // 문자열 ex. UserDto
+                        "desc": "키 설명",
+                        "list": [
+                            {
+                                "fields": [
+                                    {
+                                        "keyName": "키", 
+                                        "type": "타입",
+                                        "desc": "헤더 키 설명",
+                                        "itera": true/false,        // 리스트 여부
+                                        "constrains": ["NotNull"],  
+                                        "value": "값"               // 아무타입 다 가능
+                                    }, 
+                                ],
+                                "nestedDtos": {
+                                    "DTO ID": [
+                                        {
+                                            "keyName": "dto 키 이름",
+                                            "name": "dto 이름",
+                                            "desc": "키 설명",
+                                            "fields": [                     // 단순한 필드
+                                                {
+                                                    "keyName": "키", 
+                                                    "type": "타입",
+                                                    "desc": "헤더 키 설명",
+                                                    "itera": true/false,        // 리스트 여부
+                                                    "constrains": ["NotNull"],  
+                                                    "value": "값"               // 아무타입 다 가능
+                                                }, 
+                                                { }
+                                            ]
+                                        }
+                                    ],
+                                    "DTO ID": [
+
+                                    ]
+                                },
+                                "nestedDtoLists": {
+                                    "DTO ID": [
+                                        {
+                                            "keyName": "키 이름",       // 문자열 ex. orderItemList    
+                                            "name": "dto 이름",         // 문자열 ex. OrderItem
+                                            "desc": "키 설명",
+                                            "list": [
+                                                {
+                                                    "fields": [
+                                                        {
+                                                            "keyName": "키", 
+                                                            "type": "타입",
+                                                            "desc": "헤더 키 설명",
+                                                            "itera": true/false,        // 리스트 여부
+                                                            "constrains": ["NotNull"],  
+                                                            "value": "값"               // 아무타입 다 가능
+                                                        }, 
+                                                    ]
+                                                },
+                                                { }
+                                            ]
+                                        }
+                                    ],
+                                    "DTO ID": [
+
+                                    ]
+                                }
+                            },
+                            { }
+                        ]
+                    },
+                    {
+
+                    }
+                ],
+                "DTO ID": [
+                    
+                ]
             }
         }
     },
