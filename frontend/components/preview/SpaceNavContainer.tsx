@@ -35,7 +35,7 @@ const SpaceNavContainer = function (): JSX.Element {
   return (
     <div className="w-[20%] h-full flex flex-col gap-3">
       <div className="h-[10%]">
-        <Image src={UserImg} alt="logo" height={70} />
+        <Image src={UserImg} alt="logo" width={70} height={70} />
       </div>
       <Box className="flex-1 min-h-0 flex flex-col p-5 gap-5" fontType="normal">
         {/* 이미지 */}
@@ -45,6 +45,8 @@ const SpaceNavContainer = function (): JSX.Element {
               alt="프로필 이미지"
               src={userData?.profileImg || UserImg}
               className="min-w-full min-h-full object-cover"
+              width={200}
+              height={200}
             />
           </div>
           <span className="text-theme-white-strong text-[15px] mt-3">

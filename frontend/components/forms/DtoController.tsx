@@ -221,17 +221,18 @@ const DtoController = function ({ item, idx, remove }: Props) {
                             className="w-[25%] flex items-center justify-center outline-none border-b-[3px] border-b-grayscale-dark bg-opacity-0 bg-theme-white-light aria-selected:bg-black px-2"
                           >
                             <option value={``}>선택</option>
-                            {commonConstraints.map((con) => {
-                              return (
-                                <option
-                                  key={`${con.name}-wonsi-${iidx}`}
-                                  value={con.name}
-                                  title={con.desc}
-                                >
-                                  {con.name}
-                                </option>
-                              );
-                            })}
+                            {typeData < 10 &&
+                              commonConstraints.map((con) => {
+                                return (
+                                  <option
+                                    key={`${con.name}-wonsi-${iidx}`}
+                                    value={con.name}
+                                    title={con.desc}
+                                  >
+                                    {con.name}
+                                  </option>
+                                );
+                              })}
                             {typeData === 1 &&
                               stringConstraints.map((con) => {
                                 return (

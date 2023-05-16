@@ -88,7 +88,7 @@ export const queryKeys = {
     [...queryKeys.spaceApi(spaceId), `section`, `${sectionId}`] as const,
   // space의 category 목록 => 사용
   spaceCategoryList: (spaceId: string | number) =>
-    [...queryKeys.spaceApi(spaceId), `list`] as const,
+    [...queryKeys.spaceApi(spaceId), `category`, `list`] as const,
   // space의 카테고리에 종속된 api 목록들
   spaceCategoryApis: (spaceId: string | number, categoryId: string | number) =>
     [...queryKeys.spaceApi(spaceId), `category`, `${categoryId}`] as const,

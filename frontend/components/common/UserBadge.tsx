@@ -26,6 +26,8 @@ const UserBadge = function ({
         src={(imgSrc as string) ? (imgSrc as string) : UserImg}
         alt="user image"
         className="min-w-full min-h-full object-cover"
+        width={500}
+        height={500}
       />
     </div>
   );

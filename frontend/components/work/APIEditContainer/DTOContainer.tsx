@@ -38,6 +38,8 @@ const DTOContainer = function () {
     fields: [],
     name: ``,
   });
+  const { data: selectedDtoData } = useDtoDetail(spaceId, selectedDtoItem || 0);
+  console.log(selectedDtoData);
 
   useEffect(
     function () {

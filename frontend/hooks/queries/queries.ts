@@ -21,11 +21,12 @@ export interface DtoList {
  * constraints: 제약조건 문자열 배열
  */
 export interface DtoField {
-  key: string;
+  keyName: string;
   type: string | number;
   desc: string;
   itera: boolean;
   constraints: string[];
+  value?: any;
 }
 
 /**
@@ -42,6 +43,24 @@ export interface DtoDetail {
   fields?: DtoField[];
   nestedDtos?: {
     [id: number]: DtoDetail;
+  };
+}
+
+export interface NestedDtoDetail {
+  type: number;
+  keyName: string;
+  desc: string;
+  itera: boolean;
+  constraints?: string[];
+  nestedDtos?: NestedDtoDetail[];
+}
+
+export interface ChangedDtoDetail {
+  desc: string;
+  itera: boolean;
+  fields?: DtoField[];
+  nextedDtos?: {
+    [id: number]: NestedDtoDetail[];
   };
 }
 
@@ -395,7 +414,7 @@ export const useDtoDetail = function (
   spaceId: string | number,
   dtoId: string | number
 ) {
-  return useQuery<DtoDetail>({
+  return useQuery<ChangedDtoDetail>({
     queryKey: queryKeys.spaceDtoDetail(spaceId, dtoId),
     queryFn: async function () {
       return getDtoDetail(dtoId).then((res) => res.data);

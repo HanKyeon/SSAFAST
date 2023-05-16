@@ -84,8 +84,6 @@ const DtoForm = function ({
   const queryClient = useQueryClient();
   const { dark } = useStoreSelector((state) => state.dark);
   const { handleSubmit, control, reset, resetField } = methods;
-  // data
-  const { data, isLoading, isError } = useDtoDetail(spaceId, selectedId || ``);
 
   const {
     fields: wonsiFields,
@@ -99,24 +97,24 @@ const DtoForm = function ({
   const removeHandler = useCallback(function (idx: number) {
     wonsiRemove(idx);
   }, []);
-  // 생성 mutate
+
   const { mutateAsync: deleteMutateAsync } = useMutation({
-    mutationFn: async function () {
+    mutationFn: async function (dtoId: number | string) {
       return apiRequest({
         method: `delete`,
-        url: `/api/dto/${data?.id}`,
+        url: `/api/dto/${dtoId}`,
         params: {},
         // data: {}
       });
     },
-    onSuccess: function () {
-      if (data) {
-        queryClient.removeQueries({
-          queryKey: queryKeys.spaceDtoDetail(parseInt(spaceId), data.id),
-        });
-        queryClient.invalidateQueries(queryKeys.spaceDto(parseInt(spaceId)));
-        queryClient.invalidateQueries(queryKeys.spaceApi(parseInt(spaceId)));
-      }
+    onSuccess: function (data) {
+      // if (data) {
+      //   queryClient.removeQueries({
+      //     queryKey: queryKeys.spaceDtoDetail(parseInt(spaceId), data),
+      //   });
+      // }
+      queryClient.invalidateQueries(queryKeys.spaceDto(parseInt(spaceId)));
+      queryClient.invalidateQueries(queryKeys.spaceApi(parseInt(spaceId)));
     },
   });
   const { mutateAsync: postMutateAsync } = useMutation({
@@ -168,12 +166,13 @@ const DtoForm = function ({
     setIsCodeModal(() => true);
   }, []);
 
-  const dataSetting = function (data: DtoInterfaceInForm) {
+  const dataSetting = async function (data: DtoInterfaceInForm) {
     let name = data.name;
     let desc = data.desc;
     let fields: RefineDtoField[] = [];
     let nestedDtos: any = {};
-    data?.fields.forEach(async (field) => {
+
+    for await (const field of data.fields) {
       if (!!field.type && field.type < 11) {
         fields.push({
           constraints: [
@@ -229,11 +228,10 @@ const DtoForm = function ({
             keyName: field.keyName,
             type: dtoId,
             desc: field.desc,
-            itera: res.data.itera,
-            constraints: [...field.constraints],
+            itera: field.itera,
+            constraints: [],
             nestedDtos: { ...res.data.nestedDtos },
           };
-          return res;
         });
         console.log(`${dtoId}의 정보`, data);
         if (!data) {
@@ -245,7 +243,8 @@ const DtoForm = function ({
           nestedDtos[dtoId] = [{ ...data! }];
         }
       }
-    });
+    }
+
     postMutateAsync({
       workspaceId: spaceId,
       name,
@@ -266,10 +265,10 @@ const DtoForm = function ({
 
   const deleteHandler = function () {
     console.log('삭제');
-    if (data) {
-      deleteMutateAsync().then((res) => {
-        dispatch(DispatchToast('삭제 완료!', true));
-      });
+    if (false) {
+      // deleteMutateAsync().then((res) => {
+      //   dispatch(DispatchToast('삭제 완료!', true));
+      // });
     } else {
       dispatch(DispatchToast('작성 정보가 초기화 됩니다.', true));
       reset({ name: ``, desc: ``, fields: [] });
@@ -348,7 +347,7 @@ const DtoForm = function ({
               </Button>
             </div>
             <div className="w-full h-[6%] text-[32px] flex items-center justify-center">
-              {data ? `DTO 수정하기` : `DTO 생성하기`}
+              {selectedId ? `DTO 수정하기` : `DTO 생성하기`}
             </div>
             <Controller
               name={`name`}

@@ -234,7 +234,7 @@ const APIList = function ({
               >
                 {cate?.apis?.map((api, apiIdx) => (
                   <APIlistItem
-                    key={`${api.id}_${apiIdx}`}
+                    key={`${api.id}-${apiIdx}-apiz`}
                     checkBox={checkBox} // 체크박스 달고있는 list
                     checked={!!checkedIds.find((id) => id === api.id)}
                     item={api}
