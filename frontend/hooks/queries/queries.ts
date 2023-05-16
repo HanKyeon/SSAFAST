@@ -58,9 +58,10 @@ export interface NestedDtoDetail {
 
 export interface ChangedDtoDetail {
   desc: string;
+  name: string;
   itera: boolean;
   fields?: DtoField[];
-  nextedDtos?: {
+  nestedDtos?: {
     [id: number]: NestedDtoDetail[];
   };
 }

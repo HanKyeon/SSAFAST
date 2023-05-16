@@ -66,24 +66,27 @@ export interface DtoInterfaceInForm {
 }
 
 interface Props {
-  methods: UseFormReturn<DtoInterfaceInForm, any>;
-  defaultData?: DtoDetail;
+  defaultData?: DtoInterfaceInForm;
   resetSelected: () => void;
   selectedId: string | number | null;
 }
 
-const DtoForm = function ({
-  defaultData,
-  methods,
-  resetSelected,
-  selectedId,
-}: Props) {
+const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
   const router = useRouter();
   const dispatch = useStoreDispatch();
   const { spaceId } = router.query as SpaceParams;
   const queryClient = useQueryClient();
   const { dark } = useStoreSelector((state) => state.dark);
+  const methods = useForm({
+    defaultValues: defaultData,
+  });
   const { handleSubmit, control, reset, resetField } = methods;
+  useEffect(
+    function () {
+      reset(defaultData, { keepDefaultValues: true });
+    },
+    [defaultData]
+  );
 
   const {
     fields: wonsiFields,
@@ -103,7 +106,7 @@ const DtoForm = function ({
       return apiRequest({
         method: `delete`,
         url: `/api/dto/${dtoId}`,
-        params: {},
+        // params: {},
         // data: {}
       });
     },
@@ -244,31 +247,61 @@ const DtoForm = function ({
         }
       }
     }
-
-    postMutateAsync({
-      workspaceId: spaceId,
-      name,
-      description: desc,
-      document: { fields, nestedDtos },
-    }).then((res) => {
-      queryClient.invalidateQueries(queryKeys.spaceDtoList(parseInt(spaceId)));
-      resetSelected();
-      reset({ name: ``, desc: ``, fields: [] });
-    });
-    console.log({
-      workspaceId: spaceId,
-      name,
-      description: desc,
-      document: { fields, nestedDtos },
-    });
+    if (selectedId) {
+      apiRequest({
+        method: `put`,
+        url: `/api/dto/${selectedId}`,
+        data: {
+          workspaceId: spaceId,
+          name,
+          description: desc,
+          document: { fields, nestedDtos },
+        },
+      }).then((res) => {
+        dispatch(DispatchToast('수정 완료!', true));
+        queryClient.invalidateQueries(queryKeys.spaceDtoList(spaceId));
+        queryClient.invalidateQueries(
+          queryKeys.spaceDtoDetail(spaceId, selectedId)
+        );
+        resetSelected();
+        reset({ name: ``, desc: ``, fields: [] });
+      });
+    } else {
+      postMutateAsync({
+        workspaceId: spaceId,
+        name,
+        description: desc,
+        document: { fields, nestedDtos },
+      })
+        .then((res) => {
+          queryClient.invalidateQueries(
+            queryKeys.spaceDtoList(parseInt(spaceId))
+          );
+          resetSelected();
+          reset({ name: ``, desc: ``, fields: [] });
+        })
+        .catch((err) => {
+          console.log(err.data, '<<<<<<<<<');
+          if (err.response.data === 'DTO DEPTH OVER 2') {
+            dispatch(DispatchToast('DTO의 최대 깊이는 2입니다!', false));
+          }
+        });
+    }
+    // console.log({
+    //   workspaceId: spaceId,
+    //   name,
+    //   description: desc,
+    //   document: { fields, nestedDtos },
+    // });
   };
 
   const deleteHandler = function () {
     console.log('삭제');
-    if (false) {
-      // deleteMutateAsync().then((res) => {
-      //   dispatch(DispatchToast('삭제 완료!', true));
-      // });
+    if (selectedId) {
+      deleteMutateAsync(selectedId).then((res) => {
+        dispatch(DispatchToast('삭제 완료!', true));
+        resetSelected();
+      });
     } else {
       dispatch(DispatchToast('작성 정보가 초기화 됩니다.', true));
       reset({ name: ``, desc: ``, fields: [] });
