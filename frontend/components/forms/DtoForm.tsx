@@ -66,24 +66,28 @@ export interface DtoInterfaceInForm {
 }
 
 interface Props {
-  methods: UseFormReturn<DtoInterfaceInForm, any>;
-  defaultData?: DtoDetail;
+  defaultData?: DtoInterfaceInForm;
   resetSelected: () => void;
   selectedId: string | number | null;
 }
 
-const DtoForm = function ({
-  defaultData,
-  methods,
-  resetSelected,
-  selectedId,
-}: Props) {
+const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
   const router = useRouter();
   const dispatch = useStoreDispatch();
   const { spaceId } = router.query as SpaceParams;
   const queryClient = useQueryClient();
   const { dark } = useStoreSelector((state) => state.dark);
+  const methods = useForm({
+    defaultValues: defaultData,
+  });
   const { handleSubmit, control, reset, resetField } = methods;
+  useEffect(
+    function () {
+      console.log(defaultData, '<<<<<<<<<이거로 리셋 예정');
+      reset(defaultData, { keepDefaultValues: true });
+    },
+    [defaultData]
+  );
 
   const {
     fields: wonsiFields,
@@ -250,17 +254,26 @@ const DtoForm = function ({
       name,
       description: desc,
       document: { fields, nestedDtos },
-    }).then((res) => {
-      queryClient.invalidateQueries(queryKeys.spaceDtoList(parseInt(spaceId)));
-      resetSelected();
-      reset({ name: ``, desc: ``, fields: [] });
-    });
-    console.log({
-      workspaceId: spaceId,
-      name,
-      description: desc,
-      document: { fields, nestedDtos },
-    });
+    })
+      .then((res) => {
+        queryClient.invalidateQueries(
+          queryKeys.spaceDtoList(parseInt(spaceId))
+        );
+        resetSelected();
+        reset({ name: ``, desc: ``, fields: [] });
+      })
+      .catch((err) => {
+        console.log(err.data, '<<<<<<<<<');
+        if (err.response.data === 'DTO DEPTH OVER 2') {
+          dispatch(DispatchToast('DTO의 최대 깊이는 2입니다!', false));
+        }
+      });
+    // console.log({
+    //   workspaceId: spaceId,
+    //   name,
+    //   description: desc,
+    //   document: { fields, nestedDtos },
+    // });
   };
 
   const deleteHandler = function () {

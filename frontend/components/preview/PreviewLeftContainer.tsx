@@ -69,6 +69,7 @@ const PreviewLeftContainer = function (): JSX.Element {
     isLoading: spaceApiLoading,
     isError: spaceApiError,
   } = useSpaceApis(parseInt(spaceId));
+  console.log(spaceDetailData);
   const apiList = useMemo(
     function () {
       let ret: EachCateApi[] = [];

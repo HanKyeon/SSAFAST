@@ -38,7 +38,7 @@ const DtoController = function ({ item, idx, remove }: Props) {
   const [typeData, setTypeData] = useState<number>(0);
   // const { field: constraintField } = useController({
   //   control,
-  //   name: `fields.${idx}.constraints`,
+  //   name: `fields[${idx}].constraints`,
   // });
   const {
     fields: constraintsFields,
@@ -46,7 +46,7 @@ const DtoController = function ({ item, idx, remove }: Props) {
     remove: constraintsRemove,
   } = useFieldArray({
     control,
-    name: `fields.${idx}.constraints`,
+    name: `fields[${idx}].constraints`,
   });
   const appendConstraint = function () {
     constraintsAppend({
@@ -77,14 +77,15 @@ const DtoController = function ({ item, idx, remove }: Props) {
       >
         <Controller
           key={`field-keyName-${idx}`}
-          name={`fields.${idx}.keyName`}
+          name={`fields[${idx}].keyName`}
           control={control}
           render={({ field }) => (
             <div className="flex flex-row gap-2 w-[23%]">
               {/* <label>이름</label> */}
               <input
-                name={`fields.${idx}.keyName`}
+                name={`fields[${idx}].keyName`}
                 onChange={field.onChange}
+                value={field.value}
                 title={field.value}
                 placeholder="Key"
                 className="w-full flex items-center justify-center outline-none border-b-[3px] border-b-grayscale-dark bg-opacity-0 bg-theme-white-light truncate px-2"
@@ -94,13 +95,13 @@ const DtoController = function ({ item, idx, remove }: Props) {
         />
         <Controller
           key={`field-type-${item.id}`}
-          name={`fields.${idx}.type`}
+          name={`fields[${idx}].type`}
           control={control}
           render={({ field }) => (
             <div className="flex flex-row gap-2 w-[17%]">
               {/* <label>타입</label> */}
               <select
-                name={`fields.${idx}.type`}
+                name={`fields[${idx}].type`}
                 onChange={(v) => {
                   field.onChange(v);
                   getTypeValue();
@@ -140,15 +141,16 @@ const DtoController = function ({ item, idx, remove }: Props) {
 
         <Controller
           key={`field-itera-${idx}`}
-          name={`fields.${idx}.itera`}
+          name={`fields[${idx}].itera`}
           control={control}
           render={({ field }) => (
             <div className="flex flex-col w-[7%] items-center justify-center">
               <label className="text-[16.6px]">배열</label>
               <input
                 type="checkbox"
-                name={`fields.${idx}.itera`}
+                name={`fields[${idx}].itera`}
                 onChange={field.onChange}
+                checked={field.value}
                 value={field.value}
                 className="flex items-center justify-center outline-none border-b-[3px] border-b-grayscale-dark bg-opacity-0 bg-theme-white-light px-2"
               />
@@ -157,14 +159,15 @@ const DtoController = function ({ item, idx, remove }: Props) {
         />
         <Controller
           key={`field-desc-${idx}`}
-          name={`fields.${idx}.desc`}
+          name={`fields[${idx}].desc`}
           control={control}
           render={({ field }) => (
             <div className="flex flex-row gap-2 w-[48%]">
               {/* <label>설명</label> */}
               <input
-                name={`fields.${idx}.desc`}
+                name={`fields[${idx}].desc`}
                 onChange={field.onChange}
+                value={field.value}
                 title={field.value}
                 className="w-full flex items-center justify-center outline-none border-b-[3px] border-b-grayscale-dark bg-opacity-0 bg-theme-white-light"
                 placeholder="Description"
@@ -181,7 +184,7 @@ const DtoController = function ({ item, idx, remove }: Props) {
       {/* <div className="w-full flex flex-col"> */}
       <Controller
         key={`field-constraints-${idx}`}
-        name={`fields.${idx}.constraints`}
+        name={`fields[${idx}].constraints`}
         control={control}
         render={({ field }) => {
           return (
@@ -209,13 +212,13 @@ const DtoController = function ({ item, idx, remove }: Props) {
                 return (
                   <Controller
                     key={`${item.id}-constraint`}
-                    name={`fields.${idx}.constraints.${iidx}.mainName`}
+                    name={`fields[${idx}].constraints[${iidx}].mainName`}
                     render={({ field: ifield }) => {
                       return (
                         <AnimationBox className="flex flex-row gap-2">
                           <select
                             key={`${item.id}-constraint-${iidx}`}
-                            name={`fields.${idx}.constraints.${iidx}.mainName`}
+                            name={`fields[${idx}].constraints[${iidx}].mainName`}
                             onChange={ifield.onChange}
                             value={ifield.value}
                             className="w-[25%] flex items-center justify-center outline-none border-b-[3px] border-b-grayscale-dark bg-opacity-0 bg-theme-white-light aria-selected:bg-black px-2"
@@ -284,11 +287,11 @@ const DtoController = function ({ item, idx, remove }: Props) {
                             <>
                               <Controller
                                 key={`${item.id}-constraint-validateReg-${iidx}`}
-                                name={`fields.${idx}.constraints.${iidx}.validateReg`}
+                                name={`fields[${idx}].constraints[${iidx}].validateReg`}
                                 render={({ field: validateRegField }) => {
                                   return (
                                     <input
-                                      name={`fields.${idx}.constraints.${iidx}.validateReg`}
+                                      name={`fields[${idx}].constraints[${iidx}].validateReg`}
                                       type="text"
                                       onChange={validateRegField.onChange}
                                       placeholder="regexp"
@@ -303,11 +306,11 @@ const DtoController = function ({ item, idx, remove }: Props) {
                             <>
                               <Controller
                                 key={`${item.id}-constraint-maxV-${iidx}`}
-                                name={`fields.${idx}.constraints.${iidx}.maxV`}
+                                name={`fields[${idx}].constraints[${iidx}].maxV`}
                                 render={({ field: maxVField }) => {
                                   return (
                                     <input
-                                      name={`fields.${idx}.constraints.${iidx}.maxV`}
+                                      name={`fields[${idx}].constraints[${iidx}].maxV`}
                                       type="number"
                                       step={typeData === 2 ? 1 : 0.01}
                                       onChange={maxVField.onChange}
@@ -324,11 +327,11 @@ const DtoController = function ({ item, idx, remove }: Props) {
                             <>
                               <Controller
                                 key={`${item.id}-constraint-minV-${iidx}`}
-                                name={`fields.${idx}.constraints.${iidx}.minV`}
+                                name={`fields[${idx}].constraints[${iidx}].minV`}
                                 render={({ field: minVField }) => {
                                   return (
                                     <input
-                                      name={`fields.${idx}.constraints.${iidx}.minV`}
+                                      name={`fields[${idx}].constraints[${iidx}].minV`}
                                       type="number"
                                       step={typeData === 2 ? 1 : 0.01}
                                       onChange={minVField.onChange}
@@ -345,11 +348,11 @@ const DtoController = function ({ item, idx, remove }: Props) {
                             <>
                               <Controller
                                 key={`${item.id}-constraint-minV-${iidx}`}
-                                name={`fields.${idx}.constraints.${iidx}.minV`}
+                                name={`fields[${idx}].constraints[${iidx}].minV`}
                                 render={({ field: minVField }) => {
                                   return (
                                     <input
-                                      name={`fields.${idx}.constraints.${iidx}.minV`}
+                                      name={`fields[${idx}].constraints[${iidx}].minV`}
                                       type="number"
                                       step={typeData === 2 ? 1 : 0.01}
                                       onChange={minVField.onChange}
@@ -362,11 +365,11 @@ const DtoController = function ({ item, idx, remove }: Props) {
                               />
                               <Controller
                                 key={`${item.id}-constraint-maxV-${iidx}`}
-                                name={`fields.${idx}.constraints.${iidx}.maxV`}
+                                name={`fields[${idx}].constraints[${iidx}].maxV`}
                                 render={({ field: maxVField }) => {
                                   return (
                                     <input
-                                      name={`fields.${idx}.constraints.${iidx}.maxV`}
+                                      name={`fields[${idx}].constraints[${iidx}].maxV`}
                                       type="number"
                                       step={typeData === 2 ? 1 : 0.01}
                                       onChange={maxVField.onChange}
@@ -383,11 +386,11 @@ const DtoController = function ({ item, idx, remove }: Props) {
                             <>
                               <Controller
                                 key={`${item.id}-constraint-minV-${iidx}`}
-                                name={`fields.${idx}.constraints.${iidx}.minV`}
+                                name={`fields[${idx}].constraints[${iidx}].minV`}
                                 render={({ field: minVField }) => {
                                   return (
                                     <input
-                                      name={`fields.${idx}.constraints.${iidx}.minV`}
+                                      name={`fields[${idx}].constraints[${iidx}].minV`}
                                       type="number"
                                       onChange={minVField.onChange}
                                       value={minVField.value}
@@ -399,11 +402,11 @@ const DtoController = function ({ item, idx, remove }: Props) {
                               />
                               <Controller
                                 key={`${item.id}-constraint-maxV-${iidx}`}
-                                name={`fields.${idx}.constraints.${iidx}.maxV`}
+                                name={`fields[${idx}].constraints[${iidx}].maxV`}
                                 render={({ field: maxVField }) => {
                                   return (
                                     <input
-                                      name={`fields.${idx}.constraints.${iidx}.maxV`}
+                                      name={`fields[${idx}].constraints[${iidx}].maxV`}
                                       type="number"
                                       onChange={maxVField.onChange}
                                       value={maxVField.value}

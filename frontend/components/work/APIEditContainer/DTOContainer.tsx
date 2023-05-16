@@ -29,17 +29,12 @@ const DTOContainer = function () {
   const [selectedDtoItem, setSelectedDtoItem] = useState<
     number | string | null
   >(null);
-  const { data, isLoading, isError } = useDtoDetail(
-    spaceId,
-    selectedDtoItem || ``
-  );
   const [defaultData, setDefaultData] = useState<DtoInterfaceInForm>({
     desc: ``,
     fields: [],
     name: ``,
   });
   const { data: selectedDtoData } = useDtoDetail(spaceId, selectedDtoItem || 0);
-  console.log(selectedDtoData);
 
   useEffect(
     function () {
@@ -52,15 +47,45 @@ const DTOContainer = function () {
           };
         });
       } else {
-        // data에 따른 default setting
+        if (selectedDtoData) {
+          let fields: any[] = [];
+          selectedDtoData?.fields?.map((dto) => {
+            fields.push({
+              keyName: dto.keyName,
+              type: dto.type,
+              desc: dto.desc,
+              itera: dto.itera,
+              constraints: [],
+              value: dto.value,
+            });
+          });
+          Object.keys(selectedDtoData?.nestedDtos!).map((dtoId: any) => {
+            selectedDtoData?.nestedDtos![dtoId].map((nDto) => {
+              fields.push({
+                keyName: nDto.keyName,
+                type: nDto.keyName,
+                desc: nDto.desc,
+                itera: nDto.itera,
+                constraints: [],
+                value: null,
+              });
+            });
+          });
+          let defa = {
+            desc: selectedDtoData?.desc,
+            name: selectedDtoData?.name,
+            fields: fields,
+          };
+          setDefaultData(() => {
+            return defa as DtoInterfaceInForm;
+          });
+        }
       }
     },
-    [data, selectedDtoItem]
+    [selectedDtoData, selectedDtoItem]
   );
 
   // 여기 defaultData를 data 변경한 것으로 바꾸고,
-  const methods = useForm<DtoInterfaceInForm>({ defaultValues: defaultData });
-  const { handleSubmit, control, getValues } = methods;
 
   const resetSelectedHandler = function () {
     setSelectedDtoItem(() => null);
@@ -113,7 +138,7 @@ const DTOContainer = function () {
         className="basis-[50%] w-[50%] h-full flex-1 items-center justify-center p-5 flex flex-col"
       >
         <DtoForm
-          methods={methods}
+          defaultData={defaultData}
           resetSelected={resetSelectedHandler}
           selectedId={selectedDtoItem}
         />

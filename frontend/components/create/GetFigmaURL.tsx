@@ -108,8 +108,8 @@ client_id=${process.env.NEXT_PUBLIC_FIGMA_ROCKET_APP_CLIENT_ID}&redirect_uri=${p
             src={Description}
             alt={'안내'}
             className="h-full w-full object-contain"
-            width={50}
-            height={50}
+            width={500}
+            height={500}
           />
         </AnimationBox>
       </div>
