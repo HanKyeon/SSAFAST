@@ -5,6 +5,7 @@ import figmaAxios from '@/utils/figmaAxios';
 import apiRequest from '@/utils/axios';
 import { useStoreDispatch, useStoreSelector } from '../useStore';
 import { figmaTokenActions } from '@/store/figma-token-slice';
+import { FieldsType, HeadersType } from '@/components/work/APIDocsContainer';
 
 /**
  * dtoList: 디티오 리스트
@@ -536,6 +537,120 @@ export const useSpaceApis = function (spaceId: string | number) {
       }).then((res) => res.data);
     },
     enabled: !!spaceId,
+  });
+};
+
+// api 상세 조회 (api 명세 부분에서 수정을 위한) (nestedDtoLists:{}를 만들 필요X)
+// export const useApiDetail = function (
+//   spaceId: string | number,
+//   apiId: string | number
+// ) {
+//   return useQuery<>({
+//     queryKey: queryKeys.spaceApiDetail(spaceId, apiId),
+//     queryFn: async function () {
+//       return apiRequest({
+//         method: `get`,
+//         url: ``,
+//       });
+//     },
+//   });
+// };
+
+export interface ApiDetailAtTestItem {
+  keyName: string;
+  type: number;
+  desc: string;
+  value?: any;
+  itera?: boolean;
+  constraints?: string[];
+}
+
+export interface ApiDetailAtTestDto {
+  [key: string | number]: {
+    name?: string;
+    keyName: string | null;
+    desc: string;
+    itera: boolean;
+    type?: number;
+    constraints?: string[];
+    fields?: ApiDetailAtTestItem[];
+    nestedDtos?: ApiDetailAtTestDto;
+    nestedDtoLists?: ApiDetailAtTestDto;
+  }[];
+}
+
+export interface ApiDetailAtTest {
+  request: {
+    additionalUrl: string;
+    headers?: ApiDetailAtTestItem[];
+    body?: {
+      fields?: ApiDetailAtTestItem[];
+      nestedDtos?: ApiDetailAtTestDto;
+      nestedDtoLists?: ApiDetailAtTestDto;
+    };
+    pathVars?: ApiDetailAtTestItem[];
+    params?: ApiDetailAtTestItem[];
+  };
+  response: {
+    statusCode: string | number;
+    desc: string;
+    headers?: ApiDetailAtTestItem[];
+    body?: {
+      fields?: ApiDetailAtTestItem[];
+      nestedDtos?: ApiDetailAtTestDto;
+      nestedDtoLists?: ApiDetailAtTestDto;
+    };
+  }[];
+}
+
+// 상상 queries 희희
+// api 상세 조회 (단일테스트나 usecaseTest를 위한) (nestedDtoLists:{}가 필요)
+export const useApiDetailAtTest = function (
+  spaceId: string | number,
+  apiId: string | number
+) {
+  return useQuery<ApiDetailAtTest>({
+    queryKey: queryKeys.spaceApiDetail(spaceId, apiId), // 이거 key이름 수정필요!!!!
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/api/${apiId}/detail`,
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId && !!apiId,
+  });
+};
+
+export interface PrevResponse {
+  apiId: string | number;
+  apiName: string;
+  desc: string;
+  headers?: ApiDetailAtTestItem[];
+  body?: {
+    fields?: ApiDetailAtTestItem[];
+    nestedDtos?: ApiDetailAtTestDto;
+    nestedDtoLists?: ApiDetailAtTestDto;
+  };
+}
+
+export interface PrevResponses {
+  prevResponses: PrevResponse[];
+}
+
+// 이전 response 변수 목록 조회
+export const useUseCaseResList = function (
+  spaceId: string | number,
+  apiIds: string
+) {
+  return useQuery<PrevResponses>({
+    queryKey: queryKeys.spaceApiDetail(spaceId, apiIds), // 이거 이름 수정필요!!!!
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/usecase/prev-responses`,
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId && !!apiIds,
   });
 };
 

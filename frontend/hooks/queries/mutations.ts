@@ -579,3 +579,18 @@ export const useSaveSingleApiTest = function (spaceId: string | number) {
     },
   });
 };
+// export const useNewUsecase = function (workspaceId: string | number) {
+//   return useMutation({
+//     mutationFn: function (name: string, description: string) {
+//       return apiRequest({
+//         method: `post`,
+//         url: `api/usecase`,
+//       });
+//     },
+//     onSuccess:function(){
+//       QueryClient.invalidateQueries({
+//         queryKey:
+//       })
+//     }
+//   });
+// };

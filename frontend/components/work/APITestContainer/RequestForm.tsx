@@ -195,7 +195,7 @@ const RequestForm = function ({ toggleIsList }: Props) {
                 <ReqItem
                   fields={pathFields}
                   formName={`request.pathVars`}
-                  name="Path Variables"
+                  name="path variables"
                   control={control}
                   item={data.request.pathVars}
                 />

@@ -10,6 +10,7 @@ import {
 } from '@/hooks/queries/queries';
 import { useRouter } from 'next/router';
 import { SpaceParams } from '@/pages/space';
+import { UseTestApiCompactType } from '../work/APITestContainer/usecase/UseTestContainer';
 
 interface APIlistItemPropsType {
   item: EachCateApi;
@@ -20,6 +21,7 @@ interface APIlistItemPropsType {
   // checkedList?: (string | number)[];
   onToggleCheck?: (apiId: number | string, check: boolean) => void;
   setSelectedIdHandler?: (id: number) => void;
+  onClickApi?: (api: UseTestApiCompactType) => void;
 }
 
 const APIlistItem = function ({
@@ -30,6 +32,7 @@ const APIlistItem = function ({
   checked = false,
   onToggleCheck,
   setSelectedIdHandler,
+  onClickApi,
 }: APIlistItemPropsType): JSX.Element {
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
@@ -56,7 +59,12 @@ const APIlistItem = function ({
 
   return (
     <li
-      onClick={onClickApiItem && (() => onClickApiItem(item.id))}
+      onClick={
+        onClickApi
+          ? () =>
+              onClickApi({ id: item.id, name: item.name, method: item.method })
+          : () => onClickApiItem(item.id)
+      }
       className={`${className} flex items-center gap-3 h-[40px] min-h-[40px]`}
     >
       {checkBox && (
