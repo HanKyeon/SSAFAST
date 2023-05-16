@@ -81,7 +81,6 @@ const APIList = function ({
   } = useInput(categoryRef);
 
   const { data: spaceApiList, isLoading, isError } = useSpaceApis(spaceId);
-
   // const {data: sectionApiList} = useSectionsApi(spaceId, sectionId, selectedMethod, searchInputData)
   const { data: sectionApiList } = useSectionsApi(spaceId, 1);
 

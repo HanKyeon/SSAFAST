@@ -3,7 +3,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { useStoreSelector } from '@/hooks/useStore';
 import { IoMdArrowRoundBack } from 'react-icons/io';
 import { useRouter } from 'next/router';
-import { useBaseUrl } from '@/hooks/queries/queries';
+import { useBaseUrl, useSpaceCategory } from '@/hooks/queries/queries';
 import { SpaceParams } from '@/pages/space';
 import { RequestFormData } from './RequestForm';
 import { ResponseFormData } from './ResponseForm';
@@ -12,9 +12,11 @@ import { Box, Button, Input, Select } from '@/components/common';
 import AnimationBox from '@/components/common/AnimationBox';
 import RequestForm from './RequestForm';
 import ResponseForm from './ResponseForm';
+import { useCreateApi } from '@/hooks/queries/mutations';
 
 // Api interface
 export interface ApiCreateForm {
+  workspaceId: number;
   name: string;
   description: string;
   method?: 1 | 2 | 3 | 4 | 5;
@@ -41,150 +43,6 @@ export interface ServerData {
   };
 }
 
-const data: any = {
-  name: '엄지',
-  description: '엄지 바보',
-  method: 1,
-  baseUrl: 1,
-  categoryId: 1,
-  status: 1,
-  document: {
-    request: {
-      headers: [
-        {
-          key: 'Content-Type',
-          type: 'String',
-          desc: 'Define request data type',
-          value: null,
-        },
-        {
-          key: 'Age',
-          type: 'Integer',
-          desc: 'Fields for cashing',
-          value: null,
-        },
-      ],
-      body: {
-        fields: [
-          {
-            key: 'ID',
-            type: 'String',
-            desc: 'Login User ID',
-            itera: false,
-            constraints: ['NotBlank', 'Size(min=4, max=10)', 'NotNull'],
-            value: null,
-          },
-          {
-            key: 'telephones',
-            type: 'String',
-            desc: 'cell-phone numbers with candidates',
-            itera: true,
-            constraints: ['NotBlank', 'NotNull', 'Length(min=2, max=5)'],
-            value: null,
-          },
-        ],
-        nestedDtos: {
-          //dto id
-          '15': {
-            fields: [
-              {
-                key: 'ID',
-                type: 'String',
-                desc: 'User Identify Info',
-                itera: false,
-                constraints: ['notNull'],
-                value: null,
-              },
-            ],
-            nestedDtos: {
-              '5': {
-                fields: [
-                  {
-                    key: 'content',
-                    type: 'String',
-                    desc: 'comment for user',
-                    itera: true,
-                    constraints: ['NotNull', 'NotEmpty'],
-                  },
-                  {
-                    key: 'CreatedDate',
-                    type: 'Date',
-                    desc: 'Sign up date',
-                    itera: false,
-                    constraints: ['NotNull'],
-                  },
-                ],
-                nestedDtos: {},
-              },
-              '3': {
-                fields: [
-                  {
-                    key: 'content',
-                    type: 'String',
-                    desc: 'comment for user',
-                    itera: true,
-                    constraints: ['NotNull', 'NotEmpty'],
-                  },
-                  {
-                    key: 'CreatedDate',
-                    type: 'Date',
-                    desc: 'Sign up date',
-                    itera: false,
-                    constraints: ['NotNull'],
-                  },
-                ],
-                nestedDtos: {},
-              },
-            },
-          },
-          //dto id
-          '8': {
-            fields: [
-              {
-                key: 'ID',
-                type: 'String',
-                desc: 'User Identify Info',
-                itera: false,
-                constraints: ['notNull'],
-              },
-            ],
-            nestedDtos: {},
-          },
-        },
-      },
-      pathVars: [
-        {
-          key: 'userid',
-          type: 'String',
-          desc: 'for login',
-          constraints: ['NotNull'],
-          value: null,
-        },
-      ],
-      params: [
-        {
-          key: 'age',
-          type: 'int',
-          desc: 'user age',
-          constraints: ['NotNull'],
-          value: null,
-        },
-      ],
-    },
-    response: [
-      {
-        status_code: 200,
-        desc: '요청 성공',
-        headers: [],
-        body: {
-          fields: [],
-          nestedDtos: {},
-        },
-      },
-    ],
-  },
-};
-
 // Form Tab 스타일
 const selectedStyle = (dark: boolean) =>
   `${
@@ -194,7 +52,7 @@ const selectedStyle = (dark: boolean) =>
   }` as const;
 
 interface ApiCreateProps {
-  toggleAddHandler: (e: FormEvent) => void;
+  toggleAddHandler: () => void;
 }
 // Form을 모을 최상위 함수
 const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
@@ -208,12 +66,16 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
     isError: baseUrlError,
   } = useBaseUrl(parseInt(spaceId));
 
+  const { data: categoryListData } = useSpaceCategory(parseInt(spaceId));
+  const { data: baseUrlListData } = useBaseUrl(parseInt(spaceId));
+
   const methods = useForm<ApiCreateForm>({
     defaultValues: {
+      workspaceId: parseInt(spaceId),
       name: '',
       description: '',
       method: undefined,
-      baseUrl: 1,
+      baseUrl: 5,
       categoryId: undefined,
       status: undefined,
       document: {
@@ -229,10 +91,14 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
       },
     },
   });
-
+  const { mutate: createMutate, mutateAsync: createMutateAsync } = useCreateApi(
+    parseInt(spaceId)
+  );
   const { control, handleSubmit } = methods;
+
   const onSubmit = function (data: ApiCreateForm) {
-    console.log('hi', data);
+    console.log('API 데이터', data);
+    createMutateAsync(data).then(() => toggleAddHandler());
   };
 
   // Request Tab 이동
@@ -292,10 +158,14 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
                       value={field.value}
                       onChange={(v) => {
                         field.onChange(v);
+                        console.log(field.value);
                       }}
                     >
-                      <option value="">경로를 설정해주세요.</option>
-                      <option value="1">/user</option>
+                      {categoryListData?.categorys?.map((item, index) => (
+                        <>
+                          <option value={item.id}>{item.name}</option>
+                        </>
+                      ))}
                     </Select>
                     {fieldState.invalid && (
                       <span className="text-red-500">
@@ -408,8 +278,11 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
                         onBlur={field.onBlur}
                         className={`w-full text-start items-start`}
                       >
-                        <option value="1">Base URL</option>
-                        <option value="2">또다른 Sub URL</option>
+                        {baseUrlListData?.baseurls?.map((item, index) => (
+                          <>
+                            <option value={item.id}>{item.url}</option>
+                          </>
+                        ))}
                       </Select>
                     </div>
                   )}

@@ -309,7 +309,7 @@ export const useApiResultResponseDetail = function (
     queryFn: async function () {
       return apiRequest({
         method: `get`,
-        url: `/api/api-pre/response`,
+        url: `/api/api-exec/response`,
         params: {
           resId: responseId,
         },
@@ -819,45 +819,44 @@ export const useApiDetail = function (spaceId: string | number, apiId: number) {
   });
 };
 
-// // Api 단일 테스트용 상세 조회
-// export const getApiSingleTestDetail = async function (apiId: number) {
-//   return apiRequest({
-//     method: `get`,
-//     url: `/api/api/${apiId}/detail`,
-//   });
-// };
+// Api 단일 테스트용 상세 조회
+export const getApiSingleTestDetail = async function (apiId: string | number) {
+  return apiRequest({
+    method: `get`,
+    url: `/api/api/${apiId}/detail`,
+  });
+};
 
-// export const useApiSingleTestDetail = function (
-//   spaceId: string | number,
-//   apiId: number
-// ) {
-//   return useQuery<any>({
-//     queryKey: queryKeys.spaceApiDetail(spaceId, apiId),
-//     queryFn: async function () {
-//       return getApiSingleTestDetail(apiId).then((res) => res.data);
-//     },
-//     enabled: !!spaceId && !!apiId,
-//   });
-// };
+export const useApiSingleTestDetail = function (
+  spaceId: string | number,
+  apiId: string | number
+) {
+  return useQuery<any>({
+    queryKey: queryKeys.spaceApiDetail(spaceId, apiId),
+    queryFn: async function () {
+      return getApiSingleTestDetail(apiId).then((res) => res.data);
+    },
+    enabled: !!spaceId && !!apiId,
+  });
+};
 
-// // Api 단일테스트 결과 목록 조회
-// export const getApiSingleTestResult = function (apiId: number) {
-//   return apiRequest({
-//     method: `get`,
-//     url: `/api/api-exec/response/list`,
-//     params: apiId,
-//   });
-// };
-
-// export const useApiSingleTestResult = function (
-//   spaceId: string | number,
-//   apiId: number
-// ) {
-//   return useQuery<any>({
-//     queryKey: queryKeys.spaceApiDetail(spaceId, apiId),
-//     queryFn: async function () {
-//       return getApiSingleTestResult(apiId).then((res) => res.data);
-//     },
-//     enabled: !!spaceId && !!apiId,
-//   });
-// };
+// UseCase 이전 목록 Response 변수 목록 조회
+// Api ids 조인해서 넣으면 댐
+export const useApiUsecasePrevResponse = function (
+  spaceId: string | number,
+  apiIds: string
+) {
+  return useQuery<any>({
+    queryKey: queryKeys.usecase(spaceId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/usecase/prev-responses`,
+        params: {
+          apiIds: apiIds,
+        },
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId && !!apiIds,
+  });
+};

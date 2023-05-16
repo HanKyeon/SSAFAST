@@ -457,7 +457,7 @@ export const useCreateApi = function (spaceId: string | number) {
       return apiRequest({
         method: `post`,
         url: `/api/api`,
-        data,
+        data: data,
       });
     },
     onSuccess: function () {
@@ -527,18 +527,25 @@ export const useDeleteApi = function (spaceId: string | number) {
 };
 
 // Api 단일 테스트 요청
-export const useSingleApiTest = function () {
+export const useSingleApiTest = function (
+  spaceId: string | number,
+  apiId: string | number
+) {
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: function (data: any) {
       return apiRequest({
-        method: `put`,
+        method: `post`,
         url: `/api/api-exec`,
         data: data.execReqData,
       });
     },
     onSuccess: function () {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.spaceResult(spaceId, apiId),
+      });
+
       dispatch(DispatchToast('Api가 성공적으로 실행되었습니다!', true));
     },
     onError: function () {
