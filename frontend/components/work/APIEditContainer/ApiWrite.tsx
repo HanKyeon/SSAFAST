@@ -41,6 +41,7 @@ export interface ServerData {
     request: MockupData2Type;
     response: Body;
   };
+  isEdit: boolean;
 }
 
 // Form Tab 스타일
@@ -53,9 +54,15 @@ const selectedStyle = (dark: boolean) =>
 
 interface ApiCreateProps {
   toggleAddHandler: () => void;
+  apiIdHandler: (id: string | number) => void;
+  currentApiId: string | number;
 }
 // Form을 모을 최상위 함수
-const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
+const ApiWrite = function ({
+  toggleAddHandler,
+  currentApiId,
+  apiIdHandler,
+}: ApiCreateProps) {
   const { dark } = useStoreSelector((state) => state.dark);
   const [step, setStep] = useState<number>(1);
   const router = useRouter();
@@ -75,8 +82,8 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
       name: '',
       description: '',
       method: undefined,
-      baseUrl: 5,
-      categoryId: undefined,
+      baseUrl: baseUrlListData?.baseurls[0].id as number,
+      categoryId: categoryListData?.categorys[0].id as number,
       status: undefined,
       document: {
         request: undefined,
@@ -101,6 +108,11 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
     createMutateAsync(data).then(() => toggleAddHandler());
   };
 
+  const goToApiContainer = function () {
+    toggleAddHandler();
+    apiIdHandler(-1);
+  };
+
   // Request Tab 이동
   const requestTabHandler = function () {
     setStep(() => 1);
@@ -109,12 +121,12 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
   const responseTabHandler = function () {
     setStep(() => 2);
   };
-
+  console.log(currentApiId);
   return (
     <div className="flex flex-col gap-3 p-[3%] w-full h-full overflow-y-scroll">
       <div className="h-[5%]">
         <Button
-          onClick={toggleAddHandler}
+          onClick={goToApiContainer}
           isEmpty
           className="flex flex-row gap-2 items-center"
         >
