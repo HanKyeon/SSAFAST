@@ -12,8 +12,10 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import com.rocket.ssafast.apispec.domain.Document.ApiSpecDocument;
 import com.rocket.ssafast.apispec.domain.Document.element.ApiDoc;
 import com.rocket.ssafast.apispec.domain.Document.element.ResponseDoc;
+import com.rocket.ssafast.apispec.domain.Document.temp.ResponseField;
 import com.rocket.ssafast.usecase.dto.response.ResUsecasePrevResponseDto;
 
 import lombok.RequiredArgsConstructor;
@@ -28,35 +30,23 @@ public class ApiSpecMongoTempRepository {
 		
 		// 1. collection에서 api의 spec 정보 가져오기
 		Query query = Query.query(Criteria.where("_id").is(id));
+		ApiSpecDocument document = mongoTemplate.findOne(query, ApiSpecDocument.class,"SSAFAST_API_SPEC");
 
-		Document doc = mongoTemplate.findOne(query, Document.class,"SSAFAST_API_SPEC");
-
-		System.out.println("doc: "+doc);
-		Map<Long, ApiDoc> apis = (Map<Long, ApiDoc>)(
-			(Map<Long, ApiDoc>) doc.get("apis")).entrySet().stream()
-			.filter( apiDocEntry -> apiIds.contains(apiDocEntry.getKey()));
-
-		
 		// 2. 최종 리턴될 객체
 		List<ResUsecasePrevResponseDto> prevResponseDtos = new ArrayList<>();
 
-
-		// 3. 리턴될 객체에 데이터 삽입
-		apis.forEach((apiId, apiDoc) -> {
-
-			// api의 spec의 response 중 status가 200인 response 명세 가져오기
-			ResponseDoc responseDoc = apiDoc.getResponse().stream()
-				.filter(resDoc -> resDoc.getStatusCode() == 200)
-				.collect(Collectors.toList()).get(0);
-
-			// response의 headers와 body 정보만 삽입
-			prevResponseDtos.add(
-				ResUsecasePrevResponseDto.builder()
-					.apiId(apiId)
-					.headers(responseDoc.getHeaders())
-					.body(responseDoc.getBody())
-					.build()
-			);
+		document.getApis().forEach((apiId, apiSpecDoc) -> {
+			if(apiIds.contains(apiId)){
+				ResponseField response = apiSpecDoc.getResponse().stream()
+					.filter(res -> res.getStatusCode() == 200)
+					.findFirst()
+					.get();
+				prevResponseDtos.add(ResUsecasePrevResponseDto.builder()
+						.apiId(apiId)
+						.headers(response.getHeaders())
+						.body(response.getBody())
+						.build());
+			}
 		});
 
 		return prevResponseDtos;
