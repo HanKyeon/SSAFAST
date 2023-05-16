@@ -1,17 +1,19 @@
 import { Box, Button, Input } from '@/components/common';
 import { useStoreSelector } from '@/hooks/useStore';
 import MappingContainer from './MappingContainer';
-import { HiPlusCircle } from 'react-icons/hi';
 import SideApiItem from './SideApiItem';
 import BoxHeader from '@/components/common/BoxHeader';
 import { FormProvider, useForm } from 'react-hook-form';
 import { ApiTestForm, MockupData2Type } from '../../APIDocsContainer';
-import { EventHandler, FormEvent, useRef, useState } from 'react';
+import { EventHandler, FormEvent, useEffect, useRef, useState } from 'react';
 import Modal from '@/components/common/Modal';
 import { IoArrowBackOutline } from 'react-icons/io5';
 import useInput from '@/hooks/useInput';
 import APIList from '../../APIEditContainer/APIList';
 import { EachCateApi } from '@/hooks/queries/queries';
+import UCReqBox from './UCReqBox';
+import UCResBox from './UCResBox';
+import SideContainer from './SideContainer';
 
 const mockupData2: MockupData2Type = {
   request: {
@@ -229,7 +231,7 @@ export type UseTestApiCompactType = {
   id: string | number;
   name: string;
   method: 1 | 2 | 3 | 4 | 5;
-  idx?: number;
+  idx: number;
   status?: 0 | 1 | 2; // 0:- 1:Success 2: Fail
 };
 
@@ -244,8 +246,10 @@ const UseTestContainer = function () {
   const [isNewModalOpen, setIsNewModalOpen] = useState<boolean>(false);
   const [newTestName, setNewTestName] = useState<string>('');
   const [isApiListOpen, setIsApiListOpen] = useState<boolean>(false);
-  const [curApi, setCurApi] = useState<UseTestApiCompactType>();
+  const [curapi, setCurApi] = useState<UseTestApiCompactType>();
   const [apis, setApis] = useState<UseTestApiCompactType[]>([]);
+  const [countApi, setCountApi] = useState<number>(0);
+  const [resApiIds, setResApiIds] = useState<string>('');
 
   const methods = useForm<UseTestForm>({
     defaultValues: {
@@ -280,16 +284,32 @@ const UseTestContainer = function () {
   };
   // const onClickApitoAdd = (apiId: string | number,apiName: string, method: 1|2|3|4|5): void => {
   const onClickApitoAdd = (api: UseTestApiCompactType): void => {
-    setCurApi(api);
-    setApis((prev) => [...prev, api]);
+    setCurApi({ ...api, idx: countApi });
+    setApis((prev) => [...prev, { ...api, idx: countApi }]);
+    setCountApi((prev) => prev + 1);
     onToggleAddApiModal();
   };
   const onClickAddApiBtn = (): void => {
     onToggleAddApiModal();
   };
   const checkData = function (data: UseTestForm) {
-    console.log(data);
+    console.log('원본', data);
   };
+  // console.log('!!!!!!!!!!!', apis);
+  useEffect(() => {
+    // response 가져오기 위해 이전 api들의 id 가져오기
+    if (curapi) {
+      let tmpstr = 'apiIds=';
+      apis.map((api: UseTestApiCompactType) => {
+        if (api.idx < curapi.idx) {
+          tmpstr = `${tmpstr}${api.idx === 0 ? '' : ','}${api.id}`;
+        } else {
+          setResApiIds(tmpstr);
+          return;
+        }
+      });
+    }
+  }, [curapi]);
 
   return (
     <Box variant="one" fontType="header" className="h-full w-full">
@@ -330,62 +350,29 @@ const UseTestContainer = function () {
               onSubmit={handleSubmit(checkData)}
             >
               {/* 왼쪽 사이드 */}
+              <SideContainer
+                apis={apis}
+                onClickApi={onClickApi}
+                onClickAddApiBtn={onClickAddApiBtn}
+              />
+              {/* Request */}
               <Box
                 variant="two"
                 fontType="normal"
-                className="basis-[25%] w-[25%] h-full p-5 flex flex-col gap-6"
+                className="flex-1 h-full p-5 flex flex-col"
               >
-                {/* usecase TITLE */}
-                <div className={`w-full`}>
-                  <BoxHeader title="info" className={`!pb-1`} />
-                  <span className={`text-content`}>
-                    유저가 서비스를 처음 사용
-                  </span>
-                  <p className={`text-small text-grayscale-deeplightlight`}>
-                    회원가입부터 게시글을 작성하는데까지의 흐름
-                  </p>
-                </div>
-                {/* api 순서대로 조록 */}
-                <div className={`w-full flex-1 flex flex-col min-h-0`}>
-                  <BoxHeader title="order" className={`!pb-1`} />
-                  <div className={`flex-1 overflow-scroll scrollbar-hide`}>
-                    <ul>
-                      {apis.length > 0 &&
-                        apis.map((api: UseTestApiCompactType, idx: number) => (
-                          <SideApiItem
-                            key={`${api.id}_${idx}`}
-                            api={api}
-                            onClickApi={() =>
-                              onClickApi({
-                                id: api.id,
-                                method: api.method,
-                                name: api.name,
-                                idx,
-                              })
-                            }
-                          />
-                        ))}
-                    </ul>
-                    <div
-                      className={`flex gap-2 justify-center items-center border-[1px] border-grayscale-dark py-2 border-dashed rounded-[8px] text-grayscale-dark mt-4 cursor-pointer`}
-                      onClick={onClickAddApiBtn}
-                    >
-                      Add api <HiPlusCircle />
-                    </div>
-                  </div>
-                </div>
-                {/* 버튼 wrapper */}
-                <div className={`w-full flex gap-3`}>
-                  <Button
-                    className={`flex-1 !bg-mammoth-normal !border-mammoth-normal !py-1`}
-                  >
-                    초기화
-                  </Button>
-                  <Button className={`flex-1 !py-1`}>실행</Button>
-                </div>
+                <BoxHeader title="Request" />
+                {curapi && <UCReqBox control={control} currentApi={curapi} />}
               </Box>
-              {/* Request랑 Response Container */}
-              <MappingContainer curapi={curApi} />
+              {/* Response */}
+              <Box
+                variant="two"
+                fontType="normal"
+                className="flex-1 h-full p-5 flex flex-col"
+              >
+                <BoxHeader title="Response" />
+                {curapi && <UCResBox currentApi={curapi} resApis={resApiIds} />}
+              </Box>
             </form>
           </FormProvider>
           {isApiListOpen && (

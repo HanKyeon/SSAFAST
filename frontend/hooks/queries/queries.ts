@@ -5,6 +5,7 @@ import figmaAxios from '@/utils/figmaAxios';
 import apiRequest from '@/utils/axios';
 import { useStoreDispatch, useStoreSelector } from '../useStore';
 import { figmaTokenActions } from '@/store/figma-token-slice';
+import { FieldsType, HeadersType } from '@/components/work/APIDocsContainer';
 
 /**
  * dtoList: 디티오 리스트
@@ -570,10 +571,11 @@ export interface ApiDetailAtTestDto {
     keyName: string | null;
     desc: string;
     itera: boolean;
+    constraints?: string[];
     fields?: ApiDetailAtTestItem[];
     nestedDtos?: ApiDetailAtTestDto;
-    nestedDtoList?: ApiDetailAtTestDto;
-  };
+    nestedDtoLists?: ApiDetailAtTestDto;
+  }[];
 }
 
 export interface ApiDetailAtTest {
@@ -583,9 +585,9 @@ export interface ApiDetailAtTest {
     body?: {
       fields?: ApiDetailAtTestItem[];
       nestedDtos?: ApiDetailAtTestDto;
-      nestedDtoList?: ApiDetailAtTestDto;
+      nestedDtoLists?: ApiDetailAtTestDto;
     };
-    pathVars?: ApiDetailAtTestItem;
+    pathVars?: ApiDetailAtTestItem[];
     params?: ApiDetailAtTestItem[];
   };
   response: {
@@ -595,7 +597,7 @@ export interface ApiDetailAtTest {
     body?: {
       fields?: ApiDetailAtTestItem[];
       nestedDtos?: ApiDetailAtTestDto;
-      nestedDtoList?: ApiDetailAtTestDto;
+      nestedDtoLists?: ApiDetailAtTestDto;
     };
   }[];
 }
@@ -607,7 +609,7 @@ export const useApiDetailAtTest = function (
   apiId: string | number
 ) {
   return useQuery<ApiDetailAtTest>({
-    queryKey: queryKeys.spaceApiDetail(spaceId, apiId), // 이거 key이름 수정필요!
+    queryKey: queryKeys.spaceApiDetail(spaceId, apiId), // 이거 key이름 수정필요!!!!
     queryFn: async function () {
       return apiRequest({
         method: `get`,
@@ -615,6 +617,35 @@ export const useApiDetailAtTest = function (
       }).then((res) => res.data);
     },
     enabled: !!spaceId && !!apiId,
+  });
+};
+
+export interface PrevResponse {
+  apiId: string | number;
+  apiName: string;
+  desc: string;
+  headers?: HeadersType[];
+  body?: {
+    fields?: ApiDetailAtTestItem[];
+    nestedDtos?: ApiDetailAtTestDto;
+    nestedDtoLists?: ApiDetailAtTestDto;
+  };
+}
+
+// 이전 response 변수 목록 조회
+export const useUseCaseResList = function (
+  spaceId: string | number,
+  apiIds: string
+) {
+  return useQuery<PrevResponse>({
+    queryKey: queryKeys.spaceApiDetail(spaceId, apiIds), // 이거 이름 수정필요!!!!
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/usecase/prev-responses`,
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId && !!apiIds,
   });
 };
 

@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import { BodyType, FieldsType, HeadersType } from '.';
-import ToggleableHeader from './ToggleableHeader';
-import ReqItemInner from './ReqItemInner';
 import { Controller, FieldArrayWithId, useFormContext } from 'react-hook-form';
-import styles from './ReqItem.module.css';
+import styles from '../../APIDocsContainer/ReqItem.module.css';
+import ToggleableHeader from '../../APIDocsContainer/ToggleableHeader';
+import ReqItemInner from '../../APIDocsContainer/ReqItemInner';
+import { FieldsType, HeadersType } from '../../APIDocsContainer';
 
 type ReqtemPropsType = {
   fields?: FieldArrayWithId[]; // 잠깐 ?넣어유,,
@@ -12,7 +12,7 @@ type ReqtemPropsType = {
   name: string;
   item: HeadersType[] | FieldsType[];
 };
-const ReqItem = function ({
+const UCReqItem = function ({
   fields,
   formName,
   name, // 그냥 이름
@@ -31,7 +31,7 @@ const ReqItem = function ({
   const styles1 = {
     style: `${isOpen ? `h-[calc(${a}*43px)]` : 'h-[43px]'}`,
   };
-
+  console.log('111111', formName, item);
   return (
     <div className={`${styles1[`style`]} w-full`}>
       <ToggleableHeader title={name} isOpen={isOpen} setIsOpen={setisOpen} />
@@ -39,7 +39,7 @@ const ReqItem = function ({
         {(item as HeadersType[] | FieldsType[])?.map((item, idx) => (
           <Controller
             key={`${Math.random()}`} // fields[idx].id
-            name={`${formName}.${idx}`}
+            name={`${formName}.${item.keyName}`}
             control={control}
             render={({ field }) => {
               return (
@@ -48,7 +48,7 @@ const ReqItem = function ({
                   className={`w-[87%] rounded-[13px] overflow-hidden mt-0 mb-3 mx-auto text-content duration-[0.33s]`}
                 >
                   <ReqItemInner
-                    formName={`${formName}.${idx}`}
+                    formName={`${formName}.${item.keyName}`}
                     field={field}
                     item={item}
                     control={control}
@@ -64,4 +64,4 @@ const ReqItem = function ({
   );
 };
 
-export default ReqItem;
+export default UCReqItem;

@@ -1,6 +1,10 @@
 import { Box } from '@/components/common';
 import BoxHeader from '@/components/common/BoxHeader';
 import { UseTestApiCompactType } from './UseTestContainer';
+import { useRouter } from 'next/router';
+import { ParsedUrlQuery } from 'querystring';
+import { useApiDetailAtTest } from '@/hooks/queries/queries';
+import { SpaceParams } from '@/pages/space';
 
 type MappingContainerPropsType = {
   curapi?: UseTestApiCompactType;
@@ -9,6 +13,10 @@ type MappingContainerPropsType = {
 const MappingContainer = function ({
   curapi,
 }: MappingContainerPropsType): JSX.Element {
+  const router = useRouter();
+  const { spaceId } = router.query as SpaceParams;
+  // const { data, isLoading, isError } = useApiDetailAtTest(spaceId, curapi?.id);
+
   return (
     <>
       {/* Request */}
@@ -19,7 +27,9 @@ const MappingContainer = function ({
       >
         <BoxHeader title="Request" />
         {curapi && (
-          <div className={`flex-1 overflow-scroll scrollbar-hide`}></div>
+          <div className={`flex-1 overflow-scroll scrollbar-hide`}>
+            {/*  */}
+          </div>
         )}
       </Box>
       {/* Response */}
