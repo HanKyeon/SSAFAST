@@ -23,7 +23,7 @@ public class ParentDtoEntity {
     @Column(name = "dto_id")
     private Long dtoId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_dto_id")
     private DtoSpecEntity dtoSpecEntity;
 }

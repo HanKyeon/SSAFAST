@@ -56,6 +56,8 @@ public class ParentDtoEntityService {
             throw new CustomException(ErrorCode.DTO_NOT_FOUND);
         }
         if(childEntity.get().isHasChild() & hasParent){
+            log.info("3번입니다");
+            log.info(childEntity.get().toString());
             throw new CustomException(ErrorCode.DTO_DEPTH_OVER);
         }
 
@@ -74,7 +76,7 @@ public class ParentDtoEntityService {
     }
 
     public boolean deleteParentDtoEntityInfoCascade(DtoSpecEntity parentDto){
-        List<ParentDtoEntity> relatedBeforeEntities = parentDtoEntityRepository.findByDtoSpecEntity(parentDto);
+        List<ParentDtoEntity> relatedBeforeEntities = parentDtoEntityRepository.findAllByDtoSpecEntity(parentDto);
         for(ParentDtoEntity entity : relatedBeforeEntities){
             Long entityId = entity.getDtoId();
             deleteParentDtoEntityInfo(entityId, entity);
@@ -86,7 +88,7 @@ public class ParentDtoEntityService {
 
         parentDtoEntityRepository.delete(entity);
         // 부모가 사라진 경우가 된다면
-        if(parentDtoEntityRepository.findByDtoId(childKey).size()<1){
+        if(parentDtoEntityRepository.findAllByDtoId(childKey).size()<1){
             DtoSpecEntity entityInfo = dtoSpecEntityRepository.findById(childKey).get();
             // 정보 갱신
             dtoSpecEntityRepository.save(

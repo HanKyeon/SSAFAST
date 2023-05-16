@@ -114,7 +114,7 @@ public class ApiSpecService {
             }
             else{
                 //부모가 없지만 슬하에 자식이 자식을 가진 경우를 검증해야함
-                List<ChildDtoEntity> hasChildList = childDtoEntityRepository.findByDtoId(dtoId);
+                List<ChildDtoEntity> hasChildList = childDtoEntityRepository.findAllByDtoId(dtoId);
                 for(ChildDtoEntity hasChildEntity : hasChildList){
                     if(hasChildEntity.getDtoSpecEntity().isHasChild()){
                         return false;

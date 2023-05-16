@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ParentDtoEntityRepository extends JpaRepository<ParentDtoEntity, Long> {
-    List<ParentDtoEntity> findByDtoId(Long dtoId);
-    List<ParentDtoEntity> findByDtoSpecEntity(DtoSpecEntity dtoSpecEntity);
+    List<ParentDtoEntity> findAllByDtoId(Long dtoId);
+    List<ParentDtoEntity> findAllByDtoSpecEntity(DtoSpecEntity dtoSpecEntity);
 }
