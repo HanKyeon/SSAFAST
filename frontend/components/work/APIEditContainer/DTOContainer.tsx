@@ -105,7 +105,7 @@ const DTOContainer = function () {
       <Box
         variant="two"
         fontType="normal"
-        className="basis-[50%] w-[50%] h-full flex-1 items-center justify-center p-4 flex flex-col"
+        className="basis-[50%] w-[50%] h-full flex-1 items-center justify-center p-4 flex flex-col overflow-hidden"
       >
         <div className="h-[8%] w-full flex flex-row items-center justify-between">
           <div className="text-[36px]">DTO List</div>
@@ -128,7 +128,10 @@ const DTOContainer = function () {
               Description
             </div>
           </div>
-          <DTOList setSelected={selectDtoHandler} />
+          <DTOList
+            setSelected={selectDtoHandler}
+            selectedId={selectedDtoItem}
+          />
         </div>
       </Box>
       {/* 오른쪽 */}

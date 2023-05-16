@@ -83,7 +83,6 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
   const { handleSubmit, control, reset, resetField } = methods;
   useEffect(
     function () {
-      console.log(defaultData, '<<<<<<<<<이거로 리셋 예정');
       reset(defaultData, { keepDefaultValues: true });
     },
     [defaultData]
@@ -107,7 +106,7 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
       return apiRequest({
         method: `delete`,
         url: `/api/dto/${dtoId}`,
-        params: {},
+        // params: {},
         // data: {}
       });
     },
@@ -248,26 +247,46 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
         }
       }
     }
-
-    postMutateAsync({
-      workspaceId: spaceId,
-      name,
-      description: desc,
-      document: { fields, nestedDtos },
-    })
-      .then((res) => {
+    if (selectedId) {
+      apiRequest({
+        method: `put`,
+        url: `/api/dto/${selectedId}`,
+        data: {
+          workspaceId: spaceId,
+          name,
+          description: desc,
+          document: { fields, nestedDtos },
+        },
+      }).then((res) => {
+        dispatch(DispatchToast('수정 완료!', true));
+        queryClient.invalidateQueries(queryKeys.spaceDtoList(spaceId));
         queryClient.invalidateQueries(
-          queryKeys.spaceDtoList(parseInt(spaceId))
+          queryKeys.spaceDtoDetail(spaceId, selectedId)
         );
         resetSelected();
         reset({ name: ``, desc: ``, fields: [] });
-      })
-      .catch((err) => {
-        console.log(err.data, '<<<<<<<<<');
-        if (err.response.data === 'DTO DEPTH OVER 2') {
-          dispatch(DispatchToast('DTO의 최대 깊이는 2입니다!', false));
-        }
       });
+    } else {
+      postMutateAsync({
+        workspaceId: spaceId,
+        name,
+        description: desc,
+        document: { fields, nestedDtos },
+      })
+        .then((res) => {
+          queryClient.invalidateQueries(
+            queryKeys.spaceDtoList(parseInt(spaceId))
+          );
+          resetSelected();
+          reset({ name: ``, desc: ``, fields: [] });
+        })
+        .catch((err) => {
+          console.log(err.data, '<<<<<<<<<');
+          if (err.response.data === 'DTO DEPTH OVER 2') {
+            dispatch(DispatchToast('DTO의 최대 깊이는 2입니다!', false));
+          }
+        });
+    }
     // console.log({
     //   workspaceId: spaceId,
     //   name,
@@ -278,10 +297,11 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
 
   const deleteHandler = function () {
     console.log('삭제');
-    if (false) {
-      // deleteMutateAsync().then((res) => {
-      //   dispatch(DispatchToast('삭제 완료!', true));
-      // });
+    if (selectedId) {
+      deleteMutateAsync(selectedId).then((res) => {
+        dispatch(DispatchToast('삭제 완료!', true));
+        resetSelected();
+      });
     } else {
       dispatch(DispatchToast('작성 정보가 초기화 됩니다.', true));
       reset({ name: ``, desc: ``, fields: [] });
