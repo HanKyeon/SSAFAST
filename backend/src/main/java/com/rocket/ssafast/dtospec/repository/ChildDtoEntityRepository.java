@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface ChildDtoEntityRepository extends JpaRepository<ChildDtoEntity, Long> {
     List<ChildDtoEntity> findAllByDtoId(Long dtoId);
-    List<ChildDtoEntity> findByDtoSpecEntity(DtoSpecEntity dtoSpecEntity);
+    List<ChildDtoEntity> findAllByDtoSpecEntity(DtoSpecEntity dtoSpecEntity);
 }

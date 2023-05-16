@@ -11,7 +11,7 @@ import lombok.*;
 public class ApiSpecInfoDto {
     private Long workspaceId;
     private String name;
-    private String desc;
+    private String description;
     private int method;
     private Long baseUrl;
     private Long categoryId;
