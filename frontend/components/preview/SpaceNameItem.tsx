@@ -35,6 +35,8 @@ const SpaceNameItem = function ({
             src={SpaceIcon}
             alt="space icon"
             className="h-full w-auto object-contain"
+            width={30}
+            height={30}
           />
         </i>
         <span>{item.name}</span>

@@ -309,7 +309,7 @@ export const useApiResultResponseDetail = function (
     queryFn: async function () {
       return apiRequest({
         method: `get`,
-        url: `/api/api-pre/response`,
+        url: `/api/api-exec/response`,
         params: {
           resId: responseId,
         },
@@ -425,8 +425,7 @@ interface CategoryList {
   categorys: { id: number | string; name: string }[];
 }
 
-// ??
-// 카테고리 조회
+// 카테고리 목록 조회
 export const useSpaceCategory = function (spaceId: string | number) {
   return useQuery<CategoryList>({
     queryKey: queryKeys.spaceCategoryList(spaceId),
@@ -799,5 +798,65 @@ export const useFigmaSections = function (figmaId: string, ids: string) {
     enabled: !!figmaId && !!ids,
     refetchOnMount: false,
     keepPreviousData: false,
+  });
+};
+
+// Api 상세 조회 (성민이의 요청에 따라 바뀔 수 있음. 일단 params에 workSpaceId 붙여달라함)
+export const getApiDetail = async function (apiId: number) {
+  return apiRequest({
+    method: `get`,
+    url: `/api/api/${apiId}`,
+  });
+};
+
+export const useApiDetail = function (spaceId: string | number, apiId: number) {
+  return useQuery<any>({
+    queryKey: queryKeys.spaceApiDetail(spaceId, apiId),
+    queryFn: async function () {
+      return getApiDetail(apiId).then((res) => res.data);
+    },
+    enabled: !!spaceId && !!apiId,
+  });
+};
+
+// Api 단일 테스트용 상세 조회
+export const getApiSingleTestDetail = async function (apiId: string | number) {
+  return apiRequest({
+    method: `get`,
+    url: `/api/api/${apiId}/detail`,
+  });
+};
+
+export const useApiSingleTestDetail = function (
+  spaceId: string | number,
+  apiId: string | number
+) {
+  return useQuery<any>({
+    queryKey: queryKeys.spaceApiDetail(spaceId, apiId),
+    queryFn: async function () {
+      return getApiSingleTestDetail(apiId).then((res) => res.data);
+    },
+    enabled: !!spaceId && !!apiId,
+  });
+};
+
+// UseCase 이전 목록 Response 변수 목록 조회
+// Api ids 조인해서 넣으면 댐
+export const useApiUsecasePrevResponse = function (
+  spaceId: string | number,
+  apiIds: string
+) {
+  return useQuery<any>({
+    queryKey: queryKeys.usecase(spaceId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/usecase/prev-responses`,
+        params: {
+          apiIds: apiIds,
+        },
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId && !!apiIds,
   });
 };
