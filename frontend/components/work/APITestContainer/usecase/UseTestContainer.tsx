@@ -231,7 +231,7 @@ export type UseTestApiCompactType = {
   id: string | number;
   name: string;
   method: 1 | 2 | 3 | 4 | 5;
-  idx: number;
+  idx?: number;
   status?: 0 | 1 | 2; // 0:- 1:Success 2: Fail
 };
 
@@ -250,6 +250,8 @@ const UseTestContainer = function () {
   const [apis, setApis] = useState<UseTestApiCompactType[]>([]);
   const [countApi, setCountApi] = useState<number>(0);
   const [resApiIds, setResApiIds] = useState<string>('');
+
+  const [mappingFormName, setMappingFormName] = useState<string | null>(null);
 
   const methods = useForm<UseTestForm>({
     defaultValues: {
@@ -295,19 +297,16 @@ const UseTestContainer = function () {
   const checkData = function (data: UseTestForm) {
     console.log('원본', data);
   };
-  // console.log('!!!!!!!!!!!', apis);
   useEffect(() => {
     // response 가져오기 위해 이전 api들의 id 가져오기
     if (curapi) {
-      let tmpstr = 'apiIds=';
-      apis.map((api: UseTestApiCompactType) => {
-        if (api.idx < curapi.idx) {
-          tmpstr = `${tmpstr}${api.idx === 0 ? '' : ','}${api.id}`;
-        } else {
-          setResApiIds(tmpstr);
-          return;
-        }
-      });
+      const queryParams = new URLSearchParams();
+      const apiIds = apis
+        .map((api: UseTestApiCompactType) => api.id)
+        .slice(0, curapi.idx);
+      queryParams.set('apiIds', apiIds.join(','));
+      setResApiIds(queryParams.toString());
+      // console.log('!!!!!!!!!!!', queryParams.toString());
     }
   }, [curapi]);
 
@@ -362,7 +361,13 @@ const UseTestContainer = function () {
                 className="flex-1 h-full p-5 flex flex-col"
               >
                 <BoxHeader title="Request" />
-                {curapi && <UCReqBox control={control} currentApi={curapi} />}
+                {curapi && (
+                  <UCReqBox
+                    control={control}
+                    currentApi={curapi}
+                    setMappingFormName={setMappingFormName}
+                  />
+                )}
               </Box>
               {/* Response */}
               <Box
@@ -371,7 +376,14 @@ const UseTestContainer = function () {
                 className="flex-1 h-full p-5 flex flex-col"
               >
                 <BoxHeader title="Response" />
-                {curapi && <UCResBox currentApi={curapi} resApis={resApiIds} />}
+                {curapi && (
+                  <UCResBox
+                    control={control}
+                    currentApi={curapi}
+                    resApis={resApiIds}
+                    formName={mappingFormName}
+                  />
+                )}
               </Box>
             </form>
           </FormProvider>

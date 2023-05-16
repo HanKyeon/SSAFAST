@@ -9,6 +9,7 @@ import { PointerEvent, useCallback, useEffect, useState } from 'react';
 import Modal from '@/components/common/Modal';
 import { useStoreSelector } from '@/hooks/useStore';
 import { Box, Button } from '@/components/common';
+import UseCaseTest from './usecase';
 interface Props {
   serverSideStore?: RTCSpaceData;
   store: any;
@@ -147,7 +148,7 @@ const TestContainer = function ({ store, serverSideStore }: Props) {
           goLoadTest={goLoadTest}
           isActive={USE1LOAD2}
         />
-        {USE1LOAD2 % 2 ? <UseTestContainer /> : <LoadTestContainer />}
+        {USE1LOAD2 % 2 ? <UseCaseTest /> : <LoadTestContainer />}
       </div>
       {isPresence &&
         others

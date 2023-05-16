@@ -6,6 +6,7 @@ import { Control, useFieldArray } from 'react-hook-form';
 import ReqItem from '../../APIDocsContainer/ReqItem';
 import ReqItemBody from '../../APIDocsContainer/ReqItemBody';
 import UCReqItem from './UCReqItem';
+import { Dispatch, SetStateAction } from 'react';
 
 const curapiMock: ApiDetailAtTest = {
   request: {
@@ -147,11 +148,13 @@ const curapiMock: ApiDetailAtTest = {
 type UCReqBoxPropsType = {
   currentApi: UseTestApiCompactType;
   control: Control<UseTestForm, any>;
+  setMappingFormName: Dispatch<SetStateAction<string | null>>;
 };
 
 const UCReqBox = function ({
   currentApi,
   control,
+  setMappingFormName,
 }: UCReqBoxPropsType): JSX.Element {
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
@@ -197,6 +200,7 @@ const UCReqBox = function ({
           name="headers"
           control={control}
           item={curapiMock.request.headers}
+          setMappingFormName={setMappingFormName}
         />
       )}
       {/* {curapiMock.request.body && (
@@ -215,6 +219,7 @@ const UCReqBox = function ({
           name="params"
           control={control}
           item={curapiMock.request.params}
+          setMappingFormName={setMappingFormName}
         />
       )}
       {curapiMock.request.pathVars && (
@@ -224,6 +229,7 @@ const UCReqBox = function ({
           name="path variables"
           control={control}
           item={curapiMock.request.pathVars}
+          setMappingFormName={setMappingFormName}
         />
       )}
     </div>

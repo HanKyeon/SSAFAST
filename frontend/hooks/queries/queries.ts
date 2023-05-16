@@ -560,17 +560,18 @@ export interface ApiDetailAtTestItem {
   keyName: string;
   type: number;
   desc: string;
-  value: any;
+  value?: any;
   itera?: boolean;
   constraints?: string[];
 }
 
 export interface ApiDetailAtTestDto {
   [key: string | number]: {
-    name: string;
+    name?: string;
     keyName: string | null;
     desc: string;
     itera: boolean;
+    type?: number;
     constraints?: string[];
     fields?: ApiDetailAtTestItem[];
     nestedDtos?: ApiDetailAtTestDto;
@@ -624,7 +625,7 @@ export interface PrevResponse {
   apiId: string | number;
   apiName: string;
   desc: string;
-  headers?: HeadersType[];
+  headers?: ApiDetailAtTestItem[];
   body?: {
     fields?: ApiDetailAtTestItem[];
     nestedDtos?: ApiDetailAtTestDto;
@@ -632,12 +633,16 @@ export interface PrevResponse {
   };
 }
 
+export interface PrevResponses {
+  prevResponses: PrevResponse[];
+}
+
 // 이전 response 변수 목록 조회
 export const useUseCaseResList = function (
   spaceId: string | number,
   apiIds: string
 ) {
-  return useQuery<PrevResponse>({
+  return useQuery<PrevResponses>({
     queryKey: queryKeys.spaceApiDetail(spaceId, apiIds), // 이거 이름 수정필요!!!!
     queryFn: async function () {
       return apiRequest({

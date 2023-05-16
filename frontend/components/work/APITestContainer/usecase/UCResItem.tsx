@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Control,
   Controller,
@@ -7,30 +7,33 @@ import {
 } from 'react-hook-form';
 import styles from '../../APIDocsContainer/ReqItem.module.css';
 import ToggleableHeader from '../../APIDocsContainer/ToggleableHeader';
+import ReqItemInner from '../../APIDocsContainer/ReqItemInner';
 import { FieldsType, HeadersType } from '../../APIDocsContainer';
-import { ApiDetailAtTestItem } from '@/hooks/queries/queries';
-import UCReqItemInner from './UCReqItemInner';
+import { ApiDetailAtTestItem, PrevResponse } from '@/hooks/queries/queries';
+import UCResInner from './UCResInner';
 import { UseTestForm } from './UseTestContainer';
 
-type ReqtemPropsType = {
-  fields?: FieldArrayWithId[]; // 잠깐 ?넣어유,,
-  formName: string;
-  // control: Control<UseTestForm, any>;
-  control: any;
+type ResItemPropsType = {
+  //   fields?: FieldArrayWithId[]; // 잠깐 ?넣어유,,
+  //   formName?: string;
+  //   control?: any;
   name: string;
-  item: HeadersType[] | FieldsType[] | ApiDetailAtTestItem[];
-  setMappingFormName: Dispatch<SetStateAction<string | null>>;
+  item: PrevResponse;
+  formName: string | null;
+  control: Control<UseTestForm, any>;
 };
-const UCReqItem = function ({
-  fields,
-  formName,
+const UCResItem = function ({
+  //   fields,
+  //   formName,
+  //   control,
   name, // 그냥 이름
   item, // item
+  formName,
   control,
-  setMappingFormName,
-}: ReqtemPropsType): JSX.Element {
+}: ResItemPropsType): JSX.Element {
   const [isOpen, setisOpen] = useState<boolean>(true);
-  const a = item?.length + 1;
+  //   const a = item?.length + 1;
+  const a = 1;
 
   const Styles = {
     style: `${
@@ -41,11 +44,32 @@ const UCReqItem = function ({
   const styles1 = {
     style: `${isOpen ? `h-[calc(${a}*43px)]` : 'h-[43px]'}`,
   };
-  console.log('111111', formName, item);
+  //   console.log('111111', formName, item);
   return (
     <div className={`${styles1[`style`]} w-full`}>
       <ToggleableHeader title={name} isOpen={isOpen} setIsOpen={setisOpen} />
-      <div className={`${Styles['style']}`}>
+      {item.headers && (
+        <div className={`w-full`}>
+          <p>headers</p>
+          {item.headers.map((headerItem: ApiDetailAtTestItem, idx: number) => (
+            <UCResInner
+              key={`${headerItem.keyName}_${idx}`}
+              item={headerItem}
+              formName={formName}
+              control={control}
+            />
+          ))}
+        </div>
+      )}
+      {/* {item.body && (
+        <div className={`w-full`}>
+          <p>headers</p>
+          {item.body.map((bodyItem: ApiDetailAtTestItem, idx: number) => (
+            <UCResInner key={`${bodyItem.keyName}_${idx}`} />
+          ))}
+        </div>
+      )} */}
+      {/* <div className={`${Styles['style']}`}>
         {(item as HeadersType[] | FieldsType[])?.map((item, idx) => (
           <Controller
             key={`${Math.random()}`} // fields[idx].id
@@ -57,22 +81,21 @@ const UCReqItem = function ({
                   key={item.keyName}
                   className={`w-[87%] rounded-[13px] overflow-hidden mt-0 mb-3 mx-auto text-content duration-[0.33s]`}
                 >
-                  <UCReqItemInner
+                  <ReqItemInner
                     formName={`${formName}.${item.keyName}`}
                     field={field}
                     item={item}
                     control={control}
                     name={name}
-                    setMappingFormName={setMappingFormName}
                   />
                 </div>
               );
             }}
           />
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };
 
-export default UCReqItem;
+export default UCResItem;
