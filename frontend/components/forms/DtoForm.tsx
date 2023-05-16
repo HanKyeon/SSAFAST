@@ -230,7 +230,7 @@ const DtoForm = function ({
             type: dtoId,
             desc: field.desc,
             itera: res.data.itera,
-            constraints: [...res.data.constraints],
+            constraints: [...field.constraints],
             nestedDtos: { ...res.data.nestedDtos },
           };
           return res;
