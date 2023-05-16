@@ -3,7 +3,8 @@ package com.rocket.ssafast.usecase.dto.response;
 import java.util.List;
 
 import com.rocket.ssafast.apispec.domain.Document.element.Body;
-import com.rocket.ssafast.apispec.domain.Document.element.HeaderField;
+import com.rocket.ssafast.apispec.domain.Document.temp.BodyDocs;
+import com.rocket.ssafast.apispec.domain.Document.temp.HeaderField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,5 +27,5 @@ public class ResUsecasePrevResponseDto {
 
 	private List<HeaderField> headers;
 
-	private Body body;
+	private BodyDocs body;
 }
