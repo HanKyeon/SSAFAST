@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -36,14 +37,14 @@ public class DtoSpecEntity {
     @Column(name = "has_child")
     @ColumnDefault("0")
     private boolean hasChild;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    @JoinColumn(name = "child_dto_id")
-    private List<ChildDtoEntity> childs;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    @JoinColumn(name = "parent_dto_id")
-    private List<ParentDtoEntity> parents;
+//
+//    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+//    @JoinColumn(name = "child_dto_id")
+//    private List<ChildDtoEntity> childs;
+//
+//    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+//    @JoinColumn(name = "parent_dto_id")
+//    private List<ParentDtoEntity> parents;
 
 
 }

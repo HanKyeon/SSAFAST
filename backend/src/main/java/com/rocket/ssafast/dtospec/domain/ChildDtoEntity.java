@@ -1,9 +1,6 @@
 package com.rocket.ssafast.dtospec.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
@@ -13,6 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 @Slf4j
+@ToString
 @Entity(name = "child_dto")
 public class ChildDtoEntity {
 

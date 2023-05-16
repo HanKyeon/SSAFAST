@@ -233,6 +233,13 @@ public class DtoSpecEntityService {
             setChildDefaultValue.put(key, convertList);
         }
 
+
+        //parent, child table update 해야함
+        // update 된 dto 의 자식관계 업데이트
+        childDtoEntityService.updateChildDtoEntityInfoCascade(dtoId, childKeyList);
+        // update 된 dto 들의 부모관계 업데이트
+        parentDtoEntityService.updateParentDtoEntityInfoCascade(dtoId, childKeyList);
+
         DtoInfo updateDto =
                 DtoInfo.builder()
                         .itera(updateDtoSpecDto.getDocument().isItera())
@@ -241,15 +248,6 @@ public class DtoSpecEntityService {
                         .build();
 
         dtoSpecDocumentService.createOrUpdateDtoDocs(dtoId, updateDto);
-
-        //parent, child table update 해야함
-        if(hasChild){
-            // update 된 dto 의 자식관계 업데이트
-            childDtoEntityService.updateChildDtoEntityInfoCascade(dtoId, childKeyList);
-            // update 된 dto 들의 부모관계 업데이트
-            parentDtoEntityService.updateParentDtoEntityInfoCascade(dtoId, childKeyList);
-        }
-
 
         return updateDtoSpecDto;
     }

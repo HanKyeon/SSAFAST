@@ -27,13 +27,13 @@ public class ChildDtoEntityService {
 
     public boolean updateChildDtoEntityInfoCascade(Long dtoId, List<Long> childKeyList){
 
+        Optional<DtoSpecEntity> updateDto = dtoSpecEntityRepository.findById(dtoId);
+        if(!updateDto.isPresent()){ throw new CustomException(ErrorCode.DTO_NOT_FOUND); }
+
         //1. 기존 dto가 가지고 있던 자식 정보 삭제
         deleteChildDtoEntityInfoCascade(dtoId);
 
-        Optional<DtoSpecEntity> updateDto = dtoSpecEntityRepository.findById(dtoId);
-
-        if(!updateDto.isPresent()){ throw new CustomException(ErrorCode.DTO_NOT_FOUND); }
-
+        //2. 새로 자식을 가지게 된 dto 정보 업데이트
         for(Long childKey : childKeyList){
             updateChildDtoEntityInfo(dtoId, childKey);
         }
@@ -70,7 +70,8 @@ public class ChildDtoEntityService {
         if(!dto.isPresent()){ throw new CustomException(ErrorCode.DTO_NOT_FOUND); }
 
         //삭제 해야 할 자식 리스트 조회
-        List<ChildDtoEntity> dtoHasChildList = childDtoEntityRepository.findByDtoId(dtoId);
+        List<ChildDtoEntity> dtoHasChildList = childDtoEntityRepository.findAllByDtoId(dtoId);
+        log.info("dtoHasChildList : "+ dtoHasChildList.toString());
 
         for(ChildDtoEntity dtoHasChild : dtoHasChildList){
             deleteChildDtoEntityInfo(dtoHasChild);
