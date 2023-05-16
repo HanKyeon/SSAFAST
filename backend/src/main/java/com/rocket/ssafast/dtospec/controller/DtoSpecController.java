@@ -3,6 +3,7 @@ package com.rocket.ssafast.dtospec.controller;
 import com.rocket.ssafast.auth.domain.UserDetailsImpl;
 import com.rocket.ssafast.dtospec.domain.DtoSpecEntity;
 import com.rocket.ssafast.dtospec.domain.element.DtoInfo;
+import com.rocket.ssafast.dtospec.domain.element.FieldDtoInfo;
 import com.rocket.ssafast.dtospec.dto.request.AddDtoSpecDto;
 import com.rocket.ssafast.dtospec.dto.request.UpdateDtoSpecDto;
 import com.rocket.ssafast.dtospec.dto.response.ResponseDtoListItem;
@@ -10,6 +11,7 @@ import com.rocket.ssafast.dtospec.service.DtoSpecDocumentService;
 import com.rocket.ssafast.dtospec.service.DtoSpecEntityService;
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
+import com.rocket.ssafast.member.dto.response.ResMemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -80,42 +82,34 @@ public class DtoSpecController {
         }
     }
 
-//    @PutMapping(value = "/{dtoId}")
-//    public ResponseEntity<?> updateDtoInfo(@PathVariable Long dtoId, @RequestBody UpdateDtoSpecDto updateDtoSpecDto){
-//        try{
-//            boolean hasParent = false;
-//            boolean hasChild = false;
-//            //1. get entity for check relation for other dtos(parent, child info)
-//            DtoSpecEntity dtoSpecEntity = dtoSpecEntityService.getDtoSpecEntityById(dtoId);
-//
-//            Map<Long, DtoInfo> childDto = updateDtoSpecDto.getDocument().getNestedDtos();
-//            hasParent = dtoSpecEntity.isHasParent();
-//            hasChild = childDto!=null || childDto.size() > 0;
-//
-//            //child has child
-//            for(Long childKey : childDto.keySet()){
-//                if(dtoSpecEntityService.childDtoIsExist(childKey)){
-//                    return new ResponseEntity<>(ErrorCode.DTO_DEPTH_OVER.getMessage(), ErrorCode.DTO_DEPTH_OVER.getHttpStatus());
-//                }
-//            }
-//
-//            //current dto has parent and child
-//            if(hasChild && hasParent){
-//                return new ResponseEntity<>(ErrorCode.DTO_DEPTH_OVER.getMessage(), ErrorCode.DTO_DEPTH_OVER.getHttpStatus());
-//            }
-//
-//            dtoSpecEntityService.updateDtoEntity(dtoId, updateDtoSpecDto);
-//
-//        }
-//        catch (CustomException customException){
-//            return new ResponseEntity<>(customException.getMessage(), customException.getHttpStatus());
-//        }
-//
-//        //dto depth 가 2를 벗어나는지 확인하는 로직 필요 - mysql
-//        //3. update entity
-//        //4. update document
-//        return new ResponseEntity<>(updateDtoSpecDto, HttpStatus.OK);
-//    }
+    @PutMapping(value = "/{dtoId}")
+    public ResponseEntity<?> updateDtoInfo(@AuthenticationPrincipal UserDetailsImpl memberDto, @PathVariable Long dtoId, @RequestBody AddDtoSpecDto updateDtoSpecDto){
+        try{
+//            return new ResponseEntity<>(updateDtoSpecDto, HttpStatus.OK);
+            return new ResponseEntity<>(dtoSpecEntityService.checkInputBeforeUpdateEntityAndUpdate(memberDto.getMemberId(), dtoId, updateDtoSpecDto), HttpStatus.OK);
+        }
+        catch (CustomException customException){
+            customException.printStackTrace();
+            return new ResponseEntity<>(customException.getMessage(), customException.getHttpStatus());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(ErrorCode.INTERNAL_SERVER_ERROR.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus());
+        }
+    }
+
+    @DeleteMapping(value = "/{dtoId}")
+    public ResponseEntity<?> deleteDtoInfo(@AuthenticationPrincipal UserDetailsImpl member, @PathVariable Long dtoId){
+        try{
+            return new ResponseEntity<>(dtoId, HttpStatus.OK);
+        }
+        catch (CustomException c){
+            return new ResponseEntity<>(c.getMessage(), c.getHttpStatus());
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(ErrorCode.INTERNAL_SERVER_ERROR.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus());
+        }
+    }
 
 
 }

@@ -44,6 +44,12 @@ public class ChildDtoEntityService {
         Optional<DtoSpecEntity> childDtoIsExists = dtoSpecEntityRepository.findById(childDtoId);
 
         if(!childDtoIsExists.isPresent()){
+            log.info("why ?? : " + childDtoId+", " +
+                    ""+ childDtoIsExists.isPresent()+
+                    "," + dtoSpecEntityRepository.findById(childDtoId).isPresent());
+            for(DtoSpecEntity dto : dtoSpecEntityRepository.findAll()){
+                log.info(dto.toString());
+            }
             throw new CustomException(ErrorCode.DTO_NOT_FOUND);
         }
         childDtoEntityRepository.save(

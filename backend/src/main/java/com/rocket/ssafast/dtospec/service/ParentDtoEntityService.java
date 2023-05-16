@@ -56,6 +56,8 @@ public class ParentDtoEntityService {
             throw new CustomException(ErrorCode.DTO_NOT_FOUND);
         }
         if(childEntity.get().isHasChild() & hasParent){
+            log.info("3번입니다");
+            log.info(childEntity.get().toString());
             throw new CustomException(ErrorCode.DTO_DEPTH_OVER);
         }
 
