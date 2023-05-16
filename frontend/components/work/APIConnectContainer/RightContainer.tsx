@@ -2,7 +2,6 @@ import { Button, Input } from '@/components/common';
 import EomSelect from '@/components/common/EomSelect';
 import { BsCheckLg, BsFilter, BsFolderPlus } from 'react-icons/bs';
 import { HiOutlineSearch, HiPencil } from 'react-icons/hi';
-import APIList from '../APIEditContainer/APIList';
 import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { SpaceParams } from '@/pages/space';
@@ -16,6 +15,7 @@ import {
 } from '@/hooks/queries/queries';
 import { useStoreDispatch } from '@/hooks/useStore';
 import { DispatchToast } from '@/store';
+import APIConnectList from './APIConnectList';
 
 const checkedMok: SpaceApiList = {
   apiCategories: [
@@ -201,7 +201,7 @@ const RightContainer = function ({
           </Button>
         )}
       </div>
-      <APIList
+      <APIConnectList
         apiList={
           isSaved && checkedAPIList
             ? checkedAPIList
