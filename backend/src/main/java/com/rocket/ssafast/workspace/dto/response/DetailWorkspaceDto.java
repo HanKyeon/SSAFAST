@@ -21,9 +21,9 @@ public class DetailWorkspaceDto {
     private int totalApiCount;
     private int completeApiCount;
     private String figmaImg;
-    @JsonFormat(pattern = "yyyy-MM-DD")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
-    @JsonFormat(pattern = "yyyy-MM-DD")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
     private String figmaFileId;
     private String figmaFileName;

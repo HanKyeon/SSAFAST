@@ -10,7 +10,6 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Slf4j
 public class FigmaSectionApi {
     @Id

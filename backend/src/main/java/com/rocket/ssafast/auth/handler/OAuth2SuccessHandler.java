@@ -29,7 +29,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 	private final RedisService redisService;
 	private final JwtTokenProvider jwtTokenProvider;
 	private long COOKIE_EXPIRATION = 7776000; // 90일
-	private String serverUrl = "https://www.ssafast.com";
+	private String serverUrl = "http://localhost:3000";
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,

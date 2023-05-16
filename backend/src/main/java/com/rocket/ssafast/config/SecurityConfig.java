@@ -66,8 +66,8 @@ public class SecurityConfig {
 			.frameOptions().sameOrigin()
 
 			// // cors 설정 적용
-			// .and()
-			// .cors().configurationSource(corsConfigurationSource())
+			.and()
+			.cors().configurationSource(corsConfigurationSource())
 
 			// OAuth2
 			.and()
