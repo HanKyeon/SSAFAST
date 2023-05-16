@@ -235,6 +235,7 @@ const DtoForm = function ({
           };
           return res;
         });
+        console.log(`${dtoId}의 정보`, data);
         if (!data) {
           return;
         }
@@ -255,7 +256,12 @@ const DtoForm = function ({
       resetSelected();
       reset({ name: ``, desc: ``, fields: [] });
     });
-    console.log(data);
+    console.log({
+      workspaceId: spaceId,
+      name,
+      description: desc,
+      document: { fields, nestedDtos },
+    });
   };
 
   const deleteHandler = function () {
