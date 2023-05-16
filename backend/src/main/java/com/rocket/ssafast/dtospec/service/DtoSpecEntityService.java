@@ -260,7 +260,7 @@ public class DtoSpecEntityService {
         }
 
         //mysql dtoId 를 자식으로 가지고 있는 아이들 조회
-        List<ChildDtoEntity> dtoHasParentList = childDtoEntityRepository.findByDtoSpecEntity(targetDtoEntity.get());
+        List<ChildDtoEntity> dtoHasParentList = childDtoEntityRepository.findAllByDtoSpecEntity(targetDtoEntity.get());
 
         for(ChildDtoEntity dtoHasParent : dtoHasParentList){
             Long parentDtoId = dtoHasParent.getDtoId();
@@ -285,13 +285,14 @@ public class DtoSpecEntityService {
                             .build();
 
             dtoSpecDocumentService.createOrUpdateDtoDocs(parentDtoId, updateDtoDocs);
-
+            childDtoEntityRepository.delete(dtoHasParent);
         }
 
         //mysql dtoId를 api nestedDtos 에 가지고 있는 아이들 조회
         for(ApiHasDtoEntity apiHasDto : apiHasDtoEntityRepository.findAllByDtoSpecEntity(targetDtoEntity.get())){
             Long apiId = apiHasDto.getApiSpecEntity().getId();
             ApiSpecDoc apiDocs = apiSpecDocumentService.getApiSpecDocs(apiId);
+
 
         }
         //mongodb nesteDtos 에서 제거 후 저장

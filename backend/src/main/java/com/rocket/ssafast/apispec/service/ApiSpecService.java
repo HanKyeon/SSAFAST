@@ -64,7 +64,7 @@ public class ApiSpecService {
         ApiSpecEntity apiSpec = apiSpecRepository.save(
                 ApiSpecEntity.builder()
                         .name(apiSpecInfoDto.getName())
-                        .description(apiSpecInfoDto.getDesc())
+                        .description(apiSpecInfoDto.getDescription())
                         .method(apiSpecInfoDto.getMethod())
                         .status(apiSpecInfoDto.getStatus())
                         .baseurlId(apiSpecInfoDto.getBaseUrl())
