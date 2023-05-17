@@ -141,7 +141,7 @@ const ApiWrite = function ({
           workspaceId: parseInt(spaceId),
           name: '',
           description: '',
-          method: 1,
+          method: undefined,
           baseUrl: baseUrlListData?.baseurls[0].id as number,
           categoryId: categoryListData?.categorys[0].id as number,
           status: 1,
