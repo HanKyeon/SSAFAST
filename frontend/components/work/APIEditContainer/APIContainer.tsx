@@ -21,388 +21,6 @@ import { useCreateCategory } from '@/hooks/queries/mutations';
 import { useRouter } from 'next/router';
 import { SpaceParams } from '@/pages/space';
 
-const mockupAPIList: SpaceApiList = {
-  apiCategories: [
-    {
-      categoryId: 1,
-      categoryName: 'user',
-      apis: [
-        {
-          id: 1,
-          name: '전체 회원 목록',
-          description: '아무튼 다 가져오는거',
-          method: 1,
-          status: 1,
-          writter: {
-            id: 1,
-            name: '로사짱',
-            email: 'a@naver.com',
-            profileImg: 'anjanj.png',
-          },
-        },
-      ],
-    },
-    {
-      categoryId: 2,
-      categoryName: 'mypage',
-      apis: [
-        {
-          id: 4,
-          name: '내 정보 수정',
-          description: '내 정보를 막 수정해버려',
-          method: 3,
-          status: 1,
-          writter: {
-            id: 1,
-            name: '로사짱',
-            email: 'a@naver.com',
-            profileImg: 'anjanj.png',
-          },
-        },
-        {
-          id: 5,
-          name: '전체 회원 목록',
-          description: '아무튼 다 가져오는거',
-          method: 1,
-          status: 2,
-          writter: {
-            id: 1,
-            name: '로사짱',
-            email: 'a@naver.com',
-            profileImg: 'anjanj.png',
-          },
-        },
-        {
-          id: 7,
-          name: '회원가입',
-          description: '아무튼 가입',
-          method: 1,
-          status: 4,
-          writter: {
-            id: 1,
-            name: '로사짱',
-            email: 'a@naver.com',
-            profileImg: 'anjanj.png',
-          },
-        },
-        {
-          id: 8,
-          name: '전체 회원 목록',
-          description: '아무튼 다 가져오는거',
-          method: 1,
-          status: 3,
-          writter: {
-            id: 1,
-            name: '로사짱',
-            email: 'a@naver.com',
-            profileImg: 'anjanj.png',
-          },
-        },
-      ],
-    },
-  ],
-};
-
-// const mockupAPIList: APIListType[] = [
-//   {
-//     categoryId: 1,
-//     categoryName: 'user',
-//     apis: [
-//       {
-//         id: 1,
-//         name: '전체 회원 목록',
-//         description: '아무튼 다 가져오는거',
-//         method: 1,
-//         status: '명세중',
-//         writter: {
-//           id: 1,
-//           name: '로사짱',
-//           email: 'a@naver.com',
-//           profileImg: 'anjanj.png',
-//         },
-//       },
-//       {
-//         id: 2,
-//         name: '회원 한명 조회',
-//         description: '한명 가져오는거',
-//         method: 'GET',
-//         status: '명세중',
-//         writter: {
-//           id: 1,
-//           name: '로사짱',
-//           email: 'a@naver.com',
-//           profileImg: 'anjanj.png',
-//         },
-//       },
-//       {
-//         id: 3,
-//         name: '회원가입',
-//         description: '아무튼 가입',
-//         method: 'POST',
-//         status: '명세중',
-//         writter: {
-//           id: 1,
-//           name: '로사짱',
-//           email: 'a@naver.com',
-//           profileImg: 'anjanj.png',
-//         },
-//       },
-//     ],
-//   },
-//   {
-//     categoryId: 2,
-//     categoryName: 'mypage',
-//     apis: [
-//       {
-//         id: 1,
-//         name: '내 정보 수정',
-//         description: '내 정보를 막 수정해버려',
-//         method: 'PUT',
-//         status: '명세중',
-//         writter: {
-//           id: 1,
-//           name: '로사짱',
-//           email: 'a@naver.com',
-//           profileImg: 'anjanj.png',
-//         },
-//       },
-//       {
-//         id: 1,
-//         name: '전체 회원 목록',
-//         description: '아무튼 다 가져오는거',
-//         method: 'GET',
-//         status: '명세중',
-//         writter: {
-//           id: 1,
-//           name: '로사짱',
-//           email: 'a@naver.com',
-//           profileImg: 'anjanj.png',
-//         },
-//       },
-//       {
-//         id: 2,
-//         name: '회원 한명 조회',
-//         description: '한명 가져오는거',
-//         method: 'GET',
-//         status: '명세중',
-//         writter: {
-//           id: 1,
-//           name: '로사짱',
-//           email: 'a@naver.com',
-//           profileImg: 'anjanj.png',
-//         },
-//       },
-//       {
-//         id: 3,
-//         name: '회원가입',
-//         description: '아무튼 가입',
-//         method: 'POST',
-//         status: '명세중',
-//         writter: {
-//           id: 1,
-//           name: '로사짱',
-//           email: 'a@naver.com',
-//           profileImg: 'anjanj.png',
-//         },
-//       },
-//       {
-//         id: 1,
-//         name: '전체 회원 목록',
-//         description: '아무튼 다 가져오는거',
-//         method: 'GET',
-//         status: '명세중',
-//         writter: {
-//           id: 1,
-//           name: '로사짱',
-//           email: 'a@naver.com',
-//           profileImg: 'anjanj.png',
-//         },
-//       },
-//       {
-//         id: 2,
-//         name: '회원 한명 조회',
-//         description: '한명 가져오는거',
-//         method: 'GET',
-//         status: '명세중',
-//         writter: {
-//           id: 1,
-//           name: '로사짱',
-//           email: 'a@naver.com',
-//           profileImg: 'anjanj.png',
-//         },
-//       },
-//       {
-//         id: 3,
-//         name: '회원가입',
-//         description: '아무튼 가입',
-//         method: 'POST',
-//         status: '명세중',
-//         writter: {
-//           id: 1,
-//           name: '로사짱',
-//           email: 'a@naver.com',
-//           profileImg: 'anjanj.png',
-//         },
-//       },
-//       {
-//         id: 1,
-//         name: '전체 회원 목록',
-//         description: '아무튼 다 가져오는거',
-//         method: 'GET',
-//         status: '명세중',
-//         writter: {
-//           id: 1,
-//           name: '로사짱',
-//           email: 'a@naver.com',
-//           profileImg: 'anjanj.png',
-//         },
-//       },
-//       {
-//         id: 2,
-//         name: '회원 한명 조회',
-//         description: '한명 가져오는거',
-//         method: 'GET',
-//         status: '명세중',
-//         writter: {
-//           id: 1,
-//           name: '로사짱',
-//           email: 'a@naver.com',
-//           profileImg: 'anjanj.png',
-//         },
-//       },
-//       {
-//         id: 3,
-//         name: '회원가입',
-//         description: '아무튼 가입',
-//         method: 'POST',
-//         status: '명세중',
-//         writter: {
-//           id: 1,
-//           name: '로사짱',
-//           email: 'a@naver.com',
-//           profileImg: 'anjanj.png',
-//         },
-//       },
-//       {
-//         id: 1,
-//         name: '전체 회원 목록',
-//         description: '아무튼 다 가져오는거',
-//         method: 'GET',
-//         status: '명세중',
-//         writter: {
-//           id: 1,
-//           name: '로사짱',
-//           email: 'a@naver.com',
-//           profileImg: 'anjanj.png',
-//         },
-//       },
-//       {
-//         id: 2,
-//         name: '회원 한명 조회',
-//         description: '한명 가져오는거',
-//         method: 'GET',
-//         status: '명세중',
-//         writter: {
-//           id: 1,
-//           name: '로사짱',
-//           email: 'a@naver.com',
-//           profileImg: 'anjanj.png',
-//         },
-//       },
-//       {
-//         id: 3,
-//         name: '회원가입',
-//         description: '아무튼 가입',
-//         method: 'POST',
-//         status: '명세중',
-//         writter: {
-//           id: 1,
-//           name: '로사짱',
-//           email: 'a@naver.com',
-//           profileImg: 'anjanj.png',
-//         },
-//       },
-//       {
-//         id: 1,
-//         name: '전체 회원 목록',
-//         description: '아무튼 다 가져오는거',
-//         method: 'GET',
-//         status: '명세중',
-//         writter: {
-//           id: 1,
-//           name: '로사짱',
-//           email: 'a@naver.com',
-//           profileImg: 'anjanj.png',
-//         },
-//       },
-//       {
-//         id: 2,
-//         name: '회원 한명 조회',
-//         description: '한명 가져오는거',
-//         method: 'GET',
-//         status: '명세중',
-//         writter: {
-//           id: 1,
-//           name: '로사짱',
-//           email: 'a@naver.com',
-//           profileImg: 'anjanj.png',
-//         },
-//       },
-//       {
-//         id: 3,
-//         name: '회원가입',
-//         description: '아무튼 가입',
-//         method: 'POST',
-//         status: '명세중',
-//         writter: {
-//           id: 1,
-//           name: '로사짱',
-//           email: 'a@naver.com',
-//           profileImg: 'anjanj.png',
-//         },
-//       },
-//     ],
-//   },
-// ];
-
-const mok = [
-  {
-    figmaSectionId: `1`,
-    sectionUrl:
-      'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e56c89a6-34b7-4c8b-9e49-22c7fd82c48a',
-    refreshId: `4:14`,
-    name: `홈 페이지 1`,
-  },
-  {
-    figmaSectionId: `2`,
-    sectionUrl:
-      'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/fbcc8976-b92d-4454-8e61-0050b7a42f95',
-    refreshId: `115:522`,
-    name: `space - space메인 - Dark`,
-  },
-  {
-    figmaSectionId: `3`,
-    sectionUrl:
-      'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/6d3ac41b-03ec-4491-9c63-1f4744d45650',
-    refreshId: `101:417`,
-    name: `space - space메인 - Light`,
-  },
-  {
-    figmaSectionId: `4`,
-    sectionUrl:
-      'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/dba880b8-18c0-4835-ac27-b5af934d5806',
-    refreshId: `232:1897`,
-    name: `Figma화면에 api 연결 - 편집`,
-  },
-  {
-    figmaSectionId: `5`,
-    sectionUrl:
-      'https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/35599cc7-27ff-4584-834a-e53af3849446',
-    refreshId: `232:2481`,
-    name: `api명세 작성 - postman - dark`,
-  },
-];
-
 interface Props {
   store?: any;
 }
@@ -411,14 +29,21 @@ const APIContainer = function ({ store }: Props) {
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
   const [isAdd, setIsAdd] = useState<boolean>(false);
+  const [currentApiId, setCurrentApiId] = useState<number | string>(-1);
   const [isModal, setIsModal] = useState<boolean>(false);
   const [selectedIdx, setSelectedIdx] = useState<number>(0);
   useEffect(() => {
     // selectedIdx가 바뀌면 api filter를 하든 뭐
   }, [selectedIdx]);
+
   const toggleAddHandler = function () {
     setIsAdd((v) => !v);
   };
+
+  const apiIdHandler = function (id: string | number) {
+    setCurrentApiId(id);
+  };
+
   const closeModal = useCallback(function () {
     setIsModal(() => false);
   }, []);
@@ -431,6 +56,7 @@ const APIContainer = function ({ store }: Props) {
     onChangeHandler: categoryChange,
     onResetHandler: categoryReset,
   } = useInput(categoryRef);
+
   const { mutate, mutateAsync } = useCreateCategory(parseInt(spaceId));
 
   const categorySubmit = function (e: FormEvent) {
@@ -467,7 +93,11 @@ const APIContainer = function ({ store }: Props) {
       >
         {isAdd ? (
           // <ApiCreateForm toggleAddHandler={toggleAddHandler} />
-          <ApiWrite toggleAddHandler={toggleAddHandler} />
+          <ApiWrite
+            toggleAddHandler={toggleAddHandler}
+            apiIdHandler={apiIdHandler}
+            currentApiId={currentApiId}
+          />
         ) : (
           <>
             {isModal && (
@@ -531,7 +161,10 @@ const APIContainer = function ({ store }: Props) {
                 </Button>
               </div>
               {/* api 목록 */}
-              <APIList apiList={mockupAPIList} />
+              <APIList
+                toggleAddHandler={toggleAddHandler}
+                apiIdHandler={apiIdHandler}
+              />
             </div>
           </>
         )}

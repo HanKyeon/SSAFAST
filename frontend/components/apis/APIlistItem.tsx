@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import CheckBox from '../common/CheckBox';
 import UserBadge from '../common/UserBadge';
 import MethodBadge, { MethodBadgePropsType } from './MethodBadge';
@@ -22,6 +22,8 @@ interface APIlistItemPropsType {
   onToggleCheck?: (apiId: number | string, check: boolean) => void;
   setSelectedIdHandler?: (id: number) => void;
   onClickApi?: (api: UseTestApiCompactType) => void;
+  toggleAddHandler?: () => void;
+  apiIdHandler?: (id: string | number) => void;
 }
 
 const APIlistItem = function ({
@@ -33,9 +35,18 @@ const APIlistItem = function ({
   onToggleCheck,
   setSelectedIdHandler,
   onClickApi,
+  toggleAddHandler,
+  apiIdHandler,
 }: APIlistItemPropsType): JSX.Element {
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
+
+  const letsEdit = function (id: number | string) {
+    if (toggleAddHandler && apiIdHandler) {
+      toggleAddHandler();
+      apiIdHandler(id);
+    }
+  };
 
   const onClickApiItem = (apiID: string | number): void => {
     if (!checkBox) {
@@ -63,6 +74,8 @@ const APIlistItem = function ({
         onClickApi
           ? () =>
               onClickApi({ id: item.id, name: item.name, method: item.method })
+          : toggleAddHandler && apiIdHandler
+          ? () => letsEdit(item.id)
           : () => onClickApiItem(item.id)
       }
       className={`${className} flex items-center gap-3 h-[40px] min-h-[40px]`}
