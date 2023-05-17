@@ -105,7 +105,7 @@ const BodyListInput = function ({
           );
         })}
         {/* 첫번째 DTO */}
-        {...Object.keys(nestedDtos.value).map((dtoId) => {
+        {...Object.keys(nestedDtos.value || {}).map((dtoId) => {
           return nestedDtos.value[dtoId].map((dto: any, dtoidx: any) => {
             return (
               <div
@@ -119,21 +119,21 @@ const BodyListInput = function ({
                   formName={`${formName}.nestedDtos.${dtoId}[${dtoidx}].fields`}
                 >
                   {nestedDtos.value[dtoId][dtoidx].nestedDtos &&
-                    Object.keys(nestedDtos.value[dtoId][dtoidx].nestedDtos).map(
-                      (nestedDtoId, nestedDtoIdx) => {
-                        return (
-                          <FieldListInput
-                            depth={2}
-                            typeName={`${nestedDtos.value[dtoId][dtoidx].nestedDtos[nestedDtoId][nestedDtoIdx].name}`}
-                            key={`${dtoId}-dto-${dtoidx}-${dto.keyName}`}
-                            formName={`${formName}.nestedDtos.${dtoId}[${dtoidx}].nestedDtos[${nestedDtoId}][${nestedDtoIdx}].fields`}
-                          />
-                        );
-                      }
-                    )}
+                    Object.keys(
+                      nestedDtos.value[dtoId][dtoidx].nestedDtos || {}
+                    ).map((nestedDtoId, nestedDtoIdx) => {
+                      return (
+                        <FieldListInput
+                          depth={2}
+                          typeName={`${nestedDtos.value[dtoId][dtoidx].nestedDtos[nestedDtoId][nestedDtoIdx].name}`}
+                          key={`${dtoId}-dto-${dtoidx}-${dto.keyName}`}
+                          formName={`${formName}.nestedDtos.${dtoId}[${dtoidx}].nestedDtos[${nestedDtoId}][${nestedDtoIdx}].fields`}
+                        />
+                      );
+                    })}
                   {nestedDtos.value[dtoId][dtoidx].nestedDtoLists &&
                     Object.keys(
-                      nestedDtos.value[dtoId][dtoidx].nestedDtoLists
+                      nestedDtos.value[dtoId][dtoidx].nestedDtoLists || {}
                     ).map((nestedDtoId, nestedDtoIdx) => {
                       return (
                         <FieldListInput
@@ -158,7 +158,7 @@ const BodyListInput = function ({
           });
         })}
         {/* nestedDtoLists */}
-        {...Object.keys(nestedDtoLists.value).map((dtoId) => {
+        {...Object.keys(nestedDtoLists.value || {}).map((dtoId) => {
           return nestedDtoLists.value[dtoId].map((dto: any, dtoidx: any) => {
             return (
               <>
@@ -170,7 +170,7 @@ const BodyListInput = function ({
                 >
                   {nestedDtoLists.value[dtoId][dtoidx].nestedDtos &&
                     Object.keys(
-                      nestedDtoLists.value[dtoId][dtoidx].nestedDtos
+                      nestedDtoLists.value[dtoId][dtoidx].nestedDtos || {}
                     ).map((nestedDtoId, nestedDtoIdx) => {
                       return (
                         <FieldListInput
@@ -183,7 +183,7 @@ const BodyListInput = function ({
                     })}
                   {nestedDtoLists.value[dtoId][dtoidx].nestedDtoLists &&
                     Object.keys(
-                      nestedDtoLists.value[dtoId][dtoidx].nestedDtoLists
+                      nestedDtoLists.value[dtoId][dtoidx].nestedDtoLists || {}
                     ).map((nestedDtoId, nestedDtoIdx) => {
                       return (
                         <FieldListInput

@@ -194,6 +194,17 @@ const ApiWrite = function ({
 
   const onSubmit = async function (data: ApiCreateForm) {
     console.log('API 요청 데이터', data);
+    let workspaceId = spaceId;
+    let name = data.name;
+    let description = data.description;
+    let method = data.method;
+    let baseUrl = data.baseUrl;
+    let cateforyId = data.categoryId;
+    let status = data.status;
+    let document: any = { request: {}, response: {} };
+
+    data.document.response;
+
     createMutateAsync(data).then(() => toggleAddHandler());
   };
 

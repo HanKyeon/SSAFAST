@@ -87,8 +87,8 @@ const PreviewLeftContainer = function (): JSX.Element {
   );
   return (
     <div className="h-full flex-[2] py-3 flex flex-col gap-3 min-w-0">
-      <Box className="flex-[3] bg-preview bg-no-repeat bg-cover bg-center">
-        <div className="w-full h-full p-10 bg-basic-black bg-opacity-60 flex flex-col gap-5">
+      <Box className="flex-[3] h-[40%] bg-preview bg-no-repeat bg-cover bg-center">
+        <div className="w-full h-full p-9 bg-basic-black bg-opacity-60 flex flex-col gap-2">
           {/* header */}
           <div className="flex gap-3 items-center">
             <i>
@@ -112,20 +112,20 @@ const PreviewLeftContainer = function (): JSX.Element {
             {spaceDetailData?.startDate} ~ {spaceDetailData?.endDate}
           </p>
           {/* stack이랑? figma 이미지 */}
-          <div className="flex flex-1 gap-5 mt-5">
-            <div className="flex-1">
+          <div className="flex flex-1 h-[55%] gap-5">
+            {/* <div className="flex-1">
               <span className="text-[14px] text-grayscale-dark">Stack</span>
               <div className="h-full border-red-400 border-[1px] rounded-[8px]">
                 stack list들
               </div>
-            </div>
-            <div className="flex-1">
+            </div> */}
+            <div className="flex-1 h-full">
               <span className="text-[14px] text-grayscale-dark">Figma</span>
-              <div className="h-full border-red-400 border-[1px] rounded-[8px]">
+              <div className="h-[96%] w-auto border-red-400 border-[1px] rounded-[8px]">
                 <img
                   src={spaceDetailData?.figmaImg}
                   alt="figma thumbnail"
-                  className="w-full h-full"
+                  className="w-full h-full object-contain"
                 />
               </div>
             </div>
@@ -146,6 +146,7 @@ const PreviewLeftContainer = function (): JSX.Element {
                 key={`${api.id}-api-preview-item`}
                 item={api}
                 writter={false}
+                hoverOpt={false}
               />
             );
           })}
@@ -155,6 +156,7 @@ const PreviewLeftContainer = function (): JSX.Element {
                 key={`${api.id}-api-preview-item`}
                 item={api}
                 writter={false}
+                hoverOpt={false}
               />
             );
           })}

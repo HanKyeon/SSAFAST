@@ -42,9 +42,13 @@ const resMockup: ResType = {
 
 interface Props {
   selectedId?: number;
+  responseData?: string;
 }
 
-const ResBoxPostman = function ({ selectedId }: Props): JSX.Element {
+const ResBoxPostman = function ({
+  selectedId,
+  responseData,
+}: Props): JSX.Element {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [isOpenJSON, setIsOpenJSON] = useState<boolean>(true);
   const [isOpenDocs, setIsOpenDocs] = useState<boolean>(true);
@@ -71,7 +75,13 @@ const ResBoxPostman = function ({ selectedId }: Props): JSX.Element {
             />
             {isOpenJSON && ( */}
             <div className={`px-6`}>
-              <ResJSON response={resMockup} />
+              <ResJSON
+                response={
+                  responseData?.length
+                    ? responseData
+                    : `api 테스트를 진행해보세요!`
+                }
+              />
             </div>
             {/* )}
           </div>

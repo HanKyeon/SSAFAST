@@ -18,6 +18,7 @@ interface APIlistItemPropsType {
   writter?: boolean;
   checkBox?: boolean;
   checked?: boolean;
+  hoverOpt?: boolean;
   // checkedList?: (string | number)[];
   onToggleCheck?: (apiId: number | string, check: boolean) => void;
   setSelectedIdHandler?: (id: number) => void;
@@ -37,6 +38,7 @@ const APIlistItem = function ({
   onClickApi,
   toggleAddHandler,
   apiIdHandler,
+  hoverOpt = true,
 }: APIlistItemPropsType): JSX.Element {
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
@@ -78,7 +80,9 @@ const APIlistItem = function ({
           ? () => letsEdit(item.id)
           : () => onClickApiItem(item.id)
       }
-      className={`${className} flex items-center gap-3 h-[40px] min-h-[40px] hover:scale-[101.4%] duration-[0.33s] cursor-pointer`}
+      className={`${className} flex items-center gap-3 h-[40px] min-h-[40px] duration-[0.33s] ${
+        hoverOpt ? 'cursor-pointer hover:scale-[101.4%]' : ''
+      }`}
     >
       {checkBox && (
         <CheckBox isChecked={checked} onToggleCheck={onClickCheckBox} />
