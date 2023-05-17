@@ -42,7 +42,7 @@ const NonHeaderController = function ({
 }: Props) {
   const { control, getValues, watch } = useFormContext();
   const { dark } = useStoreSelector((state) => state.dark);
-  const [typeData, setTypeData] = useState<string | number>(``);
+  const [typeData, setTypeData] = useState<number>(0);
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
   const { data: dtoListData } = useDtoList(spaceId);
@@ -59,10 +59,10 @@ const NonHeaderController = function ({
   const appendConstraint = function () {
     constraintsAppend({ mainName: ``, minV: null, maxV: null });
   };
-
   const getTypeValue = function () {
     // console.log(getValues(formName)[index].type);
     setTypeData(() => getValues(formName)[index].type);
+    console.log(typeData);
   };
   const removeHandler = function () {
     remove(index);
@@ -181,7 +181,7 @@ const NonHeaderController = function ({
         ></CircleBtn>
       </Box>
       {/* 제약 조건 */}
-      <Controller
+      {/* <Controller
         key={`${formName}-constraints-${index}`}
         name={`${formName}.${index}.constraints`}
         control={control}
@@ -203,10 +203,6 @@ const NonHeaderController = function ({
                   onClick={appendConstraint}
                 />
               </div>
-              {/* <ConstraintsOption
-                typeData={typeData}
-                AddConstraint={constraintsAddHandler}
-              /> */}
               {constraintsFields.map((item, idx) => {
                 return (
                   <Controller
@@ -223,18 +219,19 @@ const NonHeaderController = function ({
                             className="w-[25%] flex items-center justify-center outline-none border-b-[3px] border-b-grayscale-dark bg-opacity-0 bg-theme-white-light aria-selected:bg-black px-2"
                           >
                             <option value={``}>선택</option>
-                            {commonConstraints.map((con) => {
-                              return (
-                                <option
-                                  key={`${con.name}-wonsi-${idx}`}
-                                  value={con.name}
-                                  title={con.desc}
-                                >
-                                  {con.name}
-                                </option>
-                              );
-                            })}
-                            {typeData === 'String' &&
+                            {typeData < 10 &&
+                              commonConstraints.map((con) => {
+                                return (
+                                  <option
+                                    key={`${con.name}-wonsi-${idx}`}
+                                    value={con.name}
+                                    title={con.desc}
+                                  >
+                                    {con.name}
+                                  </option>
+                                );
+                              })}
+                            {typeData === 1 &&
                               stringConstraints.map((con) => {
                                 return (
                                   <option
@@ -246,7 +243,7 @@ const NonHeaderController = function ({
                                   </option>
                                 );
                               })}
-                            {typeData === 'String' && (
+                            {typeData === 1 && (
                               <>
                                 <option
                                   key={`pattern-string-${idx}`}
@@ -262,26 +259,17 @@ const NonHeaderController = function ({
                                 </option>
                               </>
                             )}
-                            {(typeData === 'int' ||
-                              typeData === `long` ||
-                              typeData === `float` ||
-                              typeData === `double`) && (
+                            {typeData >= 2 && typeData <= 5 && (
                               <option key={`max-number-${idx}`} value={`Max`}>
                                 Max
                               </option>
                             )}
-                            {(typeData === 'int' ||
-                              typeData === `long` ||
-                              typeData === `float` ||
-                              typeData === `double`) && (
+                            {typeData >= 2 && typeData <= 5 && (
                               <option key={`min-number-${idx}`} value={`Min`}>
                                 Min
                               </option>
                             )}
-                            {(typeData === 'int' ||
-                              typeData === `long` ||
-                              typeData === `float` ||
-                              typeData === `double`) && (
+                            {typeData >= 2 && typeData <= 5 && (
                               <option
                                 key={`range-number-${idx}`}
                                 value={`Range`}
@@ -321,7 +309,7 @@ const NonHeaderController = function ({
                                       name={`${formName}.${index}.constraints.${idx}.maxV`}
                                       type="number"
                                       value={maxVField.value}
-                                      step={typeData === `int` ? 1 : 0.01}
+                                      step={typeData === 2 ? 1 : 0.01}
                                       onChange={maxVField.onChange}
                                       placeholder="Maximum"
                                       className="text-grayscale-dark bg-grayscale-deeplightlight bg-opacity-0 border-b-[3px] border-b-grayscale-dark w-[33%]"
@@ -342,7 +330,7 @@ const NonHeaderController = function ({
                                       name={`${formName}.${index}.constraints.${idx}.minV`}
                                       type="number"
                                       value={minVField.value}
-                                      step={typeData === `int` ? 1 : 0.01}
+                                      step={typeData === 2 ? 1 : 0.01}
                                       onChange={minVField.onChange}
                                       placeholder="Minimum"
                                       className="text-grayscale-dark bg-grayscale-deeplightlight bg-opacity-0 border-b-[3px] border-b-grayscale-dark w-[33%]"
@@ -363,7 +351,7 @@ const NonHeaderController = function ({
                                       name={`${formName}.${index}.constraints.${idx}.minV`}
                                       type="number"
                                       value={minVField.value}
-                                      step={typeData === `int` ? 1 : 0.01}
+                                      step={typeData === 2 ? 1 : 0.01}
                                       onChange={minVField.onChange}
                                       placeholder="Minimum"
                                       className="text-grayscale-dark bg-grayscale-deeplightlight bg-opacity-0 border-b-[3px] border-b-grayscale-dark w-[33%]"
@@ -380,7 +368,7 @@ const NonHeaderController = function ({
                                       name={`${formName}.${index}.constraints.${idx}.maxV`}
                                       type="number"
                                       value={maxVField.value}
-                                      step={typeData === `int` ? 1 : 0.01}
+                                      step={typeData === 2 ? 1 : 0.01}
                                       onChange={maxVField.onChange}
                                       placeholder="Maximum"
                                       className="text-grayscale-dark bg-grayscale-deeplightlight bg-opacity-0 border-b-[3px] border-b-grayscale-dark w-[33%]"
@@ -439,7 +427,7 @@ const NonHeaderController = function ({
             </div>
           );
         }}
-      />
+      /> */}
     </AnimationBox>
   );
 };

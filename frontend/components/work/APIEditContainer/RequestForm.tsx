@@ -31,7 +31,6 @@ export interface Headers {
   keyName: string;
   type: string;
   desc: string;
-  value: string | null;
 }
 
 export interface BodyType {
@@ -45,7 +44,6 @@ export interface Fields {
   desc: string;
   itera: boolean;
   constraints: string[];
-  value: string | null;
 }
 
 export type NestedDtosType = {
@@ -57,7 +55,6 @@ export interface PathVariables {
   type: number;
   desc: string;
   constraints: string[];
-  value: null;
 }
 
 export interface Params {
@@ -66,7 +63,6 @@ export interface Params {
   desc: string;
   constraints: string[];
   itera: boolean;
-  value: null;
 }
 
 const RequestForm = function () {
@@ -89,7 +85,6 @@ const RequestForm = function () {
       keyName: '',
       type: '',
       desc: '',
-      value: null,
     });
     if (pathOpen === false) {
       setHeadersOpen((prev) => !prev);
@@ -110,7 +105,6 @@ const RequestForm = function () {
       type: 0,
       desc: '',
       constraints: [],
-      value: null,
       itera: false,
     });
     if (paramsOpen === false) {
@@ -131,7 +125,6 @@ const RequestForm = function () {
       type: 0,
       desc: '',
       constraints: [],
-      value: null,
     });
     if (pathOpen === false) {
       setPathOpen((prev) => !prev);
@@ -152,7 +145,6 @@ const RequestForm = function () {
       desc: '',
       itera: false,
       constraints: [],
-      value: null,
     });
     if (pathOpen === false) {
       setPathOpen((prev) => !prev);
