@@ -15,18 +15,19 @@ export interface DtoList {
 }
 
 /**
- * key: 이름
+ * keyName: 이름
  * type: 타입
  * desc: 설명
- * itera: 배열 여부
- * constraints: 제약조건 문자열 배열
+ * itera?: 배열 여부
+ * constraints?: 제약조건 문자열 배열
+ * value?: 값 옵셔널
  */
 export interface DtoField {
   keyName: string;
   type: string | number;
   desc: string;
-  itera: boolean;
-  constraints: string[];
+  constraints?: string[];
+  itera?: boolean;
   value?: any;
 }
 
@@ -955,6 +956,65 @@ export const useApiDetail = function (spaceId: string | number, apiId: number) {
 };
 
 // Api 단일 테스트용 상세 조회
+
+export interface BodyNestedDtoDetail {
+  [id: number]: {
+    name?: string;
+    keyName?: string;
+    desc?: string;
+    constraints?: string[];
+    itera?: boolean;
+    fields?: DtoField[];
+    nestedDtos?: BodyNestedDtoDetail;
+  }[];
+  [id: string]: {
+    name?: string;
+    keyName?: string;
+    desc?: string;
+    constraints?: string[];
+    itera?: boolean;
+    fields?: DtoField[];
+    nestedDtos?: BodyNestedDtoDetail;
+  }[];
+}
+
+export interface DtoDetailForTestBody {
+  fields: DtoField[];
+  nestedDtos?: BodyNestedDtoDetail;
+  nestedDtoLists?: BodyNestedDtoDetail;
+}
+
+/**
+ * Form에서 Request 접근 시 :
+ * document.request
+ */
+export interface ApiDetailInTest {
+  apiId: number;
+  name: string;
+  description: string;
+  method: number;
+  status: number;
+  baseurlId: number;
+  categoryId: number;
+  member: { id: number; name: string; email: string; profileImg: string };
+  createdTime: string;
+  document: {
+    request: {
+      additionalUrl: string;
+      headers: DtoField[];
+      body: DtoDetailForTestBody;
+      pathVars: DtoField[];
+      params: DtoField[];
+    };
+    response: {
+      statusCode: number;
+      desc: string;
+      headers: DtoField[];
+      body: DtoDetailForTestBody;
+    };
+  };
+}
+
 export const getApiSingleTestDetail = async function (apiId: string | number) {
   return apiRequest({
     method: `get`,
@@ -966,7 +1026,7 @@ export const useApiSingleTestDetail = function (
   spaceId: string | number,
   apiId: string | number
 ) {
-  return useQuery<any>({
+  return useQuery<ApiDetailInTest>({
     queryKey: queryKeys.spaceApiDetail(spaceId, apiId),
     queryFn: async function () {
       return getApiSingleTestDetail(apiId).then((res) => res.data);
