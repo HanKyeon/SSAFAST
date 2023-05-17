@@ -26,6 +26,7 @@ interface Props {
   headerIdx: number;
   setActive: (idx: number | null) => void;
   isConnect?: boolean;
+  changeApiId?: (id: number) => void;
 }
 
 const FigmaListItem = function ({
@@ -36,6 +37,7 @@ const FigmaListItem = function ({
   headerIdx,
   setActive,
   isConnect = false,
+  changeApiId,
 }: Props) {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -137,21 +139,14 @@ const FigmaListItem = function ({
           </Box>
         </Modal>
       </AnimationBox>
-      {/* <Box
-        variant="three"
-        fontType="normal"
-        className="pt-3 px-5 whitespace-nowrap w-full h-auto duration-[0.33s] flex flex-col gap-6 pb-4 cursor-pointer"
-      > */}
+
       <div className="flex flex-row items-center justify-between gap-5 w-full">
         <div
-          className="w-full text-ellipsis overflow-hidden text-header py-3"
+          className="w-full text-ellipsis overflow-hidden text-header py-3 cursor-pointer duration-[0.33s]"
           onClick={expandHandler}
         >
           #{headerIdx + 1} {figmaData.name}
         </div>
-        {/* <Button className="text-[1.2rem]" onClick={openDeleteModal}>
-            삭제
-          </Button> */}
         {activeIdx === idx && (
           <HiOutlineTrash
             className={`text-grayscale-dark hover:text-mammoth-normal text-[24px] cursor-pointer duration-[0.33s]`}
@@ -159,10 +154,9 @@ const FigmaListItem = function ({
           />
         )}
       </div>
-
       <AnimationBox
         isOpened={isExpand}
-        appearClassName="animate-[appear-opacity-softly_0.22s_both]"
+        appearClassName="animate-[appear-opacity-softly_0.33s_both]"
         disappearClassName="animate-[disappear-opacity-softly_0.11s_both] relative"
         className="w-full gap-2 flex flex-col"
       >
@@ -176,7 +170,11 @@ const FigmaListItem = function ({
             className={`w-[95%] my-0 mx-auto flex flex-col gap-1 duration-[0.33s]`}
           >
             {sectionApiList?.map((api) => (
-              <APIlistItem key={`figma-${idx}-${api.id}-api`} item={api} />
+              <APIlistItem
+                key={`figma-${idx}-${api.id}-api`}
+                item={api}
+                setSelectedIdHandler={changeApiId}
+              />
             ))}
           </ul>
         )}

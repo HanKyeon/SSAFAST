@@ -78,7 +78,7 @@ const APIlistItem = function ({
           ? () => letsEdit(item.id)
           : () => onClickApiItem(item.id)
       }
-      className={`${className} flex items-center gap-3 h-[40px] min-h-[40px]`}
+      className={`${className} flex items-center gap-3 h-[40px] min-h-[40px] hover:scale-[101.4%] duration-[0.33s] cursor-pointer`}
     >
       {checkBox && (
         <CheckBox isChecked={checked} onToggleCheck={onClickCheckBox} />

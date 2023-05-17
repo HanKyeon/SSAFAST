@@ -56,6 +56,7 @@ interface Props {
   apiData?: EachCateApi[];
   onChangeSection?: (id: string | number) => void;
   isConnect?: boolean;
+  changeApiId?: (id: number) => void;
 }
 
 const FigmaList = function ({
@@ -63,6 +64,7 @@ const FigmaList = function ({
   apiData,
   figmaList,
   isConnect = false,
+  changeApiId,
 }: Props) {
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
@@ -91,6 +93,7 @@ const FigmaList = function ({
                 idx={figmaData.id as number}
                 activeIdx={activeIdx}
                 setActive={changeIdxHandler}
+                changeApiId={changeApiId}
               />
             );
           }

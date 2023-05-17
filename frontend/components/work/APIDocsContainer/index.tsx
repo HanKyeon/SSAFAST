@@ -9,10 +9,24 @@ import MethodBadge from '@/components/apis/MethodBadge';
 import ReqBox from './ReqBox';
 import ResBox from './ResBox';
 import LeftContainer from './LeftContainer';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { IoMdArrowDropright } from 'react-icons/io';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import { FormProvider, useForm } from 'react-hook-form';
+import { useRouter } from 'next/router';
+import { SpaceParams } from '@/pages/space';
+import {
+  ApiDetailInTest,
+  DtoDetailForTestBody,
+  DtoField,
+  useApiDetail,
+  useApiSingleTestDetail,
+  useBaseUrl,
+} from '@/hooks/queries/queries';
+import { useQueryClient } from '@tanstack/react-query';
+import apiRequest from '@/utils/axios';
+import ReqBoxPostman from './formComponent/ReqBoxPostman';
+import ResBoxPostman from './formComponent/ResBoxPostman';
 
 const status: (1 | 2 | 3 | 4)[] = [1, 2, 3, 4];
 export type MockupData2Type = {
@@ -64,94 +78,57 @@ export type BodyType = {
   nestedDtoList?: NestedDtosType | NestedDtosType[];
 };
 
-const mockupData2: MockupData2Type = {
-  request: {
-    headers: [
-      {
-        keyName: 'Content-Type',
-        type: 'String',
-        desc: 'Define request data type',
-        value: null,
-      },
-      {
-        keyName: 'Age',
-        type: 'Integer',
-        desc: 'Fields for cashing',
-        value: null,
-      },
-    ],
-    body: {
-      fields: [
+const mockupData2: ApiDetailInTest = {
+  apiId: 1,
+  name: `api이름`,
+  description: `api설명`,
+  method: 1,
+  status: 1,
+  baseurlId: 5,
+  categoryId: 1,
+  member: { id: 1, name: `작성자`, email: `asdf@asdf.com`, profileImg: `` },
+  createdTime: `2023-05-17`,
+  document: {
+    request: {
+      additionalUrl: `/api/:userId`,
+      headers: [
         {
-          keyName: 'ID',
-          type: 1,
-          desc: '사용자 ID',
-          itera: false,
-          constraints: ['NotNull'],
+          keyName: 'Content-Type',
+          type: 'String',
+          desc: 'Define request data type',
           value: null,
         },
         {
-          keyName: 'PW',
-          type: 1,
-          desc: '사용자 PW',
-          itera: false,
-          constraints: ['NotNull'],
+          keyName: 'Age',
+          type: 'Integer',
+          desc: 'Fields for cashing',
           value: null,
         },
       ],
-      nestedDtos: {
-        '11': {
-          name: 'UserInfo', // 실제 dto class 이름
-          keyName: '11Dto', // 사용자가 지정한 변수명 e.g) Test test2;
-          desc: '사용자 정보를 저장하는 class',
-          itera: false,
-          fields: [
+      body: {
+        fields: [
+          {
+            keyName: 'ID',
+            type: 1,
+            desc: '사용자 ID',
+            itera: false,
+            constraints: ['NotNull'],
+            value: null,
+          },
+          {
+            keyName: 'PW',
+            type: 1,
+            desc: '배열 값',
+            itera: true,
+            constraints: ['NotNull'],
+            value: null,
+          },
+        ],
+        nestedDtos: {
+          11: [
             {
-              keyName: 'userID',
-              type: 1,
-              desc: '추천인ID',
-              value: null,
-              itera: false,
-              constraints: ['NotNull'],
-            },
-            {
-              keyName: 'userPW',
-              type: 1,
-              desc: '추천인PW',
-              value: null,
-              itera: false,
-              constraints: ['NotNull'],
-            },
-          ],
-          nestedDtos: {},
-        },
-        '8': {
-          name: 'UserInfo', // 실제 dto class 이름
-          keyName: '8Dto', // 사용자가 지정한 변수명 e.g) Test test2;
-          desc: '사용자 정보를 저장하는 class',
-          itera: false,
-          fields: [
-            {
-              keyName: 'userID',
-              type: 1,
-              desc: '추천인ID',
-              value: null,
-              itera: false,
-              constraints: ['NotNull'],
-            },
-            {
-              keyName: 'userPW',
-              type: 1,
-              desc: '추천인PW',
-              value: null,
-              itera: false,
-              constraints: ['NotNull'],
-            },
-          ],
-          nestedDtos: {
-            '7': {
               name: 'UserInfo', // 실제 dto class 이름
-              keyName: '7Dto', // 사용자가 지정한 변수명 e.g) Test test2;
+              keyName: '11Dto', // 사용자가 지정한 변수명 e.g) Test test2;
               desc: '사용자 정보를 저장하는 class',
               itera: false,
               fields: [
@@ -174,47 +151,112 @@ const mockupData2: MockupData2Type = {
               ],
               nestedDtos: {},
             },
-          },
-        },
-      },
-      nestedDtoList: {
-        '12': {
-          name: 'RecUserInfo',
-          keyName: null,
-          desc: '추천한 사용자들의 정보를 담는 class',
-          itera: true,
-          fields: [
+          ],
+          8: [
             {
-              keyName: 'userID',
-              type: 1,
-              desc: '추천인ID',
-              value: null,
-              itera: false,
-              constraints: ['NotNull'],
+              name: 'UserInfo', // 실제 dto class 이름
+              keyName: '8Dto', // 사용자가 지정한 변수명 e.g) Test test2;
+              desc: '사용자 정보를 저장하는 class',
+              itera: true,
+              fields: [
+                {
+                  keyName: 'userID',
+                  type: 1,
+                  desc: '추천인ID',
+                  value: null,
+                  itera: false,
+                  constraints: ['NotNull'],
+                },
+                {
+                  keyName: 'userPW',
+                  type: 1,
+                  desc: '추천인PW',
+                  value: null,
+                  itera: false,
+                  constraints: ['NotNull'],
+                },
+              ],
+              nestedDtos: {
+                7: [
+                  {
+                    name: 'UserInfo', // 실제 dto class 이름
+                    keyName: '7Dto', // 사용자가 지정한 변수명 e.g) Test test2;
+                    desc: '사용자 정보를 저장하는 class',
+                    itera: false,
+                    fields: [
+                      {
+                        keyName: 'userID',
+                        type: 1,
+                        desc: '추천인ID',
+                        value: null,
+                        itera: false,
+                        constraints: ['NotNull'],
+                      },
+                      {
+                        keyName: 'userPW',
+                        type: 1,
+                        desc: '추천인PW',
+                        value: null,
+                        itera: false,
+                        constraints: ['NotNull'],
+                      },
+                    ],
+                    nestedDtos: {},
+                  },
+                ],
+              },
             },
           ],
-          nestedDtos: {},
+        },
+        nestedDtoLists: {
+          12: [
+            {
+              name: 'RecUserInfo',
+              keyName: `recommendedPeople`,
+              desc: '추천한 사용자들의 정보를 담는 class',
+              itera: true,
+              fields: [
+                {
+                  keyName: 'userID',
+                  type: 1,
+                  desc: '추천인ID',
+                  value: null,
+                  itera: false,
+                  constraints: ['NotNull'],
+                },
+              ],
+              nestedDtos: {},
+            },
+          ],
         },
       },
+      pathVars: [
+        {
+          keyName: 'userid',
+          type: 'String',
+          desc: 'for login',
+          constraints: ['NotNull'],
+          value: null,
+        },
+      ],
+      params: [
+        {
+          keyName: 'age',
+          type: 'int',
+          desc: 'user age',
+          constraints: ['NotNull'],
+          value: null,
+        },
+      ],
     },
-    pathVars: [
-      {
-        keyName: 'userid',
-        type: 'String',
-        desc: 'for login',
-        constraints: ['NotNull'],
-        value: null,
+    response: {
+      statusCode: 200,
+      desc: `성공`,
+      headers: [],
+      body: {
+        fields: [],
       },
-    ],
-    params: [
-      {
-        keyName: 'age',
-        type: 'int',
-        desc: 'user age',
-        constraints: ['NotNull'],
-        value: null,
-      },
-    ],
+    },
   },
 };
 
@@ -223,29 +265,47 @@ interface Props {
   store: any;
 }
 const APIDocsContainer = function ({ store, serverSideStore }: Props) {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { spaceId } = router.query as SpaceParams;
+  const [selectedId, setSelectedId] = useState<number>(0);
+  const { data: selectedApiData } = useApiSingleTestDetail(spaceId, selectedId);
+  const { data: baseUrlListdata } = useBaseUrl(spaceId);
   const [curStatus, setCurStatus] = useState<number>(0);
   const onChangeStatus = (): void => {
     setCurStatus((prev) => (curStatus === 3 ? 0 : prev + 1));
+    apiRequest({
+      method: `put`,
+      url: `/api/api/status`,
+      params: {
+        apiId: selectedId,
+      },
+    });
   };
-  const methods = useForm<ApiTestForm>({
-    defaultValues: {
-      request: mockupData2.request,
-    },
-  });
-  const { control, handleSubmit } = methods;
+  const methods = useForm<ApiDetailInTest>({ defaultValues: mockupData2 });
+  const { control, handleSubmit, reset } = methods;
 
-  const [selectedId, setSelectedId] = useState<number>(0);
+  useEffect(
+    function () {
+      if (selectedApiData) {
+        reset(selectedApiData);
+      } else {
+      }
+    },
+    [selectedApiData]
+  );
+
   const changeSelectedIdHandler = useCallback(function (id: number) {
     setSelectedId(() => id);
   }, []);
 
-  const checkData = function (data: ApiTestForm) {
+  const checkData = function (data: ApiDetailInTest) {
     console.log(data);
   };
   return (
-    <div className="h-full flex justify-center items-center gap-3">
+    <div className="h-full w-full flex justify-center items-center gap-[1.12%]">
       {/* 왼쪽 화면 */}
-      <Box className="h-full p-5 flex-1">
+      <Box className="basis-[50%] w-[50%] h-full flex-1 items-center justify-center p-5 flex flex-col overflow-hidden">
         <LeftContainer
           store={store}
           selectedId={selectedId}
@@ -253,7 +313,7 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
         />
       </Box>
       {/* 오른쪽 화면 */}
-      <div className="h-full flex-1 min-w-0">
+      <div className="basis-[50%] w-[50%] h-full flex-1 items-center justify-center flex flex-col overflow-hidden">
         <FormProvider {...methods}>
           <form className="w-full h-full" onSubmit={handleSubmit(checkData)}>
             <div className={`h-full w-full flex flex-col items-center gap-3`}>
@@ -261,7 +321,10 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
               <Box className="w-full p-5 gap-3">
                 <div className="flex justify-between items-center">
                   <div className={`flex items-center justify-between w-[75px]`}>
-                    <StatusBadge status={status[curStatus]} small />
+                    <StatusBadge
+                      status={status[selectedApiData?.status || curStatus]}
+                      small
+                    />
                     {/* <IoMdArrowDropright */}
                     <MdOutlineKeyboardArrowRight
                       className={`text-[22px] duration-[0.33s] text-grayscale-deepdark hover:text-grayscale-light`}
@@ -277,21 +340,29 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
                     </button>
                   </div>
                 </div>
-                <p className="mt-[12px] text-header">게시글 목록 불러오기</p>
+                <p className="mt-[12px] text-header">
+                  {selectedApiData?.name || '게시글 목록 불러오기'}
+                </p>
                 <p className="mt-1 text-content text-grayscale-dark">
-                  게시글 목록 쭈루리 불러오는 것
+                  {selectedApiData?.description ||
+                    '게시글 목록 쭈루리 불러오는 것'}
                 </p>
                 <div className="mt-[12px] flex gap-3 items-center">
-                  <MethodBadge method={1} small />
+                  <MethodBadge
+                    method={(selectedApiData?.method as 1 | 2 | 3 | 4 | 5) || 1}
+                    small
+                  />
                   <p className="text-[14px] text-grayscale-light">
-                    https://localhost:8080/user/:userid
+                    {baseUrlListdata?.baseurls.find(
+                      (v) => v.id === selectedApiData?.baseurlId
+                    )?.id || 'https://localhost:8080/user/:userid'}
                   </p>
                 </div>
               </Box>
               {/* Request */}
-              <ReqBox control={control} data={mockupData2} />
+              <ReqBoxPostman selectedId={selectedId} />
               {/* Response */}
-              <ResBox />
+              <ResBoxPostman selectedId={selectedId} />
             </div>
           </form>
         </FormProvider>
