@@ -1,12 +1,19 @@
 package com.rocket.ssafast.apispec.service;
 
+import com.rocket.ssafast.apiexec.domain.document.element.ApiTestResultRequest;
+import com.rocket.ssafast.apiexec.domain.document.element.ApiTestResultRequestBody;
+import com.rocket.ssafast.apiexec.domain.document.element.ApiTestResultRequestNestedDto;
+import com.rocket.ssafast.apiexec.domain.document.element.ApiTestResultRequestNestedDtoList;
 import com.rocket.ssafast.apispec.domain.Document.element.ApiDoc;
+import com.rocket.ssafast.apispec.domain.Document.element.HeaderField;
 import com.rocket.ssafast.apispec.domain.Document.temp.ApiSpecDoc;
 import com.rocket.ssafast.apispec.domain.Document.temp.BodyField;
 import com.rocket.ssafast.apispec.domain.Document.temp.ResponseField;
 import com.rocket.ssafast.apispec.domain.Entity.ApiSpecEntity;
 import com.rocket.ssafast.apispec.domain.Entity.CategoryEntity;
 import com.rocket.ssafast.apispec.dto.request.ApiSpecInfoDto;
+import com.rocket.ssafast.apispec.dto.response.DetailApiInfoDocument;
+import com.rocket.ssafast.apispec.dto.response.DetailApiInfoForTestDto;
 import com.rocket.ssafast.apispec.dto.response.DetailApiSpecInfoDto;
 import com.rocket.ssafast.apispec.repository.ApiSpecRepository;
 import com.rocket.ssafast.apispec.repository.CategoryEntityRepository;
@@ -14,14 +21,18 @@ import com.rocket.ssafast.dtospec.domain.ApiHasDtoEntity;
 import com.rocket.ssafast.dtospec.domain.ChildDtoEntity;
 import com.rocket.ssafast.dtospec.domain.DtoSpecEntity;
 import com.rocket.ssafast.dtospec.domain.element.DtoInfo;
+import com.rocket.ssafast.dtospec.domain.element.FieldInfo;
 import com.rocket.ssafast.dtospec.repository.ApiHasDtoEntityRepository;
 import com.rocket.ssafast.dtospec.repository.ChildDtoEntityRepository;
 import com.rocket.ssafast.dtospec.repository.DtoSpecEntityRepository;
+import com.rocket.ssafast.dtospec.service.DtoSpecDocumentService;
+import com.rocket.ssafast.dtospec.service.DtoSpecEntityService;
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
 import com.rocket.ssafast.member.domain.Member;
 import com.rocket.ssafast.member.dto.response.ResMemberDto;
 import com.rocket.ssafast.member.repository.MemberRepository;
+import com.rocket.ssafast.utils.UtilMethods;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -42,6 +53,8 @@ public class ApiSpecService {
     private final CategoryEntityRepository categoryEntityRepository;
     private final ChildDtoEntityRepository childDtoEntityRepository;
 
+    private final DtoSpecEntityService dtoSpecEntityService;
+    private final DtoSpecDocumentService dtoSpecDocumentService;
     private final ApiSpecDocumentService apiSpecDocumentService;
     public Long createApiSpec(Long memberId, ApiSpecInfoDto apiSpecInfoDto){
 
@@ -169,6 +182,147 @@ public class ApiSpecService {
                         .categoryId(apiSpec.get().getCategory().getId())
                         .member(memberDto)
                         .document(apiDoc)
+                        .build();
+    }
+
+    public DetailApiInfoForTestDto getApiSpecDetail(Long apiId){
+
+        Optional<ApiSpecEntity> apiSpec = apiSpecRepository.findById(apiId);
+        ApiSpecDoc apiDoc = apiSpecDocumentService.getApiSpecDocs(apiId);
+        log.info("getApiSpecDetailMethod find : " + apiDoc.toString());
+
+        if(!apiSpec.isPresent()){ throw new CustomException(ErrorCode.API_NOT_FOUND); }
+
+        //make header's list
+        List<HeaderField> requestHeaderFields = new ArrayList<>();
+        apiDoc.getRequest().getHeaders().forEach(value -> {
+            requestHeaderFields.add(value.convertTo());
+        });
+
+        List<FieldInfo> requestPathVars = new ArrayList<>();
+        apiDoc.getRequest().getPathVars().forEach(value ->{
+            log.info("@@pathvars : " + value.toString());
+            requestPathVars.add(value.convertTo());
+        });
+
+        List<FieldInfo> requestParams = new ArrayList<>();
+        apiDoc.getRequest().getParams().forEach(value -> {
+            requestParams.add(value.convertTo());
+        });
+
+        //make request.body's list
+        List<FieldInfo> bodyFields = new ArrayList<>();
+        apiDoc.getRequest().getBody().getFields().forEach(value -> {
+            bodyFields.add(value.convertTo());
+        });
+
+        Map<Long, List<ApiTestResultRequestNestedDto>> nestedDtos = new HashMap<>();
+        Map<Long, List<ApiTestResultRequestNestedDtoList>> nestedDtoLists = new HashMap<>();
+
+
+        //nestedDtos 는 null-check를 해야한다.
+        if(apiDoc.getRequest().getBody().getNestedDtos() != null){
+            for(Long dtoId : apiDoc.getRequest().getBody().getNestedDtos().keySet()){
+                Map<Long, List<ApiTestResultRequestNestedDto>> forNestedDtos = new HashMap<>();
+                Map<Long, List<ApiTestResultRequestNestedDtoList>> forNestedDtoLists = new HashMap<>();
+                List<ApiTestResultRequestNestedDto> outerNestedDto = new ArrayList<>();
+
+                DtoSpecEntity dtoSpecEntity = dtoSpecEntityService.getDtoSpecEntityById(dtoId);
+                DtoInfo dtoSpecDoc =  dtoSpecDocumentService.findByDtoId(dtoId);
+
+                // dtoId has objects
+                apiDoc.getRequest().getBody().getNestedDtos().get(dtoId).forEach(value -> {
+
+                    // dto in dto
+                    if(dtoSpecDoc.getNestedDtos() != null){
+                        dtoSpecDoc.getNestedDtos().forEach((docDtoKey, docDtoValue) -> {
+
+                            DtoSpecEntity innerDtoSpecEntity = dtoSpecEntityService.getDtoSpecEntityById(docDtoKey);
+                            DtoInfo innerDtoSpecDoc = dtoSpecDocumentService.findByDtoId(docDtoKey);
+
+                            List<ApiTestResultRequestNestedDto> innerNestedDto = new ArrayList<>();
+
+                            docDtoValue.forEach(innerValue -> {
+                                if(innerValue.isItera()){
+                                    // nestedDtoLists -> to be continue
+                                }
+                                else{
+                                    innerNestedDto.add(
+                                            ApiTestResultRequestNestedDto.builder()
+                                                    .keyName(innerValue.getKeyName())
+                                                    .name(innerDtoSpecEntity.getName())
+                                                    .desc(innerDtoSpecEntity.getDescription())
+                                                    .fields(innerDtoSpecDoc.getFields())
+                                                    .nestedDtos(new HashMap<>())
+                                                    .nestedDtoLists(new HashMap<>())
+                                                    .build()
+                                    );
+                                }
+                            });
+
+                            forNestedDtos.put(docDtoKey, innerNestedDto);
+
+                        });
+                    }
+
+
+                    if(value.isItera()){
+                        // nestedDtoLists -> to be continue
+                    }
+                    else{
+                        outerNestedDto.add(
+                            ApiTestResultRequestNestedDto.builder()
+                                    .keyName(value.getKeyName())
+                                    .name(dtoSpecEntity.getName())
+                                    .desc(dtoSpecEntity.getDescription())
+                                    .fields(dtoSpecDoc.getFields())
+                                    .nestedDtos(forNestedDtos)
+                                    .nestedDtoLists(forNestedDtoLists)
+                                    .build()
+                        );
+
+                    }
+                });
+
+                nestedDtos.put(dtoId, outerNestedDto);
+            }
+        }
+
+
+        ApiTestResultRequestBody requestBody =
+                ApiTestResultRequestBody.builder()
+                        .fields(bodyFields)
+                        .nestedDtos(nestedDtos)
+                        .nestedDtoLists(nestedDtoLists)
+                        .build();
+
+        DetailApiInfoDocument document =
+                DetailApiInfoDocument.builder()
+                        .request(
+                                ApiTestResultRequest.builder()
+                                        .additionalUrl(apiDoc.getRequest().getAdditionalUrl())
+                                        .headers(requestHeaderFields)
+                                        .pathVars(requestPathVars)
+                                        .params(requestParams)
+                                        .body(requestBody)
+                                        .build()
+                        )
+                        .response(null)
+                        .build();
+
+
+        return
+                DetailApiInfoForTestDto.builder()
+                        .apiId(apiSpec.get().getId())
+                        .baseurlId(apiSpec.get().getBaseurlId())
+                        .categoryId(apiSpec.get().getCategory().getId())
+                        .name(apiSpec.get().getName())
+                        .status(apiSpec.get().getStatus())
+                        .method(apiSpec.get().getMethod())
+                        .description(apiSpec.get().getDescription())
+                        .createdTime(apiSpec.get().getCreatedTime())
+                        .member(apiSpec.get().getMember().toResDto())
+                        .document(document)
                         .build();
     }
 

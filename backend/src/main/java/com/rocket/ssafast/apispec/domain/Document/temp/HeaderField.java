@@ -16,4 +16,8 @@ public class HeaderField {
     private int type;
     private String desc;
     private List<String> constraints;
+
+    public com.rocket.ssafast.apispec.domain.Document.element.HeaderField convertTo(){
+        return new com.rocket.ssafast.apispec.domain.Document.element.HeaderField(this.keyName, this.type, this.desc, null);
+    }
 }

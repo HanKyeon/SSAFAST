@@ -5,15 +5,13 @@ import java.util.Map;
 
 import com.rocket.ssafast.dtospec.domain.element.FieldInfo;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ApiTestResultRequestBody {
 
     private List<FieldInfo> fields;
