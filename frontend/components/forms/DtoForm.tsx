@@ -18,6 +18,7 @@ import {
 import {
   DtoDetail,
   getDtoDetail,
+  useDtoClasses,
   useDtoDetail,
   useDtoList,
 } from '@/hooks/queries/queries';
@@ -81,6 +82,7 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
     defaultValues: defaultData,
   });
   const { handleSubmit, control, reset, resetField } = methods;
+  const { data: dtoClassCode } = useDtoClasses(spaceId, selectedId!);
   useEffect(
     function () {
       reset(defaultData, { keepDefaultValues: true });
@@ -106,16 +108,9 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
       return apiRequest({
         method: `delete`,
         url: `/api/dto/${dtoId}`,
-        // params: {},
-        // data: {}
       });
     },
     onSuccess: function (data) {
-      // if (data) {
-      //   queryClient.removeQueries({
-      //     queryKey: queryKeys.spaceDtoDetail(parseInt(spaceId), data),
-      //   });
-      // }
       queryClient.invalidateQueries(queryKeys.spaceDto(parseInt(spaceId)));
       queryClient.invalidateQueries(queryKeys.spaceApi(parseInt(spaceId)));
     },
@@ -130,28 +125,6 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
     },
   });
   const { data: dtoListData } = useDtoList(spaceId);
-
-  // 이 부분은 확신이 없음!
-  // useEffect(
-  //   function () {
-  //     if (!dtoListData) {
-  //       return;
-  //     }
-  //     dtoListData?.dtoList.forEach((dto) => {
-  //       queryClient.setQueryData(
-  //         queryKeys.spaceDtoDetail(spaceId, dto.id),
-  //         async (old) => {
-  //           let data;
-  //           await getDtoDetail(dto.id).then((res) => {
-  //             data = res.data;
-  //           });
-  //           return data;
-  //         }
-  //       );
-  //     });
-  //   },
-  //   [dtoListData]
-  // );
 
   const [isModal, setIsModal] = useState<boolean>(false);
   const closeModal = useCallback(function () {
@@ -345,7 +318,8 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
               근데 니들 저장해야 저장된거 보여줌. 꼬우면 결제 ㄱ
             </div>
             <Box variant="three" className="w-full h-full p-5">
-              이 편지는 17세기 영국으로부터 시작되어...
+              {dtoClassCode?.dtoClass ||
+                '이 편지는 17세기 영국으로부터 시작되어...'}
             </Box>
             <div className="flex flex-row gap-4">
               <Box

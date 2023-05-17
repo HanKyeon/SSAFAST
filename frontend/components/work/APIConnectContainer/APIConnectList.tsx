@@ -119,7 +119,7 @@ type APIListPropsType = {
 };
 
 const APIConnectList = function ({
-  apiList = checkedMok,
+  apiList,
   checkedIds = [],
   checkBox = false, // checkbox===true이면 -> figma화면이랑 api 연결중!
   onToggleCheck,
@@ -138,71 +138,73 @@ const APIConnectList = function ({
     onResetHandler: categoryReset,
   } = useInput(categoryRef);
 
-  const { data: spaceApiList, isLoading, isError } = useSpaceApis(spaceId);
-  // const {data: sectionApiList} = useSectionsApi(spaceId, sectionId, selectedMethod, searchInputData)
-  const { data: sectionApiList } = useSectionsApi(spaceId, 1);
-
   const onClickOpenCate = (cateID: string | number, cateIdx: number): void => {
     setCurCateIdx(cateIdx);
   };
 
   return (
-    <>
-      <ul
-        className={`h-full w-full overflow-y-scroll scrollbar-hide flex flex-col items-center gap-3`}
-      >
-        {spaceApiList?.apiCategories?.map((cate, cateIdx) => (
-          <>
-            <li key={`${cate.categoryId}_${cateIdx}`} className={`w-full`}>
-              {/* 카테고리 */}
-              <div className={`mb-1 flex items-center gap-3`}>
-                <div
-                  className={`flex items-center gap-3 cursor-pointer`}
-                  onClick={() => onClickOpenCate(cate.categoryId, cateIdx)}
-                >
-                  <i className={`text-[20px]`}>
-                    {curCateIdx === cateIdx ? (
-                      <BsFolder2Open />
-                    ) : (
-                      <BsFolder className={`mt-[2px]`} />
-                    )}
-                  </i>
-                  <span>{cate.categoryName}</span>
-                </div>
-                <AiOutlineMore
-                  className={`text-grayscale-dark hover:text-theme-white-strong`}
-                />
-
-                <span>{cate.categoryName}</span>
-                <AiOutlineMore
-                  className={`text-grayscale-dark hover:text-theme-white-strong`}
-                />
-              </div>
-              {/* api 목록 */}
-              <ul
-                className={`w-[90%] my-0 mx-auto flex flex-col items-center gap-1 duration-[0.33s] ${
-                  curCateIdx === cateIdx ? '' : 'hidden'
-                }`}
+    <ul
+      className={`h-full w-full overflow-y-scroll scrollbar-hide flex flex-col items-center gap-3`}
+    >
+      {apiList && apiList.apiCategories.length ? (
+        apiList?.apiCategories?.map((cate, cateIdx) => (
+          <li key={`${cate.categoryId}_${cateIdx}`} className={`w-full`}>
+            {/* 카테고리 */}
+            <div className={`mb-1 flex items-center gap-3`}>
+              <div
+                className={`flex items-center gap-3 cursor-pointer`}
+                onClick={() => onClickOpenCate(cate.categoryId, cateIdx)}
               >
-                {cate?.apis?.map((api, apiIdx) => (
-                  <APIlistItem
-                    key={`${api.id}-${apiIdx}-apiz`}
-                    checkBox={checkBox} // 체크박스 달고있는 list
-                    checked={!!checkedIds.find((id) => id === api.id)}
-                    item={api}
-                    className={`w-full duration-[0.33s] hover:scale-[101%]`}
-                    // checkedList={checkBox ? refinedCheckedList : undefined}
-                    onToggleCheck={onToggleCheck}
-                    setSelectedIdHandler={setSelectedIdHandler}
-                    onClickApi={onClickApi ? onClickApi : undefined}
-                  />
-                ))}
-              </ul>
-            </li>
-          </>
-        ))}
-      </ul>
-    </>
+                <i className={`text-[20px]`}>
+                  {curCateIdx === cateIdx ? (
+                    <BsFolder2Open />
+                  ) : (
+                    <BsFolder className={`mt-[2px]`} />
+                  )}
+                </i>
+                <span>{cate.categoryName}</span>
+              </div>
+              <AiOutlineMore
+                className={`text-grayscale-dark hover:text-theme-white-strong`}
+              />
+
+              <span>{cate.categoryName}</span>
+              <AiOutlineMore
+                className={`text-grayscale-dark hover:text-theme-white-strong`}
+              />
+            </div>
+            {/* api 목록 */}
+            <ul
+              className={`w-[90%] my-0 mx-auto flex flex-col items-center gap-1 duration-[0.33s] ${
+                curCateIdx === cateIdx ? '' : 'hidden'
+              }`}
+            >
+              {cate?.apis?.map((api, apiIdx) => (
+                <APIlistItem
+                  key={`${api.id}-${apiIdx}-apiz`}
+                  checkBox={checkBox} // 체크박스 달고있는 list
+                  checked={!!checkedIds.find((id) => id === api.id)}
+                  item={api}
+                  className={`w-full duration-[0.33s] hover:scale-[101%]`}
+                  // checkedList={checkBox ? refinedCheckedList : undefined}
+                  onToggleCheck={onToggleCheck}
+                  setSelectedIdHandler={setSelectedIdHandler}
+                  onClickApi={onClickApi ? onClickApi : undefined}
+                />
+              ))}
+            </ul>
+          </li>
+        ))
+      ) : !apiList ? (
+        <div className="w-full h-full flex items-center justify-center text-[24px]">
+          API Mapping을 진행 할 화면을 골라주세요!
+        </div>
+      ) : (
+        <div className="w-full h-full flex items-center justify-center text-[24px]">
+          화면에 매핑된 API가 없습니다! API를 추가해보세요!
+        </div>
+      )}
+    </ul>
   );
 };
 

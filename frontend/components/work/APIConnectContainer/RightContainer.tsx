@@ -202,13 +202,8 @@ const RightContainer = function ({
         )}
       </div>
       <APIConnectList
-        apiList={
-          isSaved && checkedAPIList
-            ? checkedAPIList
-            : isSaved && allAPIList
-            ? allAPIList
-            : checkedMok
-        }
+        apiList={isSaved ? checkedAPIList : allAPIList}
+        selectedId={sectionId as number}
         checkedIds={!isSaved ? refinedCheckedList : undefined}
         checkBox={!isSaved} // 체크박스 달고있을지 말지
         onToggleCheck={onToggleCheck}

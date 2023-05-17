@@ -55,15 +55,15 @@ interface Props {
   figmaList?: SpaceFigma[];
   apiData?: EachCateApi[];
   onChangeSection?: (id: string | number) => void;
+  isConnect?: boolean;
 }
 
 const FigmaList = function ({
   onChangeSection,
   apiData,
-  figmaList = mok,
+  figmaList,
+  isConnect = false,
 }: Props) {
-  const { state: yjsStore, figmaY } = useYjsState();
-  const store = useSyncedStore(yjsStore);
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
   const [activeIdx, setActiveIdx] = useState<number | null>(0);
@@ -77,52 +77,20 @@ const FigmaList = function ({
     }
   };
 
-  const addSyncedStoreFigmaItem = function () {
-    const addItem = {
-      id: `6`,
-      sectionUrl:
-        'https://thumbnail6.coupangcdn.com/thumbnails/remote/230x230ex/image/vendor_inventory/4dd4/f0211895f2765bf6459771ed1bc6b5c4e53ea4cc6024d291c8aee115445c.jpg',
-      sectionId: `232:2759`,
-      name: `무야호`,
-    };
-    if (figmaY) {
-      figmaY.push([addItem]);
-    }
-  };
-  const deleteFigmaYArr = function () {
-    figmaY.delete(0);
-  };
-
   return (
     <>
-      {/* <div className="h-full w-full p-5"> */}
-      {/* <div className="h-full w-full p-[3%] flex flex-col gap-[2%]"> */}
-      {/* {figmaY.map((figmaData, idx) => {
-      {/* {figmaList.map((figmaData, idx) => {
-        return (
-          <FigmaListItem
-            figmaData={figmaData}
-            idx={idx}
-            activeIdx={activeIdx}
-            setActive={changeIdxHandler}
-            key={`${figmaData.name}-${idx}-${figmaData.id}`}
-          />
-        );
-      })} */}
-      {/* <Box onClick={addSyncedStoreFigmaItem}>store 관련 테스트 해봅시다.</Box>
-      <Box onClick={deleteFigmaYArr}>삭제 테스트</Box> */}
       <div className={`flex flex-col gap-2`}>
         {figmaFrameList?.figmaSections.map(
           (figmaData: SpaceFigma, idx: number) => {
             return (
               <FigmaListItem
-                apiData={apiData}
+                key={`${figmaData.name}-${idx}-${figmaData.id}`}
+                isConnect={isConnect}
                 figmaData={figmaData}
                 headerIdx={idx}
                 idx={figmaData.id as number}
                 activeIdx={activeIdx}
                 setActive={changeIdxHandler}
-                key={`${figmaData.name}-${idx}-${figmaData.id}`}
               />
             );
           }
