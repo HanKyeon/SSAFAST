@@ -18,5 +18,4 @@ public class DtoInfo {
     private boolean itera;
     private List<FieldInfo> fields;
     private Map<Long, List<FieldDtoInfo>> nestedDtos;
-
 }
