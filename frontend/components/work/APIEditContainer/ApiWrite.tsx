@@ -1,5 +1,5 @@
 import { useForm, FormProvider, Controller } from 'react-hook-form';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { useStoreSelector } from '@/hooks/useStore';
 import { IoMdArrowRoundBack } from 'react-icons/io';
 import { useRouter } from 'next/router';
@@ -13,6 +13,7 @@ import AnimationBox from '@/components/common/AnimationBox';
 import RequestForm from './RequestForm';
 import ResponseForm from './ResponseForm';
 import { useCreateApi } from '@/hooks/queries/mutations';
+import { useApiDetail } from '@/hooks/queries/queries';
 
 // Api interface
 export interface ApiCreateForm {
@@ -73,44 +74,132 @@ const ApiWrite = function ({
     isError: baseUrlError,
   } = useBaseUrl(parseInt(spaceId));
 
-  const { data: categoryListData } = useSpaceCategory(parseInt(spaceId));
-  const { data: baseUrlListData } = useBaseUrl(parseInt(spaceId));
+  const { data: categoryListData, isLoading: isCategoryLoading } =
+    useSpaceCategory(parseInt(spaceId));
+  const { data: baseUrlListData, isLoading: isBaseUrlLoading } = useBaseUrl(
+    parseInt(spaceId)
+  );
+
+  const { data: Editdata } = useApiDetail(spaceId, currentApiId as number);
+
+  let defaultData: ApiCreateForm | undefined;
+
+  // const refineConstraints = function (data: any) {
+  //   let constratints: any = [];
+  //   if (!!data.type && data.type < 11) {
+  //     constratints.push({
+  //       ...data.constratins
+  //         .map((constraint: any) => {
+  //           const mainName = constraint.mainName;
+  //           if (mainName === 'Max') {
+  //             if (constraint.maxV === null) {
+  //               return ``;
+  //             }
+  //             return `Max(value=${constraint.maxV})`;
+  //           } else if (mainName === `Min`) {
+  //             if (constraint.minV === null) {
+  //               return ``;
+  //             }
+  //             return `Min(value=${constraint.minV}`;
+  //           } else if (mainName === `Range`) {
+  //             if (constraint.minV === null || constraint.maxV === null) {
+  //               return ``;
+  //             }
+  //             return `Range(min=${constraint.minV},max=${constraint.maxV})`;
+  //           } else if (mainName === `Pattern`) {
+  //             return `${
+  //               constraint.validateReg?.length
+  //                 ? `Pattern(regexp=${constraint.validateReg})`
+  //                 : ``
+  //             }`;
+  //           } else if (mainName === `Length`) {
+  //             if (constraint.minV === null || constraint.maxV === null) {
+  //               return ``;
+  //             }
+  //             return `Length(min=${constraint.minV},max=${constraint.maxV})`;
+  //           }
+  //           return mainName;
+  //         })
+  //         .filter((v: string) => v.length !== 0),
+  //     });
+  //   }
+  // };
 
   const methods = useForm<ApiCreateForm>({
-    defaultValues: {
-      workspaceId: parseInt(spaceId),
-      name: '',
-      description: '',
-      method: undefined,
-      baseUrl: baseUrlListData?.baseurls[0].id as number,
-      categoryId: categoryListData?.categorys[0].id as number,
-      status: undefined,
-      document: {
-        request: undefined,
-        response: [
-          {
-            status_code: 200,
-            desc: 'success',
-            headers: [],
-            body: undefined,
-          },
-        ],
-      },
-    },
+    defaultValues: defaultData,
   });
+
   const { mutate: createMutate, mutateAsync: createMutateAsync } = useCreateApi(
     parseInt(spaceId)
   );
-  const { control, handleSubmit } = methods;
+  const { control, handleSubmit, reset } = methods;
 
-  const onSubmit = function (data: ApiCreateForm) {
-    console.log('API 데이터', data);
+  useEffect(
+    function () {
+      if (baseUrlListData && categoryListData) {
+        reset({
+          workspaceId: parseInt(spaceId),
+          name: '',
+          description: '',
+          method: 1,
+          baseUrl: baseUrlListData?.baseurls[0].id as number,
+          categoryId: categoryListData?.categorys[0].id as number,
+          status: 1,
+          document: {
+            request: {
+              additional_url: '',
+              body: {
+                fields: [],
+              },
+              headers: [],
+              params: [],
+              pathVars: [],
+            },
+            response: [
+              {
+                statusCode: 200,
+                desc: 'success',
+                headers: [],
+                body: {
+                  fields: [],
+                },
+              },
+            ],
+          },
+        });
+      }
+    },
+    [baseUrlListData, categoryListData]
+  );
+
+  useEffect(
+    function () {
+      if (Editdata) {
+        reset({
+          workspaceId: parseInt(spaceId),
+          name: Editdata.name,
+          description: Editdata.description,
+          method: Editdata.method,
+          baseUrl: Editdata.baseUrl,
+          categoryId: Editdata.categoryId,
+          status: Editdata.status,
+          document: Editdata.document,
+        });
+        console.log('기본 데이터는?', defaultData);
+        console.log('수정 데이터', Editdata);
+      }
+    },
+    [Editdata]
+  );
+
+  const onSubmit = async function (data: ApiCreateForm) {
+    console.log('API 요청 데이터', data);
     createMutateAsync(data).then(() => toggleAddHandler());
   };
 
   const goToApiContainer = function () {
     toggleAddHandler();
-    apiIdHandler(-1);
+    apiIdHandler(0);
   };
 
   // Request Tab 이동
@@ -121,7 +210,6 @@ const ApiWrite = function ({
   const responseTabHandler = function () {
     setStep(() => 2);
   };
-  console.log(currentApiId);
   return (
     <div className="flex flex-col gap-3 p-[3%] w-full h-full overflow-y-scroll">
       <div className="h-[5%]">
@@ -217,6 +305,7 @@ const ApiWrite = function ({
                       placeholder="Name"
                       name={`name`}
                       className={`w-full text-start`}
+                      value={field.value}
                       onChange={field.onChange}
                       onBlur={field.onBlur}
                     />
@@ -239,6 +328,7 @@ const ApiWrite = function ({
                       placeholder="Description"
                       name={`description`}
                       className={`w-full text-start`}
+                      value={field.value}
                       onChange={field.onChange}
                       onBlur={field.onBlur}
                     />
@@ -287,6 +377,7 @@ const ApiWrite = function ({
                       <Select
                         name={'baseUrl'}
                         onChange={field.onChange}
+                        value={field.value}
                         onBlur={field.onBlur}
                         className={`w-full text-start items-start`}
                       >
