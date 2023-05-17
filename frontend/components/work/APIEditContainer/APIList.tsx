@@ -2,7 +2,9 @@ import APIlistItem from '@/components/apis/APIlistItem';
 import { BsFolder, BsFolder2Open } from 'react-icons/bs';
 import { AiOutlineMore } from 'react-icons/ai';
 import {
+  Dispatch,
   FormEvent,
+  SetStateAction,
   useCallback,
   useEffect,
   useMemo,
@@ -26,106 +28,19 @@ import { Box, Button, Input } from '@/components/common';
 import useInput from '@/hooks/useInput';
 import { UseTestApiCompactType } from '../APITestContainer/usecase/UseTestContainer';
 
-const checkedMok: SpaceApiList = {
-  apiCategories: [
-    {
-      categoryId: 1,
-      categoryName: 'user',
-      apis: [
-        {
-          id: 1,
-          name: '전체 회원 목록',
-          description: '아무튼 다 가져오는거',
-          method: 1,
-          status: 1,
-          writter: {
-            id: 1,
-            name: '로사짱',
-            email: 'a@naver.com',
-            profileImg: 'anjanj.png',
-          },
-        },
-      ],
-    },
-    {
-      categoryId: 2,
-      categoryName: 'mypage',
-      apis: [
-        {
-          id: 4,
-          name: '내 정보 수정',
-          description: '내 정보를 막 수정해버려',
-          method: 2,
-          status: 1,
-          writter: {
-            id: 1,
-            name: '로사짱',
-            email: 'a@naver.com',
-            profileImg: 'anjanj.png',
-          },
-        },
-        {
-          id: 5,
-          name: '전체 회원 목록',
-          description: '아무튼 다 가져오는거',
-          method: 1,
-          status: 2,
-          writter: {
-            id: 1,
-            name: '로사짱',
-            email: 'a@naver.com',
-            profileImg: 'anjanj.png',
-          },
-        },
-        {
-          id: 7,
-          name: '회원가입',
-          description: '아무튼 가입',
-          method: 4,
-          status: 4,
-          writter: {
-            id: 1,
-            name: '로사짱',
-            email: 'a@naver.com',
-            profileImg: 'anjanj.png',
-          },
-        },
-        {
-          id: 8,
-          name: '전체 회원 목록',
-          description: '아무튼 다 가져오는거',
-          method: 3,
-          status: 3,
-          writter: {
-            id: 1,
-            name: '로사짱',
-            email: 'a@naver.com',
-            profileImg: 'anjanj.png',
-          },
-        },
-      ],
-    },
-  ],
-};
-
 type APIListPropsType = {
-  apiList?: SpaceApiList;
-  checkedIds?: (number | string)[];
-  checkBox?: boolean;
   onToggleCheck?: (apiId: number | string, check: boolean) => void;
   selectedId?: number;
   setSelectedIdHandler?: (id: number) => void;
   onClickApi?: (api: UseTestApiCompactType) => void;
+  toggleAddHandler?: () => void;
+  apiIdHandler?: (id: number | string) => void;
 };
 
 const ApiList = function ({
-  apiList = checkedMok,
-  checkedIds = [],
-  checkBox = false, // checkbox===true이면 -> figma화면이랑 api 연결중!
-  onToggleCheck,
-  selectedId,
-  setSelectedIdHandler,
+  toggleAddHandler,
   onClickApi,
+  apiIdHandler,
 }: APIListPropsType): JSX.Element {
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
@@ -289,7 +204,7 @@ const ApiList = function ({
                   className={`text-grayscale-dark hover:text-theme-white-strong`}
                   onClick={openModal}
                 />
-                {isModal && (
+                {/* {isModal && (
                   <ul
                     className={`absolute z-10 bg-grayscale-deepdarkdeep rounded-[8px] w-full shadow-lg`}
                   >
@@ -308,11 +223,7 @@ const ApiList = function ({
                       삭제
                     </li>
                   </ul>
-                )}
-                <span>{cate.categoryName}</span>
-                <AiOutlineMore
-                  className={`text-grayscale-dark hover:text-theme-white-strong`}
-                />
+                )} */}
               </div>
               {/* api 목록 */}
               <ul
@@ -323,14 +234,11 @@ const ApiList = function ({
                 {cate?.apis?.map((api, apiIdx) => (
                   <APIlistItem
                     key={`${api.id}-${apiIdx}-apiz`}
-                    checkBox={checkBox} // 체크박스 달고있는 list
-                    checked={!!checkedIds.find((id) => id === api.id)}
                     item={api}
                     className={`w-full duration-[0.33s] hover:scale-[101%]`}
-                    // checkedList={checkBox ? refinedCheckedList : undefined}
-                    onToggleCheck={onToggleCheck}
-                    setSelectedIdHandler={setSelectedIdHandler}
                     onClickApi={onClickApi ? onClickApi : undefined}
+                    toggleAddHandler={toggleAddHandler}
+                    apiIdHandler={apiIdHandler}
                   />
                 ))}
               </ul>
