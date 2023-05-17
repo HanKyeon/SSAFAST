@@ -1,5 +1,5 @@
 import { useStoreSelector } from '@/hooks/useStore';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   useForm,
   useFieldArray,
@@ -15,6 +15,13 @@ import ToggleableHeader from '../APIDocsContainer/ToggleableHeader';
 import ReqItem from '../APIDocsContainer/ReqItem';
 import ReqItemBody from '../APIDocsContainer/ReqItemBody';
 import { FieldsType, HeadersType, BodyType } from '../APIDocsContainer';
+import { useRouter } from 'next/router';
+import { SpaceParams } from '@/pages/space';
+import {
+  useApiDetailAtTest,
+  useApiSingleTestDetail,
+  useBaseUrl,
+} from '@/hooks/queries/queries';
 
 export interface LoadForm {
   request: {
@@ -39,6 +46,12 @@ interface Props {
 }
 
 const RequestForm = function ({ toggleIsList }: Props) {
+  const router = useRouter();
+  const { spaceId } = router.query as SpaceParams;
+  const { data: baseUrlListData, isLoading: isBaseUrlLoading } = useBaseUrl(
+    parseInt(spaceId)
+  );
+
   const [data, setData] = useState({
     request: {
       url: '/api/:userid/comment/:commentid', // baseurl 외에 추가로 붙어야 하는 url 정보
@@ -142,17 +155,34 @@ const RequestForm = function ({ toggleIsList }: Props) {
   const methods = useForm<LoadForm>({
     defaultValues: { request: data.request, testInfo: {} },
   });
-  const { control, handleSubmit } = methods;
+  const { control, handleSubmit, reset } = methods;
+
+  // const { data: detailData } = useApiSingleTestDetail(parseInt(spaceId), 1);
+
+  // useEffect(
+  //   function () {
+  //     if (detailData) {
+  //       reset({
+  //         request: detailData.request,
+  //         testInfo: {},
+  //       });
+  //       console.log('11111', detailData.request);
+  //     }
+  //   },
+  //   [detailData]
+  // );
   const {
     fields: headersFields,
     append: headersAppend,
     remove: headersRemove,
   } = useFieldArray({ control, name: `request.headers` });
+
   const {
     fields: paramsFields,
     append: paramsAppend,
     remove: paramsRemove,
   } = useFieldArray({ control, name: `request.params` });
+
   const {
     fields: pathFields,
     append: pathAppend,
