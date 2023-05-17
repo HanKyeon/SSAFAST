@@ -108,7 +108,10 @@ const BodyListInput = function ({
         {...Object.keys(nestedDtos.value).map((dtoId) => {
           return nestedDtos.value[dtoId].map((dto: any, dtoidx: any) => {
             return (
-              <div className="w-full flex flex-row">
+              <div
+                key={`${dtoId}-${dtoidx}-nested-one`}
+                className="w-full flex flex-row"
+              >
                 <FieldListInput
                   depth={1}
                   typeName={nestedDtos.value[dtoId][dtoidx].name}
@@ -136,7 +139,7 @@ const BodyListInput = function ({
                         <FieldListInput
                           depth={2}
                           typeName={`${nestedDtos.value[dtoId][dtoidx].nestedDtoLists[nestedDtoId][nestedDtoIdx].name}`}
-                          key={`${dtoId}-dto-${dtoidx}-${dto.keyName}`}
+                          key={`${dtoId}-${nestedDtoId}-dto-${nestedDtoIdx}-${dto.keyName}`}
                           formName={`${formName}.nestedDtos.${dtoId}[${dtoidx}].nestedDtoLists[${nestedDtoId}][${nestedDtoIdx}].fields`}
                         />
                       );
