@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.List;
-
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,5 +15,5 @@ public class FieldInfo {
     private String desc;
     private String value;
     private boolean itera;
-    private List<String> constraints;
+    private String[] constraints;
 }

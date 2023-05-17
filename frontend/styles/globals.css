@@ -14,7 +14,8 @@ body {
   outline: none;
 
   font-family: nx2-g-m;
-  font-size: 22px;
+  /* font-size: 22px; */
+  overflow: hidden;
 }
 
 #__next {
@@ -26,12 +27,12 @@ body {
   margin: 0;
 
   box-sizing: border-box;
-  background-color: #1a1e1b;
-  color: #efefef;
+  /* background-color: #1a1e1b;
+  color: #efefef; */
   outline: none;
 
   font-family: nx2-g-m;
-  font-size: 22px;
+  /* font-size: 22px; */
   /* overflow: scroll; */
 }
 
@@ -51,4 +52,16 @@ body {
 #overlay-root::-webkit-scrollbar,
 #backdrop-root::-webkit-scrollbar {
   display: none;
+}
+
+select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+select {
+  background-color: none;
+  color: #9d9d9d;
+  outline: none;
 }

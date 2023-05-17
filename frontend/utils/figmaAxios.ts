@@ -17,7 +17,6 @@ figmaAxios.interceptors.request.use(
   (config) => {
     const state = store.getState(); // 리덕스 상태 가져오기
     const accessToken = state.figmatoken.figmaAccess; // 리덕스 accessToken 읽기
-
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`; // 리덕스에 accessToken이 있을 경우 Authorization 헤더 추가
     }

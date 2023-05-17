@@ -1,3 +1,5 @@
+import MetaHead from '@/components/common/MetaHead';
+import { SpinnerDots } from '@/components/common/Spinner';
 import { useStoreDispatch } from '@/hooks/useStore';
 import { DispatchToast } from '@/store';
 import { figmaTokenActions } from '@/store/figma-token-slice';
@@ -20,20 +22,18 @@ const FigmaCodeLoadingPage = function () {
       }
       figmaAxios({
         method: `post`,
-        baseURL: `https://www.figma.com`,
-        url: `/api/oauth/token`,
+        url: `/api/figma-token-gen`,
         params: {
           client_id: `${process.env.NEXT_PUBLIC_FIGMA_ROCKET_APP_CLIENT_ID}`,
-          response_type: `code`,
-          redirect_uri: `${process.env.NEXT_PUBLIC_HOSTNAME}/figma-loading`,
           client_secret: `${process.env.NEXT_PUBLIC_FIGMA_ROCKET_APP_CLIENT_SECRET}`,
+          redirect_uri: `${process.env.NEXT_PUBLIC_HOSTNAME}/figma-loading`,
           code: code,
           grant_type: `authorization_code`,
         },
       })
         .then((res) => {
-          const access = res[`access_token` as keyof AxiosResponse];
-          const refresh = res[`refresh_token` as keyof AxiosResponse];
+          const access = res.data[`access_token` as keyof AxiosResponse];
+          const refresh = res.data[`refresh_token` as keyof AxiosResponse];
           if (access && refresh) {
             dispatch(figmaTokenActions.setAccessToken({ figmaAccess: access }));
             dispatch(
@@ -41,9 +41,11 @@ const FigmaCodeLoadingPage = function () {
             );
             // user의 figma token을 저장하는 요청.
             apiRequest({
-              method: `post`,
+              method: `put`,
+              url: `/api/user/figma-token`,
               data: {
-                // 토큰 두개 넣어서 post
+                figmaAccess: access,
+                figmaRefresh: refresh,
               },
             });
           }
@@ -61,7 +63,10 @@ const FigmaCodeLoadingPage = function () {
   );
   return (
     <>
-      <div>하이요 피그마 토큰 받아오고 저장하고 있어용~</div>
+      <MetaHead />
+      <div className="h-full w-full flex items-center justify-center">
+        <SpinnerDots />
+      </div>
     </>
   );
 };
