@@ -1,9 +1,6 @@
 package com.rocket.ssafast.apispec.domain.Document.temp;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,6 +8,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class ApiSpecDoc {
     private RequestBodyField request;
     private List<ResponseField> response;

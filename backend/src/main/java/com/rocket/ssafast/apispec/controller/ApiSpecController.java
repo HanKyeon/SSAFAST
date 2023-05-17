@@ -1,5 +1,6 @@
 package com.rocket.ssafast.apispec.controller;
 
+import com.rocket.ssafast.apiexec.domain.document.element.ApiTestResultRequest;
 import com.rocket.ssafast.apispec.dto.request.ApiSpecInfoDto;
 import com.rocket.ssafast.apispec.dto.response.DetailApiSpecInfoDto;
 import com.rocket.ssafast.apispec.repository.ApiSpecRepository;
@@ -50,19 +51,21 @@ public class ApiSpecController {
         }
     }
 
-//    @GetMapping("/{apiId}/detail")
-//    public ResponseEntity<?> getApiSpecDetail(Long apiId){
-//        try{
+    @GetMapping("/{apiId}/detail")
+    public ResponseEntity<?> getApiSpecDetail(@PathVariable Long apiId, @RequestBody ApiTestResultRequest test){
+        try{
+            return new ResponseEntity<>(apiSpecService.getApiSpecDetail(apiId), HttpStatus.OK);
+//            return new ResponseEntity<>(test, HttpStatus.OK);
 //            DetailApiSpecInfoDto result = apiSpecService.getApiSpecDetail(apiId);
 //            return new ResponseEntity<>(result, HttpStatus.OK);
-//        }
-//        catch (CustomException c){
-//            return new ResponseEntity<>(c.getMessage(), c.getHttpStatus());
-//        }
-//        catch (Error e){
-//            return new ResponseEntity<>(ErrorCode.INTERNAL_SERVER_ERROR.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus());
-//        }
-//    }
+        }
+        catch (CustomException c){
+            return new ResponseEntity<>(c.getMessage(), c.getHttpStatus());
+        }
+        catch (Error e){
+            return new ResponseEntity<>(ErrorCode.INTERNAL_SERVER_ERROR.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus());
+        }
+    }
 
     @PutMapping("/{apiId}")
     public ResponseEntity<?> updateApiSpec(@AuthenticationPrincipal ResMemberDto memberDto, Long apiId, @RequestBody ApiSpecInfoDto apiSpecInfoDto){
