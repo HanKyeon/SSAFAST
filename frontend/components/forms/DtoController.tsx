@@ -139,24 +139,26 @@ const DtoController = function ({ item, idx, remove }: Props) {
           )}
         />
 
-        <Controller
-          key={`field-itera-${idx}`}
-          name={`fields[${idx}].itera`}
-          control={control}
-          render={({ field }) => (
-            <div className="flex flex-col w-[7%] items-center justify-center">
-              <label className="text-[16.6px]">배열</label>
-              <input
-                type="checkbox"
-                name={`fields[${idx}].itera`}
-                onChange={field.onChange}
-                checked={field.value}
-                value={field.value}
-                className="flex items-center justify-center outline-none border-b-[3px] border-b-grayscale-dark bg-opacity-0 bg-theme-white-light px-2"
-              />
-            </div>
-          )}
-        />
+        {typeData < 10 && (
+          <Controller
+            key={`field-itera-${idx}`}
+            name={`fields[${idx}].itera`}
+            control={control}
+            render={({ field }) => (
+              <div className="flex flex-col w-[7%] items-center justify-center">
+                <label className="text-[16.6px]">배열</label>
+                <input
+                  type="checkbox"
+                  name={`fields[${idx}].itera`}
+                  onChange={field.onChange}
+                  checked={field.value}
+                  value={field.value}
+                  className="flex items-center justify-center outline-none border-b-[3px] border-b-grayscale-dark bg-opacity-0 bg-theme-white-light px-2"
+                />
+              </div>
+            )}
+          />
+        )}
         <Controller
           key={`field-desc-${idx}`}
           name={`fields[${idx}].desc`}

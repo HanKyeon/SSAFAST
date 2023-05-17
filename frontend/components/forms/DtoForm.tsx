@@ -204,7 +204,7 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
             keyName: field.keyName,
             type: dtoId,
             desc: field.desc,
-            itera: field.itera,
+            itera: false,
             constraints: [],
             nestedDtos: { ...res.data.nestedDtos },
           };
@@ -254,7 +254,6 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
           reset({ name: ``, desc: ``, fields: [] });
         })
         .catch((err) => {
-          console.log(err.data, '<<<<<<<<<');
           if (err.response.data === 'DTO DEPTH OVER 2') {
             dispatch(DispatchToast('DTO의 최대 깊이는 2입니다!', false));
           }
@@ -313,13 +312,15 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
       {isCodeModal && (
         <Modal closeModal={closeCodeModal} parentClasses="h-[70%] w-[60%]">
           <Box className="flex flex-col gap-4 w-full h-full p-5 items-center justify-center">
-            <div className="text-[36px]">ㅎㅇ 님들 DTO 코드임</div>
+            <div className="text-[36px]">DTO Code</div>
             <div className="text-[24px] text-red-500">
-              근데 니들 저장해야 저장된거 보여줌. 꼬우면 결제 ㄱ
+              가장 최근에 저장된 데이터로 코드입니다.
             </div>
             <Box variant="three" className="w-full h-full p-5">
-              {dtoClassCode?.dtoClass ||
-                '이 편지는 17세기 영국으로부터 시작되어...'}
+              <pre>
+                {dtoClassCode?.dtoClass ||
+                  '이 편지는 17세기 영국으로부터 시작되어...'}
+              </pre>
             </Box>
             <div className="flex flex-row gap-4">
               <Box
