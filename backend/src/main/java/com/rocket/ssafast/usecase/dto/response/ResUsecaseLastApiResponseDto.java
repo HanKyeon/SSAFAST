@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ResUsecaseDto {
+public class ResUsecaseLastApiResponseDto {
 
 	Boolean success;
 

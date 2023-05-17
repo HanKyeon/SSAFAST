@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.jayway.jsonpath.JsonPath;
+import com.rocket.ssafast.apispec.domain.Document.ApiSpecDocument;
 import com.rocket.ssafast.apispec.domain.Entity.ApiSpecEntity;
 import com.rocket.ssafast.apiexec.dto.request.ReqApiExecMessageDto;
 import com.rocket.ssafast.apiexec.dto.request.element.ReqApiExecMessageParamDto;
@@ -43,7 +44,8 @@ import com.rocket.ssafast.usecase.domain.document.element.request.UsecaseTestReq
 import com.rocket.ssafast.usecase.domain.entity.UsecaseDtoEntity;
 import com.rocket.ssafast.usecase.domain.entity.UsecaseEntity;
 import com.rocket.ssafast.usecase.dto.request.ReqUsecaseEntityDto;
-import com.rocket.ssafast.usecase.dto.response.ResUsecaseDto;
+import com.rocket.ssafast.usecase.dto.response.ResUsecaseDetailDto;
+import com.rocket.ssafast.usecase.dto.response.ResUsecaseLastApiResponseDto;
 import com.rocket.ssafast.usecase.dto.response.ResUsecasePrevResponseDto;
 import com.rocket.ssafast.usecase.dto.response.ResUsecaseSummaryDto;
 import com.rocket.ssafast.usecase.repository.UsecaseTestDocsRepository;
@@ -81,7 +83,7 @@ public class UsecaseTestService {
 	}
 
 	@Transactional
-	public ResUsecaseDto execUsecaseTest(long usecaseTestId, UsecaseInfo usecaseTestInfo,
+	public ResUsecaseLastApiResponseDto execUsecaseTest(long usecaseTestId, UsecaseInfo usecaseTestInfo,
 		MultipartFile[] files, MultipartFile[][] filesArrs,
 		String[] filekeys, String[] filesArrKeys) {
 
@@ -101,7 +103,8 @@ public class UsecaseTestService {
 
 		Long lastApiId = 0L;
 		JsonObject results = new JsonObject();												// 응답 데이터 축적 객체
-		
+
+		ReqApiTestResultResponseDto errorResponstDto = null;
 
 		while(nowApiId != null) {
 			System.out.println("nowApiId: "+nowApiId);
@@ -268,18 +271,12 @@ public class UsecaseTestService {
 				nowApiId = testDetails.get(nowApiId).getChild();						// 다음 API로 GO
 
 			} catch (HttpClientErrorException | HttpServerErrorException e){
-
-				ReqApiTestResultResponseDto errorResponstDto = ReqApiTestResultResponseDto.builder()
+				errorResponstDto = ReqApiTestResultResponseDto.builder()
 					.statusCodeValue(e.getStatusCode().value())
 					.statusCode(e.getStatusCode().name())
 					.body(e.getMessage())
 					.build();
-
-				return ResUsecaseDto.builder()
-					.success(false)
-					.lastApiId(Long.parseLong(nowApiId))
-					.lastApiResponse(errorResponstDto)
-					.build();
+				break;
 
 			} catch (Exception e) {
 				throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
@@ -289,8 +286,20 @@ public class UsecaseTestService {
 
 		// 12. usecase test 정보 업데이트
 		UsecaseDocument usecaseDocument = usecaseTestDocsRepository.findById(SSAFAST_USECASE_TEST);
-		usecaseDocument.getUsecaseTest().put(usecaseTestId, usecaseTestInfo);
-		usecaseTestDocsRepository.save(usecaseDocument);
+
+		if(usecaseDocument == null) {
+			Map<Long, UsecaseInfo> usecaseTest = new HashMap<>();
+			usecaseTest.put(usecaseTestId, usecaseTestInfo);
+
+			usecaseTestDocsRepository.save(UsecaseDocument.builder()
+					.id(SSAFAST_USECASE_TEST)
+					.usecaseTest(usecaseTest)
+				.build());
+		}
+		else {
+			usecaseDocument.getUsecaseTest().put(usecaseTestId, usecaseTestInfo);
+			usecaseTestDocsRepository.save(usecaseDocument);
+		}
 
 
 		// 13. usecase test에 포함된 dto 정보 업데이트
@@ -321,11 +330,19 @@ public class UsecaseTestService {
 
 		usecaseTestEntityRepository.save(usecaseEntity);
 
-		return ResUsecaseDto.builder()
-			.success(true)
-			.lastApiId(lastApiId)
-			.lastApiResponse(reqApiTestResultResponseDto)
-			.build();
+		if(errorResponstDto == null) {
+			return ResUsecaseLastApiResponseDto.builder()
+				.success(true)
+				.lastApiId(lastApiId)
+				.lastApiResponse(reqApiTestResultResponseDto)
+				.build();
+		} else {
+			return ResUsecaseLastApiResponseDto.builder()
+				.success(false)
+				.lastApiId(Long.parseLong(nowApiId))
+				.lastApiResponse(errorResponstDto)
+				.build();
+		}
 	}
 
 	public void addNestedDtosToJson(UsecaseReqNestedDto nowNestedDto, JsonObject jsonObject, JsonObject results) {
@@ -488,11 +505,19 @@ public class UsecaseTestService {
 		return usecaseSummarList;
 	}
 
-	public UsecaseInfo getDetailTest(Long usecaseId) {
+	public ResUsecaseDetailDto getDetailTest(Long usecaseId) {
+		Optional<UsecaseEntity> usecaseTestEntity = usecaseTestEntityRepository.findById(usecaseId);
 		if(!usecaseTestEntityRepository.findById(usecaseId).isPresent()) {
 			throw new CustomException(ErrorCode.USECASETEST_NOT_FOUND);
 		}
-		return usecaseTestDocsRepository.findTestById(SSAFAST_USECASE_TEST, usecaseId);
+
+		UsecaseEntity usecaseTest = usecaseTestEntity.get();
+
+		return ResUsecaseDetailDto.builder()
+			.name(usecaseTest.getName())
+			.desc(usecaseTest.getDesc())
+			.usecaseTest(usecaseTestDocsRepository.findTestById(SSAFAST_USECASE_TEST, usecaseId))
+			.build();
 	}
 
 	@Transactional

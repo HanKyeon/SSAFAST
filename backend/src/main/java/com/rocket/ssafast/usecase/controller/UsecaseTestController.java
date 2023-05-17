@@ -110,9 +110,7 @@ public class UsecaseTestController {
 	@GetMapping("/{usecaseId}")
 	ResponseEntity<?> getDetailTest(@PathVariable("usecaseId") Long usecaseId) {
 		try {
-			Map<String, UsecaseInfo> result = new HashMap<>();
-			result.put("usecaseTest", usecaseTestService.getDetailTest(usecaseId));
-			return new ResponseEntity<>(result, HttpStatus.OK);
+			return new ResponseEntity<>(usecaseTestService.getDetailTest(usecaseId), HttpStatus.OK);
 		} catch (CustomException e){
 			return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
 		} catch (Exception e) {
