@@ -1,4 +1,4 @@
-package com.rocket.ssafast.apispec.domain.Enum;
+package com.rocket.ssafast.dtospec.Enum;
 
 import java.util.Collections;
 import java.util.Map;

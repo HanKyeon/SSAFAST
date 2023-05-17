@@ -1,4 +1,4 @@
-package com.rocket.ssafast.apispec.domain.Enum;
+package com.rocket.ssafast.dtospec.Enum;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
