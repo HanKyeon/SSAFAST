@@ -18,7 +18,7 @@ const Input = function ({
     input: `bg-transparent border-b-[1px] outline-none w-full ${
       isDark
         ? `border-theme-white-normal placeholder:text-grayscale-deepdarklight`
-        : `border-theme-dark-normal placeholder:text-grayscale-deepdarklight`
+        : `border-theme-dark-normal placeholder:text-grayscale-deeplight`
     }`,
   };
   return (

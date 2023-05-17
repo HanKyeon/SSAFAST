@@ -579,18 +579,33 @@ export const useSaveSingleApiTest = function (spaceId: string | number) {
     },
   });
 };
-// export const useNewUsecase = function (workspaceId: string | number) {
-//   return useMutation({
-//     mutationFn: function (name: string, description: string) {
-//       return apiRequest({
-//         method: `post`,
-//         url: `api/usecase`,
-//       });
-//     },
-//     onSuccess:function(){
-//       QueryClient.invalidateQueries({
-//         queryKey:
-//       })
-//     }
-//   });
-// };
+
+// 유스케이스 테스트 생성
+export const useNewUsecase = function (workspaceId: string | number) {
+  const dispatch = useStoreDispatch();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: function (usecaseData: {
+      name: string;
+      description: string;
+      workspaceId: number | string;
+    }) {
+      return apiRequest({
+        method: `post`,
+        url: `/api/usecase`,
+        data: usecaseData,
+      });
+    },
+    onSuccess: function () {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.usecaseList(workspaceId),
+      });
+      dispatch(DispatchToast('새 유스케이스 테스트가 생성되었습니다.', true));
+    },
+    onError: function () {
+      dispatch(
+        DispatchToast('새 유스케이스 테스트 생성에 실패하였습니다.', false)
+      );
+    },
+  });
+};

@@ -1,14 +1,13 @@
 import { ApiDetailAtTestItem } from '@/hooks/queries/queries';
 import { useContext, useState } from 'react';
 import { Control, Controller } from 'react-hook-form';
-import { UseTestForm } from './UseTestContainer';
 import { UCContext, UCContextInterface } from '.';
 import { Box, Input } from '@/components/common';
 import { useStoreSelector } from '@/hooks/useStore';
 
 type UCResInnerPropsType = {
   item: ApiDetailAtTestItem;
-  //   control: Control<UseTestForm, any>;
+  //   control: Control<UsecaseDetailType, any>;
   control: any;
   formName: string;
   depth?: number;

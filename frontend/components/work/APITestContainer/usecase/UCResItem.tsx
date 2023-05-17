@@ -9,8 +9,11 @@ import styles from '../../APIDocsContainer/ReqItem.module.css';
 import ToggleableHeader from '../../APIDocsContainer/ToggleableHeader';
 import ReqItemInner from '../../APIDocsContainer/ReqItemInner';
 import { FieldsType, HeadersType } from '../../APIDocsContainer';
-import { ApiDetailAtTestItem, PrevResponse } from '@/hooks/queries/queries';
-import { UseTestForm } from './UseTestContainer';
+import {
+  ApiDetailAtTestItem,
+  PrevResponse,
+  UsecaseDetailType,
+} from '@/hooks/queries/queries';
 import UCResItemInner from './UCResItemInner';
 
 type ResItemPropsType = {
@@ -19,7 +22,7 @@ type ResItemPropsType = {
   //   control?: any;
   name: string;
   item: PrevResponse;
-  control: Control<UseTestForm, any>;
+  control: Control<UsecaseDetailType, any>;
   formName: string;
 };
 const UCResItem = function ({

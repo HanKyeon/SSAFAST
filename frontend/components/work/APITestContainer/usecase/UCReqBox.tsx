@@ -1,7 +1,12 @@
 import { useRouter } from 'next/router';
-import { UseTestApiCompactType, UseTestForm } from './UseTestContainer';
+import { UseTestApiCompactType } from './UseTestContainer';
 import { SpaceParams } from '@/pages/space';
-import { ApiDetailAtTest, useApiDetailAtTest } from '@/hooks/queries/queries';
+import {
+  ApiDetailAtTest,
+  UsecaseDetailType,
+  UsecaseListItemType,
+  useApiDetailAtTest,
+} from '@/hooks/queries/queries';
 import { Control, useFieldArray } from 'react-hook-form';
 import ReqItem from '../../APIDocsContainer/ReqItem';
 import ReqItemBody from '../../APIDocsContainer/ReqItemBody';
@@ -146,11 +151,13 @@ const curapiMock: ApiDetailAtTest = {
 };
 
 type UCReqBoxPropsType = {
+  curUsecase: UsecaseListItemType;
   currentApi: UseTestApiCompactType;
-  control: Control<UseTestForm, any>;
+  control: Control<UsecaseDetailType, any>;
 };
 
 const UCReqBox = function ({
+  curUsecase,
   currentApi,
   control,
 }: UCReqBoxPropsType): JSX.Element {

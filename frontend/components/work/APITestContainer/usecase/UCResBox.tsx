@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router';
-import { UseTestApiCompactType, UseTestForm } from './UseTestContainer';
+import { UseTestApiCompactType } from './UseTestContainer';
 import { SpaceParams } from '@/pages/space';
 import {
   PrevResponse,
   PrevResponses,
-  useUseCaseResList,
+  UsecaseDetailType,
+  UsecaseListItemType,
 } from '@/hooks/queries/queries';
 import ToggleableHeader from '../../APIDocsContainer/ToggleableHeader';
 import UCResItem from './UCResItem';
@@ -116,12 +117,14 @@ const resDataMock: PrevResponses = {
 };
 
 type UCResBoxPropsType = {
+  curUsecase: UsecaseListItemType;
   currentApi: UseTestApiCompactType;
   resApis: string;
-  control: Control<UseTestForm, any>;
+  control: Control<UsecaseDetailType, any>;
 };
 
 const UCResBox = function ({
+  curUsecase,
   currentApi,
   resApis,
   control,
@@ -132,7 +135,7 @@ const UCResBox = function ({
   //   data: resDatas,
   //   isLoading,
   //   isError,
-  // } = useUseCaseResList(spaceId, resApis);
+  // } = useUsecaseResponses(spaceId, resApis);
   return (
     <div className={`flex-1 overflow-scroll scrollbar-hide`}>
       {resDataMock.prevResponses.map((resData: PrevResponse, idx: number) => (

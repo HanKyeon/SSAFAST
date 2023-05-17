@@ -10,12 +10,11 @@ import ToggleableHeader from '../../APIDocsContainer/ToggleableHeader';
 import { FieldsType, HeadersType } from '../../APIDocsContainer';
 import { ApiDetailAtTestItem } from '@/hooks/queries/queries';
 import UCReqItemInner from './UCReqItemInner';
-import { UseTestForm } from './UseTestContainer';
 
 type ReqtemPropsType = {
   fields?: FieldArrayWithId[]; // 잠깐 ?넣어유,,
   formName: string;
-  // control: Control<UseTestForm, any>;
+  // control: Control<UsecaseDetailType, any>;
   control: any;
   name: string;
   item: HeadersType[] | FieldsType[] | ApiDetailAtTestItem[];
