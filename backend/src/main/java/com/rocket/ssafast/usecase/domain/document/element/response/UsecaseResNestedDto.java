@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class UsecaseResNestedDto {
 
 	@NotEmpty
-	String dtoName;
+	String name;
 
 	@Valid
 	Map<String, UsecaseResFieldDetail> fields;

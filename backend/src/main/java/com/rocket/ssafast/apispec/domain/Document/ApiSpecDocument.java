@@ -3,6 +3,7 @@ package com.rocket.ssafast.apispec.domain.Document;
 import com.rocket.ssafast.apispec.domain.Document.element.ApiDoc;
 import com.rocket.ssafast.apispec.domain.Document.element.RequestDoc;
 import com.rocket.ssafast.apispec.domain.Document.element.ResponseDoc;
+import com.rocket.ssafast.apispec.domain.Document.temp.ApiSpecDoc;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,6 @@ public class ApiSpecDocument {
 
     @Id
     private String id;
-    private Map<Long, ApiDoc> apis;
+    private Map<Long, ApiSpecDoc> apis;
 
 }
