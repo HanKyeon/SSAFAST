@@ -52,12 +52,9 @@ public class ApiSpecController {
     }
 
     @GetMapping("/{apiId}/detail")
-    public ResponseEntity<?> getApiSpecDetail(@PathVariable Long apiId, @RequestBody ApiTestResultRequest test){
+    public ResponseEntity<?> getApiSpecDetail(@PathVariable Long apiId){
         try{
             return new ResponseEntity<>(apiSpecService.getApiSpecDetail(apiId), HttpStatus.OK);
-//            return new ResponseEntity<>(test, HttpStatus.OK);
-//            DetailApiSpecInfoDto result = apiSpecService.getApiSpecDetail(apiId);
-//            return new ResponseEntity<>(result, HttpStatus.OK);
         }
         catch (CustomException c){
             return new ResponseEntity<>(c.getMessage(), c.getHttpStatus());
