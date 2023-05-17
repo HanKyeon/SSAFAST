@@ -41,6 +41,7 @@ const ApiList = function ({
   toggleAddHandler,
   onClickApi,
   apiIdHandler,
+  setSelectedIdHandler,
 }: APIListPropsType): JSX.Element {
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
@@ -220,6 +221,7 @@ const ApiList = function ({
                   onClickApi={onClickApi ? onClickApi : undefined}
                   toggleAddHandler={toggleAddHandler}
                   apiIdHandler={apiIdHandler}
+                  setSelectedIdHandler={setSelectedIdHandler}
                 />
               ))}
             </ul>
