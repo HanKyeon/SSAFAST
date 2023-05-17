@@ -44,6 +44,13 @@ public class DtoSpecDocumentService {
         return new DtoSpecDocument(SSAFAST_DTO_ID, new HashMap<>());
     }
 
+    public boolean deleteDtoDocs(Long dtoId){
+        DtoSpecDocument document = createOrFindDtosIfExists();
+        document.getDtos().remove(dtoId);
+        dtoSpecDocumentRepository.save(document);
+        return true;
+    }
+
 
 
 }

@@ -83,5 +83,18 @@ public class ChildDtoEntityService {
         childDtoEntityRepository.delete(childHasDtoEntity);
     }
 
+    public boolean isChildDtoRelationRemove(Long dtoId){
+
+        List<ChildDtoEntity> childDtoEntityList = childDtoEntityRepository.findAllByDtoId(dtoId);
+
+        for(ChildDtoEntity dtoHasChild : childDtoEntityList){
+
+        }
+
+
+
+        return true;
+    }
+
 
 }

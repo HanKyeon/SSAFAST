@@ -3,6 +3,7 @@ package com.rocket.ssafast.apispec.service;
 import com.rocket.ssafast.apispec.domain.Document.element.ApiDoc;
 import com.rocket.ssafast.apispec.domain.Document.temp.ApiSpecDoc;
 import com.rocket.ssafast.apispec.domain.Document.temp.BodyField;
+import com.rocket.ssafast.apispec.domain.Document.temp.ResponseField;
 import com.rocket.ssafast.apispec.domain.Entity.ApiSpecEntity;
 import com.rocket.ssafast.apispec.domain.Entity.CategoryEntity;
 import com.rocket.ssafast.apispec.dto.request.ApiSpecInfoDto;
@@ -26,10 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -74,7 +72,43 @@ public class ApiSpecService {
         );
 
         //update api has dto table
+        Set<Long> apiHasDtoSet = new HashSet<>();
+        //request
         Map<Long, List<BodyField>> inputHasDto = apiSpecInfoDto.getDocument().getRequest().getBody().getNestedDtos();
+        for(Long inputHasDtoId : extractDtoIdFromUserInput(inputHasDto, apiSpec)){
+            apiHasDtoSet.add(inputHasDtoId);
+        }
+
+        //response
+        for(ResponseField responseObject : apiSpecInfoDto.getDocument().getResponse()){
+            for(Long inputHasDtoId : extractDtoIdFromUserInput(responseObject.getBody().getNestedDtos(), apiSpec)){
+                apiHasDtoSet.add(inputHasDtoId);
+            }
+        }
+
+        for(Long apiSpecHasDtoId : apiHasDtoSet){
+            Optional<DtoSpecEntity> dto = dtoSpecEntityRepository.findById(apiSpecHasDtoId);
+            if(!dto.isPresent()){
+                throw new CustomException(ErrorCode.DTO_NOT_FOUND);
+            }
+            apiHasDtoEntityRepository.save(
+                    ApiHasDtoEntity.builder()
+                            .apiSpecEntity(apiSpec)
+                            .dtoSpecEntity(dto.get())
+                            .build()
+            );
+        }
+
+        //insert nosql
+        apiSpecDocumentService.createApiSpec(apiSpec.getId(), apiSpecInfoDto.getDocument());
+
+        return apiSpec.getId();
+    }
+
+    public List<Long> extractDtoIdFromUserInput(Map<Long, List<BodyField>> inputHasDto, ApiSpecEntity apiSpec){
+
+        List<Long> inputInfoHasDto = new ArrayList<>();
+
         //nestedDto 가 없는 경우도 있다.
         if(inputHasDto == null){
             //pass
@@ -89,19 +123,11 @@ public class ApiSpecService {
                     throw new CustomException(ErrorCode.DTO_DEPTH_OVER);
                 }
                 //api가 가지고 있는 dto 정보 저장
-                apiHasDtoEntityRepository.save(
-                        ApiHasDtoEntity.builder()
-                                .apiSpecEntity(apiSpec)
-                                .dtoSpecEntity(dto.get())
-                                .build()
-                );
+                inputInfoHasDto.add(dtoId);
             }
         }
 
-        //insert nosql
-        apiSpecDocumentService.createApiSpec(apiSpec.getId(), apiSpecInfoDto.getDocument());
-
-        return apiSpec.getId();
+        return inputInfoHasDto;
     }
 
     public boolean isDtoOverLimitDepth(Long dtoId, DtoSpecEntity dto){

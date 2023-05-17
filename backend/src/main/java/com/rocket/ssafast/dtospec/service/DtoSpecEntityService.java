@@ -1,6 +1,6 @@
 package com.rocket.ssafast.dtospec.service;
 
-import com.rocket.ssafast.apispec.domain.Document.temp.ApiSpecDoc;
+import com.rocket.ssafast.apispec.domain.Document.temp.*;
 import com.rocket.ssafast.apispec.repository.ApiSpecDocRepository;
 import com.rocket.ssafast.apispec.repository.ApiSpecRepository;
 import com.rocket.ssafast.apispec.service.ApiSpecDocumentService;
@@ -252,52 +252,161 @@ public class DtoSpecEntityService {
         return updateDtoSpecDto;
     }
 
-    public void deleteDto(Long dtoId){
+    public boolean deleteDto(Long dtoId){
         //mysql 제거 후 dtoId를 자식으로 가지고 있는 아이들이 또다른 자식이 없을 경우 entity flag update
         Optional<DtoSpecEntity> targetDtoEntity = dtoSpecEntityRepository.findById(dtoId);
         if(!targetDtoEntity.isPresent()){
             throw new CustomException(ErrorCode.DTO_NOT_FOUND);
         }
 
-        //mysql dtoId 를 자식으로 가지고 있는 아이들 조회
-        List<ChildDtoEntity> dtoHasParentList = childDtoEntityRepository.findAllByDtoSpecEntity(targetDtoEntity.get());
+        DtoSpecEntity deleteDtoEntity = targetDtoEntity.get();
 
-        for(ChildDtoEntity dtoHasParent : dtoHasParentList){
-            Long parentDtoId = dtoHasParent.getDtoId();
-            DtoInfo parentDtoDoc = dtoSpecDocumentService.findByDtoId(parentDtoId);
-            //mongodb nestedDto 에서 제거 후 저장
-            Map<Long, List<FieldDtoInfo>> changeNestedDto = new HashMap<>();
-            for(Map.Entry<Long, List<FieldDtoInfo>> entry : parentDtoDoc.getNestedDtos().entrySet()){
-                Long _key = entry.getKey();
-                List<FieldDtoInfo> _value = entry.getValue();
-
-                if(!dtoId.equals(_key)){
-                    changeNestedDto.put(_key, _value);
-                }
-            }
-
-            DtoInfo updateDtoDocs =
-                    DtoInfo.builder()
-                            .name(parentDtoDoc.getName())
-                            .itera(parentDtoDoc.isItera())
-                            .fields(parentDtoDoc.getFields())
-                            .nestedDtos(changeNestedDto)
-                            .build();
-
-            dtoSpecDocumentService.createOrUpdateDtoDocs(parentDtoId, updateDtoDocs);
-            childDtoEntityRepository.delete(dtoHasParent);
+        if(deleteDtoEntity.isHasChild() && deleteDtoEntity.isHasParent()){
+            throw new CustomException(ErrorCode.DTO_DEPTH_OVER);
         }
 
-        //mysql dtoId를 api nestedDtos 에 가지고 있는 아이들 조회
+        //자식을 가지고 있는 경우
+        if(deleteDtoEntity.isHasChild()){
+            childDtoEntityRepository.findAllByDtoId(dtoId).forEach(childDtoEntity -> {
+                childDtoEntityRepository.delete(childDtoEntity);
+            });
+            parentDtoEntityRepository.findAllByDtoSpecEntity(deleteDtoEntity).forEach(parentDtoEntity -> {
+                Long childHasDtoId = parentDtoEntity.getDtoId();
+                parentDtoEntityRepository.delete(parentDtoEntity);
+
+                List<ParentDtoEntity> childHasAnotherParents = parentDtoEntityRepository.findAllByDtoId(childHasDtoId);
+                if(childHasAnotherParents == null || childHasAnotherParents.isEmpty()){
+                    Optional<DtoSpecEntity> childHasDtoEntity = dtoSpecEntityRepository.findById(childHasDtoId);
+                    if(!childHasDtoEntity.isPresent()){
+                        throw new CustomException(ErrorCode.DTO_NOT_FOUND);
+                    }
+
+                    dtoSpecEntityRepository.save(
+                            DtoSpecEntity.builder()
+                                    .id(childHasDtoEntity.get().getId())
+                                    .workspaceId(childHasDtoEntity.get().getWorkspaceId())
+                                    .name(childHasDtoEntity.get().getName())
+                                    .description(childHasDtoEntity.get().getDescription())
+                                    .hasChild(childHasDtoEntity.get().isHasChild())
+                                    .hasParent(false)
+                                    .build()
+                    );
+                }
+            });
+
+        }
+
+        //부모를 가지고 있는 경우
+        if(deleteDtoEntity.isHasParent()){
+            childDtoEntityRepository.findAllByDtoSpecEntity(deleteDtoEntity).forEach(childDtoEntity -> {
+                Long parentHasDtoId = childDtoEntity.getDtoId();
+                childDtoEntityRepository.delete(childDtoEntity);
+
+                List<ChildDtoEntity> parentHasAnotherChilds = childDtoEntityRepository.findAllByDtoId(parentHasDtoId);
+
+                if(parentHasAnotherChilds == null || parentHasAnotherChilds.isEmpty()){
+                    Optional<DtoSpecEntity> parentHasDtoEntity = dtoSpecEntityRepository.findById(parentHasDtoId);
+
+                    if(!parentHasDtoEntity.isPresent()){
+                        throw new CustomException(ErrorCode.DTO_NOT_FOUND);
+                    }
+
+                    dtoSpecEntityRepository.save(
+                            DtoSpecEntity.builder()
+                                    .id(parentHasDtoEntity.get().getId())
+                                    .workspaceId(parentHasDtoEntity.get().getWorkspaceId())
+                                    .name(parentHasDtoEntity.get().getName())
+                                    .description(parentHasDtoEntity.get().getDescription())
+                                    .hasParent(parentHasDtoEntity.get().isHasParent())
+                                    .hasChild(false)
+                                    .build()
+                    );
+                }
+
+
+            });
+            parentDtoEntityRepository.findAllByDtoId(dtoId).forEach(parentDtoEntity -> {
+                Long parentDtoId = parentDtoEntity.getDtoSpecEntity().getId();
+                DtoInfo parentDtoDoc = dtoSpecDocumentService.findByDtoId(parentDtoId);
+                Map<Long, List<FieldDtoInfo>> parentNestedDtos = parentDtoDoc.getNestedDtos();
+                parentNestedDtos.remove(dtoId);
+
+                DtoInfo updateParentDtoDocs =
+                        DtoInfo.builder()
+                                .name(parentDtoDoc.getName())
+                                .itera(parentDtoDoc.isItera())
+                                .fields(parentDtoDoc.getFields())
+                                .nestedDtos(parentNestedDtos)
+                                .build();
+
+                dtoSpecDocumentService.createOrUpdateDtoDocs(parentDtoId, updateParentDtoDocs);
+                parentDtoEntityRepository.delete(parentDtoEntity);
+
+            });
+        }
+
+        //dtoId를 api nestedDtos 에 가지고 있는 아이들 조회
         for(ApiHasDtoEntity apiHasDto : apiHasDtoEntityRepository.findAllByDtoSpecEntity(targetDtoEntity.get())){
+            // Api Document request, response 순회하면서 target dto 제거
             Long apiId = apiHasDto.getApiSpecEntity().getId();
             ApiSpecDoc apiDocs = apiSpecDocumentService.getApiSpecDocs(apiId);
 
+            //request
+            Map<Long, List<BodyField>> newNestedDtos = apiDocs.getRequest().getBody().getNestedDtos();
+            newNestedDtos.remove(dtoId);
 
+            RequestBodyField newRequest =
+                    RequestBodyField.builder()
+                            .additionalUrl(apiDocs.getRequest().getAdditionalUrl())
+                            .headers(apiDocs.getRequest().getHeaders())
+                            .params(apiDocs.getRequest().getParams())
+                            .pathVars(apiDocs.getRequest().getPathVars())
+                            .body(
+                                    BodyDocs.builder()
+                                            .fields(apiDocs.getRequest().getBody().getFields())
+                                            .nestedDtos(newNestedDtos)
+                                            .build()
+                            )
+                            .build();
+
+            //response
+            List<ResponseField> newResponse = new ArrayList<>();
+            for(ResponseField objectByStatusCode : apiDocs.getResponse()){
+                Map<Long, List<BodyField>> newNestedDtoByStatusCode = objectByStatusCode.getBody().getNestedDtos();
+                newNestedDtoByStatusCode.remove(dtoId);
+
+                newResponse.add(
+                        ResponseField.builder()
+                                .statusCode(objectByStatusCode.getStatusCode())
+                                .desc(objectByStatusCode.getDesc())
+                                .headers(objectByStatusCode.getHeaders())
+                                .body(
+                                        BodyDocs.builder()
+                                                .fields(objectByStatusCode.getBody().getFields())
+                                                .nestedDtos(newNestedDtoByStatusCode)
+                                                .build()
+                                )
+                                .build()
+                );
+            }
+
+            //새로운 request, response 정보 갱신 후 저장
+            apiSpecDocumentService.updateApiSpec(
+                    apiId,
+                    ApiSpecDoc.builder()
+                            .request(newRequest)
+                            .response(newResponse)
+                            .build()
+            );
+            //apiHasDto 삭제
+            apiHasDtoEntityRepository.delete(apiHasDto);
         }
-        //mongodb nesteDtos 에서 제거 후 저장
 
-        //dtoSpecEntity에서 dtoId 가진 dto 제
+        //dtoSpecDocument에서 dtoId 가진 dto 제거
+        dtoSpecDocumentService.deleteDtoDocs(dtoId);
+        //dtoSpecEntity에서 dtoId 가진 dto 제거
+        dtoSpecEntityRepository.delete(targetDtoEntity.get());
+        return true;
     }
 
     public DtoInfo getDtoSpecEntity(Long dtoId){

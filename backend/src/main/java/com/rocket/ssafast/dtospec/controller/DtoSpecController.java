@@ -101,12 +101,13 @@ public class DtoSpecController {
     @DeleteMapping(value = "/{dtoId}")
     public ResponseEntity<?> deleteDtoInfo(@AuthenticationPrincipal UserDetailsImpl member, @PathVariable Long dtoId){
         try{
-            return new ResponseEntity<>(dtoId, HttpStatus.OK);
+            return new ResponseEntity<>(dtoSpecEntityService.deleteDto(dtoId), HttpStatus.OK);
         }
         catch (CustomException c){
             return new ResponseEntity<>(c.getMessage(), c.getHttpStatus());
         }
         catch (Exception e){
+            e.printStackTrace();
             return new ResponseEntity<>(ErrorCode.INTERNAL_SERVER_ERROR.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus());
         }
     }

@@ -37,14 +37,5 @@ public class DtoSpecEntity {
     @Column(name = "has_child")
     @ColumnDefault("0")
     private boolean hasChild;
-//
-//    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
-//    @JoinColumn(name = "child_dto_id")
-//    private List<ChildDtoEntity> childs;
-//
-//    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
-//    @JoinColumn(name = "parent_dto_id")
-//    private List<ParentDtoEntity> parents;
-
 
 }
