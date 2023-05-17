@@ -10,8 +10,8 @@ import ToggleableHeader from '../../APIDocsContainer/ToggleableHeader';
 import ReqItemInner from '../../APIDocsContainer/ReqItemInner';
 import { FieldsType, HeadersType } from '../../APIDocsContainer';
 import { ApiDetailAtTestItem, PrevResponse } from '@/hooks/queries/queries';
-import UCResInner from './UCResInner';
 import { UseTestForm } from './UseTestContainer';
+import UCResItemInner from './UCResItemInner';
 
 type ResItemPropsType = {
   //   fields?: FieldArrayWithId[]; // 잠깐 ?넣어유,,
@@ -19,8 +19,8 @@ type ResItemPropsType = {
   //   control?: any;
   name: string;
   item: PrevResponse;
-  formName: string | null;
   control: Control<UseTestForm, any>;
+  formName: string;
 };
 const UCResItem = function ({
   //   fields,
@@ -28,8 +28,8 @@ const UCResItem = function ({
   //   control,
   name, // 그냥 이름
   item, // item
-  formName,
   control,
+  formName,
 }: ResItemPropsType): JSX.Element {
   const [isOpen, setisOpen] = useState<boolean>(true);
   //   const a = item?.length + 1;
@@ -52,15 +52,16 @@ const UCResItem = function ({
         <div className={`w-full`}>
           <p>headers</p>
           {item.headers.map((headerItem: ApiDetailAtTestItem, idx: number) => (
-            <UCResInner
+            <UCResItemInner
               key={`${headerItem.keyName}_${idx}`}
               item={headerItem}
-              formName={formName}
               control={control}
+              formName={`${formName}.headers.${headerItem.keyName}`}
             />
           ))}
         </div>
       )}
+
       {/* {item.body && (
         <div className={`w-full`}>
           <p>headers</p>

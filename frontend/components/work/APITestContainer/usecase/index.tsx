@@ -1,16 +1,22 @@
-import { createContext, useState } from 'react';
+import { Dispatch, SetStateAction, createContext, useState } from 'react';
 import UseTestContainer from './UseTestContainer';
 
-// const UCContext = createContext<>(null);
+export interface UCContextInterface {
+  contextFormName: string | null;
+  setContextFormName: Dispatch<SetStateAction<string | null>>;
+}
+
+export const UCContext = createContext<UCContextInterface>({
+  contextFormName: null,
+  setContextFormName: () => {},
+});
 
 const UseCaseTest = function (): JSX.Element {
-  //   const [first, setfirst] = useState(second);
-  //   const [formNameContext, setFormNameContext] = useState<string | null>(null)
-  const formNameContext = useState<string | null>(null);
+  const [contextFormName, setContextFormName] = useState<string | null>(null);
   return (
-    // <UCContext.Provider value={formNameContext}>
-    <UseTestContainer />
-    // </UCContext.Provider>
+    <UCContext.Provider value={{ contextFormName, setContextFormName }}>
+      <UseTestContainer />
+    </UCContext.Provider>
   );
 };
 

@@ -118,14 +118,12 @@ const resDataMock: PrevResponses = {
 type UCResBoxPropsType = {
   currentApi: UseTestApiCompactType;
   resApis: string;
-  formName: string | null;
   control: Control<UseTestForm, any>;
 };
 
 const UCResBox = function ({
   currentApi,
   resApis,
-  formName,
   control,
 }: UCResBoxPropsType): JSX.Element {
   const router = useRouter();
@@ -142,8 +140,8 @@ const UCResBox = function ({
           key={`${resData.apiId}_${idx}`}
           item={resData}
           name={resData.apiName}
-          formName={formName}
           control={control}
+          formName={`${resData.apiId}`}
         />
         // <div className={`w-full`}>
         //   <ToggleableHeader title={resData.apiName} />

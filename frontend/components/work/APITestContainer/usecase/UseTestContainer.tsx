@@ -251,8 +251,6 @@ const UseTestContainer = function () {
   const [countApi, setCountApi] = useState<number>(0);
   const [resApiIds, setResApiIds] = useState<string>('');
 
-  const [mappingFormName, setMappingFormName] = useState<string | null>(null);
-
   const methods = useForm<UseTestForm>({
     defaultValues: {
       rootApiId: '',
@@ -361,13 +359,7 @@ const UseTestContainer = function () {
                 className="flex-1 h-full p-5 flex flex-col"
               >
                 <BoxHeader title="Request" />
-                {curapi && (
-                  <UCReqBox
-                    control={control}
-                    currentApi={curapi}
-                    setMappingFormName={setMappingFormName}
-                  />
-                )}
+                {curapi && <UCReqBox control={control} currentApi={curapi} />}
               </Box>
               {/* Response */}
               <Box
@@ -381,7 +373,6 @@ const UseTestContainer = function () {
                     control={control}
                     currentApi={curapi}
                     resApis={resApiIds}
-                    formName={mappingFormName}
                   />
                 )}
               </Box>

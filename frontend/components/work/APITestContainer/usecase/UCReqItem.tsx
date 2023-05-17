@@ -19,7 +19,6 @@ type ReqtemPropsType = {
   control: any;
   name: string;
   item: HeadersType[] | FieldsType[] | ApiDetailAtTestItem[];
-  setMappingFormName: Dispatch<SetStateAction<string | null>>;
 };
 const UCReqItem = function ({
   fields,
@@ -27,7 +26,6 @@ const UCReqItem = function ({
   name, // 그냥 이름
   item, // item
   control,
-  setMappingFormName,
 }: ReqtemPropsType): JSX.Element {
   const [isOpen, setisOpen] = useState<boolean>(true);
   const a = item?.length + 1;
@@ -41,7 +39,7 @@ const UCReqItem = function ({
   const styles1 = {
     style: `${isOpen ? `h-[calc(${a}*43px)]` : 'h-[43px]'}`,
   };
-  console.log('111111', formName, item);
+  //   console.log('111111', formName, item);
   return (
     <div className={`${styles1[`style`]} w-full`}>
       <ToggleableHeader title={name} isOpen={isOpen} setIsOpen={setisOpen} />
@@ -63,7 +61,6 @@ const UCReqItem = function ({
                     item={item}
                     control={control}
                     name={name}
-                    setMappingFormName={setMappingFormName}
                   />
                 </div>
               );

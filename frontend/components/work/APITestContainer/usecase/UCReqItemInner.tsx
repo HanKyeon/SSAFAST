@@ -4,7 +4,8 @@ import { HiChatBubbleBottomCenterText } from 'react-icons/hi2';
 import Input from '@/components/common/Input';
 import { Controller } from 'react-hook-form';
 import { BodyType, FieldsType, HeadersType } from '../../APIDocsContainer';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useContext } from 'react';
+import { UCContext, UCContextInterface } from '.';
 
 interface UCReqItemInnerPropsType {
   item: HeadersType | FieldsType | BodyType;
@@ -14,7 +15,6 @@ interface UCReqItemInnerPropsType {
   name?: string;
   field?: any;
   formName: string;
-  setMappingFormName: Dispatch<SetStateAction<string | null>>;
 }
 
 const UCReqItemInner = function ({
@@ -25,9 +25,11 @@ const UCReqItemInner = function ({
   depth = 0,
   field,
   formName,
-  setMappingFormName,
 }: UCReqItemInnerPropsType): JSX.Element {
   const { dark: isDark } = useStoreSelector((state) => state.dark);
+
+  const { contextFormName, setContextFormName } =
+    useContext<UCContextInterface>(UCContext);
 
   const styles = {
     innerBox: `w-full h-auto flex items-center overflow-hidden relative ${
@@ -79,7 +81,8 @@ const UCReqItemInner = function ({
   };
 
   const onClickMappingBtn = (): void => {
-    setMappingFormName(formName);
+    setContextFormName(formName);
+    console.log('formName 담았거든??', contextFormName);
   };
 
   return (
@@ -104,10 +107,11 @@ const UCReqItemInner = function ({
                 : item.name}
             </div>
             <div className={`${styles['value']}`}>
-              {'type' in item && (
+              {/* {'type' in item && (
                 <Controller
                   name={`${formName}.value`}
                   control={control}
+                  defaultValue={'fffff'}
                   render={({ field, fieldState }) => (
                     <Input
                       name={`${formName}.value`}
@@ -118,7 +122,7 @@ const UCReqItemInner = function ({
                     />
                   )}
                 />
-              )}
+              )} */}
             </div>
           </div>
           <div onClick={onClickMappingBtn}>res에서 맵핑할궤</div>
