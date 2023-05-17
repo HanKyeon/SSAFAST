@@ -1,6 +1,7 @@
 import { PropsWithChildren, MouseEvent } from 'react';
 import ReactDOM from 'react-dom';
 import { ImCross } from 'react-icons/im';
+import AnimationBox from './AnimationBox';
 
 interface Props {
   closeModal: () => void;
@@ -27,7 +28,7 @@ function Modal({
               className={`${parentClasses}`}
               onClick={(e) => e.stopPropagation()}
             >
-              {children}
+              <AnimationBox className="h-full w-full">{children}</AnimationBox>
             </div>
           </div>
         </>,

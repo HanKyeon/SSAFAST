@@ -74,6 +74,27 @@ module.exports = {
           white: `#FFFFFF`,
           black: `#212121`,
         },
+        jossbar: {
+          blue: `#7CC8EC`,
+          pink: `#EC7E9A`,
+        },
+        grayscale: {
+          light: `#D9D9D9`,
+          deeplightlight: `#c6c6c6`,
+          deeplight: `#B6B6B6`,
+          dark: `#9D9D9D`,
+          deepdarklight: `#646464`,
+          deepdark: `#515457`,
+          deepdarkdeep: `#3A3C3F`,
+          deepdarkdeepdeep: `#36383C`,
+        },
+      },
+      fontSize: {
+        megaheader: '36px',
+        header: '24px',
+        normal: '18px',
+        content: '16px',
+        small: '14px',
       },
       fontFamily: {
         'black-hans': ['black-hans', 'ui-sans-serif'],
@@ -89,6 +110,7 @@ module.exports = {
         taebaek: ['taebaek', 'ui-sans-serif'],
       },
       backgroundImage: {
+        preview: "url('../public/assets/images/preview-bg.jpg')",
         // "tale-nav-logo": "url('/src/assets/images/TaleNavLogo.png')",
         // "tale-nav-logo-container":
         //   "url('/src/assets/images/TaleNavLogoContainer.png')",
@@ -434,5 +456,8 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/typography')],
+  plugins: [
+    require('@tailwindcss/typography'),
+    require('tailwind-scrollbar-hide'),
+  ],
 };

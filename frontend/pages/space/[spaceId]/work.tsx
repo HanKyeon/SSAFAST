@@ -1,5 +1,4 @@
-import { wrapper } from '@/store';
-import { InferGetServerSidePropsType } from 'next';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import {
   MouseEvent,
   PointerEvent,
@@ -12,86 +11,168 @@ import { useRouter } from 'next/router';
 import { SpaceParams } from '..';
 import apiRequest from '@/utils/axios';
 import { WebrtcProvider } from 'y-webrtc';
-import { getYjsValue, syncedStore } from '@syncedstore/core';
-import * as Y from 'yjs';
+import { getYjsDoc, getYjsValue, syncedStore } from '@syncedstore/core';
 import WorkContainer from '@/components/work/WorkContainer';
+import { useSyncedStore } from '@syncedstore/react';
+import { PresenceUserData, workFigma } from '@/components/work/presence-type';
+import MetaHead from '@/components/common/MetaHead';
+import {
+  SpaceFigma,
+  useBaseUrl,
+  useSpaceDetail,
+  useSpaceFrames,
+  useUserData,
+  useUserFigmaTokens,
+} from '@/hooks/queries/queries';
+// import { yjsStore } from '@/utils/syncedStore';
+import YjsProvider, { useYjsState } from '@/components/work/YjsProvider';
+import { Awareness } from '@y-presence/client';
+import * as Y from 'yjs';
+import { WebsocketProvider } from 'y-websocket';
+import { useMutation } from '@tanstack/react-query';
+
+export interface RTCSpaceData {
+  figmaList: workFigma[];
+  dtoList: any[];
+  apiList: any[];
+  SectionApiList: any[];
+  useCaseList: any[];
+  overloadList: any[];
+  baseUrlList: string[];
+}
 
 const SpaceWorkPage = function (
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
-  // const [step, setStep] = useState<number>(0);
-  // const router = useRouter();
-  // const { spaceId } = router.query;
-  // // const {} = useSpaceData // ReactQuery훅 만들어서 space data를 받아와야 한다.
-  // const [awareness, setAwareness] = useState<any>(null);
-  // const [sessions, setSessions] = useState<object>();
-  // const newStore = syncedStore({
-  //   pjt: {} as any,
-  // });
-  // useEffect(
-  //   function () {
-  //     setAwareness(
-  //       () =>
-  //         new WebrtcProvider(
-  //           `${spaceId} 프로젝트 이름`,
-  //           getYjsValue(newStore) as any
-  //         )
-  //     );
-  //   },
-  //   [spaceId]
-  // ); // 여기에 space data를 의존성으로 넣는다.
+  const router = useRouter();
+  const spaceId = props.spaceId;
+  let { state, doc, figmaY } = useYjsState();
 
-  // const others = useOthers<PresenceUserData>();
+  const { data: userFigmaTokenData } = useUserFigmaTokens();
+  const { data: spaceDetailData } = useSpaceDetail(parseInt(spaceId));
+  const {
+    data: spaceFrameData,
+    isLoading: spaceFrameDataLoading,
+    isError: spaceFrameDataError,
+  } = useSpaceFrames(parseInt(spaceId));
+  const { data: baseUrls } = useBaseUrl(parseInt(spaceId));
 
-  // //  프리센스커서 이동 관련 이벤트
-  // const updatePresence = useUpdatePresence<PresenceUserData>();
-  // const pointerMoveHandler = useCallback(
-  //   function (e: MouseEvent) {
-  //     updatePresence({
-  //       cursor: {
-  //         x: e.clientX,
-  //         y: e.clientY,
-  //       },
-  //     });
-  //   },
-  //   [updatePresence]
-  // );
+  const { data: userData, isLoading } = useUserData();
+  const store = useSyncedStore(state);
+  const [awareness, setAwareness] = useState<Awareness>();
+  useEffect(function () {
+    let provider: WebrtcProvider;
+    if (state && spaceId?.length) {
+      provider = new WebrtcProvider(
+        `ssafast${spaceId}`,
+        getYjsDoc(state) as any,
+        {
+          signaling: [
+            // `ws://localhost:4444`,
+            // `wss://localhost:4444`,
+            `wss://www.ssafast.com/ws`,
+            // `wss://0.0.0.0:4444`,
+            // `wss://www.ssafast.com:4444`,
+            // `ws://www.ssafast.com:4444`,
+            // 'wss://signaling.yjs.dev',
+            // 'wss://y-webrtc-signaling-eu.herokuapp.com',
+            // 'wss://y-webrtc-signaling-us.herokuapp.com',
+          ], //`ws://www.ssafast.com:4444`
+        }
+      );
+      provider.connect();
+
+      console.log('커넥트', provider.signalingConns);
+      console.log('쌩 provider', provider);
+      console.log('어웨어니스', provider.awareness);
+      const { awareness: innerAwareness } = provider;
+      setAwareness(innerAwareness);
+    }
+
+    return function () {
+      console.log('디스커넥트');
+      provider.disconnect();
+    };
+  }, []);
+
+  useEffect(
+    function () {
+      if (!awareness && spaceFrameDataLoading) {
+        return;
+      }
+      if (!figmaY.length && spaceFrameData) {
+        figmaY.push([...spaceFrameData.figmaSections]);
+        // const nfigmaY = new Y.Array<SpaceFigma>();
+        // nfigmaY.push([...spaceFrameData.figmaSections]);
+        // figmaY = nfigmaY;
+      }
+      // if (!figmaY.length) {
+      //   // const nfigmaY = new Y.Array<SpaceFigma>();
+      //   figmaY.push([
+      //     {
+      //       id: 1,
+      //       name: `d`,
+      //       sectionId: `123`,
+      //       sectionUrl: ``,
+      //     },
+      //     {
+      //       id: 2,
+      //       name: `dd`,
+      //       sectionId: `123`,
+      //       sectionUrl: ``,
+      //     },
+      //     {
+      //       id: 3,
+      //       name: `ddd`,
+      //       sectionId: `123`,
+      //       sectionUrl: ``,
+      //     },
+      //     {
+      //       id: 4,
+      //       name: `dddd`,
+      //       sectionId: `123`,
+      //       sectionUrl: ``,
+      //     },
+      //   ]);
+      // }
+    },
+    [awareness, spaceFrameData, baseUrls]
+  );
 
   return (
-    <div className="h-full w-full">
-      <WorkContainer />
-      {/* {awareness && (
-        <RoomProvider<PresenceUserData>
-          awareness={awareness}
-          initialPresence={{
-            name: `전데요...`,
-            color: `#${Math.round(Math.random() * 0xffffff).toString(16)}`,
-          }}
-        >
-          <div className="h-full w-full">하이요</div>
-        </RoomProvider>
-      )} */}
-    </div>
+    <>
+      <MetaHead
+        title={`SSAFAST: 작업 공간`}
+        description={`SSAFAST: 작업하는 공간입니다.`}
+        url={`/space/${spaceId}/work`}
+      />
+      <div className="h-full w-full overflow-hidden">
+        <YjsProvider>
+          {awareness && (
+            <RoomProvider<PresenceUserData>
+              awareness={awareness}
+              initialPresence={{
+                name: `${userData?.name || `나다이띱때끼야`}`,
+                color: `#${Math.round(Math.random() * 0xffffff).toString(16)}`,
+                step: 1,
+              }}
+            >
+              <WorkContainer store={state} />
+            </RoomProvider>
+          )}
+        </YjsProvider>
+      </div>
+    </>
   );
 };
 
 export default SpaceWorkPage;
 
-export const getServerSideProps = wrapper.getServerSideProps(function (store) {
-  return async function (context) {
-    const { spaceId } = context.params as SpaceParams;
-    let spaceData = {};
-    // await apiRequest({
-    //   method: `get`,
-    //   url: `/`,
-    // }).then((res) => {
-    //   // sapceData에 space 정보 넣어주기.
-    // });
-
-    return {
-      props: {
-        spaceData,
-      },
-    };
+export const getServerSideProps: GetServerSideProps = async function (context) {
+  const { spaceId } = context.params as SpaceParams;
+  return {
+    props: {
+      spaceId: spaceId,
+    },
   };
-});
+};

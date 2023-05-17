@@ -5,6 +5,7 @@ import AnimationBox from './AnimationBox';
 import styles from './Toast.module.css';
 import { toastActions } from '@/store/toast-slice';
 import { useRouter } from 'next/router';
+import Box from './Box';
 
 interface Props {
   message?: string;
@@ -82,12 +83,14 @@ const Toast = function ({ children }: PropsWithChildren<Props>) {
           isOpened={isToast}
           className={`box-border fixed min-w-[288px] w-[32%] h-[15%] z-[100] flex justify-center items-center bottom-[0%] left-[50%]`}
         >
-          <div
-            className={`box-border w-full h-full rounded-[8px] flex flex-row items-center justify-center z-[100] translate-x-[-50%] translate-y-[-30%] p-2 bg-[#FFFEE1] shadow-2xl drop-shadow-2xl duration-[0.33s] active:bg-[#F4F2C3]`}
+          <Box
+            className={`box-border w-full h-full rounded-[8px] flex flex-row items-center justify-center z-[100] translate-x-[-50%] translate-y-[-30%] p-2 shadow-2xl drop-shadow-2xl duration-[0.33s]`}
             onClick={closeToast}
+            variant="three"
+            fontType="normal"
           >
             <div
-              className={`box-border flex flex-row items-center justify-evenly w-full h-full rounded-[8px] border-[6px] border-[#FEDEAC] bg-[#FFFEE1] duration-[0.33s] active:bg-[#F4F2C3]`}
+              className={`box-border flex flex-row items-center justify-evenly w-full h-full rounded-[8px] border-[6px] border-gray-500 duration-[0.33s]`}
             >
               <div
                 className={`box-border basis-[32%] w-[32%] h-full flex flex-col items-center justify-center gap-1`}
@@ -95,7 +98,7 @@ const Toast = function ({ children }: PropsWithChildren<Props>) {
                 {isSuccess ? <Smile /> : <Sad />}
               </div>
               <div
-                className={`basis-[68%] w-[68%] flex font-hopang-black items-center justify-center whitespace-pre-line flex-col px-3 ${
+                className={`basis-[68%] w-[68%] flex font-nx2-medium items-center justify-center whitespace-pre-line flex-col px-3 ${
                   toastMessage.length > 10 ? `text-[1.33rem] ` : `text-[1.9rem]`
                 }`}
               >
@@ -109,7 +112,7 @@ const Toast = function ({ children }: PropsWithChildren<Props>) {
                 )}
               </div>
             </div>
-          </div>
+          </Box>
         </AnimationBox>,
         document.getElementById('backdrop-root')!
       )}

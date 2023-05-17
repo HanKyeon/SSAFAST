@@ -4,7 +4,7 @@ const useDebounce = function (
   value: any,
   delay: number = 1000
 ): { value: any } {
-  const [debouncedValue, setDebouncedValue] = useState(value);
+  const [debouncedValue, setDebouncedValue] = useState<any>(value);
   useEffect(
     function () {
       const timeId = setTimeout(function () {
@@ -14,7 +14,7 @@ const useDebounce = function (
         clearTimeout(timeId);
       };
     },
-    [value]
+    [value, debouncedValue]
   );
   return debouncedValue;
 };
