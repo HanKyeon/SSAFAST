@@ -163,91 +163,70 @@ const ApiList = function ({
                     카테고리를 정말 삭제 하시겠습니까?
                   </div>
 
-                    <div className="flex gap-4">
-                      <Button
-                        className="flex items-center justify-center text-center rounded-[8px] border !border-red-500 !bg-red-500"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          categoryDelete(cate.categoryId);
-                        }}
-                      >
-                        삭제
-                      </Button>
-                      <Box
-                        variant="three"
-                        className="text-center rounded-[8px] cursor-pointer "
-                        onClick={closeDeleteModal}
-                      >
-                        닫기
-                      </Box>
-                    </div>
-                  </Box>
-                </AnimationBox>
-              </Modal>
-            )}
-            <li key={`${cate.categoryId}_${cateIdx}`} className={`w-full`}>
-              {/* 카테고리 */}
-              <div className={`mb-1 flex items-center gap-3`}>
-                <div
-                  className={`flex items-center gap-3 cursor-pointer`}
-                  onClick={() => onClickOpenCate(cate.categoryId, cateIdx)}
-                >
-                  <i className={`text-[20px]`}>
-                    {curCateIdx === cateIdx ? (
-                      <BsFolder2Open />
-                    ) : (
-                      <BsFolder className={`mt-[2px]`} />
-                    )}
-                  </i>
-                  <span>{cate.categoryName}</span>
-                </div>
-                <AiOutlineMore
-                  className={`text-grayscale-dark hover:text-theme-white-strong`}
-                  onClick={openModal}
-                />
-                {/* {isModal && (
-                  <ul
-                    className={`absolute z-10 bg-grayscale-deepdarkdeep rounded-[8px] w-full shadow-lg`}
-                  >
-                    <li
-                      key={`${cate.categoryId}_${cateIdx}_update`}
-                      className={`text-center py-1 border-t-[1px] border-grayscale-dark first:border-none cursor-pointer`}
-                      onClick={openUpdateModal}
-                    >
-                      수정
-                    </li>
-                    <li
-                      key={`${cate.categoryId}_${cateIdx}_delete`}
-                      className={`text-center py-1 border-t-[1px] border-grayscale-dark first:border-none cursor-pointer`}
-                      onClick={openDeleteModal}
+                  <div className="flex gap-4">
+                    <Button
+                      className="flex items-center justify-center text-center rounded-[8px] border !border-red-500 !bg-red-500"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        categoryDelete(cate.categoryId);
+                      }}
                     >
                       삭제
-                    </li>
-                  </ul>
-                )} */}
-              </div>
-              {/* api 목록 */}
-              <ul
-                className={`w-[90%] my-0 mx-auto flex flex-col items-center gap-1 duration-[0.33s] ${
-                  curCateIdx === cateIdx ? '' : 'hidden'
-                }`}
+                    </Button>
+                    <Box
+                      variant="three"
+                      className="text-center rounded-[8px] cursor-pointer "
+                      onClick={closeDeleteModal}
+                    >
+                      닫기
+                    </Box>
+                  </div>
+                </Box>
+              </AnimationBox>
+            </Modal>
+          )}
+          <li key={`${cate.categoryId}_${cateIdx}`} className={`w-full`}>
+            {/* 카테고리 */}
+            <div className={`mb-1 flex items-center gap-3`}>
+              <div
+                className={`flex items-center gap-3 cursor-pointer`}
+                onClick={() => onClickOpenCate(cate.categoryId, cateIdx)}
               >
-                {cate?.apis?.map((api, apiIdx) => (
-                  <APIlistItem
-                    key={`${api.id}-${apiIdx}-apiz`}
-                    item={api}
-                    className={`w-full duration-[0.33s] hover:scale-[101%]`}
-                    onClickApi={onClickApi ? onClickApi : undefined}
-                    toggleAddHandler={toggleAddHandler}
-                    apiIdHandler={apiIdHandler}
-                  />
-                ))}
-              </ul>
-            </li>
-          </>
-        ))}
-      </ul>
-    </>
+                <i className={`text-[20px]`}>
+                  {curCateIdx === cateIdx ? (
+                    <BsFolder2Open />
+                  ) : (
+                    <BsFolder className={`mt-[2px]`} />
+                  )}
+                </i>
+                <span>{cate.categoryName}</span>
+              </div>
+              <AiOutlineMore
+                className={`text-grayscale-dark hover:text-theme-white-strong`}
+                onClick={openModal}
+              />
+            </div>
+            {/* api 목록 */}
+            <ul
+              className={`w-[90%] my-0 mx-auto flex flex-col items-center gap-1 duration-[0.33s] ${
+                curCateIdx === cateIdx ? '' : 'hidden'
+              }`}
+            >
+              {cate?.apis?.map((api, apiIdx) => (
+                <APIlistItem
+                  key={`${api.id}-${apiIdx}-apiz`}
+                  item={api}
+                  className={`w-full duration-[0.33s] hover:scale-[101%]`}
+                  onClickApi={onClickApi ? onClickApi : undefined}
+                  toggleAddHandler={toggleAddHandler}
+                  apiIdHandler={apiIdHandler}
+                />
+              ))}
+            </ul>
+          </li>
+        </>
+      ))}
+    </ul>
   );
 };
 

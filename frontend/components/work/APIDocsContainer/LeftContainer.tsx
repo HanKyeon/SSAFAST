@@ -178,11 +178,11 @@ const LeftContainer = function ({
       <div className={`flex-1 overflow-y-scroll scrollbar-hide`}>
         {curTab === 'Figma' ? (
           //   화면별 api
-          <FigmaList apiData={apiMok} />
+          <FigmaList isConnect={true} />
         ) : (
           //   전체 api
           <APIList
-            apiList={spaceApis || { apiCategories: [] }}
+            // apiList={spaceApis || { apiCategories: [] }}
             setSelectedIdHandler={changeSelectedId}
           />
         )}
