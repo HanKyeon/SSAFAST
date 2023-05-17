@@ -27,6 +27,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import apiRequest from '@/utils/axios';
 import ReqBoxPostman from './formComponent/ReqBoxPostman';
 import ResBoxPostman from './formComponent/ResBoxPostman';
+import { queryKeys } from '@/hooks/queries/QueryKeys';
 
 const status: (1 | 2 | 3 | 4)[] = [1, 2, 3, 4];
 export type MockupData2Type = {
@@ -84,7 +85,7 @@ const mockupData2: ApiDetailInTest = {
   description: `api설명`,
   method: 1,
   status: 1,
-  baseurlId: 5,
+  baseurlId: 4,
   categoryId: 1,
   member: { id: 1, name: `작성자`, email: `asdf@asdf.com`, profileImg: `` },
   createdTime: `2023-05-17`,
@@ -272,14 +273,25 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
   const { data: selectedApiData } = useApiSingleTestDetail(spaceId, selectedId);
   const { data: baseUrlListdata } = useBaseUrl(spaceId);
   const [curStatus, setCurStatus] = useState<number>(0);
+  // status 변경
   const onChangeStatus = (): void => {
-    setCurStatus((prev) => (curStatus === 3 ? 0 : prev + 1));
-    apiRequest({
-      method: `put`,
-      url: `/api/api/status`,
-      params: {
-        apiId: selectedId,
-      },
+    setCurStatus((prev) => {
+      apiRequest({
+        method: `put`,
+        url: `/api/api/status`,
+        data: {
+          apiId: selectedId,
+          status: prev === 3 ? 0 : prev + 1,
+        },
+      }).then((res) => {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.spaceSection(spaceId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.spaceApiList(spaceId),
+        });
+      });
+      return prev === 3 ? 0 : prev + 1;
     });
   };
   const methods = useForm<ApiDetailInTest>({ defaultValues: mockupData2 });
@@ -289,6 +301,7 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
     function () {
       if (selectedApiData) {
         reset(selectedApiData);
+        setCurStatus(() => selectedApiData.status);
       } else {
       }
     },
@@ -299,8 +312,94 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
     setSelectedId(() => id);
   }, []);
 
-  const checkData = function (data: ApiDetailInTest) {
+  const formDataSettingHandler = function (data: ApiDetailInTest) {
     console.log(data);
+    let url: string = `${
+      baseUrlListdata?.baseurls.find((v) => v.id === data.baseurlId)?.url! +
+      selectedApiData?.document.request.additionalUrl
+    }`;
+    console.log(`url :`, url);
+    let method = data.method;
+    console.log(
+      `method :`,
+      [``, `GET`, `POST`, `PUT`, `DEL`, `PATCH`][data.method]
+    );
+    let headers: any = {};
+    data.document.request.headers.forEach((v) => {
+      headers[v.keyName] = v.value;
+    });
+    console.log(`headers :`, headers);
+    let pathVars: any = {};
+    data.document.request.pathVars.forEach((v) => {
+      pathVars[v.keyName] = v.value;
+    });
+    console.log(`path variables :`, pathVars);
+    let params: any = {};
+    data.document.request.params.forEach((v) => {
+      params[v.keyName] = v.value;
+    });
+    console.log(`params :`, params);
+    let body: any = {};
+    // fields
+    data.document.request.body.fields.map((v) => {
+      body[v.keyName] = v.value;
+    });
+    // nestedDtos
+    Object.keys(data.document.request.body.nestedDtos || {}).map((dtoId) => {
+      data.document.request.body.nestedDtos![dtoId].map((dto) => {
+        // nestedDtos = dto
+        let ret: any = {}; // 이게 dto의 value
+        // dto 값의 fields
+        dto.fields!.map((v) => {
+          ret[v.keyName] = v.value;
+        });
+        // 이중 중첩 dto
+        Object.keys(dto.nestedDtos!).map((idtoId) => {
+          dto.nestedDtos![idtoId].map((inDto) => {
+            let ininRet: any = {};
+            inDto.fields!.map((innerField) => {
+              ininRet[innerField.keyName] = innerField.value;
+            });
+            ret[inDto.keyName!] = { ...ininRet };
+          });
+        });
+        body[dto.keyName!] = { ...ret };
+      });
+    });
+    console.log(`body :`, body);
+    console.log('최종 RequestConfig는 아래');
+    console.log({
+      method: `post`,
+      url: `/api/api-exec`,
+      data: {
+        execReqData: {
+          url,
+          method,
+          headers,
+          pathVars,
+          params,
+          body: JSON.stringify(body),
+        },
+      },
+    });
+    // 요청 결과도 처리해야함.
+    apiRequest({
+      method: `post`,
+      url: `/api/api-exec`,
+      data: {
+        execReqData: {
+          url,
+          method,
+          headers,
+          pathVars,
+          params,
+          body: JSON.stringify(body),
+        },
+      },
+    }).then((res) => {
+      queryClient.invalidateQueries(queryKeys.spaceResult(spaceId, selectedId));
+      console.log('처리해야함');
+    });
   };
   return (
     <div className="h-full w-full flex justify-center items-center gap-[1.12%]">
@@ -315,7 +414,10 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
       {/* 오른쪽 화면 */}
       <div className="basis-[50%] w-[50%] h-full flex-1 items-center justify-center flex flex-col overflow-hidden">
         <FormProvider {...methods}>
-          <form className="w-full h-full" onSubmit={handleSubmit(checkData)}>
+          <form
+            className="w-full h-full"
+            onSubmit={handleSubmit(formDataSettingHandler)}
+          >
             <div className={`h-full w-full flex flex-col items-center gap-3`}>
               {/* api detail */}
               <Box className="w-full p-5 gap-3">
@@ -327,7 +429,7 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
                     />
                     {/* <IoMdArrowDropright */}
                     <MdOutlineKeyboardArrowRight
-                      className={`text-[22px] duration-[0.33s] text-grayscale-deepdark hover:text-grayscale-light`}
+                      className={`text-[22px] duration-[0.33s] text-grayscale-deepdark hover:text-grayscale-light cursor-pointer`}
                       onClick={onChangeStatus}
                     />
                   </div>

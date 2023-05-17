@@ -84,8 +84,10 @@ export const queryKeys = {
   spaceApiDetail: (spaceId: string | number, apiId: string | number) =>
     [...queryKeys.spaceApi(spaceId), `detail`, `${apiId}`] as const,
   // space의 section 하나에 귀속된 api들 => 사용
+  spaceSection: (spaceId: string | number) =>
+    [...queryKeys.spaceApi(spaceId), `section`] as const,
   spaceSectionApis: (spaceId: string | number, sectionId: string | number) =>
-    [...queryKeys.spaceApi(spaceId), `section`, `${sectionId}`] as const,
+    [...queryKeys.spaceSection(spaceId), `${sectionId}`] as const,
   // space의 category 목록 => 사용
   spaceCategoryList: (spaceId: string | number) =>
     [...queryKeys.spaceApi(spaceId), `category`, `list`] as const,
