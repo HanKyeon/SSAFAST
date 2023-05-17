@@ -8,8 +8,11 @@ import UseTestContainer from './usecase/UseTestContainer';
 import { PointerEvent, useCallback, useEffect, useState } from 'react';
 import Modal from '@/components/common/Modal';
 import { useStoreSelector } from '@/hooks/useStore';
-import { Box, Button } from '@/components/common';
+import { Box, Button, Input } from '@/components/common';
 import UseCaseTest from './usecase';
+import { useRouter } from 'next/router';
+import { SpaceParams } from '@/pages/space';
+import { useBaseUrl } from '@/hooks/queries/queries';
 interface Props {
   serverSideStore?: RTCSpaceData;
   store: any;
@@ -41,6 +44,7 @@ const TestContainer = function ({ store, serverSideStore }: Props) {
   const { presence: isPresence } = useStoreSelector((state) => state.dark);
   const [USE1LOAD2, setUSE1LOAD2] = useState<1 | 2>(1);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [serverClass, setServerClass] = useState<1 | 2 | 3>(1);
   const goUseTest = function () {
     setUSE1LOAD2(() => 1);
   };
@@ -63,63 +67,90 @@ const TestContainer = function ({ store, serverSideStore }: Props) {
     setUSE1LOAD2(() => 2);
   };
 
+  const router = useRouter();
+  const { spaceId } = router.query as SpaceParams;
+  const { data: baseUrlListData, isLoading: isBaseUrlLoading } = useBaseUrl(
+    parseInt(spaceId)
+  );
+
+  console.log(spaceId);
   return (
     <>
       {isModal && (
         <Modal closeModal={closeModal} parentClasses="h-[80%] w-[80%]">
           <Box className="flex flex-col gap-4 w-full h-full p-5 items-center justify-center">
-            <div className="text-[36px]">
+            <div className="text-[24px]">
               BaseUrl을 인증해야 사용할 수 있는 기능입니다.
             </div>
-            <div className="h-[50%] w-[50%] border-red-900 border flex items-center justify-center">
-              여기 코드 복사해서 가라
+            <div className="h-[50%] w-[50%] ">
+              <div className="flex w-full">
+                <div
+                  onClick={() => setServerClass(1)}
+                  className="cursor-pointer text-center text-sm h-[5%] py-2 px-7 rounded-tl-[8px] border-mincho-strong text-mincho-strong border-x-[2px] border-t-[2px] min-w-[40px] duration-[0.33s]"
+                >
+                  Java
+                </div>
+                <div
+                  onClick={() => setServerClass(2)}
+                  className="cursor-pointer text-center text-sm h-[5%] py-2 px-7 border-mincho-strong text-mincho-strong border-t-[2px] min-w-[40px] duration-[0.33s]"
+                >
+                  Flask
+                </div>
+                <div
+                  onClick={() => setServerClass(3)}
+                  className="cursor-pointer text-center text-sm h-[5%] py-2 px-7 rounded-tr-[8px] border-mincho-strong text-mincho-strong border-x-[2px] border-t-[2px] min-w-[40px] duration-[0.33s]"
+                >
+                  Django
+                </div>
+              </div>
+              {serverClass === 1 && (
+                <div className="w-full text-small h-[90%] border-red-900 border-[4px] flex flex-col items-center justify-center overflow-y-scroll">
+                  {`@RestController`}
+                  <br />
+                  {`@RequestMapping("/api/ssafast")`}
+                  <br />
+                  {`public class SsafastController {`}
+                  <br />
+                  {`    @PostMapping("")`}
+                  <br />
+                  {`    ResponseEntity<?> executeOverload(@RequestBody HashMap<String, String> map) {`}
+                  <br />
+                  {`        System.out.println(map.get("verification"));`}
+                  <br />
+                  {`        return new ResponseEntity<>("success", HttpStatus.OK);`}
+                  <br />
+                  {`    }`}
+                  <br />
+                  {`}`}
+                </div>
+              )}
+              {serverClass === 2 && (
+                <div className="w-full h-[90%] border-red-900 border flex items-center justify-center overflow-y-scroll">
+                  플라스크 코드
+                </div>
+              )}
+              {serverClass === 3 && (
+                <div className="w-full h-[90%] border-red-900 border flex items-center justify-center overflow-y-scroll">
+                  파이썬 코드
+                </div>
+              )}
             </div>
-            <div className="flex flex-col items-start justify-start overflow-y-scroll h-[40%]">
-              <label className="text-[24px]">인증해야할 URL 목록</label>
-              <div>
-                baseURL1
-                <Button>인증했냐</Button>
-              </div>
-              <div>
-                baseURL2
-                <Button>인증했냐</Button>
-              </div>
-              <div>
-                baseURL3
-                <Button>인증했냐</Button>
-              </div>
-              <div>
-                baseURL4
-                <Button>인증했냐</Button>
-              </div>
-              <div>
-                baseURL5
-                <Button>인증했냐</Button>
-              </div>
-              <div>
-                baseURL6
-                <Button>인증했냐</Button>
-              </div>
-              <div>
-                baseURL7
-                <Button>인증했냐</Button>
-              </div>
-              <div>
-                baseURL8
-                <Button>인증했냐</Button>
-              </div>
-              <div>
-                baseURL9
-                <Button>인증했냐</Button>
-              </div>
-              <div>
-                baseURL10
-                <Button>인증했냐</Button>
-              </div>
-              <div>
-                baseURL11
-                <Button>인증했냐</Button>
-              </div>
+            <div className="flex flex-col items-center justify-start overflow-y-scroll h-[40%] w-full">
+              <br />
+              <label className="text-[18px]">인증해야할 URL 목록</label>
+              <br />
+
+              {baseUrlListData?.baseurls.map((item, index) => (
+                <>
+                  <div className="flex w-[50%] justify-between gap-12">
+                    <div key={item.id}>{item.url}</div>
+                    <Input
+                      name={`${item.id}-${item.url}`}
+                      className="text-center !w-24"
+                    />
+                  </div>
+                </>
+              ))}
             </div>
             <div className="flex flex-row gap-4">
               <Box
