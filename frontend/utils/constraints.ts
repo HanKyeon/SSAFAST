@@ -10,6 +10,19 @@ export const defaultTypes = [
   { id: 9, name: `LocalDateTime`, desc: `로컬 날짜 타입` },
 ];
 
+export const getWonsiType = [
+  ``,
+  'String',
+  'Integer',
+  'Long',
+  'Float',
+  'Double',
+  'Boolean',
+  'MultipartFile',
+  'Date',
+  'LocalDateTime',
+];
+
 export const valuedConstraints = {
   max: (v: number) => {
     return {
