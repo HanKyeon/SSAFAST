@@ -52,12 +52,16 @@ const UCResItem = function ({
         <div className={`w-full`}>
           <p>headers</p>
           {item.headers.map((headerItem: ApiDetailAtTestItem, idx: number) => (
-            <UCResItemInner
+            <div
+              className={`w-[87%] rounded-[13px] overflow-hidden mt-0 mb-3 mx-auto text-content duration-[0.33s]`}
               key={`${headerItem.keyName}_${idx}`}
-              item={headerItem}
-              control={control}
-              formName={`${formName}.headers.${headerItem.keyName}`}
-            />
+            >
+              <UCResItemInner
+                item={headerItem}
+                control={control}
+                formName={`${formName}.headers.${headerItem.keyName}`}
+              />
+            </div>
           ))}
         </div>
       )}
