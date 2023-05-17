@@ -47,6 +47,7 @@ public class DtoSpecDocumentService {
     public boolean deleteDtoDocs(Long dtoId){
         DtoSpecDocument document = createOrFindDtosIfExists();
         document.getDtos().remove(dtoId);
+        dtoSpecDocumentRepository.save(document);
         return true;
     }
 

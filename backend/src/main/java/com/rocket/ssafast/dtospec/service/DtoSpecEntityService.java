@@ -345,20 +345,16 @@ public class DtoSpecEntityService {
             });
         }
 
-        //mysql dtoId를 api nestedDtos 에 가지고 있는 아이들 조회
+        //dtoId를 api nestedDtos 에 가지고 있는 아이들 조회
         for(ApiHasDtoEntity apiHasDto : apiHasDtoEntityRepository.findAllByDtoSpecEntity(targetDtoEntity.get())){
             // Api Document request, response 순회하면서 target dto 제거
             Long apiId = apiHasDto.getApiSpecEntity().getId();
             ApiSpecDoc apiDocs = apiSpecDocumentService.getApiSpecDocs(apiId);
 
             //request
-            Map<Long, List<BodyField>> newNestedDtos = new HashMap<>();
-            for(Map.Entry<Long, List<BodyField>> entry : apiDocs.getRequest().getBody().getNestedDtos().entrySet()){
-                Long _key = entry.getKey();
-                List<BodyField> _value = entry.getValue();
+            Map<Long, List<BodyField>> newNestedDtos = apiDocs.getRequest().getBody().getNestedDtos();
+            newNestedDtos.remove(dtoId);
 
-                if(!_key.equals(dtoId)){ newNestedDtos.put(_key, _value); }
-            }
             RequestBodyField newRequest =
                     RequestBodyField.builder()
                             .additionalUrl(apiDocs.getRequest().getAdditionalUrl())
@@ -376,13 +372,9 @@ public class DtoSpecEntityService {
             //response
             List<ResponseField> newResponse = new ArrayList<>();
             for(ResponseField objectByStatusCode : apiDocs.getResponse()){
-                Map<Long, List<BodyField>> newNestedDtoByStatusCode = new HashMap<>();
-                for(Map.Entry<Long, List<BodyField>> entry : objectByStatusCode.getBody().getNestedDtos().entrySet()){
-                    Long _key = entry.getKey();
-                    List<BodyField> _value = entry.getValue();
+                Map<Long, List<BodyField>> newNestedDtoByStatusCode = objectByStatusCode.getBody().getNestedDtos();
+                newNestedDtoByStatusCode.remove(dtoId);
 
-                    if(!_key.equals(dtoId)){ newNestedDtoByStatusCode.put(_key, _value); }
-                }
                 newResponse.add(
                         ResponseField.builder()
                                 .statusCode(objectByStatusCode.getStatusCode())
