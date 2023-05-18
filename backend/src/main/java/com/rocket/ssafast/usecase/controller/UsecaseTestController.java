@@ -56,16 +56,16 @@ public class UsecaseTestController {
 	@PutMapping("/exec")
 	ResponseEntity<?> execUsecaseTest(
 		@RequestParam("usecaseId") Long usecaseTestId,
-		@RequestPart(value = "files", required = false) MultipartFile[] files,				// 단건 파일들
-		@RequestPart(value = "filesArrs", required = false) MultipartFile[][] filesArrs,	// 다건 파일들
-		@RequestPart(value = "filekeys", required = false) String[] filekeys,				// 단건 파일 키들
-		@RequestPart(value = "filesArrKeys", required = false) String[] filesArrKeys,		// 다건 파일 키들
-		@Valid @RequestPart("usecaseTestData") UsecaseInfo usecaseTestInfo) {			// usecase 테스트 정보
+		// @RequestPart(value = "files", required = false) MultipartFile[] files,				// 단건 파일들
+		// @RequestPart(value = "filesArrs", required = false) MultipartFile[][] filesArrs,	// 다건 파일들
+		// @RequestPart(value = "filekeys", required = false) String[] filekeys,				// 단건 파일 키들
+		// @RequestPart(value = "filesArrKeys", required = false) String[] filesArrKeys,		// 다건 파일 키들
+		@Valid @RequestBody UsecaseInfo usecaseTestInfo) {			// usecase 테스트 정보
 
 		try {
 			return new ResponseEntity<>(
 				usecaseTestService.execUsecaseTest(
-					usecaseTestId, usecaseTestInfo, files, filesArrs, filekeys, filesArrKeys
+					usecaseTestId, usecaseTestInfo, null, null, null, null
 				), HttpStatus.OK);
 		} catch (CustomException e) {
 			log.error("error: ", e);
