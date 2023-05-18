@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ public class DtoSpecController {
     private final DtoSpecEntityService dtoSpecEntityService;
     private final DtoSpecDocumentService dtoSpecDocumentService;
     @PostMapping
-    public ResponseEntity<?> insertDto(@RequestBody AddDtoSpecDto addDtoSpecDto){
+    public ResponseEntity<?> insertDto(@RequestBody @Valid AddDtoSpecDto addDtoSpecDto){
 
         try{
             return new ResponseEntity<>(dtoSpecEntityService.createDtoEntity(addDtoSpecDto), HttpStatus.OK);
@@ -83,7 +84,7 @@ public class DtoSpecController {
     }
 
     @PutMapping(value = "/{dtoId}")
-    public ResponseEntity<?> updateDtoInfo(@AuthenticationPrincipal UserDetailsImpl memberDto, @PathVariable Long dtoId, @RequestBody AddDtoSpecDto updateDtoSpecDto){
+    public ResponseEntity<?> updateDtoInfo(@AuthenticationPrincipal UserDetailsImpl memberDto, @PathVariable Long dtoId, @RequestBody @Valid AddDtoSpecDto updateDtoSpecDto){
         try{
 //            return new ResponseEntity<>(updateDtoSpecDto, HttpStatus.OK);
             return new ResponseEntity<>(dtoSpecEntityService.checkInputBeforeUpdateEntityAndUpdate(memberDto.getMemberId(), dtoId, updateDtoSpecDto), HttpStatus.OK);
