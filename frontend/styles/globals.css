@@ -65,3 +65,21 @@ select {
   color: #9d9d9d;
   outline: none;
 }
+
+.canvas-under-bg-container {
+  position: fixed;
+  z-index: -30;
+  box-sizing: border-box;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

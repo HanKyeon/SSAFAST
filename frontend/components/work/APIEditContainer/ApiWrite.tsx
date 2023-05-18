@@ -321,7 +321,9 @@ const ApiWrite = function ({
                     >
                       {categoryListData?.categorys?.map((item, index) => (
                         <>
-                          <option value={item.id}>{item.name}</option>
+                          <option key={`${item.id}_${index}`} value={item.id}>
+                            {item.name}
+                          </option>
                         </>
                       ))}
                     </Select>
