@@ -33,7 +33,7 @@ import contentAxios from '@/utils/contentAxios';
 import { useStoreDispatch } from '@/hooks/useStore';
 import { DispatchToast } from '@/store';
 
-const status: (1 | 2 | 3 | 4)[] = [1, 2, 3, 4];
+const status: (0 | 1 | 2 | 3 | 4)[] = [0, 1, 2, 3, 4];
 export type MockupData2Type = {
   request: {
     headers: HeadersType[];
@@ -93,28 +93,28 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
   const [selectedId, setSelectedId] = useState<number>(0);
   const { data: selectedApiData } = useApiSingleTestDetail(spaceId, selectedId);
   const { data: baseUrlListdata } = useBaseUrl(spaceId);
-  const [curStatus, setCurStatus] = useState<number>(0);
+  const [curStatus, setCurStatus] = useState<number>(1);
   const [responseData, setResponseData] = useState<any>();
   const [requestConfigModal, setRequestConfigModal] = useState<boolean>(false);
   // status 변경
-  const onChangeStatus = (): void => {
+  const onChangeStatus = async () => {
     setCurStatus((prev) => {
-      apiRequest({
-        method: `put`,
-        url: `/api/api/status`,
-        data: {
-          apiId: selectedId,
-          status: prev === 3 ? 0 : prev + 1,
-        },
-      }).then((res) => {
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.spaceSection(spaceId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.spaceApiList(spaceId),
-        });
+      return prev === 4 ? 1 : prev + 1;
+    });
+    await apiRequest({
+      method: `put`,
+      url: `/api/api/status`,
+      data: {
+        apiId: selectedId,
+        status: curStatus,
+      },
+    }).then((res) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.spaceSection(spaceId),
       });
-      return prev === 3 ? 0 : prev + 1;
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.spaceApiList(spaceId),
+      });
     });
   };
   const methods = useForm<ApiDetailInTest>();
@@ -261,7 +261,7 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
                       className={`flex items-center justify-between w-[75px]`}
                     >
                       <StatusBadge
-                        status={status[selectedApiData?.status || curStatus]}
+                        status={status[curStatus] as 1 | 2 | 3 | 4}
                         small
                       />
                       {/* <IoMdArrowDropright */}
@@ -275,8 +275,8 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
                         className="cursor-pointer hover:scale-110 duration-[0.33s]"
                         onClick={requestModalOnHandler}
                       />
-                      <HiOutlineFolderArrowDown />
-                      <IoSaveOutline />
+                      {/* <HiOutlineFolderArrowDown /> */}
+                      {/* <IoSaveOutline /> */}
                       <button title="submit-btn" type="submit">
                         <TbSend className="text-mincho-normal cursor-pointer" />
                       </button>
