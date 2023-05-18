@@ -1,15 +1,14 @@
 package com.rocket.ssafast.dtospec.dto.request;
 
 import com.rocket.ssafast.dtospec.domain.element.DtoInfo;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class AddDtoSpecDto {
 
     private Long workspaceId;
