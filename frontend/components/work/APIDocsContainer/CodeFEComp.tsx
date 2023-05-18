@@ -15,7 +15,7 @@ const CodeFEComp = function ({ selectedApiId, closeModal }: Props) {
   const { spaceId } = router.query as SpaceParams;
   const { data: apiDetail } = useApiSingleTestDetail(spaceId, selectedApiId);
   const { data: baseURLData } = useBaseUrl(spaceId);
-  const [showData, setShowData] = useState<any>(`기다려주세요`);
+  const [showData, setShowData] = useState<any>(`api를 선택하세요!`);
   useEffect(
     function () {
       if (apiDetail && baseURLData) {
