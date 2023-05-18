@@ -4,7 +4,8 @@ import { HiChatBubbleBottomCenterText } from 'react-icons/hi2';
 import Input from '@/components/common/Input';
 import { Controller } from 'react-hook-form';
 import { BodyType, FieldsType, HeadersType } from '../../APIDocsContainer';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useContext, useState } from 'react';
+import { UCContext, UCContextInterface } from '.';
 
 interface UCReqItemInnerPropsType {
   item: HeadersType | FieldsType | BodyType;
@@ -14,7 +15,6 @@ interface UCReqItemInnerPropsType {
   name?: string;
   field?: any;
   formName: string;
-  setMappingFormName: Dispatch<SetStateAction<string | null>>;
 }
 
 const UCReqItemInner = function ({
@@ -25,9 +25,12 @@ const UCReqItemInner = function ({
   depth = 0,
   field,
   formName,
-  setMappingFormName,
 }: UCReqItemInnerPropsType): JSX.Element {
   const { dark: isDark } = useStoreSelector((state) => state.dark);
+  const [mapped, setMapped] = useState<boolean>(false);
+
+  const { contextFormName, setContextFormName } =
+    useContext<UCContextInterface>(UCContext);
 
   const styles = {
     innerBox: `w-full h-auto flex items-center overflow-hidden relative ${
@@ -79,8 +82,16 @@ const UCReqItemInner = function ({
   };
 
   const onClickMappingBtn = (): void => {
-    setMappingFormName(formName);
+    setMapped(true);
+    setContextFormName(formName);
+    console.log('formName 담았거든??', contextFormName);
   };
+
+  const onClickSelfTyping = (): void => {
+    setMapped(false);
+  };
+
+  console.log('>>>>>>>>>>>>', item);
 
   return (
     <>
@@ -103,8 +114,8 @@ const UCReqItemInner = function ({
                 ? (item as FieldsType | HeadersType).type
                 : item.name}
             </div>
-            <div className={`${styles['value']}`}>
-              {'type' in item && (
+            {/* {!mapped && (
+              <div className={`${styles['value']}`}>
                 <Controller
                   name={`${formName}.value`}
                   control={control}
@@ -118,10 +129,105 @@ const UCReqItemInner = function ({
                     />
                   )}
                 />
+              </div>
+            )} */}
+            {/* 아래는 화면에서 숨길 부분 */}
+            <>
+              <Controller
+                name={`${formName}.type`}
+                control={control}
+                defaultValue={`${'type' in item && item.type}`}
+                render={({ field, fieldState }) => (
+                  <Input
+                    name={`${formName}.type`}
+                    value={field.value}
+                    onChange={field.onChange}
+                    className={`w-full`}
+                    placeholder="value"
+                  />
+                )}
+              />
+              <Controller
+                name={`${formName}.desc`}
+                control={control}
+                defaultValue={`${item.desc}`}
+                render={({ field, fieldState }) => (
+                  <Input
+                    name={`${formName}.desc`}
+                    value={field.value}
+                    onChange={field.onChange}
+                    className={`w-full`}
+                    placeholder="value"
+                  />
+                )}
+              />
+              {mapped ? (
+                <Controller
+                  name={`${formName}.mapped`}
+                  control={control}
+                  defaultValue={mapped}
+                  render={({ field, fieldState }) => (
+                    <Input
+                      name={`${formName}.mapped`}
+                      value={field.value}
+                      onChange={field.onChange}
+                      className={`w-full`}
+                      placeholder="value"
+                    />
+                  )}
+                />
+              ) : (
+                <Controller
+                  name={`${formName}.mapped`}
+                  control={control}
+                  defaultValue={!mapped}
+                  render={({ field, fieldState }) => (
+                    <Input
+                      name={`${formName}.mapped`}
+                      value={field.value}
+                      onChange={field.onChange}
+                      className={`w-full`}
+                      placeholder="value"
+                    />
+                  )}
+                />
               )}
-            </div>
+            </>
+            {'constraints' in item && (
+              <Controller
+                name={`${formName}.constraints`}
+                control={control}
+                defaultValue={item.constraints}
+                render={({ field, fieldState }) => (
+                  <Input
+                    name={`${formName}.constraints`}
+                    value={field.value}
+                    onChange={field.onChange}
+                    className={`w-full`}
+                    placeholder="value"
+                  />
+                )}
+              />
+            )}
+            {'itera' in item && (
+              <Controller
+                name={`${formName}.constraints`}
+                control={control}
+                defaultValue={item.itera}
+                render={({ field, fieldState }) => (
+                  <Input
+                    name={`${formName}.constraints`}
+                    value={field.value}
+                    onChange={field.onChange}
+                    className={`w-full`}
+                    placeholder="value"
+                  />
+                )}
+              />
+            )}
           </div>
           <div onClick={onClickMappingBtn}>res에서 맵핑할궤</div>
+          <div onClick={onClickSelfTyping}>직접 입력할궹</div>
         </>
       )}
     </>

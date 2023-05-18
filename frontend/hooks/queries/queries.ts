@@ -6,6 +6,11 @@ import apiRequest from '@/utils/axios';
 import { useStoreDispatch, useStoreSelector } from '../useStore';
 import { figmaTokenActions } from '@/store/figma-token-slice';
 import { FieldsType, HeadersType } from '@/components/work/APIDocsContainer';
+import {
+  RequestItem,
+  ResponseItem,
+  UseTestDtoItem,
+} from '@/components/work/APITestContainer/usecase/UseTestContainer';
 
 /**
  * dtoList: 디티오 리스트
@@ -582,28 +587,58 @@ export interface ApiDetailAtTestDto {
 }
 
 export interface ApiDetailAtTest {
-  request: {
-    additionalUrl: string;
-    headers?: ApiDetailAtTestItem[];
-    body?: {
-      fields?: ApiDetailAtTestItem[];
-      nestedDtos?: ApiDetailAtTestDto;
-      nestedDtoLists?: ApiDetailAtTestDto;
-    };
-    pathVars?: ApiDetailAtTestItem[];
-    params?: ApiDetailAtTestItem[];
+  apiId: string | number;
+  name: string;
+  description: string;
+  method: number;
+  status: number;
+  baseurlId: string | number;
+  categoryId: string | number;
+  member: {
+    id: number;
+    name: string;
+    email: string;
+    profileImg: string;
   };
-  response: {
-    statusCode: string | number;
-    desc: string;
-    headers?: ApiDetailAtTestItem[];
-    body?: {
-      fields?: ApiDetailAtTestItem[];
-      nestedDtos?: ApiDetailAtTestDto;
-      nestedDtoLists?: ApiDetailAtTestDto;
+  createdTime: Date;
+  document: {
+    request: {
+      additionalUrl: string;
+      headers?: ApiDetailAtTestItem[];
+      body?: {
+        fields?: ApiDetailAtTestItem[];
+        nestedDtos?: ApiDetailAtTestDto;
+        nestedDtoLists?: ApiDetailAtTestDto;
+      };
+      pathVars?: ApiDetailAtTestItem[];
+      params?: ApiDetailAtTestItem[];
     };
-  }[];
+    response: {} | null;
+  };
 }
+// export interface ApiDetailAtTest {
+//   request: {
+//     additionalUrl: string;
+//     headers?: ApiDetailAtTestItem[];
+//     body?: {
+//       fields?: ApiDetailAtTestItem[];
+//       nestedDtos?: ApiDetailAtTestDto;
+//       nestedDtoLists?: ApiDetailAtTestDto;
+//     };
+//     pathVars?: ApiDetailAtTestItem[];
+//     params?: ApiDetailAtTestItem[];
+//   };
+//   response: {
+//     statusCode: string | number;
+//     desc: string;
+//     headers?: ApiDetailAtTestItem[];
+//     body?: {
+//       fields?: ApiDetailAtTestItem[];
+//       nestedDtos?: ApiDetailAtTestDto;
+//       nestedDtoLists?: ApiDetailAtTestDto;
+//     };
+//   }[];
+// }
 
 // 상상 queries 희희
 // api 상세 조회 (단일테스트나 usecaseTest를 위한) (nestedDtoLists:{}가 필요)
@@ -612,7 +647,7 @@ export const useApiDetailAtTest = function (
   apiId: string | number
 ) {
   return useQuery<ApiDetailAtTest>({
-    queryKey: queryKeys.spaceApiDetail(spaceId, apiId), // 이거 key이름 수정필요!!!!
+    queryKey: queryKeys.spaceApiDetail(spaceId, apiId),
     queryFn: async function () {
       return apiRequest({
         method: `get`,
@@ -640,19 +675,95 @@ export interface PrevResponses {
 }
 
 // 이전 response 변수 목록 조회
-export const useUseCaseResList = function (
+export const useUsecaseResponses = function (
   spaceId: string | number,
-  apiIds: string
+  ids: string
 ) {
   return useQuery<PrevResponses>({
-    queryKey: queryKeys.spaceApiDetail(spaceId, apiIds), // 이거 이름 수정필요!!!!
+    queryKey: queryKeys.usecaseResponses(spaceId, ids), // 이거 이름 수정필요!!!!
     queryFn: async function () {
       return apiRequest({
         method: `get`,
         url: `/api/usecase/prev-responses`,
+        params: {
+          apiIds: ids,
+        },
       }).then((res) => res.data);
     },
-    enabled: !!spaceId && !!apiIds,
+    enabled: !!spaceId && !!ids.length,
+  });
+};
+
+export interface UsecaseListItemType {
+  id: string | number;
+  name?: string;
+  desc?: string;
+  isNew?: boolean;
+}
+
+// 유스케이스 테스트 목록 조회
+export const useUsecaseList = function (workspaceId: string | number) {
+  return useQuery<UsecaseListItemType[]>({
+    queryKey: queryKeys.usecaseList(workspaceId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/usecase/list`,
+        params: {
+          workspaceId,
+        },
+      }).then((res) => res.data.usecaseTestList);
+    },
+    enabled: !!workspaceId,
+  });
+};
+
+export interface UsecaseDetailType {
+  name: string;
+  desc: string;
+  rootApiId: string | number;
+  testDetails: {
+    [key: string | number]: {
+      additionalUrl: string;
+      parent?: string | number;
+      child?: string | number;
+      request: {
+        headers?: RequestItem;
+        pathVars?: RequestItem;
+        params?: RequestItem;
+        body?: {
+          fields?: RequestItem;
+          nestedDtos?: UseTestDtoItem;
+          nestedDtoLists?: UseTestDtoItem;
+        };
+      };
+      response: {
+        headers?: ResponseItem;
+        body?: {
+          fields?: ResponseItem;
+          nestedDtos?: UseTestDtoItem;
+          nestedDtoLists?: UseTestDtoItem;
+        };
+      };
+    };
+  };
+}
+
+// 유스케이스 테스트 상세 조회
+export const useUsecaseDetail = function (
+  spaceId: string | number,
+  usecaseId: string | number,
+  isNew: boolean
+) {
+  return useQuery<UsecaseDetailType>({
+    queryKey: queryKeys.usecaseDetail(spaceId, usecaseId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/usecase/${usecaseId}`,
+      }).then((res) => res.data.usecaseTest);
+    },
+    enabled: !!spaceId && !!usecaseId && !isNew,
   });
 };
 

@@ -3,18 +3,36 @@ import SideApiItem from './SideApiItem';
 import { UseTestApiCompactType } from './UseTestContainer';
 import { HiPlusCircle } from 'react-icons/hi';
 import { Box, Button } from '@/components/common';
+import { UsecaseListItemType, useUsecaseDetail } from '@/hooks/queries/queries';
+import { useRouter } from 'next/router';
+import { SpaceParams } from '@/pages/space';
+import { useTestUsecase } from '@/hooks/queries/mutations';
 
 type SideContainerPropsType = {
+  curUsecase: UsecaseListItemType;
   apis: UseTestApiCompactType[];
   onClickApi: (api: UseTestApiCompactType) => void;
   onClickAddApiBtn: () => void;
 };
 
 const SideContainer = function ({
+  curUsecase,
   apis,
   onClickApi,
   onClickAddApiBtn,
 }: SideContainerPropsType): JSX.Element {
+  const router = useRouter();
+  const { spaceId } = router.query as SpaceParams;
+  const {
+    data: ucData,
+    isLoading,
+    isError,
+  } = useUsecaseDetail(
+    spaceId,
+    curUsecase.id,
+    curUsecase.isNew ? curUsecase.isNew : false
+  );
+
   return (
     <Box
       variant="two"
@@ -24,9 +42,19 @@ const SideContainer = function ({
       {/* usecase TITLE */}
       <div className={`w-full`}>
         <BoxHeader title="info" className={`!pb-1`} />
-        <span className={`text-content`}>유저가 서비스를 처음 사용</span>
+        <span className={`text-content`}>
+          {curUsecase.isNew
+            ? curUsecase.name
+            : ucData
+            ? ucData.name
+            : '뭐 없다 안된다?'}
+        </span>
         <p className={`text-small text-grayscale-deeplightlight`}>
-          회원가입부터 게시글을 작성하는데까지의 흐름
+          {curUsecase.isNew
+            ? curUsecase.desc
+            : ucData
+            ? ucData.desc
+            : '뭐 없다 안된다?'}
         </p>
       </div>
       {/* api 순서대로 조록 */}
@@ -61,11 +89,14 @@ const SideContainer = function ({
       {/* 버튼 wrapper */}
       <div className={`w-full flex gap-3`}>
         <Button
+          type="button"
           className={`flex-1 !bg-mammoth-normal !border-mammoth-normal !py-1`}
         >
           초기화
         </Button>
-        <Button className={`flex-1 !py-1`}>실행</Button>
+        <Button type="submit" className={`flex-1 !py-1`}>
+          실행
+        </Button>
       </div>
     </Box>
   );

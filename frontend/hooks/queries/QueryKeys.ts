@@ -107,7 +107,7 @@ export const queryKeys = {
   // usecase detail
   usecaseDetail: (spaceId: string | number, usecaseId: string | number) =>
     [...queryKeys.usecase(spaceId), `detail`, `${usecaseId}`] as const,
-  // response 응답
+  // response 응답 (apis(: usecase test실행 api들 id 목록)에 따른 response 목록)
   usecaseResponses: (spaceId: string | number, ids: string) =>
     [...queryKeys.usecase(spaceId), `detail`, `${ids}`] as const,
 

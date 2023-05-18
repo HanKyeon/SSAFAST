@@ -167,11 +167,6 @@ const APIConnectList = function ({
               <AiOutlineMore
                 className={`text-grayscale-dark hover:text-theme-white-strong`}
               />
-
-              <span>{cate.categoryName}</span>
-              <AiOutlineMore
-                className={`text-grayscale-dark hover:text-theme-white-strong`}
-              />
             </div>
             {/* api 목록 */}
             <ul

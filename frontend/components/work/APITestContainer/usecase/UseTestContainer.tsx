@@ -1,7 +1,5 @@
 import { Box, Button, Input } from '@/components/common';
 import { useStoreSelector } from '@/hooks/useStore';
-import MappingContainer from './MappingContainer';
-import SideApiItem from './SideApiItem';
 import BoxHeader from '@/components/common/BoxHeader';
 import { FormProvider, useForm } from 'react-hook-form';
 import { ApiTestForm, MockupData2Type } from '../../APIDocsContainer';
@@ -10,164 +8,177 @@ import Modal from '@/components/common/Modal';
 import { IoArrowBackOutline } from 'react-icons/io5';
 import useInput from '@/hooks/useInput';
 import APIList from '../../APIEditContainer/APIList';
-import { EachCateApi } from '@/hooks/queries/queries';
+import {
+  EachCateApi,
+  UsecaseDetailType,
+  UsecaseListItemType,
+  useUsecaseDetail,
+} from '@/hooks/queries/queries';
 import UCReqBox from './UCReqBox';
 import UCResBox from './UCResBox';
 import SideContainer from './SideContainer';
+import UsecaseList from './UsecaseList';
+import {
+  TestResponseType,
+  useNewUsecase,
+  useTestUsecase,
+} from '@/hooks/queries/mutations';
+import { useRouter } from 'next/router';
+import { SpaceParams } from '@/pages/space';
 
-const mockupData2: MockupData2Type = {
-  request: {
-    headers: [
-      {
-        keyName: 'Content-Type',
-        type: 'String',
-        desc: 'Define request data type',
-        value: null,
-      },
-      {
-        keyName: 'Age',
-        type: 'Integer',
-        desc: 'Fields for cashing',
-        value: null,
-      },
-    ],
-    body: {
-      fields: [
-        {
-          keyName: 'ID',
-          type: 1,
-          desc: '사용자 ID',
-          itera: false,
-          constraints: ['NotNull'],
-          value: null,
-        },
-        {
-          keyName: 'PW',
-          type: 1,
-          desc: '사용자 PW',
-          itera: false,
-          constraints: ['NotNull'],
-          value: null,
-        },
-      ],
-      nestedDtos: {
-        '11': {
-          name: 'UserInfo', // 실제 dto class 이름
-          keyName: '11Dto', // 사용자가 지정한 변수명 e.g) Test test2;
-          desc: '사용자 정보를 저장하는 class',
-          itera: false,
-          fields: [
-            {
-              keyName: 'userID',
-              type: 1,
-              desc: '추천인ID',
-              value: null,
-              itera: false,
-              constraints: ['NotNull'],
-            },
-            {
-              keyName: 'userPW',
-              type: 1,
-              desc: '추천인PW',
-              value: null,
-              itera: false,
-              constraints: ['NotNull'],
-            },
-          ],
-          nestedDtos: {},
-        },
-        '8': {
-          name: 'UserInfo', // 실제 dto class 이름
-          keyName: '8Dto', // 사용자가 지정한 변수명 e.g) Test test2;
-          desc: '사용자 정보를 저장하는 class',
-          itera: false,
-          fields: [
-            {
-              keyName: 'userID',
-              type: 1,
-              desc: '추천인ID',
-              value: null,
-              itera: false,
-              constraints: ['NotNull'],
-            },
-            {
-              keyName: 'userPW',
-              type: 1,
-              desc: '추천인PW',
-              value: null,
-              itera: false,
-              constraints: ['NotNull'],
-            },
-          ],
-          nestedDtos: {
-            '7': {
-              name: 'UserInfo', // 실제 dto class 이름
-              keyName: '7Dto', // 사용자가 지정한 변수명 e.g) Test test2;
-              desc: '사용자 정보를 저장하는 class',
-              itera: false,
-              fields: [
-                {
-                  keyName: 'userID',
-                  type: 1,
-                  desc: '추천인ID',
-                  value: null,
-                  itera: false,
-                  constraints: ['NotNull'],
-                },
-                {
-                  keyName: 'userPW',
-                  type: 1,
-                  desc: '추천인PW',
-                  value: null,
-                  itera: false,
-                  constraints: ['NotNull'],
-                },
-              ],
-              nestedDtos: {},
-            },
-          },
-        },
-      },
-      nestedDtoList: {
-        '12': {
-          name: 'RecUserInfo',
-          keyName: null,
-          desc: '추천한 사용자들의 정보를 담는 class',
-          itera: true,
-          fields: [
-            {
-              keyName: 'userID',
-              type: 1,
-              desc: '추천인ID',
-              value: null,
-              itera: false,
-              constraints: ['NotNull'],
-            },
-          ],
-          nestedDtos: {},
-        },
-      },
-    },
-    pathVars: [
-      {
-        keyName: 'userid',
-        type: 'String',
-        desc: 'for login',
-        constraints: ['NotNull'],
-        value: null,
-      },
-    ],
-    params: [
-      {
-        keyName: 'age',
-        type: 'int',
-        desc: 'user age',
-        constraints: ['NotNull'],
-        value: null,
-      },
-    ],
-  },
-};
+// const mockupData2: MockupData2Type = {
+//   request: {
+//     headers: [
+//       {
+//         keyName: 'Content-Type',
+//         type: 'String',
+//         desc: 'Define request data type',
+//         value: null,
+//       },
+//       {
+//         keyName: 'Age',
+//         type: 'Integer',
+//         desc: 'Fields for cashing',
+//         value: null,
+//       },
+//     ],
+//     body: {
+//       fields: [
+//         {
+//           keyName: 'ID',
+//           type: 1,
+//           desc: '사용자 ID',
+//           itera: false,
+//           constraints: ['NotNull'],
+//           value: null,
+//         },
+//         {
+//           keyName: 'PW',
+//           type: 1,
+//           desc: '사용자 PW',
+//           itera: false,
+//           constraints: ['NotNull'],
+//           value: null,
+//         },
+//       ],
+//       nestedDtos: {
+//         '11': {
+//           name: 'UserInfo', // 실제 dto class 이름
+//           keyName: '11Dto', // 사용자가 지정한 변수명 e.g) Test test2;
+//           desc: '사용자 정보를 저장하는 class',
+//           itera: false,
+//           fields: [
+//             {
+//               keyName: 'userID',
+//               type: 1,
+//               desc: '추천인ID',
+//               value: null,
+//               itera: false,
+//               constraints: ['NotNull'],
+//             },
+//             {
+//               keyName: 'userPW',
+//               type: 1,
+//               desc: '추천인PW',
+//               value: null,
+//               itera: false,
+//               constraints: ['NotNull'],
+//             },
+//           ],
+//           nestedDtos: {},
+//         },
+//         '8': {
+//           name: 'UserInfo', // 실제 dto class 이름
+//           keyName: '8Dto', // 사용자가 지정한 변수명 e.g) Test test2;
+//           desc: '사용자 정보를 저장하는 class',
+//           itera: false,
+//           fields: [
+//             {
+//               keyName: 'userID',
+//               type: 1,
+//               desc: '추천인ID',
+//               value: null,
+//               itera: false,
+//               constraints: ['NotNull'],
+//             },
+//             {
+//               keyName: 'userPW',
+//               type: 1,
+//               desc: '추천인PW',
+//               value: null,
+//               itera: false,
+//               constraints: ['NotNull'],
+//             },
+//           ],
+//           nestedDtos: {
+//             '7': {
+//               name: 'UserInfo', // 실제 dto class 이름
+//               keyName: '7Dto', // 사용자가 지정한 변수명 e.g) Test test2;
+//               desc: '사용자 정보를 저장하는 class',
+//               itera: false,
+//               fields: [
+//                 {
+//                   keyName: 'userID',
+//                   type: 1,
+//                   desc: '추천인ID',
+//                   value: null,
+//                   itera: false,
+//                   constraints: ['NotNull'],
+//                 },
+//                 {
+//                   keyName: 'userPW',
+//                   type: 1,
+//                   desc: '추천인PW',
+//                   value: null,
+//                   itera: false,
+//                   constraints: ['NotNull'],
+//                 },
+//               ],
+//               nestedDtos: {},
+//             },
+//           },
+//         },
+//       },
+//       nestedDtoList: {
+//         '12': {
+//           name: 'RecUserInfo',
+//           keyName: null,
+//           desc: '추천한 사용자들의 정보를 담는 class',
+//           itera: true,
+//           fields: [
+//             {
+//               keyName: 'userID',
+//               type: 1,
+//               desc: '추천인ID',
+//               value: null,
+//               itera: false,
+//               constraints: ['NotNull'],
+//             },
+//           ],
+//           nestedDtos: {},
+//         },
+//       },
+//     },
+//     pathVars: [
+//       {
+//         keyName: 'userid',
+//         type: 'String',
+//         desc: 'for login',
+//         constraints: ['NotNull'],
+//         value: null,
+//       },
+//     ],
+//     params: [
+//       {
+//         keyName: 'age',
+//         type: 'int',
+//         desc: 'user age',
+//         constraints: ['NotNull'],
+//         value: null,
+//       },
+//     ],
+//   },
+// };
 
 export interface RequestItem {
   [key: string]: {
@@ -198,35 +209,6 @@ export interface ResponseItem {
   };
 }
 
-export interface UseTestForm {
-  rootApiId: string | number;
-  testDetails: {
-    [key: string | number]: {
-      additionalUrl: string;
-      parent?: string | number;
-      child?: string | number;
-      request: {
-        headers?: RequestItem;
-        pathVars?: RequestItem;
-        params?: RequestItem;
-        body?: {
-          fields?: RequestItem;
-          nestedDtos?: UseTestDtoItem;
-          nestedDtoLists?: UseTestDtoItem;
-        };
-      };
-      response: {
-        headers?: ResponseItem;
-        body?: {
-          fields?: ResponseItem;
-          nestedDtos?: UseTestDtoItem;
-          nestedDtoLists?: UseTestDtoItem;
-        };
-      };
-    };
-  };
-}
-
 export type UseTestApiCompactType = {
   id: string | number;
   name: string;
@@ -236,25 +218,51 @@ export type UseTestApiCompactType = {
 };
 
 const UseTestContainer = function () {
-  const { dark } = useStoreSelector((state) => state.dark);
+  const router = useRouter();
+  const { spaceId } = router.query as SpaceParams;
 
-  const testName = useRef<HTMLInputElement>(null);
-  const { inputData, onChangeHandler } = useInput(testName);
+  const { dark: isDark } = useStoreSelector((state) => state.dark);
+  const { mutateAsync: newUCMutate } = useNewUsecase(spaceId);
+
+  const [ucNameInputEL, ucDescInputEl] = [
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+  ];
+  const { inputData: ucNameInput, onChangeHandler: onChangeUcNameInput } =
+    useInput(ucNameInputEL);
+  const { inputData: ucDescInput, onChangeHandler: onChangeUcDescInput } =
+    useInput(ucDescInputEl);
 
   const [isListModalOpen, setIsListModalOpen] = useState<boolean>(true);
-  const [curTestId, setCurTestId] = useState<number | string>();
   const [isNewModalOpen, setIsNewModalOpen] = useState<boolean>(false);
-  const [newTestName, setNewTestName] = useState<string>('');
   const [isApiListOpen, setIsApiListOpen] = useState<boolean>(false);
+
+  const [curUsecase, setCurUsecase] = useState<UsecaseListItemType>({
+    id: -1,
+    isNew: false,
+  });
+  const {
+    data: curUCData,
+    isLoading,
+    isError,
+  } = useUsecaseDetail(
+    spaceId,
+    curUsecase.id,
+    curUsecase.isNew ? curUsecase.isNew : false
+  );
+  const onClickUsecaseItem = (usecase: UsecaseListItemType) => {
+    setCurUsecase({ ...usecase, isNew: false });
+  };
+
   const [curapi, setCurApi] = useState<UseTestApiCompactType>();
   const [apis, setApis] = useState<UseTestApiCompactType[]>([]);
   const [countApi, setCountApi] = useState<number>(0);
   const [resApiIds, setResApiIds] = useState<string>('');
 
-  const [mappingFormName, setMappingFormName] = useState<string | null>(null);
-
-  const methods = useForm<UseTestForm>({
+  const methods = useForm<UsecaseDetailType>({
     defaultValues: {
+      name: '',
+      desc: '',
       rootApiId: '',
       testDetails: {},
     },
@@ -274,14 +282,26 @@ const UseTestContainer = function () {
     onToggleNewModal();
   };
   const onClickNew = () => {
-    // 유스케이스 테스트 생성하는 dispatch
-    // 1에서 나온 usecaseTestId를 curTestId에!
-    setCurTestId(1);
+    newUCMutate({
+      name: ucNameInput,
+      description: ucDescInput,
+      workspaceId: spaceId,
+    }).then((res) => {
+      setCurUsecase({
+        id: res.data.usecaseTestId,
+        name: ucNameInput,
+        desc: ucDescInput,
+        isNew: true,
+      });
+    });
+
+    // 모달닫음
     onToggleListModal();
     onToggleNewModal();
   };
   const onClickApi = (api: UseTestApiCompactType): void => {
     // side에서 api하나 클릭 -> req, res 세팅
+    console.log('mapping하는쪽 바꼈나? 현재 선택된 api는', api);
     setCurApi(api);
   };
   // const onClickApitoAdd = (apiId: string | number,apiName: string, method: 1|2|3|4|5): void => {
@@ -294,50 +314,80 @@ const UseTestContainer = function () {
   const onClickAddApiBtn = (): void => {
     onToggleAddApiModal();
   };
-  const checkData = function (data: UseTestForm) {
-    console.log('원본', data);
+
+  const { mutateAsync: testMutate } = useTestUsecase(spaceId);
+  const onClickTest = (data: UsecaseDetailType): void => {
+    testMutate(data).then(({ data }) =>
+      console.log('mutate 햇다@@@@@@!!!!!', data)
+    );
+    console.log('usecaes test submit 원본', data);
   };
+
   useEffect(() => {
     // response 가져오기 위해 이전 api들의 id 가져오기
     if (curapi) {
-      const queryParams = new URLSearchParams();
+      // const queryParams = new URLSearchParams();
       const apiIds = apis
         .map((api: UseTestApiCompactType) => api.id)
         .slice(0, curapi.idx);
-      queryParams.set('apiIds', apiIds.join(','));
-      setResApiIds(queryParams.toString());
-      // console.log('!!!!!!!!!!!', queryParams.toString());
+      // queryParams.set('apiIds', apiIds.join(','));
+      setResApiIds(apiIds.join(','));
+      console.log('!!!!!!!!!!!', apiIds.join(','));
+      console.log('?????????????', apiIds);
     }
   }, [curapi]);
+
+  // test가넝한api
+  // 123, Test API, testAPI
 
   return (
     <Box variant="one" fontType="header" className="h-full w-full">
       {isListModalOpen ? (
+        // 처음에 저장된 usecase list 모달 오픈
         <Modal closeModal={onToggleListModal} parentClasses="h-[50%] w-[50%]">
           {!isNewModalOpen ? (
+            // 생성 모달
             <Box
-              className={`w-full h-full p-5 flex flex-col justify-between items-center`}
+              className={`w-full h-full p-5 flex flex-col justify-between items-center gap-3`}
             >
-              <div>usecase test 리스트</div>
-              <Button onClick={onClickOpenNew}>New Test</Button>
+              <div>유스케이스 테스트 목록</div>
+              <UsecaseList onClickUsecaseItem={onClickUsecaseItem} />
+              <Button className={`!py-1`} onClick={onClickOpenNew}>
+                New Test
+              </Button>
             </Box>
           ) : (
             <Box
               className={`w-full h-full p-5 flex flex-col justify-between items-center`}
             >
               <div
-                className={`flex gap-2 items-center text-mincho-normal hover:text-mincho-strong`}
+                className={`w-full flex items-center gap-2 ${
+                  isDark ? 'text-mincho-normal' : 'text-taro-normal'
+                } cursor-pointer`}
                 onClick={onToggleNewModal}
               >
                 <IoArrowBackOutline />
                 <span className={`text-content mt-[3px]`}>뒤로</span>
               </div>
-              <Input
-                inputref={testName}
-                onChange={onChangeHandler}
-                placeholder="usecase test name"
-              />
-              <Button onClick={onClickNew}>Start</Button>
+              <div className={`flex flex-col gap-5 w-[90%] mb-7`}>
+                <p className={`mb-2 text-center`}>새 유스케이스 테스트 생성</p>
+                <Input
+                  inputref={ucNameInputEL}
+                  value={ucNameInput}
+                  onChange={onChangeUcNameInput}
+                  placeholder="Name"
+                  className={`!w-[50%]`}
+                />
+                <Input
+                  inputref={ucDescInputEl}
+                  value={ucDescInput}
+                  onChange={onChangeUcDescInput}
+                  placeholder="Description"
+                />
+              </div>
+              <Button onClick={onClickNew} className={`!py-1`}>
+                생성
+              </Button>
             </Box>
           )}
         </Modal>
@@ -346,10 +396,11 @@ const UseTestContainer = function () {
           <FormProvider {...methods}>
             <form
               className="h-full w-full flex gap-[1.12%]"
-              onSubmit={handleSubmit(checkData)}
+              onSubmit={handleSubmit(onClickTest)}
             >
               {/* 왼쪽 사이드 */}
               <SideContainer
+                curUsecase={curUsecase}
                 apis={apis}
                 onClickApi={onClickApi}
                 onClickAddApiBtn={onClickAddApiBtn}
@@ -363,9 +414,9 @@ const UseTestContainer = function () {
                 <BoxHeader title="Request" />
                 {curapi && (
                   <UCReqBox
+                    curUsecase={curUsecase}
                     control={control}
                     currentApi={curapi}
-                    setMappingFormName={setMappingFormName}
                   />
                 )}
               </Box>
@@ -378,16 +429,17 @@ const UseTestContainer = function () {
                 <BoxHeader title="Response" />
                 {curapi && (
                   <UCResBox
+                    curUsecase={curUsecase}
                     control={control}
                     currentApi={curapi}
-                    resApis={resApiIds}
-                    formName={mappingFormName}
+                    resApiIds={resApiIds}
                   />
                 )}
               </Box>
             </form>
           </FormProvider>
           {isApiListOpen && (
+            // usecase에 api 추가하는 api list 모달
             <Modal
               closeModal={onToggleAddApiModal}
               parentClasses="h-[50%] w-[50%]"
