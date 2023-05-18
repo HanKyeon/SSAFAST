@@ -44,14 +44,14 @@ public class ApiExecController {
 
 	@PostMapping
 	ResponseEntity<?> executeAPI(
-		@RequestPart(value = "files", required = false) MultipartFile[] files,				// 단건 파일들
-		@RequestPart(value = "filesArrs", required = false) MultipartFile[][] filesArrs,	// 다건 파일들
-		@RequestPart(value = "filekeys", required = false) String[] filekeys,				// 단건 파일 키들
-		@RequestPart(value = "filesArrKeys", required = false) String[] filesArrKeys,		// 다건 파일 키들
-		@Valid @RequestPart("execReqData") ReqApiExecMessageDto reqApiExecMessageDto) {		// json 데이터
+		// @RequestPart(value = "files", required = false) MultipartFile[] files,				// 단건 파일들
+		// @RequestPart(value = "filesArrs", required = false) MultipartFile[][] filesArrs,	// 다건 파일들
+		// @RequestPart(value = "filekeys", required = false) String[] filekeys,				// 단건 파일 키들
+		// @RequestPart(value = "filesArrKeys", required = false) String[] filesArrKeys,		// 다건 파일 키들
+		@Valid @RequestBody ReqApiExecMessageDto reqApiExecMessageDto) {		// json 데이터
 
 		try {
-			return new ResponseEntity<>(apiExecService.requestAPI(reqApiExecMessageDto, files, filesArrs, filekeys, filesArrKeys), HttpStatus.OK);
+			return new ResponseEntity<>(apiExecService.requestAPI(reqApiExecMessageDto, null, null, null, null), HttpStatus.OK);
 		} catch (CustomException e) {
 			return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
 		} catch (HttpServerErrorException | HttpClientErrorException e) {
