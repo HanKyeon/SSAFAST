@@ -32,18 +32,19 @@ public class OverloadController {
 	private final ApiExecService apiExecService;
 
 	@PostMapping("")
-	ResponseEntity<?> executeOverload(@RequestPart(value = "files", required = false) MultipartFile[] files,                // 단건 파일들
-									  @RequestPart(value = "filesArrs", required = false) MultipartFile[][] filesArrs,    // 다건 파일들
-									  @RequestPart(value = "filekeys", required = false) String[] filekeys,                // 단건 파일 키들
-									  @RequestPart(value = "filesArrKeys", required = false) String[] filesArrKeys,        // 다건 파일 키들
-									  @Valid @RequestPart("execReqData") ReqApiExecMessageDto reqApiExecMessageDto,
+	ResponseEntity<?> executeOverload(
+//									  @RequestPart(value = "files", required = false) MultipartFile[] files,                // 단건 파일들
+//									  @RequestPart(value = "filesArrs", required = false) MultipartFile[][] filesArrs,    // 다건 파일들
+//									  @RequestPart(value = "filekeys", required = false) String[] filekeys,                // 단건 파일 키들
+//									  @RequestPart(value = "filesArrKeys", required = false) String[] filesArrKeys,        // 다건 파일 키들
+									  @Valid @RequestBody ReqApiExecMessageDto reqApiExecMessageDto,
 									  @RequestParam Long workspaceId,
 									  @RequestParam Long apiId,
 									  @RequestParam int duration,
 									  @RequestParam int reqSec) {		// json 데이터
 
 		try {
-			return new ResponseEntity<>(overloadService.testOverloadTest(reqApiExecMessageDto, files, filesArrs, filekeys, filesArrKeys, duration, reqSec, workspaceId, apiId), HttpStatus.OK);
+			return new ResponseEntity<>(overloadService.testOverloadTest(reqApiExecMessageDto, null, null, null, null, duration, reqSec, workspaceId, apiId), HttpStatus.OK);
 		} catch (CustomException e) {
 			return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
 		} catch (HttpServerErrorException | HttpClientErrorException e) {
