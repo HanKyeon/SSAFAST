@@ -3,6 +3,8 @@ package com.rocket.ssafast.dtospec.service;
 import com.rocket.ssafast.dtospec.domain.DtoSpecDocument;
 import com.rocket.ssafast.dtospec.domain.element.DtoInfo;
 import com.rocket.ssafast.dtospec.repository.DtoSpecDocumentRepository;
+import com.rocket.ssafast.exception.CustomException;
+import com.rocket.ssafast.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +28,9 @@ public class DtoSpecDocumentService {
     public DtoInfo findByDtoId(Long dtoId){
         DtoSpecDocument document = createOrFindDtosIfExists();
         DtoInfo dtoInfo = document.getDtos().get(dtoId);
-        log.debug("test : ", dtoInfo.toString());
+        if(dtoInfo == null){
+            throw new CustomException(ErrorCode.DTO_NOT_FOUND);
+        }
         return dtoInfo;
     }
 

@@ -195,24 +195,25 @@ public class ApiSpecService {
 
         //make header's list
         List<HeaderField> requestHeaderFields = new ArrayList<>();
-        apiDoc.getRequest().getHeaders().forEach(value -> {
+        UtilMethods.emptyIfNull(apiDoc.getRequest().getHeaders()).forEach(value -> {
             requestHeaderFields.add(value.convertTo());
         });
 
         List<FieldInfo> requestPathVars = new ArrayList<>();
-        apiDoc.getRequest().getPathVars().forEach(value ->{
+        UtilMethods.emptyIfNull(apiDoc.getRequest().getPathVars()).forEach(value ->{
             log.info("@@pathvars : " + value.toString());
             requestPathVars.add(value.convertTo());
         });
 
         List<FieldInfo> requestParams = new ArrayList<>();
-        apiDoc.getRequest().getParams().forEach(value -> {
+        UtilMethods.emptyIfNull(apiDoc.getRequest().getParams()).forEach(value -> {
+            log.info("@@params : " + value.toString());
             requestParams.add(value.convertTo());
         });
 
         //make request.body's list
         List<FieldInfo> bodyFields = new ArrayList<>();
-        apiDoc.getRequest().getBody().getFields().forEach(value -> {
+        UtilMethods.emptyIfNull(apiDoc.getRequest().getBody().getFields()).forEach(value -> {
             bodyFields.add(value.convertTo());
         });
 
@@ -307,7 +308,6 @@ public class ApiSpecService {
                                         .body(requestBody)
                                         .build()
                         )
-                        .response(null)
                         .build();
 
 

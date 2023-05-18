@@ -28,6 +28,9 @@ public class ApiSpecDocumentService {
     public ApiSpecDoc getApiSpecDocs(Long apiId){
         ApiSpecDocument document = createOrFindApiSpecsIfExists();
         ApiSpecDoc target = document.getApis().get(apiId);
+        if(target == null){
+            throw new CustomException(ErrorCode.API_NOT_FOUND);
+        }
         return target;
     }
 
