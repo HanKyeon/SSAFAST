@@ -15,9 +15,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -29,8 +31,9 @@ public class TmpItem {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 
-	@Column(name = "order_id")
-	private long orderId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "order_id")
+	private TmpOrder order;
 
 	@Column
 	private String name;
@@ -41,8 +44,8 @@ public class TmpItem {
 	public TmpItemDto toDto() {
 		return TmpItemDto.builder()
 			.id(id)
-			.orderId(orderId)
 			.name(name)
+			.orderId(order.id)
 			.price(price)
 			.build();
 	}

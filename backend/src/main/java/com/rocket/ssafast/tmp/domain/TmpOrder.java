@@ -1,6 +1,5 @@
 package com.rocket.ssafast.tmp.domain;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -13,8 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
-import com.rocket.ssafast.tmp.dto.TmpItemDto;
 import com.rocket.ssafast.tmp.dto.TmpOrderDto;
 
 import lombok.AllArgsConstructor;
@@ -36,21 +35,22 @@ public class TmpOrder {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	private TmpUser tmpUser;
+	@Column(name = "member_id")
+	Long userId;
 
 	@Column(name = "num")
 	String num;
 
-	@OneToMany(targetEntity = TmpOrder.class, cascade = CascadeType.ALL)
+	@OneToMany(targetEntity = TmpItem.class, cascade = CascadeType.ALL)
+	@JoinColumn(name = "order_id")
 	private List<TmpItem> items;
-
 
 	public TmpOrderDto toDto() {
 		return TmpOrderDto.builder()
 			.id(id)
-			.userId(tmpUser.id)
+			.userId(userId)
 			.num(num)
+			.item(items.get(items.size() - 1).toDto())
 			.build();
 	}
 }
