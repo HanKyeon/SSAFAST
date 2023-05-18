@@ -179,6 +179,7 @@ const SpaceCreatePage =
           }
         })
         .then((res) => {
+          dispatch(DispatchToast('생성 완료!', true));
           queryClient.invalidateQueries(queryKeys.space());
           router.push(`/space`);
         });

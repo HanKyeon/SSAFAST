@@ -69,7 +69,7 @@ const APIContainer = function ({ store }: Props) {
     <Box
       variant="one"
       fontType="header"
-      className="h-full w-full flex flex-row gap-[1.12%]"
+      className="h-full w-full flex flex-row justify-center items-cente gap-[1.12%]"
     >
       {/* 왼쪽 */}
       <Box
@@ -88,7 +88,7 @@ const APIContainer = function ({ store }: Props) {
       <Box
         variant="two"
         fontType="normal"
-        className="h-full basis-[50%] w-[50%] flex-1 flex flex-col"
+        className="h-full basis-[50%] w-[50%] flex-1 flex flex-col p-5"
       >
         {isAdd ? (
           // <ApiCreateForm toggleAddHandler={toggleAddHandler} />
@@ -131,23 +131,24 @@ const APIContainer = function ({ store }: Props) {
                 </AnimationBox>
               </Modal>
             )}
-            <div className="h-full w-full p-5">
-              {/* 헤더 */}
-              <div
-                className={`w-full h-[7%] mb-5 flex items-center justify-between`}
-              >
-                <div className={`flex items-center gap-2`}>
-                  <BsFilter className={`text-[26px]`} />
-                  <EomSelect
+
+            {/* 헤더 */}
+            <div
+              className={`w-full h-[7%] mb-4 flex items-center justify-between`}
+            >
+              <div className={`flex items-center gap-2`}>
+                <BsFilter className={`text-[26px]`} />
+                {/* <EomSelect
                     type="methods"
                     selectedIdx={selectedIdx}
                     setSelectedIdx={setSelectedIdx}
-                  />
-                </div>
-                <div className={`flex items-center gap-2`}>
-                  <Input placeholder="search" />
-                  <HiOutlineSearch className={`text-[22px] cursor-pointer`} />
-                </div>
+                  /> */}
+              </div>
+              <div className={`flex items-center gap-2`}>
+                {/* <Input placeholder="search" />
+                  <HiOutlineSearch className={`text-[22px] cursor-pointer`} /> */}
+              </div>
+              <div className="h-full flex flex-row gap-4 items-center">
                 <BsFolderPlus
                   className={`text-[22px] cursor-pointer hover:text-mincho-strong duration-[0.33s]`}
                   onClick={openModal}
@@ -161,13 +162,13 @@ const APIContainer = function ({ store }: Props) {
                   <HiPencil />
                 </Button>
               </div>
-              {/* api 목록 */}
-              <div className="w-full h-[92%] overflow-y-scroll">
-                <APIList
-                  toggleAddHandler={toggleAddHandler}
-                  apiIdHandler={apiIdHandler}
-                />
-              </div>
+            </div>
+            {/* api 목록 */}
+            <div className="w-full h-[92%] overflow-y-scroll">
+              <APIList
+                toggleAddHandler={toggleAddHandler}
+                apiIdHandler={apiIdHandler}
+              />
             </div>
           </>
         )}

@@ -35,14 +35,17 @@ const APIConnectContainer = function ({ store, serverSideStore }: Props) {
       className={`h-full w-full flex justify-center items-center gap-[1.12%]`}
     >
       {/* 왼쪽 */}
-      <Box variant="two" className={`h-full p-5 flex-1 flex flex-col`}>
+      <Box
+        variant="two"
+        className={`h-full p-5 flex-1 flex flex-col basis-[50%] w-[50%]`}
+      >
         <BoxHeader title="Figma" />
         <div className={`flex-1 overflow-y-scroll scrollbar-hide`}>
           <FigmaList onChangeSection={onChangeSection} isConnect={true} />
         </div>
       </Box>
       {/* 오른쪽 */}
-      <Box className={`h-full p-5 flex-1 flex flex-col`}>
+      <Box className={`h-full p-5 flex-1 flex flex-col basis-[50%] w-[50%]`}>
         <RightContainer sectionId={sectionId} />
       </Box>
     </Box>
