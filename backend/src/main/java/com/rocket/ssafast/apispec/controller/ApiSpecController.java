@@ -32,7 +32,6 @@ public class ApiSpecController {
     @PostMapping
     public ResponseEntity<?> createApiSpec(@AuthenticationPrincipal UserDetailsImpl userInfo, @RequestBody ApiSpecInfoDto apiSpecInfoDto){
         try{
-//            log.info("!!!!!apiapiapiapiapiapi!!!!!" + apiSpecInfoDto.getDocument().toString());
             apiSpecService.createApiSpec(userInfo.getMemberId(), apiSpecInfoDto);
             return new ResponseEntity<>(apiSpecInfoDto, HttpStatus.OK);
         }
