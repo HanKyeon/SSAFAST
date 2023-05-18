@@ -213,6 +213,7 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
             nestedDtos: { ...res.data.nestedDtos },
           };
         });
+        console.log(`요청해서 응답으로 온 dtoId ${dtoId}의 정보`, data);
         if (!data) {
           return;
         }

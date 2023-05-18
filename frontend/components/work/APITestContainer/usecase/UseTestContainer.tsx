@@ -3,7 +3,14 @@ import { useStoreSelector } from '@/hooks/useStore';
 import BoxHeader from '@/components/common/BoxHeader';
 import { FormProvider, useForm } from 'react-hook-form';
 import { ApiTestForm, MockupData2Type } from '../../APIDocsContainer';
-import { EventHandler, FormEvent, useEffect, useRef, useState } from 'react';
+import {
+  EventHandler,
+  FormEvent,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import Modal from '@/components/common/Modal';
 import { IoArrowBackOutline } from 'react-icons/io5';
 import useInput from '@/hooks/useInput';
@@ -12,6 +19,7 @@ import {
   EachCateApi,
   UsecaseDetailType,
   UsecaseListItemType,
+  useApiDetailAtTest,
   useUsecaseDetail,
 } from '@/hooks/queries/queries';
 import UCReqBox from './UCReqBox';
@@ -26,160 +34,7 @@ import {
 import { useRouter } from 'next/router';
 import { SpaceParams } from '@/pages/space';
 import Logogogo from '@/components/common/Logogogo';
-
-// const mockupData2: MockupData2Type = {
-//   request: {
-//     headers: [
-//       {
-//         keyName: 'Content-Type',
-//         type: 'String',
-//         desc: 'Define request data type',
-//         value: null,
-//       },
-//       {
-//         keyName: 'Age',
-//         type: 'Integer',
-//         desc: 'Fields for cashing',
-//         value: null,
-//       },
-//     ],
-//     body: {
-//       fields: [
-//         {
-//           keyName: 'ID',
-//           type: 1,
-//           desc: '사용자 ID',
-//           itera: false,
-//           constraints: ['NotNull'],
-//           value: null,
-//         },
-//         {
-//           keyName: 'PW',
-//           type: 1,
-//           desc: '사용자 PW',
-//           itera: false,
-//           constraints: ['NotNull'],
-//           value: null,
-//         },
-//       ],
-//       nestedDtos: {
-//         '11': {
-//           name: 'UserInfo', // 실제 dto class 이름
-//           keyName: '11Dto', // 사용자가 지정한 변수명 e.g) Test test2;
-//           desc: '사용자 정보를 저장하는 class',
-//           itera: false,
-//           fields: [
-//             {
-//               keyName: 'userID',
-//               type: 1,
-//               desc: '추천인ID',
-//               value: null,
-//               itera: false,
-//               constraints: ['NotNull'],
-//             },
-//             {
-//               keyName: 'userPW',
-//               type: 1,
-//               desc: '추천인PW',
-//               value: null,
-//               itera: false,
-//               constraints: ['NotNull'],
-//             },
-//           ],
-//           nestedDtos: {},
-//         },
-//         '8': {
-//           name: 'UserInfo', // 실제 dto class 이름
-//           keyName: '8Dto', // 사용자가 지정한 변수명 e.g) Test test2;
-//           desc: '사용자 정보를 저장하는 class',
-//           itera: false,
-//           fields: [
-//             {
-//               keyName: 'userID',
-//               type: 1,
-//               desc: '추천인ID',
-//               value: null,
-//               itera: false,
-//               constraints: ['NotNull'],
-//             },
-//             {
-//               keyName: 'userPW',
-//               type: 1,
-//               desc: '추천인PW',
-//               value: null,
-//               itera: false,
-//               constraints: ['NotNull'],
-//             },
-//           ],
-//           nestedDtos: {
-//             '7': {
-//               name: 'UserInfo', // 실제 dto class 이름
-//               keyName: '7Dto', // 사용자가 지정한 변수명 e.g) Test test2;
-//               desc: '사용자 정보를 저장하는 class',
-//               itera: false,
-//               fields: [
-//                 {
-//                   keyName: 'userID',
-//                   type: 1,
-//                   desc: '추천인ID',
-//                   value: null,
-//                   itera: false,
-//                   constraints: ['NotNull'],
-//                 },
-//                 {
-//                   keyName: 'userPW',
-//                   type: 1,
-//                   desc: '추천인PW',
-//                   value: null,
-//                   itera: false,
-//                   constraints: ['NotNull'],
-//                 },
-//               ],
-//               nestedDtos: {},
-//             },
-//           },
-//         },
-//       },
-//       nestedDtoList: {
-//         '12': {
-//           name: 'RecUserInfo',
-//           keyName: null,
-//           desc: '추천한 사용자들의 정보를 담는 class',
-//           itera: true,
-//           fields: [
-//             {
-//               keyName: 'userID',
-//               type: 1,
-//               desc: '추천인ID',
-//               value: null,
-//               itera: false,
-//               constraints: ['NotNull'],
-//             },
-//           ],
-//           nestedDtos: {},
-//         },
-//       },
-//     },
-//     pathVars: [
-//       {
-//         keyName: 'userid',
-//         type: 'String',
-//         desc: 'for login',
-//         constraints: ['NotNull'],
-//         value: null,
-//       },
-//     ],
-//     params: [
-//       {
-//         keyName: 'age',
-//         type: 'int',
-//         desc: 'user age',
-//         constraints: ['NotNull'],
-//         value: null,
-//       },
-//     ],
-//   },
-// };
+import { UCContext, UCContextInterface } from '.';
 
 export interface RequestItem {
   [key: string]: {
@@ -234,6 +89,15 @@ const UseTestContainer = function () {
   const { inputData: ucDescInput, onChangeHandler: onChangeUcDescInput } =
     useInput(ucDescInputEl);
 
+  const {
+    contextFormName,
+    setContextFormName,
+    contextResName,
+    setContextResName,
+    contextMapped,
+    setContextMapped,
+  } = useContext<UCContextInterface>(UCContext);
+
   const [isListModalOpen, setIsListModalOpen] = useState<boolean>(true); // 유케저장목록모달
   const [isNewModalOpen, setIsNewModalOpen] = useState<boolean>(false);
   const [isApiListOpen, setIsApiListOpen] = useState<boolean>(false);
@@ -242,11 +106,7 @@ const UseTestContainer = function () {
     id: 0,
     isNew: false,
   });
-  const {
-    data: curUCData,
-    isLoading,
-    isError,
-  } = useUsecaseDetail(
+  const { data: curUCData } = useUsecaseDetail(
     spaceId,
     curUsecase.id,
     curUsecase.isNew ? curUsecase.isNew : false
@@ -262,13 +122,19 @@ const UseTestContainer = function () {
 
   const methods = useForm<UsecaseDetailType>({
     defaultValues: {
-      name: '',
-      desc: '',
+      // name: '',
+      // desc: '',
       rootApiId: '',
       testDetails: {},
     },
   });
-  const { control, handleSubmit } = methods;
+  const {
+    control,
+    handleSubmit,
+    reset,
+    setValue: setFormValue,
+    getValues,
+  } = methods;
 
   const onToggleListModal = (): void => {
     setIsListModalOpen((prev) => !prev);
@@ -307,6 +173,9 @@ const UseTestContainer = function () {
   };
   // const onClickApitoAdd = (apiId: string | number,apiName: string, method: 1|2|3|4|5): void => {
   const onClickApitoAdd = (api: UseTestApiCompactType): void => {
+    if (countApi === 0) {
+      setFormValue('rootApiId', api.id);
+    }
     setCurApi({ ...api, idx: countApi });
     setApis((prev) => [...prev, { ...api, idx: countApi }]);
     setCountApi((prev) => prev + 1);
@@ -316,10 +185,23 @@ const UseTestContainer = function () {
     onToggleAddApiModal();
   };
   const onClickClearApis = (): void => {
+    // 왼쪽 사이드에 있는 api 목록 지움
     setCurApi(undefined);
     setApis([]);
     setCountApi(0);
-    // 지금까지 만들어졌던 useForm의 method 그 data는 자동으로 초기화되나,,?
+
+    // 지금까지 만들어졌던 useForm의 method 그 data도 초기화
+    reset({
+      name: '',
+      desc: '',
+      rootApiId: '',
+      testDetails: {},
+    });
+
+    // context도 초기화
+    setContextFormName(null);
+    setContextResName(null);
+    setContextMapped(false);
   };
 
   const { mutateAsync: testMutate } = useTestUsecase(spaceId);
@@ -343,9 +225,6 @@ const UseTestContainer = function () {
       // console.log('?????????????', apiIds);
     }
   }, [curapi]);
-
-  // test가넝한api
-  // 123, Test API, testAPI
 
   return (
     <Box variant="one" fontType="header" className="h-full w-full">
@@ -426,6 +305,8 @@ const UseTestContainer = function () {
                       curUsecase={curUsecase}
                       control={control}
                       currentApi={curapi}
+                      apis={apis}
+                      setFormValue={setFormValue}
                     />
                   )}
                 </Box>

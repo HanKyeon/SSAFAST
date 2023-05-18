@@ -4,12 +4,31 @@ import { HiChatBubbleBottomCenterText } from 'react-icons/hi2';
 import Input from '@/components/common/Input';
 import { Controller } from 'react-hook-form';
 import { BodyType, FieldsType, HeadersType } from '../../APIDocsContainer';
-import { Dispatch, SetStateAction, useContext, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { UCContext, UCContextInterface } from '.';
 import {
   ApiDetailAtTestDtoInfo,
   ApiDetailAtTestItem,
 } from '@/hooks/queries/queries';
+
+const typeList = [
+  '',
+  'String',
+  'Integer',
+  'Long',
+  'Float',
+  'Double',
+  'Boolean',
+  'MultipartFile',
+  'Date',
+  'LocalDateTime',
+];
 
 interface UCReqItemInnerPropsType {
   item:
@@ -37,9 +56,16 @@ const UCReqItemInner = function ({
 }: UCReqItemInnerPropsType): JSX.Element {
   const { dark: isDark } = useStoreSelector((state) => state.dark);
   const [mapped, setMapped] = useState<boolean>(false);
+  const [mappedResName, setMappedResName] = useState<string>();
 
-  const { contextFormName, setContextFormName } =
-    useContext<UCContextInterface>(UCContext);
+  const {
+    contextFormName,
+    setContextFormName,
+    contextResName,
+    setContextResName,
+    contextMapped,
+    setContextMapped,
+  } = useContext<UCContextInterface>(UCContext);
 
   const styles = {
     innerBox: `w-full h-auto flex items-center overflow-hidden relative ${
@@ -59,12 +85,12 @@ const UCReqItemInner = function ({
       isDark ? `text-grayscale-light` : `text-grayscale-deepdarkdeep`
     } ${
       depth === 0
-        ? 'w-[150px]'
+        ? 'min-w-[110px]'
         : depth === 1
         ? 'w-[calc(150px-(100%-95%)/2-0.5px)]'
         : 'w-[calc(150px-(100%-95%)-2px)]'
     }`,
-    type: `py-[8px] px-3 w-[140px] border-x-[1px] ${
+    type: `py-[8px] px-3 min-w-[110px] border-x-[1px] ${
       isDark
         ? `text-grayscale-light border-grayscale-deepdarklight`
         : `text-grayscale-deepdarkdeep border-grayscale-deeplightlight`
@@ -85,21 +111,44 @@ const UCReqItemInner = function ({
     descIcon: `text-normal ${
       isDark ? `text-grayscale-dark` : `text-grayscale-deeplightlight`
     }`,
-    value: `py-[8px] px-3 flex-1 min-w-0 ${
-      isDark ? `text-grayscale-light` : `text-grayscale-deepdarkdeep`
+    mapped: `py-[8px] px-3 flex-1 min-w-0 ${
+      isDark ? `text-mincho-normal` : `text-taro-normal`
     }`,
+    selectBtn: `cursor-pointer rounded-b-[8px] px-4 py-1 active:bg-grayscale-deepdarkdeep bg-grayscale-deepdarklight`,
   };
 
   const onClickMappingBtn = (): void => {
     setMapped(true);
     setContextFormName(formName);
-    console.log('formName 담았거든??', contextFormName);
+    console.log(
+      'formName 담았거든??',
+      'contextFormName:',
+      contextFormName,
+      'contextResName:',
+      contextResName
+    );
   };
   const onClickSelfTyping = (): void => {
     setMapped(false);
   };
   // console.log('>>>>>>>>>>>>', item);
 
+  useEffect(() => {
+    if (contextResName && contextFormName && formName === contextFormName) {
+      setMappedResName(contextResName);
+      console.log('mapping 완료!!!', contextResName);
+      setContextMapped(false);
+      // setContextFormName(null);
+      // // setContextResName(null);
+      // setContextMapped(false);
+    }
+  }, [contextFormName, contextResName]);
+
+  useEffect(() => {
+    if (!contextMapped) {
+      setContextResName(null);
+    }
+  }, [contextMapped]);
   return (
     <>
       {item && (
@@ -118,9 +167,10 @@ const UCReqItemInner = function ({
             </div>
             <div className={`${styles['type']}`}>
               {'type' in item
-                ? (item as FieldsType | HeadersType).type
+                ? typeList[(item as FieldsType | HeadersType).type as number]
                 : item.name}
             </div>
+            <div className={`${styles['mapped']}`}>{mappedResName}</div>
             {/* {!mapped && (
               <div className={`${styles['value']}`}>
                 <Controller
@@ -239,16 +289,16 @@ const UCReqItemInner = function ({
               )}
             </div>
           </div>
-          <div className={`flex gap-2 justify-between`}>
+          <div className={`flex gap-2 justify-between text-center`}>
             <div
               onClick={onClickMappingBtn}
-              className={`flex-1 cursor-pointer bg-theme-dark-light rounded-b-[8px] px-3 py-1 active:bg-grayscale-deepdarkdeep`}
+              className={`flex-1 text-milktea-strong ${styles['selectBtn']}`}
             >
               response에서 선택
             </div>
             <div
               onClick={onClickSelfTyping}
-              className={`cursor-pointer bg-theme-dark-light rounded-b-[8px] px-3 py-1 active:bg-grayscale-deepdarkdeep`}
+              className={`text-grayscale-deeplight ${styles['selectBtn']}`}
             >
               직접 입력
             </div>

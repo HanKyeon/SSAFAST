@@ -7,23 +7,27 @@ import {
   UsecaseListItemType,
   useApiDetailAtTest,
 } from '@/hooks/queries/queries';
-import { Control, useFieldArray } from 'react-hook-form';
+import { Control, UseFormSetValue, useFieldArray } from 'react-hook-form';
 import ReqItem from '../../APIDocsContainer/ReqItem';
 import ReqItemBody from '../../APIDocsContainer/ReqItemBody';
 import UCReqItem from './UCReqItem';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 import UCReqItemDto from './UCReqItemDto';
 
 type UCReqBoxPropsType = {
   curUsecase: UsecaseListItemType;
   currentApi: UseTestApiCompactType;
   control: Control<UsecaseDetailType, any>;
+  setFormValue: UseFormSetValue<UsecaseDetailType>;
+  apis: UseTestApiCompactType[];
 };
 
 const UCReqBox = function ({
   curUsecase,
   currentApi,
   control,
+  setFormValue,
+  apis,
 }: UCReqBoxPropsType): JSX.Element {
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
@@ -59,6 +63,25 @@ const UCReqBox = function ({
   //     control,
   //     name: `testDetails.${currentApi.id as string}.request.pathVars`,
   //   });
+
+  useEffect(() => {
+    if (curapi) {
+      setFormValue(
+        `testDetails.${curapi.apiId}.additionalUrl`,
+        curapi.document.request.additionalUrl
+      );
+      if (currentApi.idx && currentApi.idx > 0) {
+        setFormValue(
+          `testDetails.${curapi.apiId}.parent`,
+          apis[currentApi.idx - 1].id
+        );
+        setFormValue(
+          `testDetails.${apis[currentApi.idx - 1].id}.child`,
+          curapi.apiId
+        );
+      }
+    }
+  }, [curapi]);
 
   return (
     <div className={`flex-1 overflow-scroll scrollbar-hide`}>
@@ -112,25 +135,27 @@ const UCReqBox = function ({
           />
         )}
       {/* params!!!! */}
-      {curapi?.document.request.params && (
-        <UCReqItem
-          //   fields={headersFields}
-          formName={`testDetails.${currentApi.id as string}.request.params`}
-          name="params"
-          control={control}
-          item={curapi.document.request.params}
-        />
-      )}
+      {curapi?.document.request.params &&
+        curapi?.document.request.params.length > 0 && (
+          <UCReqItem
+            //   fields={headersFields}
+            formName={`testDetails.${currentApi.id as string}.request.params`}
+            name="params"
+            control={control}
+            item={curapi.document.request.params}
+          />
+        )}
       {/* pathVars!!!! */}
-      {curapi?.document.request.pathVars && (
-        <UCReqItem
-          //   fields={headersFields}
-          formName={`testDetails.${currentApi.id as string}.request.pathVars`}
-          name="path variables"
-          control={control}
-          item={curapi.document.request.pathVars}
-        />
-      )}
+      {curapi?.document.request.pathVars &&
+        curapi?.document.request.pathVars.length > 0 && (
+          <UCReqItem
+            //   fields={headersFields}
+            formName={`testDetails.${currentApi.id as string}.request.pathVars`}
+            name="path variables"
+            control={control}
+            item={curapi.document.request.pathVars}
+          />
+        )}
     </div>
   );
 };

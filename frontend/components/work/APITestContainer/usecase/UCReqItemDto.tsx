@@ -30,7 +30,7 @@ const UCReqItemDto = function ({
   control,
 }: ReqtemPropsType): JSX.Element {
   const [isOpen, setisOpen] = useState<boolean>(true);
-  const a = Object.keys(item as ApiDetailAtTestDto)?.length + 1;
+  const a = Object.keys(item)?.length + 1;
 
   const Styles = {
     style: `${
@@ -46,10 +46,12 @@ const UCReqItemDto = function ({
     <div className={`${styles1[`style`]} w-full`}>
       <ToggleableHeader title={name} isOpen={isOpen} setIsOpen={setisOpen} />
       <div className={`${Styles['style']}`}>
-        {Object.keys(item as ApiDetailAtTestDto)?.map((id, idx) =>
+        {Object.keys(item)?.map((id, idx) =>
           item[`${id}`].map((dto, idx) => (
             <>
-              <div>{`${dto.keyName}_DTO`}</div>
+              <div
+                className={`text-content px-7 text-grayscale-deeplight`}
+              >{`${dto.keyName}_DTO`}</div>
               <Controller
                 key={`${Math.random()}`} // fields[idx].id
                 name={`${formName}.${dto.keyName}`}

@@ -1,9 +1,10 @@
 import { ApiDetailAtTestItem } from '@/hooks/queries/queries';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Control, Controller } from 'react-hook-form';
 import { UCContext, UCContextInterface } from '.';
 import { Box, Input } from '@/components/common';
 import { useStoreSelector } from '@/hooks/useStore';
+import { HiChatBubbleBottomCenterText } from 'react-icons/hi2';
 
 type UCResInnerPropsType = {
   item: ApiDetailAtTestItem;
@@ -20,8 +21,14 @@ const UCResItemInner = function ({
   depth = 0,
 }: UCResInnerPropsType): JSX.Element {
   const { dark: isDark } = useStoreSelector((state) => state.dark);
-  const { contextFormName, setContextFormName } =
-    useContext<UCContextInterface>(UCContext);
+  const {
+    contextFormName,
+    setContextFormName,
+    contextResName,
+    setContextResName,
+    contextMapped,
+    setContextMapped,
+  } = useContext<UCContextInterface>(UCContext);
   const [mappedFormName, setMappedFormName] = useState<string>();
   const [mapped, setMapped] = useState<boolean>(false);
 
@@ -29,10 +36,19 @@ const UCResItemInner = function ({
     console.log('안뿡');
     if (contextFormName) {
       setMappedFormName(contextFormName);
+      setContextResName(item.keyName);
+      setContextMapped(true);
       console.log('뿡!', contextFormName);
       setMapped(true);
     }
   };
+
+  // useEffect(() => {
+  //   if (!contextMapped) {
+  //     setContextResName(null);
+  //     console.log('contextResName 널됨');
+  //   }
+  // }, [contextMapped]);
 
   const styles = {
     innerBox: `w-full h-auto flex items-center overflow-hidden relative ${
@@ -88,9 +104,19 @@ const UCResItemInner = function ({
     <>
       <div
         onClick={onClickResItem}
-        className={`${styles['innerBox']} flex gap-3`}
+        className={`${styles['innerBox']} flex gap-3 cursor-pointer active:bg-grayscale-deepdarkdeep`}
       >
-        <div className={`${styles['key']}`}>{item.keyName}</div>
+        <div className={`${styles['key']}`}>
+          <div>{item.keyName}</div>
+          <div className={`${styles['desc']} active:bg-grayscale-deepdarkdeep`}>
+            <i>
+              <HiChatBubbleBottomCenterText
+                className={`${styles['descIcon']}`}
+              />
+            </i>
+            <p className={`truncate text-ellipsis`}>{item.desc}</p>
+          </div>
+        </div>
         <div className={`${styles['type']}`}>{item.type}</div>
         {/* <div className={`${styles['desc']}`}>{item.desc}</div> */}
       </div>

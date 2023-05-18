@@ -10,11 +10,13 @@ import ToggleableHeader from '../../APIDocsContainer/ToggleableHeader';
 import ReqItemInner from '../../APIDocsContainer/ReqItemInner';
 import { FieldsType, HeadersType } from '../../APIDocsContainer';
 import {
+  ApiDetailAtTestDtoInfo,
   ApiDetailAtTestItem,
   PrevResponse,
   UsecaseDetailType,
 } from '@/hooks/queries/queries';
 import UCResItemInner from './UCResItemInner';
+import UCDto from './UCDto';
 
 type ResItemPropsType = {
   //   fields?: FieldArrayWithId[]; // 잠깐 ?넣어유,,
@@ -42,6 +44,7 @@ const UCResItem = function ({
     style: `${
       isOpen ? `${styles['act']} ${styles[`slide`]}` : `${styles[`slide`]}`
     }`,
+    title: `text-content px-7 text-grayscale-deeplight`,
   };
 
   const styles1 = {
@@ -53,7 +56,7 @@ const UCResItem = function ({
       <ToggleableHeader title={name} isOpen={isOpen} setIsOpen={setisOpen} />
       {item.headers && item.headers.length > 0 && (
         <div className={`w-full`}>
-          <p>headers</p>
+          <p className={`${Styles['title']}`}>headers</p>
           {item.headers.map((headerItem: ApiDetailAtTestItem, idx: number) => (
             <div
               className={`w-[87%] rounded-[13px] overflow-hidden mt-0 mb-3 mx-auto text-content duration-[0.33s]`}
@@ -73,7 +76,7 @@ const UCResItem = function ({
           item.body.nestedDtos ||
           item.body.nestedDtoLists) && (
           <div className={`w-full`}>
-            <p>body</p>
+            <p className={`${Styles['title']}`}>body</p>
             {item.body.fields?.map(
               (headerItem: ApiDetailAtTestItem, idx: number) => (
                 <div
@@ -88,6 +91,19 @@ const UCResItem = function ({
                 </div>
               )
             )}
+            {/* {item.body.nestedDtos &&
+              Object.keys(item.body.nestedDtos).map(
+                (dtoId: string | number, idx: number) => {
+                  if (item.body?.nestedDtos) {
+                    const dto = item.body?.nestedDtos[`${dtoId}`];
+                    return (
+                      <UCDto key={idx} dto={dto} />
+                      )
+                    )
+                  }
+                }
+              )} */}
+
             {item.body.fields?.map(
               (headerItem: ApiDetailAtTestItem, idx: number) => (
                 <div
