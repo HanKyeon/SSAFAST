@@ -27,14 +27,15 @@ import { ResType } from './ResBox';
 // };
 
 type ResJSONPropsType = {
-  response: string;
+  response: any;
 };
 
 const ResJSON = function ({ response }: ResJSONPropsType): JSX.Element {
   const [jsonData, setJsonData] = useState<string>();
+  console.log(response, '<<');
   useEffect(() => {
-    setJsonData(JSON.stringify(response, null, 2));
-  }, []);
+    setJsonData(() => JSON.stringify(response, null, 2));
+  }, [response]);
   return (
     <div
       className={`border-[1px] border-grayscale-dark rounded-[8px] p-2 min-h-[30px] flex gap-2 text-content`}

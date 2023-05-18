@@ -46,6 +46,8 @@ const NonHeaderController = function ({
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
   const { data: dtoListData } = useDtoList(spaceId);
+  const formNameSplit = formName.split(`.`);
+  const formType = formNameSplit[formNameSplit.length - 1];
 
   const {
     fields: constraintsFields,
@@ -124,7 +126,10 @@ const NonHeaderController = function ({
                     </option>
                   );
                 })}
-                {dtoListData &&
+                {formType !== `params` &&
+                  formType !== `pathVars` &&
+                  formType !== `headers` &&
+                  dtoListData &&
                   dtoListData?.dtoList.map((dto) => {
                     return (
                       <option

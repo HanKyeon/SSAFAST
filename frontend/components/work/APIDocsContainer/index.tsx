@@ -29,8 +29,11 @@ import ReqBoxPostman from './formComponent/ReqBoxPostman';
 import ResBoxPostman from './formComponent/ResBoxPostman';
 import { queryKeys } from '@/hooks/queries/QueryKeys';
 import Modal from '@/components/common/Modal';
+import contentAxios from '@/utils/contentAxios';
+import { useStoreDispatch } from '@/hooks/useStore';
+import { DispatchToast } from '@/store';
 
-const status: (1 | 2 | 3 | 4)[] = [1, 2, 3, 4];
+const status: (0 | 1 | 2 | 3 | 4)[] = [0, 1, 2, 3, 4];
 export type MockupData2Type = {
   request: {
     headers: HeadersType[];
@@ -78,221 +81,40 @@ export type BodyType = {
   nestedDtoList?: NestedDtosType | NestedDtosType[];
 };
 
-// const mockupData2: ApiDetailInTest = {
-//   apiId: 1,
-//   name: `api이름`,
-//   description: `api설명`,
-//   method: 1,
-//   status: 1,
-//   baseurlId: 4,
-//   categoryId: 1,
-//   member: { id: 1, name: `작성자`, email: `asdf@asdf.com`, profileImg: `` },
-//   createdTime: `2023-05-17`,
-//   document: {
-//     request: {
-//       additionalUrl: `/api/:userId`,
-//       headers: [
-//         {
-//           keyName: 'Content-Type',
-//           type: 'String',
-//           desc: 'Define request data type',
-//           value: null,
-//         },
-//         {
-//           keyName: 'Age',
-//           type: 'Integer',
-//           desc: 'Fields for cashing',
-//           value: null,
-//         },
-//       ],
-//       body: {
-//         fields: [
-//           {
-//             keyName: 'ID',
-//             type: 1,
-//             desc: '사용자 ID',
-//             itera: false,
-//             constraints: ['NotNull'],
-//             value: null,
-//           },
-//           {
-//             keyName: 'PW',
-//             type: 1,
-//             desc: '배열 값',
-//             itera: true,
-//             constraints: ['NotNull'],
-//             value: null,
-//           },
-//         ],
-//         nestedDtos: {
-//           11: [
-//             {
-//               name: 'UserInfo', // 실제 dto class 이름
-//               keyName: '11Dto', // 사용자가 지정한 변수명 e.g) Test test2;
-//               desc: '사용자 정보를 저장하는 class',
-//               itera: false,
-//               fields: [
-//                 {
-//                   keyName: 'userID',
-//                   type: 1,
-//                   desc: '추천인ID',
-//                   value: null,
-//                   itera: false,
-//                   constraints: ['NotNull'],
-//                 },
-//                 {
-//                   keyName: 'userPW',
-//                   type: 1,
-//                   desc: '추천인PW',
-//                   value: null,
-//                   itera: false,
-//                   constraints: ['NotNull'],
-//                 },
-//               ],
-//               nestedDtos: {},
-//             },
-//           ],
-//           8: [
-//             {
-//               name: 'UserInfo', // 실제 dto class 이름
-//               keyName: '8Dto', // 사용자가 지정한 변수명 e.g) Test test2;
-//               desc: '사용자 정보를 저장하는 class',
-//               itera: true,
-//               fields: [
-//                 {
-//                   keyName: 'userID',
-//                   type: 1,
-//                   desc: '추천인ID',
-//                   value: null,
-//                   itera: false,
-//                   constraints: ['NotNull'],
-//                 },
-//                 {
-//                   keyName: 'userPW',
-//                   type: 1,
-//                   desc: '추천인PW',
-//                   value: null,
-//                   itera: false,
-//                   constraints: ['NotNull'],
-//                 },
-//               ],
-//               nestedDtos: {
-//                 7: [
-//                   {
-//                     name: 'UserInfo', // 실제 dto class 이름
-//                     keyName: '7Dto', // 사용자가 지정한 변수명 e.g) Test test2;
-//                     desc: '사용자 정보를 저장하는 class',
-//                     itera: false,
-//                     fields: [
-//                       {
-//                         keyName: 'userID',
-//                         type: 1,
-//                         desc: '추천인ID',
-//                         value: null,
-//                         itera: false,
-//                         constraints: ['NotNull'],
-//                       },
-//                       {
-//                         keyName: 'userPW',
-//                         type: 1,
-//                         desc: '추천인PW',
-//                         value: null,
-//                         itera: false,
-//                         constraints: ['NotNull'],
-//                       },
-//                     ],
-//                     nestedDtos: {},
-//                   },
-//                 ],
-//               },
-//             },
-//           ],
-//         },
-//         nestedDtoLists: {
-//           12: [
-//             {
-//               name: 'RecUserInfo',
-//               keyName: `recommendedPeople`,
-//               desc: '추천한 사용자들의 정보를 담는 class',
-//               itera: true,
-//               fields: [
-//                 {
-//                   keyName: 'userID',
-//                   type: 1,
-//                   desc: '추천인ID',
-//                   value: null,
-//                   itera: false,
-//                   constraints: ['NotNull'],
-//                 },
-//               ],
-//               nestedDtos: {},
-//             },
-//           ],
-//         },
-//       },
-//       pathVars: [
-//         {
-//           keyName: 'userid',
-//           type: 'String',
-//           desc: 'for login',
-//           constraints: ['NotNull'],
-//           value: null,
-//         },
-//       ],
-//       params: [
-//         {
-//           keyName: 'age',
-//           type: 'int',
-//           desc: 'user age',
-//           constraints: ['NotNull'],
-//           value: null,
-//         },
-//       ],
-//     },
-//     response: {
-//       statusCode: 200,
-//       desc: `성공`,
-//       headers: [],
-//       body: {
-//         fields: [],
-//       },
-//     },
-//   },
-// };
-
 interface Props {
   serverSideStore?: RTCSpaceData;
   store: any;
 }
 const APIDocsContainer = function ({ store, serverSideStore }: Props) {
   const router = useRouter();
+  const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
   const { spaceId } = router.query as SpaceParams;
   const [selectedId, setSelectedId] = useState<number>(0);
   const { data: selectedApiData } = useApiSingleTestDetail(spaceId, selectedId);
   const { data: baseUrlListdata } = useBaseUrl(spaceId);
-  const [curStatus, setCurStatus] = useState<number>(0);
-  const [responseData, setResponseData] = useState<string>(``);
+  const [curStatus, setCurStatus] = useState<number>(1);
+  const [responseData, setResponseData] = useState<any>();
   const [requestConfigModal, setRequestConfigModal] = useState<boolean>(false);
   // status 변경
-  const onChangeStatus = (): void => {
+  const onChangeStatus = async () => {
     setCurStatus((prev) => {
-      apiRequest({
-        method: `put`,
-        url: `/api/api/status`,
-        data: {
-          apiId: selectedId,
-          status: prev === 3 ? 0 : prev + 1,
-        },
-      }).then((res) => {
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.spaceSection(spaceId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.spaceApiList(spaceId),
-        });
+      return prev === 4 ? 1 : prev + 1;
+    });
+    await apiRequest({
+      method: `put`,
+      url: `/api/api/status`,
+      data: {
+        apiId: selectedId,
+        status: curStatus,
+      },
+    }).then((res) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.spaceSection(spaceId),
       });
-      return prev === 3 ? 0 : prev + 1;
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.spaceApiList(spaceId),
+      });
     });
   };
   const methods = useForm<ApiDetailInTest>();
@@ -322,6 +144,18 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
 
   const formDataSettingHandler = function (data: ApiDetailInTest) {
     console.log(data);
+    console.log(
+      baseUrlListdata?.baseurls.find((v) => v.id === data.baseurlId)?.url
+    );
+    if (
+      baseUrlListdata?.baseurls
+        .find((v) => v.id === data.baseurlId)
+        ?.url.split('/')[2]
+        .slice(0, 9) === `localhost`
+    ) {
+      dispatch(DispatchToast('로컬 서버는 지원하지 않습니다!', false));
+      return;
+    }
     let url: string = `${
       baseUrlListdata?.baseurls.find((v) => v.id === data.baseurlId)?.url! +
       selectedApiData?.document.request.additionalUrl
@@ -374,40 +208,23 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
         body[dto.keyName!] = { ...ret };
       });
     });
-    console.log(`body :`, body);
-    console.log('최종 RequestConfig는 아래');
-    console.log({
-      method: `post`,
-      url: `/api/api-exec`,
-      data: {
-        execReqData: {
-          url,
-          method,
-          headers,
-          pathVars,
-          params,
-          body: JSON.stringify(body),
-        },
-      },
-    });
+
     // 요청 결과도 처리해야함.
     apiRequest({
       method: `post`,
       url: `/api/api-exec`,
       data: {
-        execReqData: {
-          url,
-          method,
-          headers,
-          pathVars,
-          params,
-          body: JSON.stringify(body),
-        },
+        url,
+        method,
+        headers,
+        pathVars,
+        params,
+        body: JSON.stringify(body),
       },
     }).then((res) => {
       queryClient.invalidateQueries(queryKeys.spaceResult(spaceId, selectedId));
       console.log('처리해야함');
-      setResponseData(JSON.stringify(res.data));
+      setResponseData(res.data);
     });
   };
   return (
@@ -444,7 +261,7 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
                       className={`flex items-center justify-between w-[75px]`}
                     >
                       <StatusBadge
-                        status={status[selectedApiData?.status || curStatus]}
+                        status={status[curStatus] as 1 | 2 | 3 | 4}
                         small
                       />
                       {/* <IoMdArrowDropright */}
@@ -458,8 +275,8 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
                         className="cursor-pointer hover:scale-110 duration-[0.33s]"
                         onClick={requestModalOnHandler}
                       />
-                      <HiOutlineFolderArrowDown />
-                      <IoSaveOutline />
+                      {/* <HiOutlineFolderArrowDown /> */}
+                      {/* <IoSaveOutline /> */}
                       <button title="submit-btn" type="submit">
                         <TbSend className="text-mincho-normal cursor-pointer" />
                       </button>

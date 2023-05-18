@@ -247,6 +247,7 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
         document: { fields, nestedDtos },
       })
         .then((res) => {
+          dispatch(DispatchToast('생성 완료!', true));
           queryClient.invalidateQueries(
             queryKeys.spaceDtoList(parseInt(spaceId))
           );

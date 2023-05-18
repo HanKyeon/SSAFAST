@@ -42,7 +42,7 @@ const resMockup: ResType = {
 
 interface Props {
   selectedId?: number;
-  responseData?: string;
+  responseData?: any;
 }
 
 const ResBoxPostman = function ({
@@ -52,7 +52,6 @@ const ResBoxPostman = function ({
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [isOpenJSON, setIsOpenJSON] = useState<boolean>(true);
   const [isOpenDocs, setIsOpenDocs] = useState<boolean>(true);
-
   return (
     <Box
       className={`${
@@ -77,9 +76,7 @@ const ResBoxPostman = function ({
             <div className={`px-6`}>
               <ResJSON
                 response={
-                  responseData?.length
-                    ? responseData
-                    : `api 테스트를 진행해보세요!`
+                  responseData ? responseData : `api 테스트를 진행해보세요!`
                 }
               />
             </div>

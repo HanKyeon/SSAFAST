@@ -3,7 +3,12 @@ import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { useStoreSelector } from '@/hooks/useStore';
 import { IoMdArrowRoundBack } from 'react-icons/io';
 import { useRouter } from 'next/router';
-import { useBaseUrl, useSpaceCategory } from '@/hooks/queries/queries';
+import {
+  ApiDetailDef,
+  useBaseUrl,
+  useSpaceCategory,
+  useUserData,
+} from '@/hooks/queries/queries';
 import { SpaceParams } from '@/pages/space';
 import { RequestFormData } from './RequestForm';
 import { ResponseFormData } from './ResponseForm';
@@ -14,6 +19,7 @@ import RequestForm from './RequestForm';
 import ResponseForm from './ResponseForm';
 import { useCreateApi } from '@/hooks/queries/mutations';
 import { useApiDetail } from '@/hooks/queries/queries';
+import apiRequest from '@/utils/axios';
 
 // Api interface
 export interface ApiCreateForm {
@@ -21,7 +27,7 @@ export interface ApiCreateForm {
   name: string;
   description: string;
   method?: 1 | 2 | 3 | 4 | 5;
-  baseUrl: number;
+  baseurlId: number;
   categoryId?: number;
   status: number;
   document: Document;
@@ -35,7 +41,7 @@ export interface ServerData {
   name: string;
   description: string;
   method?: 1 | 2 | 3 | 4 | 5;
-  baseUrl: number;
+  baseurlId: number;
   categoryId?: number;
   status: number;
   document: {
@@ -84,70 +90,28 @@ const ApiWrite = function ({
 
   let defaultData: ApiCreateForm | undefined;
 
-  // const refineConstraints = function (data: any) {
-  //   let constratints: any = [];
-  //   if (!!data.type && data.type < 11) {
-  //     constratints.push({
-  //       ...data.constratins
-  //         .map((constraint: any) => {
-  //           const mainName = constraint.mainName;
-  //           if (mainName === 'Max') {
-  //             if (constraint.maxV === null) {
-  //               return ``;
-  //             }
-  //             return `Max(value=${constraint.maxV})`;
-  //           } else if (mainName === `Min`) {
-  //             if (constraint.minV === null) {
-  //               return ``;
-  //             }
-  //             return `Min(value=${constraint.minV}`;
-  //           } else if (mainName === `Range`) {
-  //             if (constraint.minV === null || constraint.maxV === null) {
-  //               return ``;
-  //             }
-  //             return `Range(min=${constraint.minV},max=${constraint.maxV})`;
-  //           } else if (mainName === `Pattern`) {
-  //             return `${
-  //               constraint.validateReg?.length
-  //                 ? `Pattern(regexp=${constraint.validateReg})`
-  //                 : ``
-  //             }`;
-  //           } else if (mainName === `Length`) {
-  //             if (constraint.minV === null || constraint.maxV === null) {
-  //               return ``;
-  //             }
-  //             return `Length(min=${constraint.minV},max=${constraint.maxV})`;
-  //           }
-  //           return mainName;
-  //         })
-  //         .filter((v: string) => v.length !== 0),
-  //     });
-  //   }
-  // };
-
-  const methods = useForm<ApiCreateForm>({
-    defaultValues: defaultData,
-  });
+  const methods = useForm<ApiDetailDef>();
 
   const { mutate: createMutate, mutateAsync: createMutateAsync } = useCreateApi(
     parseInt(spaceId)
   );
   const { control, handleSubmit, reset } = methods;
+  const { data: userData } = useUserData();
 
   useEffect(
     function () {
-      if (baseUrlListData && categoryListData) {
-        reset({
+      if (baseUrlListData && categoryListData && !Editdata && userData) {
+        const defaultDatas: ApiDetailDef = {
           workspaceId: parseInt(spaceId),
           name: '',
           description: '',
-          method: undefined,
-          baseUrl: baseUrlListData?.baseurls[0].id as number,
-          categoryId: categoryListData?.categorys[0].id as number,
+          method: 1,
           status: 1,
+          baseurlId: baseUrlListData?.baseurls[0].id as number,
+          categoryId: categoryListData?.categorys[0].id as number,
           document: {
             request: {
-              additional_url: '',
+              additionalUrl: '',
               body: {
                 fields: [],
               },
@@ -166,7 +130,14 @@ const ApiWrite = function ({
               },
             ],
           },
-        });
+          member: {
+            id: userData.id as number,
+            name: userData.name,
+            email: userData.email,
+            profileImg: userData.profileImg,
+          },
+        };
+        reset(defaultDatas);
       }
     },
     [baseUrlListData, categoryListData]
@@ -179,8 +150,8 @@ const ApiWrite = function ({
           workspaceId: parseInt(spaceId),
           name: Editdata.name,
           description: Editdata.description,
-          method: Editdata.method,
-          baseUrl: Editdata.baseUrl,
+          method: Editdata.method as 1 | 2 | 3 | 4 | 5,
+          baseurlId: Editdata.baseurlId,
           categoryId: Editdata.categoryId,
           status: Editdata.status,
           document: Editdata.document,
@@ -192,20 +163,96 @@ const ApiWrite = function ({
     [Editdata]
   );
 
-  const onSubmit = async function (data: ApiCreateForm) {
+  const onSubmit = async function (data: ApiDetailDef) {
     console.log('API 요청 데이터', data);
     let workspaceId = spaceId;
     let name = data.name;
     let description = data.description;
     let method = data.method;
-    let baseUrl = data.baseUrl;
-    let cateforyId = data.categoryId;
+    let baseurlId = data.baseurlId;
+    let categoryId = data.categoryId;
     let status = data.status;
-    let document: any = { request: {}, response: {} };
+    let refinedocument: any = {
+      request: {
+        additionalUrl: data.document.request.additionalUrl,
+        headers: [...data.document.request.headers],
+        params: [...data.document.request.params],
+        pathVars: [...data.document.request.pathVars],
+      },
+      response: [],
+    };
+    let requestBody: any = { fields: [], nestedDtos: {} };
 
-    data.document.response;
+    for (const field of data.document.request.body.fields) {
+      if ((field.type as number) < 10) {
+        requestBody.fields.push(field);
+      } else {
+        let dtoData = {
+          keyName: field.keyName,
+          type: field.type,
+          desc: field.desc,
+          itera: false,
+          constraints: [],
+        };
+        if (requestBody.nestedDtos[field.type]) {
+          requestBody.nestedDtos[field.type].push(dtoData);
+        } else {
+          requestBody.nestedDtos[field.type] = [{ ...dtoData }];
+        }
+      }
+    }
+    refinedocument.request.body = { ...requestBody };
 
-    createMutateAsync(data).then(() => toggleAddHandler());
+    data.document.response.map((response) => {
+      let ret: any = {
+        statusCode: response.statusCode,
+        desc: response.desc,
+        headers: [...response.headers],
+        body: { fields: [], nestedDtos: {} },
+      };
+      response.body.fields.forEach((resBodyField) => {
+        if ((resBodyField.type as number) < 10) {
+          ret.body.fields.push({
+            keyName: resBodyField.keyName,
+            type: resBodyField.type,
+            desc: resBodyField.desc,
+            itera: resBodyField.itera,
+            constraints: [],
+          });
+        } else {
+          let resBodyDtoData = {
+            keyName: resBodyField.keyName,
+            type: resBodyField.type,
+            desc: resBodyField.desc,
+            itera: resBodyField.itera,
+            constraints: [],
+          };
+          if (ret.body.nestedDtos[resBodyField.type]) {
+            ret.body.nestedDtos[resBodyField.type].push(resBodyDtoData);
+          } else {
+            ret.body.nestedDtos[resBodyField.type] = [{ ...resBodyDtoData }];
+          }
+        }
+      });
+      refinedocument.response.push(ret);
+    });
+
+    const finalConfig = {
+      workspaceId: parseInt(workspaceId),
+      name,
+      description,
+      method,
+      baseUrl: baseurlId,
+      categoryId,
+      status,
+      document: { ...refinedocument },
+    };
+
+    console.log('제출 할 데이터 :', finalConfig);
+    createMutateAsync(finalConfig).then(() => {
+      apiIdHandler(0);
+      toggleAddHandler();
+    });
   };
 
   const goToApiContainer = function () {
@@ -381,21 +428,21 @@ const ApiWrite = function ({
                 />
 
                 <Controller
-                  name={`baseUrl`}
+                  name={`baseurlId`}
                   control={control}
                   render={({ field, fieldState }) => (
                     <div className="flex flex-col w-[79%]">
                       <Select
-                        name={'baseUrl'}
+                        name={'baseurlId'}
                         onChange={field.onChange}
                         value={field.value}
                         onBlur={field.onBlur}
                         className={`w-full text-start items-start`}
                       >
                         {baseUrlListData?.baseurls?.map((item, index) => (
-                          <>
-                            <option value={item.id}>{item.url}</option>
-                          </>
+                          <option selected={index === 0} value={item.id}>
+                            {item.url}
+                          </option>
                         ))}
                       </Select>
                     </div>

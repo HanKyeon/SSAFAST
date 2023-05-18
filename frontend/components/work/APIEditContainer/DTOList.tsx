@@ -15,7 +15,7 @@ const DTOList = function ({ setSelected, selectedId }: Props) {
 
   return (
     <div className="w-full h-[92%] overflow-y-scroll flex flex-col gap-3">
-      {DtoListData &&
+      {DtoListData && DtoListData?.dtoList.length ? (
         DtoListData?.dtoList.map((dto) => {
           return (
             <DTOListItem
@@ -27,7 +27,10 @@ const DTOList = function ({ setSelected, selectedId }: Props) {
               setSelected={setSelected}
             />
           );
-        })}
+        })
+      ) : (
+        <div>DTO를 생성해보세요!</div>
+      )}
     </div>
   );
 };
