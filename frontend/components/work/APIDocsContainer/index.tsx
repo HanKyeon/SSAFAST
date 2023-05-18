@@ -32,6 +32,7 @@ import Modal from '@/components/common/Modal';
 import contentAxios from '@/utils/contentAxios';
 import { useStoreDispatch } from '@/hooks/useStore';
 import { DispatchToast } from '@/store';
+import CodeFEComp from './CodeFEComp';
 
 const status: (0 | 1 | 2 | 3 | 4)[] = [0, 1, 2, 3, 4];
 export type MockupData2Type = {
@@ -94,7 +95,8 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
   const { data: selectedApiData } = useApiSingleTestDetail(spaceId, selectedId);
   const { data: baseUrlListdata } = useBaseUrl(spaceId);
   const [curStatus, setCurStatus] = useState<number>(1);
-  const [responseData, setResponseData] = useState<any>();
+  const [responseData, setResponseData] =
+    useState<any>(`api 테스트를 진행해보세요!`);
   const [requestConfigModal, setRequestConfigModal] = useState<boolean>(false);
   // status 변경
   const onChangeStatus = async () => {
@@ -236,11 +238,14 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
   return (
     <>
       {requestConfigModal && (
-        <Modal closeModal={requestModalOffHandler}>
-          <div>하이요</div>
-          <div>하이요</div>
-          <div>하이요</div>
-          <div>하이요</div>
+        <Modal
+          parentClasses="h-[70%] w-[60%]"
+          closeModal={requestModalOffHandler}
+        >
+          <CodeFEComp
+            closeModal={requestModalOffHandler}
+            selectedApiId={selectedId}
+          />
         </Modal>
       )}
       <div className="h-full w-full flex justify-center items-center gap-[1.12%]">

@@ -1,6 +1,6 @@
 import ToggleableHeader from '@/components/work/APIDocsContainer/ToggleableHeader';
 import { Box } from '@/components/common';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ResJSON from '..//ResJSON';
 import ResDocs from '../ResDocs';
 
@@ -49,9 +49,23 @@ const ResBoxPostman = function ({
   selectedId,
   responseData,
 }: Props): JSX.Element {
-  const [isOpen, setIsOpen] = useState<boolean>(true);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isOpenJSON, setIsOpenJSON] = useState<boolean>(true);
   const [isOpenDocs, setIsOpenDocs] = useState<boolean>(true);
+  useEffect(
+    function () {
+      setIsOpen((oldV) => {
+        if (
+          responseData === `` ||
+          responseData === `api 테스트를 진행해보세요!`
+        ) {
+          return false;
+        }
+        return true;
+      });
+    },
+    [responseData]
+  );
   return (
     <Box
       className={`${
