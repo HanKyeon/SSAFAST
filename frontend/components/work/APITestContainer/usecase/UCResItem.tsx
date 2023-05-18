@@ -19,11 +19,8 @@ import UCResItemInner from './UCResItemInner';
 import UCDto from './UCDto';
 
 type ResItemPropsType = {
-  //   fields?: FieldArrayWithId[]; // 잠깐 ?넣어유,,
-  //   formName?: string;
-  //   control?: any;
   name: string;
-  item: PrevResponse;
+  item: ApiDetailAtTestItem[];
   control: Control<UsecaseDetailType, any>;
   formName: string;
 };
@@ -53,107 +50,23 @@ const UCResItem = function ({
   //   console.log('111111', formName, item);
   return (
     <div className={`${styles1[`style`]} w-full`}>
-      <ToggleableHeader title={name} isOpen={isOpen} setIsOpen={setisOpen} />
-      {item.headers && item.headers.length > 0 && (
+      {item && item.length > 0 && (
         <div className={`w-full`}>
-          <p className={`${Styles['title']}`}>headers</p>
-          {item.headers.map((headerItem: ApiDetailAtTestItem, idx: number) => (
+          <p className={`${Styles['title']}`}>{name}</p>
+          {item.map((item: ApiDetailAtTestItem, idx: number) => (
             <div
               className={`w-[87%] rounded-[13px] overflow-hidden mt-0 mb-3 mx-auto text-content duration-[0.33s]`}
-              key={`${headerItem.keyName}_${idx}`}
+              key={`${item.keyName}_${idx}`}
             >
               <UCResItemInner
-                item={headerItem}
+                item={item}
                 control={control}
-                formName={`${formName}.headers.${headerItem.keyName}`}
+                formName={`${formName}.${item.keyName}`}
               />
             </div>
           ))}
         </div>
       )}
-      {item.body &&
-        ((item.body.fields && item.body.fields.length > 0) ||
-          item.body.nestedDtos ||
-          item.body.nestedDtoLists) && (
-          <div className={`w-full`}>
-            <p className={`${Styles['title']}`}>body</p>
-            {item.body.fields?.map(
-              (headerItem: ApiDetailAtTestItem, idx: number) => (
-                <div
-                  className={`w-[87%] rounded-[13px] overflow-hidden mt-0 mb-3 mx-auto text-content duration-[0.33s]`}
-                  key={`${headerItem.keyName}_${idx}`}
-                >
-                  <UCResItemInner
-                    item={headerItem}
-                    control={control}
-                    formName={`${formName}.headers.${headerItem.keyName}`}
-                  />
-                </div>
-              )
-            )}
-            {/* {item.body.nestedDtos &&
-              Object.keys(item.body.nestedDtos).map(
-                (dtoId: string | number, idx: number) => {
-                  if (item.body?.nestedDtos) {
-                    const dto = item.body?.nestedDtos[`${dtoId}`];
-                    return (
-                      <UCDto key={idx} dto={dto} />
-                      )
-                    )
-                  }
-                }
-              )} */}
-
-            {item.body.fields?.map(
-              (headerItem: ApiDetailAtTestItem, idx: number) => (
-                <div
-                  className={`w-[87%] rounded-[13px] overflow-hidden mt-0 mb-3 mx-auto text-content duration-[0.33s]`}
-                  key={`${headerItem.keyName}_${idx}`}
-                >
-                  <UCResItemInner
-                    item={headerItem}
-                    control={control}
-                    formName={`${formName}.headers.${headerItem.keyName}`}
-                  />
-                </div>
-              )
-            )}
-          </div>
-        )}
-
-      {/* {item.body && (
-        <div className={`w-full`}>
-          <p>headers</p>
-          {item.body.map((bodyItem: ApiDetailAtTestItem, idx: number) => (
-            <UCResInner key={`${bodyItem.keyName}_${idx}`} />
-          ))}
-        </div>
-      )} */}
-      {/* <div className={`${Styles['style']}`}>
-        {(item as HeadersType[] | FieldsType[])?.map((item, idx) => (
-          <Controller
-            key={`${Math.random()}`} // fields[idx].id
-            name={`${formName}.${item.keyName}`}
-            control={control}
-            render={({ field }) => {
-              return (
-                <div
-                  key={item.keyName}
-                  className={`w-[87%] rounded-[13px] overflow-hidden mt-0 mb-3 mx-auto text-content duration-[0.33s]`}
-                >
-                  <ReqItemInner
-                    formName={`${formName}.${item.keyName}`}
-                    field={field}
-                    item={item}
-                    control={control}
-                    name={name}
-                  />
-                </div>
-              );
-            }}
-          />
-        ))}
-      </div> */}
     </div>
   );
 };

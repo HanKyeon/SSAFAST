@@ -37,7 +37,7 @@ const UCReqBox = function ({
     isError,
   } = useApiDetailAtTest(spaceId, currentApi.id);
 
-  console.log('뿌! 현재 선택된 api의 정보 ::::::::::', curapi);
+  // console.log('뿌! 현재 선택된 api의 정보 ::::::::::', curapi);
 
   //   const {
   //     fields: headersFields,
@@ -93,7 +93,7 @@ const UCReqBox = function ({
             formName={`testDetails.${currentApi.id as string}.request.headers`}
             name="headers"
             control={control}
-            item={curapi.document.request.headers}
+            item={curapi.document.request.headers!}
           />
         )}
       {/* BODY 다!!!!!!!!! */}
@@ -121,7 +121,7 @@ const UCReqBox = function ({
             item={curapi.document.request.body.nestedDtos}
           />
         )}
-      {curapi?.document.request.body?.nestedDtoLists &&
+      {/* {curapi?.document.request.body?.nestedDtoLists &&
         Object.keys(curapi?.document.request.body?.nestedDtoLists).length >
           0 && (
           <UCReqItemDto
@@ -133,7 +133,7 @@ const UCReqBox = function ({
             control={control}
             item={curapi.document.request.body.nestedDtoLists}
           />
-        )}
+        )} */}
       {/* params!!!! */}
       {curapi?.document.request.params &&
         curapi?.document.request.params.length > 0 && (

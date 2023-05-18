@@ -31,12 +31,7 @@ const typeList = [
 ];
 
 interface UCReqItemInnerPropsType {
-  item:
-    | HeadersType
-    | FieldsType
-    | BodyType
-    | ApiDetailAtTestItem
-    | ApiDetailAtTestDtoInfo;
+  item: ApiDetailAtTestDtoInfo | ApiDetailAtTestItem;
   className?: string;
   depth?: 0 | 1 | 2;
   control?: any;
@@ -45,7 +40,15 @@ interface UCReqItemInnerPropsType {
   formName: string;
 }
 
-const UCReqItemInner = function ({
+// ApiDetailAtTestItem
+// keyName: string;
+// type: number;
+// desc: string;
+// value?: any;
+// itera?: boolean;
+// constraints?: string[];
+
+const UCResItemDtoInner = function ({
   name,
   control,
   item,
@@ -115,9 +118,6 @@ const UCReqItemInner = function ({
       isDark ? `text-mincho-normal` : `text-taro-normal`
     }`,
     selectBtn: `cursor-pointer rounded-b-[8px] px-4 py-1 active:bg-grayscale-deepdarkdeep bg-grayscale-deepdarklight`,
-    value: `py-[8px] px-3 flex-1 min-w-0 ${
-      isDark ? `text-grayscale-light` : `text-grayscale-deepdarkdeep`
-    }`,
   };
 
   const onClickMappingBtn = (): void => {
@@ -173,25 +173,7 @@ const UCReqItemInner = function ({
                 ? typeList[(item as FieldsType | HeadersType).type as number]
                 : item.name}
             </div>
-            {mapped ? (
-              <div className={`${styles['mapped']}`}>{mappedResName}</div>
-            ) : (
-              <div className={`${styles['value']}`}>
-                <Controller
-                  name={`${formName}.value`}
-                  control={control}
-                  render={({ field, fieldState }) => (
-                    <Input
-                      name={`${formName}.value`}
-                      value={field.value}
-                      onChange={field.onChange}
-                      className={`w-full`}
-                      placeholder="value"
-                    />
-                  )}
-                />
-              </div>
-            )}
+            <div className={`${styles['mapped']}`}>{mappedResName}</div>
             {/* 아래는 화면에서 숨길 부분 */}
             <div>
               <Controller
@@ -313,4 +295,4 @@ const UCReqItemInner = function ({
   );
 };
 
-export default UCReqItemInner;
+export default UCResItemDtoInner;

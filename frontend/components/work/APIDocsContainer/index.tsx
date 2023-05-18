@@ -310,7 +310,7 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
                       {
                         baseUrlListdata?.baseurls.find(
                           (v) => v.id === selectedApiData?.baseurlId
-                        )?.id
+                        )?.url
                       }
                     </p>
                   </div>

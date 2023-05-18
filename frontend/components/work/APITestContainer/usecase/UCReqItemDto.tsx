@@ -12,7 +12,7 @@ import {
   ApiDetailAtTestDto,
   ApiDetailAtTestItem,
 } from '@/hooks/queries/queries';
-import UCReqItemInner from './UCReqItemInner';
+import UCReqItemDtoInner from './UCReqItemDtoInner';
 
 type ReqtemPropsType = {
   fields?: FieldArrayWithId[]; // 잠깐 ?넣어유,,
@@ -20,7 +20,7 @@ type ReqtemPropsType = {
   // control: Control<UsecaseDetailType, any>;
   control: any;
   name: string;
-  item: ApiDetailAtTestDto;
+  item: any;
 };
 const UCReqItemDto = function ({
   fields,
@@ -42,37 +42,43 @@ const UCReqItemDto = function ({
     style: `${isOpen ? `h-[calc(${a}*43px)]` : 'h-[43px]'}`,
   };
   //   console.log('111111', formName, item);
+  // setValue로 ${formName}.name 이랑 ${formName}.desc 넣어줘야됨
   return (
     <div className={`${styles1[`style`]} w-full`}>
       <ToggleableHeader title={name} isOpen={isOpen} setIsOpen={setisOpen} />
       <div className={`${Styles['style']}`}>
         {Object.keys(item)?.map((id, idx) =>
-          item[`${id}`].map((dto, idx) => (
+          item[`${id}`].map((dto: any, idx: number) => (
             <>
               <div
                 className={`text-content px-7 text-grayscale-deeplight`}
               >{`${dto.keyName}_DTO`}</div>
-              <Controller
-                key={`${Math.random()}`} // fields[idx].id
-                name={`${formName}.${dto.keyName}`}
-                control={control}
-                render={({ field }) => {
-                  return (
-                    <div
-                      key={`${dto.keyName}_${idx}`}
-                      className={`w-[87%] rounded-[13px] overflow-hidden mt-0 mb-3 mx-auto text-content duration-[0.33s]`}
-                    >
-                      <UCReqItemInner
-                        formName={`${formName}.${dto.keyName}`}
-                        field={field}
-                        item={dto}
-                        control={control}
-                        name={name}
-                      />
-                    </div>
-                  );
-                }}
-              />
+              {dto.fields &&
+                dto.fields.map(
+                  (fieldItem: ApiDetailAtTestItem, idx: number) => (
+                    <Controller
+                      key={`${Math.random()}`} // fields[idx].id
+                      name={`${formName}.${dto.keyName}.fields.${fieldItem.keyName}`}
+                      control={control}
+                      render={({ field }) => {
+                        return (
+                          <div
+                            // key={`${dto.keyName}_${idx}`}
+                            className={`w-[87%] rounded-[13px] overflow-hidden mt-0 mb-3 mx-auto text-content duration-[0.33s]`}
+                          >
+                            <UCReqItemDtoInner
+                              formName={`${formName}.${dto.keyName}.fields.${fieldItem.keyName}`}
+                              field={field}
+                              item={fieldItem}
+                              control={control}
+                              name={name}
+                            />
+                          </div>
+                        );
+                      }}
+                    />
+                  )
+                )}
             </>
           ))
         )}

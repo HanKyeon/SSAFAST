@@ -11,6 +11,7 @@ import { FieldsType, HeadersType } from '../../APIDocsContainer';
 import {
   ApiDetailAtTestDto,
   ApiDetailAtTestItem,
+  DtoField,
 } from '@/hooks/queries/queries';
 import UCReqItemInner from './UCReqItemInner';
 
@@ -24,7 +25,8 @@ type ReqtemPropsType = {
     | HeadersType[]
     | FieldsType[]
     | ApiDetailAtTestItem[]
-    | ApiDetailAtTestDto;
+    | ApiDetailAtTestDto
+    | DtoField[];
 };
 const UCReqItem = function ({
   fields,

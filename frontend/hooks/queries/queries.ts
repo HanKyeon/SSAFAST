@@ -655,8 +655,8 @@ export const useApiDetailAtTest = function (
   spaceId: string | number,
   apiId: string | number
 ) {
-  return useQuery<ApiDetailAtTest>({
-    queryKey: queryKeys.spaceApiDetail(spaceId, apiId),
+  return useQuery<ApiDetailInTest>({
+    queryKey: queryKeys.spaceUseCaseApiDetail(spaceId, apiId),
     queryFn: async function () {
       return apiRequest({
         method: `get`,
@@ -771,7 +771,7 @@ export const useUsecaseDetail = function (
         url: `/api/usecase/${usecaseId}`,
       }).then((res) => res.data.usecaseTest);
     },
-    enabled: !!spaceId && !!usecaseId && !isNew,
+    enabled: !!spaceId && !!usecaseId,
   });
 };
 
@@ -1175,7 +1175,7 @@ export const useApiSingleTestDetail = function (
   apiId: string | number
 ) {
   return useQuery<ApiDetailInTest>({
-    queryKey: queryKeys.spaceApiDetail(spaceId, apiId),
+    queryKey: queryKeys.spaceTestApiDetail(spaceId, apiId),
     queryFn: async function () {
       return getApiSingleTestDetail(apiId).then((res) => res.data);
     },

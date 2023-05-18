@@ -15,6 +15,7 @@ user                                  // 로그인or로그아웃 시 invalidate
       ㄴapi
         ㄴlist
         ㄴdetail, [apiId]
+          ㄴtestdetail
           ㄴresult
             ㄴlist
             ㄴdetail, [resId]
@@ -83,6 +84,24 @@ export const queryKeys = {
   // space에 귀속된 api 상세
   spaceApiDetail: (spaceId: string | number, apiId: string | number) =>
     [...queryKeys.spaceApi(spaceId), `detail`, `${apiId}`] as const,
+  spaceTestApiDetail: (spaceId: string | number, apiId: string | number) =>
+    [...queryKeys.spaceApiDetail(spaceId, apiId), `test-detail`] as const,
+  spaceUseCaseApiDetail: (spaceId: string | number, apiId: string | number) =>
+    [
+      ...queryKeys.spaceApiDetail(spaceId, apiId),
+      `test-detail`,
+      `usecase`,
+    ] as const,
+  spaceUseCaseApiDetailSpecial: (
+    spaceId: string | number,
+    apiId: string | number
+  ) =>
+    [
+      ...queryKeys.spaceApiDetail(spaceId, apiId),
+      `test-detail`,
+      `usecase`,
+      `refined`,
+    ] as const,
   // space의 section 하나에 귀속된 api들 => 사용
   spaceSection: (spaceId: string | number) =>
     [...queryKeys.spaceApi(spaceId), `section`] as const,

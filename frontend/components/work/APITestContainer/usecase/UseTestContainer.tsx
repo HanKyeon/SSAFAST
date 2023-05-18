@@ -35,6 +35,7 @@ import { useRouter } from 'next/router';
 import { SpaceParams } from '@/pages/space';
 import Logogogo from '@/components/common/Logogogo';
 import { UCContext, UCContextInterface } from '.';
+import useUcWithIds from '@/hooks/useUcWithIds';
 
 export interface RequestItem {
   [key: string]: {
@@ -106,35 +107,52 @@ const UseTestContainer = function () {
     id: 0,
     isNew: false,
   });
-  const { data: curUCData } = useUsecaseDetail(
+  const { data: curUCData, isFetching: ucDataFetching } = useUsecaseDetail(
     spaceId,
     curUsecase.id,
     curUsecase.isNew ? curUsecase.isNew : false
   );
   const onClickUsecaseItem = (usecase: UsecaseListItemType) => {
-    setCurUsecase({ ...usecase, isNew: false });
+    if (usecase) {
+      setCurUsecase({ ...usecase, isNew: false });
+      // setIsListModalOpen(() => false);
+      console.log(curUsecase);
+    }
   };
 
   const [curapi, setCurApi] = useState<UseTestApiCompactType>();
   const [apis, setApis] = useState<UseTestApiCompactType[]>([]);
   const [countApi, setCountApi] = useState<number>(0);
   const [resApiIds, setResApiIds] = useState<string>('');
+  const requestData = useUcWithIds(resApiIds);
+  // console.log('useCaseRequestConfig: ', requestData);
+  // console.log(JSON.stringify(requestData));
 
-  const methods = useForm<UsecaseDetailType>({
-    defaultValues: {
-      // name: '',
-      // desc: '',
-      rootApiId: '',
-      testDetails: {},
-    },
-  });
+  const methods = useForm<UsecaseDetailType>();
   const {
     control,
     handleSubmit,
     reset,
     setValue: setFormValue,
     getValues,
+    resetField,
   } = methods;
+
+  useEffect(
+    function () {
+      if (contextFormName && contextResName) {
+        console.log(contextFormName);
+        console.log(contextResName);
+        resetField(`${contextFormName}.value` as any, {
+          defaultValue: contextResName,
+        });
+        resetField(`${contextFormName}.mapped` as any, { defaultValue: true });
+        setContextFormName(() => ``);
+        setContextResName(() => ``);
+      }
+    },
+    [contextFormName, contextResName]
+  );
 
   const onToggleListModal = (): void => {
     setIsListModalOpen((prev) => !prev);

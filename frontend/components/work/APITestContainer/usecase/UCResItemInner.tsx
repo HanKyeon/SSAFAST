@@ -6,10 +6,23 @@ import { Box, Input } from '@/components/common';
 import { useStoreSelector } from '@/hooks/useStore';
 import { HiChatBubbleBottomCenterText } from 'react-icons/hi2';
 
+const typeList = [
+  '',
+  'String',
+  'Integer',
+  'Long',
+  'Float',
+  'Double',
+  'Boolean',
+  'MultipartFile',
+  'Date',
+  'LocalDateTime',
+];
+
 type UCResInnerPropsType = {
   item: ApiDetailAtTestItem;
   //   control: Control<UsecaseDetailType, any>;
-  control: any;
+  control?: any;
   formName: string;
   depth?: number;
 };
@@ -33,15 +46,14 @@ const UCResItemInner = function ({
   const [mapped, setMapped] = useState<boolean>(false);
 
   const onClickResItem = (): void => {
-    console.log('안뿡');
+    // console.log('안뿡');
     if (contextFormName) {
-      setMappedFormName(contextFormName);
-      setContextResName(item.keyName);
-      setContextMapped(true);
-      console.log('뿡!', contextFormName);
-      setMapped(true);
+      // setMappedFormName(contextFormName);
+      setContextResName(formName);
+      // console.log('뿡!', formName);
     }
   };
+  // console.log('req에 mapped된 formname은요', contextFormName);
 
   // useEffect(() => {
   //   if (!contextMapped) {
@@ -51,7 +63,7 @@ const UCResItemInner = function ({
   // }, [contextMapped]);
 
   const styles = {
-    innerBox: `w-full h-auto flex items-center overflow-hidden relative ${
+    innerBox: `w-full h-auto flex items-center overflow-hidden rounded-[8px] relative ${
       depth === 0
         ? isDark
           ? 'bg-grayscale-deepdark text-white'
@@ -117,27 +129,30 @@ const UCResItemInner = function ({
             <p className={`truncate text-ellipsis`}>{item.desc}</p>
           </div>
         </div>
-        <div className={`${styles['type']}`}>{item.type}</div>
+        <div className={`${styles['type']}`}>
+          {typeList[item.type as number]}
+        </div>
         {/* <div className={`${styles['desc']}`}>{item.desc}</div> */}
       </div>
       {mapped && (
-        <Controller
-          name={`${mappedFormName}.value`}
-          control={control}
-          defaultValue={formName}
-          render={({ field, fieldState }) => {
-            return (
-              <Input
-                name={`${mappedFormName}.value`}
-                value={field.value}
-                onChange={field.onChange}
-                className={`w-full`}
-                placeholder="value"
-                type="hidden"
-              />
-            );
-          }}
+        <Input
+          // name={`${mappedFormName}.value`}
+          // value={field.value}
+          // onChange={field.onChange}
+          className={`w-full`}
+          placeholder="value"
+          type="hidden"
         />
+        // <Controller
+        //   name={`${mappedFormName}.value`}
+        //   control={control}
+        //   defaultValue={formName}
+        //   render={({ field, fieldState }) => {
+        //     return (
+
+        //     );
+        //   }}
+        // />
       )}
     </>
   );

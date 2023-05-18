@@ -31,12 +31,7 @@ const typeList = [
 ];
 
 interface UCReqItemInnerPropsType {
-  item:
-    | HeadersType
-    | FieldsType
-    | BodyType
-    | ApiDetailAtTestItem
-    | ApiDetailAtTestDtoInfo;
+  item: ApiDetailAtTestDtoInfo | ApiDetailAtTestItem;
   className?: string;
   depth?: 0 | 1 | 2;
   control?: any;
@@ -45,7 +40,15 @@ interface UCReqItemInnerPropsType {
   formName: string;
 }
 
-const UCReqItemInner = function ({
+// ApiDetailAtTestItem
+// keyName: string;
+// type: number;
+// desc: string;
+// value?: any;
+// itera?: boolean;
+// constraints?: string[];
+
+const UCReqItemDtoInner = function ({
   name,
   control,
   item,
@@ -313,4 +316,4 @@ const UCReqItemInner = function ({
   );
 };
 
-export default UCReqItemInner;
+export default UCReqItemDtoInner;
