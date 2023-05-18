@@ -3,7 +3,6 @@ import { UseTestApiCompactType } from './UseTestContainer';
 import { SpaceParams } from '@/pages/space';
 import {
   PrevResponse,
-  PrevResponses,
   UsecaseDetailType,
   UsecaseListItemType,
   useUsecaseResponses,
@@ -143,7 +142,7 @@ const UCResBox = function ({
   }, [resDatas]);
   return (
     <div className={`flex-1 overflow-scroll scrollbar-hide`}>
-      {resDatas?.prevResponses.map((resData: PrevResponse, idx: number) => (
+      {resDatas?.map((resData: PrevResponse, idx: number) => (
         <UCResItem
           key={`${resData.apiId}_${idx}`}
           item={resData}

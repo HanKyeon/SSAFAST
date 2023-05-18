@@ -314,6 +314,12 @@ const UseTestContainer = function () {
   const onClickAddApiBtn = (): void => {
     onToggleAddApiModal();
   };
+  const onClickClearApis = (): void => {
+    setCurApi(undefined);
+    setApis([]);
+    setCountApi(0);
+    // 지금까지 만들어졌던 useForm의 method 그 data는 자동으로 초기화되나,,?
+  };
 
   const { mutateAsync: testMutate } = useTestUsecase(spaceId);
   const onClickTest = (data: UsecaseDetailType): void => {
@@ -332,8 +338,8 @@ const UseTestContainer = function () {
         .slice(0, curapi.idx);
       // queryParams.set('apiIds', apiIds.join(','));
       setResApiIds(apiIds.join(','));
-      console.log('!!!!!!!!!!!', apiIds.join(','));
-      console.log('?????????????', apiIds);
+      // console.log('!!!!!!!!!!!', apiIds.join(','));
+      // console.log('?????????????', apiIds);
     }
   }, [curapi]);
 
@@ -404,6 +410,7 @@ const UseTestContainer = function () {
                 apis={apis}
                 onClickApi={onClickApi}
                 onClickAddApiBtn={onClickAddApiBtn}
+                onClickClearApis={onClickClearApis}
               />
               {/* Request */}
               <Box

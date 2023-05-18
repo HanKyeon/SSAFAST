@@ -51,7 +51,7 @@ const UCResItem = function ({
   return (
     <div className={`${styles1[`style`]} w-full`}>
       <ToggleableHeader title={name} isOpen={isOpen} setIsOpen={setisOpen} />
-      {item.headers && (
+      {item.headers && item.headers.length > 0 && (
         <div className={`w-full`}>
           <p>headers</p>
           {item.headers.map((headerItem: ApiDetailAtTestItem, idx: number) => (
@@ -68,6 +68,42 @@ const UCResItem = function ({
           ))}
         </div>
       )}
+      {item.body &&
+        ((item.body.fields && item.body.fields.length > 0) ||
+          item.body.nestedDtos ||
+          item.body.nestedDtoLists) && (
+          <div className={`w-full`}>
+            <p>body</p>
+            {item.body.fields?.map(
+              (headerItem: ApiDetailAtTestItem, idx: number) => (
+                <div
+                  className={`w-[87%] rounded-[13px] overflow-hidden mt-0 mb-3 mx-auto text-content duration-[0.33s]`}
+                  key={`${headerItem.keyName}_${idx}`}
+                >
+                  <UCResItemInner
+                    item={headerItem}
+                    control={control}
+                    formName={`${formName}.headers.${headerItem.keyName}`}
+                  />
+                </div>
+              )
+            )}
+            {item.body.fields?.map(
+              (headerItem: ApiDetailAtTestItem, idx: number) => (
+                <div
+                  className={`w-[87%] rounded-[13px] overflow-hidden mt-0 mb-3 mx-auto text-content duration-[0.33s]`}
+                  key={`${headerItem.keyName}_${idx}`}
+                >
+                  <UCResItemInner
+                    item={headerItem}
+                    control={control}
+                    formName={`${formName}.headers.${headerItem.keyName}`}
+                  />
+                </div>
+              )
+            )}
+          </div>
+        )}
 
       {/* {item.body && (
         <div className={`w-full`}>

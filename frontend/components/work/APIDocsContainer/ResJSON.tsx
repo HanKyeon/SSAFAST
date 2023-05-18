@@ -27,7 +27,7 @@ import { ResType } from './ResBox';
 // };
 
 type ResJSONPropsType = {
-  response: string;
+  response: any;
 };
 
 const ResJSON = function ({ response }: ResJSONPropsType): JSX.Element {

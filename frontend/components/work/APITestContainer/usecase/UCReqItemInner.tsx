@@ -86,12 +86,10 @@ const UCReqItemInner = function ({
     setContextFormName(formName);
     console.log('formName 담았거든??', contextFormName);
   };
-
   const onClickSelfTyping = (): void => {
     setMapped(false);
   };
-
-  console.log('>>>>>>>>>>>>', item);
+  // console.log('>>>>>>>>>>>>', item);
 
   return (
     <>
