@@ -90,37 +90,39 @@ public class JavaPoetService {
 		});
 
 		// 3. Nested Dto 필드 생성
-		dtoInfo.getNestedDtos().forEach( (nestedDtoId, nestedDtos) -> {
+		if(dtoInfo.getNestedDtos() != null) {
+			dtoInfo.getNestedDtos().forEach( (nestedDtoId, nestedDtos) -> {
 
-			nestedDtos.forEach(nestedDto -> {
-				TypeName fieldType;
+				nestedDtos.forEach(nestedDto -> {
+					TypeName fieldType;
 
-				Optional<DtoSpecEntity> nestedDtoSpec = dtoSpecEntityRepository.findById(nestedDtoId);
-				if(!nestedDtoSpec.isPresent()) {
-					throw new CustomException(ErrorCode.DTO_NOT_FOUND);
-				}
+					Optional<DtoSpecEntity> nestedDtoSpec = dtoSpecEntityRepository.findById(nestedDtoId);
+					if(!nestedDtoSpec.isPresent()) {
+						throw new CustomException(ErrorCode.DTO_NOT_FOUND);
+					}
 
-				if(!nestedDto.isItera()) {
-					fieldType = ClassName.get(packageName, nestedDtoSpec.get().getName());
-				} else {
-					ClassName list = ClassName.get("java.util", "List");
-					fieldType = ParameterizedTypeName.get(list, ClassName.get(packageName, nestedDtoSpec.get().getName()));
-				}
+					if(!nestedDto.isItera()) {
+						fieldType = ClassName.get(packageName, nestedDtoSpec.get().getName());
+					} else {
+						ClassName list = ClassName.get("java.util", "List");
+						fieldType = ParameterizedTypeName.get(list, ClassName.get(packageName, nestedDtoSpec.get().getName()));
+					}
 
-				FieldSpec.Builder fieldBuilder;
-				if(nestedDto.getConstraints() == null) {
-					fieldBuilder = FieldSpec.builder(fieldType, nestedDto.getKeyName())
-						.addModifiers(Modifier.PRIVATE);
-				}
-				else {
-					fieldBuilder = FieldSpec.builder(fieldType, nestedDto.getKeyName())
-						.addModifiers(Modifier.PRIVATE)
-						.addAnnotations(getConstraintAnnotations(nestedDto.getConstraints()));
-				}
+					FieldSpec.Builder fieldBuilder;
+					if(nestedDto.getConstraints() == null) {
+						fieldBuilder = FieldSpec.builder(fieldType, nestedDto.getKeyName())
+							.addModifiers(Modifier.PRIVATE);
+					}
+					else {
+						fieldBuilder = FieldSpec.builder(fieldType, nestedDto.getKeyName())
+							.addModifiers(Modifier.PRIVATE)
+							.addAnnotations(getConstraintAnnotations(nestedDto.getConstraints()));
+					}
 
-				classBuilder.addField(fieldBuilder.build());
+					classBuilder.addField(fieldBuilder.build());
+				});
 			});
-		});
+		}
 
 		// 4. Class 생성
 		return JavaFile.builder(packageName, classBuilder.build()).build().toString();
