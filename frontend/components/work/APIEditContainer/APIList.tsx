@@ -29,6 +29,7 @@ import useInput from '@/hooks/useInput';
 import { UseTestApiCompactType } from '../APITestContainer/usecase/UseTestContainer';
 
 type APIListPropsType = {
+  isFiltered?: boolean;
   onToggleCheck?: (apiId: number | string, check: boolean) => void;
   selectedId?: number;
   setSelectedIdHandler?: (id: number) => void;
@@ -38,6 +39,7 @@ type APIListPropsType = {
 };
 
 const ApiList = function ({
+  isFiltered = false,
   toggleAddHandler,
   onClickApi,
   apiIdHandler,
@@ -104,6 +106,19 @@ const ApiList = function ({
     deleteMutate(categoryId);
     closeDeleteModal();
   };
+  // useEffect(
+  //   function () {
+  //     if (isFiltered) {
+  //       spaceApiList?.apiCategories.filter((data) => {
+  //         return data.apis.map((item, index) => {
+  //           item.method % 2;
+  //         });
+  //       });
+  //       console.log('spaceApiList"::::::::', spaceApiList);
+  //     }
+  //   },
+  //   [spaceApiList]
+  // );
 
   return (
     <ul

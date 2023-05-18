@@ -250,7 +250,7 @@ const ApiCreateForm = function ({ toggleAddHandler }: ApiCreateProps) {
 
       <Box
         fontType="normal"
-        className="flex justify-around flex-row items-center box-border"
+        className="flex justify-around flex-row items-center box-border pt-2"
       >
         <div
           className={`${step === 1 ? selectedStyle(dark) : ''} cursor-pointer `}

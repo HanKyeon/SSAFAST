@@ -581,6 +581,48 @@ export const useSaveSingleApiTest = function (spaceId: string | number) {
   });
 };
 
+export interface ValidateUrl {
+  certCodes: { baseurlId: number; code: number }[];
+}
+
+export const useValidateUrl = function (spaceId: string | number) {
+  const dispatch = useStoreDispatch();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: function (data: ValidateUrl) {
+      return apiRequest({
+        method: `post`,
+        url: `/api/overload/cert`,
+        data: data.certCodes,
+      });
+    },
+    onSuccess: function () {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.overloadCertUrlList(spaceId),
+      });
+      dispatch(DispatchToast('모든 URL 인증이 완료되었습니다.', true));
+    },
+    onError: function () {
+      dispatch(DispatchToast('URL 인증에 실패하였습니다.', false));
+    },
+  });
+};
+// export const useNewUsecase = function (workspaceId: string | number) {
+//   return useMutation({
+//     mutationFn: function (name: string, description: string) {
+//       return apiRequest({
+//         method: `post`,
+//         url: `api/usecase`,
+//       });
+//     },
+//     onSuccess:function(){
+//       QueryClient.invalidateQueries({
+//         queryKey:
+//       })
+//     }
+//   });
+// };
+
 // 유스케이스 테스트 생성
 export const useNewUsecase = function (workspaceId: string | number) {
   const dispatch = useStoreDispatch();
