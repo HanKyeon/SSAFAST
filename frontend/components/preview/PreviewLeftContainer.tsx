@@ -11,10 +11,12 @@ import {
 } from '@/hooks/queries/queries';
 import { SpaceParams } from '@/pages/space';
 import { useMemo } from 'react';
+import { useStoreSelector } from '@/hooks/useStore';
 
 const statusLsit = [``, `명세중`, `명세완료`, `개발중`, `개발완료`];
 
 const PreviewLeftContainer = function (): JSX.Element {
+  const { dark } = useStoreSelector((state) => state.dark);
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
   const {
@@ -45,28 +47,35 @@ const PreviewLeftContainer = function (): JSX.Element {
   );
   return (
     <div className="h-full flex-[2] py-3 flex flex-col gap-3 min-w-0">
-      <Box className="flex-[3] h-[40%] bg-preview bg-no-repeat bg-cover bg-center">
+      <Box
+        className={`flex-[3] h-[40%] bg-preview bg-no-repeat bg-cover bg-center ${
+          dark ? '' : 'invert'
+        }`}
+      >
         <div className="w-full h-full p-9 bg-basic-black bg-opacity-60 flex flex-col gap-2">
           {/* header */}
           <div className="flex gap-3 items-center">
-            <i>
-              <Image
-                src={spaceDetailData?.favicon || SpaceIcon}
-                alt="space icon"
-                className="w-[50px] h-[50px] object-contain"
-                width={500}
-                height={500}
-              />
-              {/* <img /> */}
-            </i>
-            <span className="text-[30px]">
+            <Image
+              src={spaceDetailData?.favicon || SpaceIcon}
+              alt="space icon"
+              className={`w-[50px] h-[50px] object-contain ${
+                dark ? '' : 'invert'
+              }`}
+              width={500}
+              height={500}
+            />
+            {/* <img /> */}
+
+            <span className={`text-[30px] ${dark ? '' : 'invert'}`}>
               {spaceDetailData?.name || `프로젝트가 없습니다.`}
             </span>
           </div>
           {/* pjt 설명 */}
-          <p>{spaceDetailData?.description || `프로젝트가 없습니다.`}</p>
+          <p className={`${dark ? '' : 'invert'}`}>
+            {spaceDetailData?.description || `프로젝트가 없습니다.`}
+          </p>
           {/* 기간 */}
-          <p className="text-[14px]">
+          <p className={`text-[14px] ${dark ? '' : 'invert'}`}>
             {spaceDetailData?.startDate} ~ {spaceDetailData?.endDate}
           </p>
           {/* stack이랑? figma 이미지 */}
@@ -83,7 +92,9 @@ const PreviewLeftContainer = function (): JSX.Element {
                 <img
                   src={spaceDetailData?.figmaImg}
                   alt="figma thumbnail"
-                  className="w-full h-full object-contain"
+                  className={`w-full h-full object-contain ${
+                    dark ? '' : 'invert'
+                  }`}
                 />
               </div>
             </div>

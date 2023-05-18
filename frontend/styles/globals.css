@@ -83,3 +83,7 @@ select {
   align-items: center;
   justify-content: center;
 }
+
+.get-pers {
+  perspective: 500px;
+}

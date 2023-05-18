@@ -82,7 +82,7 @@ module.exports = {
           light: `#D9D9D9`,
           deeplightlight: `#c6c6c6`,
           deeplight: `#B6B6B6`,
-          dark: `#9D9D9D`,
+          dark: `#7D7D7D`,
           deepdarklight: `#646464`,
           deepdark: `#515457`,
           deepdarkdeep: `#3A3C3F`,
@@ -456,6 +456,11 @@ module.exports = {
         shokshok: {
           '0%': { transform: 'scale(100%)' },
           '50%': { transform: 'scale(103%)' },
+        },
+        spinning: {
+          '0%': { transform: 'rotateY(0deg)' },
+          '50%': { transform: 'rotateY(180deg)' },
+          '100%': { transform: 'rotateY(360deg)' },
         },
       },
     },
