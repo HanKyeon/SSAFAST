@@ -321,7 +321,9 @@ const ApiWrite = function ({
                     >
                       {categoryListData?.categorys?.map((item, index) => (
                         <>
-                          <option value={item.id}>{item.name}</option>
+                          <option key={`${item.id}_${index}`} value={item.id}>
+                            {item.name}
+                          </option>
                         </>
                       ))}
                     </Select>
@@ -440,7 +442,7 @@ const ApiWrite = function ({
                         className={`w-full text-start items-start`}
                       >
                         {baseUrlListData?.baseurls?.map((item, index) => (
-                          <option selected={index === 0} value={item.id}>
+                          <option key={`${item.id}_${index}`} value={item.id}>
                             {item.url}
                           </option>
                         ))}
