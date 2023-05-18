@@ -14,6 +14,7 @@ import RequestForm from './RequestForm';
 import ResponseForm from './ResponseForm';
 import { useCreateApi } from '@/hooks/queries/mutations';
 import { useApiDetail } from '@/hooks/queries/queries';
+import apiRequest from '@/utils/axios';
 
 // Api interface
 export interface ApiCreateForm {
@@ -84,47 +85,6 @@ const ApiWrite = function ({
 
   let defaultData: ApiCreateForm | undefined;
 
-  // const refineConstraints = function (data: any) {
-  //   let constratints: any = [];
-  //   if (!!data.type && data.type < 11) {
-  //     constratints.push({
-  //       ...data.constratins
-  //         .map((constraint: any) => {
-  //           const mainName = constraint.mainName;
-  //           if (mainName === 'Max') {
-  //             if (constraint.maxV === null) {
-  //               return ``;
-  //             }
-  //             return `Max(value=${constraint.maxV})`;
-  //           } else if (mainName === `Min`) {
-  //             if (constraint.minV === null) {
-  //               return ``;
-  //             }
-  //             return `Min(value=${constraint.minV}`;
-  //           } else if (mainName === `Range`) {
-  //             if (constraint.minV === null || constraint.maxV === null) {
-  //               return ``;
-  //             }
-  //             return `Range(min=${constraint.minV},max=${constraint.maxV})`;
-  //           } else if (mainName === `Pattern`) {
-  //             return `${
-  //               constraint.validateReg?.length
-  //                 ? `Pattern(regexp=${constraint.validateReg})`
-  //                 : ``
-  //             }`;
-  //           } else if (mainName === `Length`) {
-  //             if (constraint.minV === null || constraint.maxV === null) {
-  //               return ``;
-  //             }
-  //             return `Length(min=${constraint.minV},max=${constraint.maxV})`;
-  //           }
-  //           return mainName;
-  //         })
-  //         .filter((v: string) => v.length !== 0),
-  //     });
-  //   }
-  // };
-
   const methods = useForm<ApiCreateForm>({
     defaultValues: defaultData,
   });
@@ -141,7 +101,7 @@ const ApiWrite = function ({
           workspaceId: parseInt(spaceId),
           name: '',
           description: '',
-          method: undefined,
+          method: 1,
           baseUrl: baseUrlListData?.baseurls[0].id as number,
           categoryId: categoryListData?.categorys[0].id as number,
           status: 1,
@@ -193,19 +153,92 @@ const ApiWrite = function ({
   );
 
   const onSubmit = async function (data: ApiCreateForm) {
-    console.log('API 요청 데이터', data);
+    // console.log('API 요청 데이터', data);
     let workspaceId = spaceId;
     let name = data.name;
     let description = data.description;
     let method = data.method;
     let baseUrl = data.baseUrl;
-    let cateforyId = data.categoryId;
+    let categoryId = data.categoryId;
     let status = data.status;
-    let document: any = { request: {}, response: {} };
+    let refinedocument: any = {
+      request: {
+        additionalUrl: data.document.request.additional_url,
+        headers: [...data.document.request.headers],
+        params: [...data.document.request.params],
+        pathVars: [...data.document.request.pathVars],
+      },
+      response: [],
+    };
+    let requestBody: any = { fields: [], nestedDtos: {} };
 
-    data.document.response;
+    for (const field of data.document.request.body.fields) {
+      if (field.type < 10) {
+        requestBody.fields.push(field);
+      } else {
+        let dtoData = {
+          keyName: field.keyName,
+          type: field.type,
+          desc: field.desc,
+          itera: false,
+          constraints: [],
+        };
+        if (requestBody.nestedDtos[field.type]) {
+          requestBody.nestedDtos[field.type].push(dtoData);
+        } else {
+          requestBody.nestedDtos[field.type] = [{ ...dtoData }];
+        }
+      }
+    }
+    refinedocument.request.body = { ...requestBody };
 
-    createMutateAsync(data).then(() => toggleAddHandler());
+    data.document.response.map((response) => {
+      let ret: any = {
+        statusCode: response.statusCode,
+        desc: response.desc,
+        headers: [...response.headers],
+        body: { fields: [], nestedDtos: {} },
+      };
+      response.body.fields.forEach((resBodyField) => {
+        if (parseInt(resBodyField.type) < 10) {
+          ret.body.fields.push({
+            keyName: resBodyField.keyName,
+            type: resBodyField.type,
+            desc: resBodyField.desc,
+            itera: resBodyField.itera,
+            constraints: [],
+          });
+        } else {
+          let resBodyDtoData = {
+            keyName: resBodyField.keyName,
+            type: resBodyField.type,
+            desc: resBodyField.desc,
+            itera: resBodyField.itera,
+            constraints: [],
+          };
+          if (ret.body.nestedDtos[resBodyField.type]) {
+            ret.body.nestedDtos[resBodyField.type].push(resBodyDtoData);
+          } else {
+            ret.body.nestedDtos[resBodyField.type] = [{ ...resBodyDtoData }];
+          }
+        }
+      });
+      refinedocument.response.push(ret);
+    });
+
+    const finalConfig = {
+      workspaceId: parseInt(workspaceId),
+      name,
+      description,
+      method,
+      baseUrl,
+      categoryId,
+      status,
+      document: { ...refinedocument },
+    };
+
+    console.log('제출 할 데이터 :', finalConfig);
+    createMutateAsync(finalConfig).then(() => toggleAddHandler());
   };
 
   const goToApiContainer = function () {

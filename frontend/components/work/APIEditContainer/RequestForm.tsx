@@ -5,6 +5,7 @@ import {
   useFieldArray,
   UseFormReturn,
   useFormContext,
+  useController,
 } from 'react-hook-form';
 import { Box, Button, CircleBtn, Input, Select } from '@/components/common';
 import { FormEvent, useCallback, useRef, useState } from 'react';
@@ -150,12 +151,21 @@ const RequestForm = function () {
       setPathOpen((prev) => !prev);
     }
   };
+  const { field: urlField } = useController({
+    name: `document.request.additional_url`,
+  });
 
   return (
     <>
-      <div className="flex flex-col w-full items-center justify-center gap-3 pb-10">
+      <div className="flex flex-col w-full items-center justify-center gap-3 pb-5">
         <div className="flex items-center w-[90%]">
-          <Input type="text" placeholder="Urn" className="" />
+          <Input
+            name={`document.request.additional_url`}
+            onChange={urlField.onChange}
+            type="text"
+            placeholder="Urn"
+            className=""
+          />
         </div>
       </div>
       {/* Params */}
