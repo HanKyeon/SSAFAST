@@ -14,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Slf4j//log 객체 자동으로 생성
 @RequiredArgsConstructor//final로 선언된 필드들에 대한 생성자를 자동으로 생성
@@ -38,9 +39,9 @@ public class ApiPreController {
     }
 
     @GetMapping("/list")
-    ResponseEntity<?> getApiPreList(@RequestParam Long workspaceId){
+    ResponseEntity<?> getApiPreList(@RequestParam Long workspaceId, @RequestParam(required = false) List<Integer> methods){
         try {
-            return new ResponseEntity<>(apiPreService.getApiCategoryList(workspaceId), HttpStatus.OK);
+            return new ResponseEntity<>(apiPreService.getApiCategoryList(workspaceId, methods), HttpStatus.OK);
         } catch (CustomException e){
             return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
         } catch (Exception e) {

@@ -7,6 +7,7 @@ import com.rocket.ssafast.apispec.repository.ApiSpecRepository;
 import com.rocket.ssafast.apispec.repository.CategoryEntityRepository;
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
+import com.rocket.ssafast.utils.UtilMethods;
 import com.rocket.ssafast.workspace.domain.Baseurl;
 import com.rocket.ssafast.workspace.dto.response.BaseurlDto;
 import com.rocket.ssafast.workspace.repository.BaseurlRepository;
@@ -105,7 +106,7 @@ public class ApiPreService {
                 .categorys(categoryDtos).build();
     }
 
-    public ApiCategoryListDto getApiCategoryList(Long workspaceId) {
+    public ApiCategoryListDto getApiCategoryList(Long workspaceId, List<Integer> methodFilterList) {
         //모든 카테고리 조회
         List<CategoryEntity> categoryEntities = categoryEntityRepository.findAllByWorkspaceId(workspaceId);
 
@@ -119,7 +120,21 @@ public class ApiPreService {
             log.info(categoryEntity.getApiSpecEntityList().toString());
             for(ApiSpecEntity apiSpecEntity : categoryEntity.getApiSpecEntityList()){
                 //apiDto를 add
-                apiSpecDto.add(apiSpecEntity.toDto());
+                if(methodFilterList == null){
+                    apiSpecDto.add(apiSpecEntity.toDto());
+                }
+
+                else{
+                    for(int methodNum : methodFilterList){
+                        if(apiSpecEntity.getMethod() == methodNum){
+                            apiSpecDto.add(apiSpecEntity.toDto());
+                            continue;
+                        }
+                    }
+
+                }
+
+
             }
             apiCategoryDto.setApis(apiSpecDto);
             categoryDtos.add(apiCategoryDto);
@@ -148,6 +163,6 @@ public class ApiPreService {
 
         categoryEntityRepository.deleteById(categoryId);
 
-        return getApiCategoryList(workspaceId);
+        return getApiCategoryList(workspaceId, null);
     }
 }
