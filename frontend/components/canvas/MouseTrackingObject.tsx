@@ -72,9 +72,11 @@ export class MTO implements MTOInterface {
     }
     if (this.bx > this.canvasWidth || this.bx < -10) {
       this.bx = Math.random() * (this.canvasWidth - 50 * 2 - 50 * 2) + 50 * 2;
+      this.size = 0;
     }
     if (this.by > this.canvasHeight || this.by < -10) {
       this.by = Math.random() * (this.canvasHeight - 50 * 2 - 50 * 2) + 50 * 2;
+      this.size = 0;
     }
   }
 }
