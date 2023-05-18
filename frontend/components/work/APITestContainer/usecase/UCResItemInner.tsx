@@ -25,6 +25,7 @@ type UCResInnerPropsType = {
   control?: any;
   formName: string;
   depth?: number;
+  className?: string;
 };
 
 const UCResItemInner = function ({
@@ -32,6 +33,7 @@ const UCResItemInner = function ({
   control,
   formName,
   depth = 0,
+  className,
 }: UCResInnerPropsType): JSX.Element {
   const { dark: isDark } = useStoreSelector((state) => state.dark);
   const {
@@ -116,7 +118,7 @@ const UCResItemInner = function ({
     <>
       <div
         onClick={onClickResItem}
-        className={`${styles['innerBox']} flex gap-3 cursor-pointer active:bg-grayscale-deepdarkdeep`}
+        className={`${styles['innerBox']} ${className} flex gap-3 cursor-pointer active:bg-grayscale-deepdarkdeep`}
       >
         <div className={`${styles['key']}`}>
           <div>{item.keyName}</div>

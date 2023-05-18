@@ -61,6 +61,7 @@ const UCResItemDto = function ({
                       key={`${fieldItem.keyName}-${fieldItem.type}-${idx}`}
                       formName={`${formName}.${dto.keyName}.${fieldItem.keyName}`}
                       item={fieldItem}
+                      className={`mt-3`}
                       // control={control}
                     />
                     // <Controller

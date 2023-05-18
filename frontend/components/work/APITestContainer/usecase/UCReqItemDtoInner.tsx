@@ -227,7 +227,7 @@ const UCReqItemDtoInner = function ({
                   />
                 )}
               />
-              {mapped ? (
+              {/* {mapped ? (
                 <Controller
                   name={`${formName}.mapped`}
                   control={control}
@@ -259,7 +259,7 @@ const UCReqItemDtoInner = function ({
                     />
                   )}
                 />
-              )}
+              )} */}
               {'constraints' in item && (
                 <Controller
                   name={`${formName}.constraints`}

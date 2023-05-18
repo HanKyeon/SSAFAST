@@ -128,8 +128,6 @@ const UseTestContainer = function () {
 
   const methods = useForm<UsecaseDetailType>({
     defaultValues: {
-      name: `${ucNameInput}`,
-      desc: `${ucDescInput}`,
       rootApiId: 0,
       testDetails: {},
     },
@@ -177,6 +175,7 @@ const UseTestContainer = function () {
       description: ucDescInput,
       workspaceId: spaceId,
     }).then((res) => {
+      console.log('usecaseTestId!!!!!!!!!', res.data.usecaseTestId);
       setCurUsecase({
         id: res.data.usecaseTestId,
         name: curUsecase.name,
@@ -215,8 +214,6 @@ const UseTestContainer = function () {
 
     // 지금까지 만들어졌던 useForm의 method 그 data도 초기화
     reset({
-      name: '',
-      desc: '',
       rootApiId: '',
       testDetails: {},
     });
@@ -234,6 +231,21 @@ const UseTestContainer = function () {
     );
     console.log('usecaes test submit 원본', data);
   };
+
+  const a = useUcWithIds(
+    apis
+      .map((api) => api.id)
+      .join(`,`)
+      .slice(1)
+  );
+  useEffect(
+    function () {
+      if (a) {
+        reset(a);
+      }
+    },
+    [a]
+  );
 
   useEffect(() => {
     // response 가져오기 위해 이전 api들의 id 가져오기
