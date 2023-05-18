@@ -587,28 +587,58 @@ export interface ApiDetailAtTestDto {
 }
 
 export interface ApiDetailAtTest {
-  request: {
-    additionalUrl: string;
-    headers?: ApiDetailAtTestItem[];
-    body?: {
-      fields?: ApiDetailAtTestItem[];
-      nestedDtos?: ApiDetailAtTestDto;
-      nestedDtoLists?: ApiDetailAtTestDto;
-    };
-    pathVars?: ApiDetailAtTestItem[];
-    params?: ApiDetailAtTestItem[];
+  apiId: string | number;
+  name: string;
+  description: string;
+  method: number;
+  status: number;
+  baseurlId: string | number;
+  categoryId: string | number;
+  member: {
+    id: number;
+    name: string;
+    email: string;
+    profileImg: string;
   };
-  response: {
-    statusCode: string | number;
-    desc: string;
-    headers?: ApiDetailAtTestItem[];
-    body?: {
-      fields?: ApiDetailAtTestItem[];
-      nestedDtos?: ApiDetailAtTestDto;
-      nestedDtoLists?: ApiDetailAtTestDto;
+  createdTime: Date;
+  document: {
+    request: {
+      additionalUrl: string;
+      headers?: ApiDetailAtTestItem[];
+      body?: {
+        fields?: ApiDetailAtTestItem[];
+        nestedDtos?: ApiDetailAtTestDto;
+        nestedDtoLists?: ApiDetailAtTestDto;
+      };
+      pathVars?: ApiDetailAtTestItem[];
+      params?: ApiDetailAtTestItem[];
     };
-  }[];
+    response: {} | null;
+  };
 }
+// export interface ApiDetailAtTest {
+//   request: {
+//     additionalUrl: string;
+//     headers?: ApiDetailAtTestItem[];
+//     body?: {
+//       fields?: ApiDetailAtTestItem[];
+//       nestedDtos?: ApiDetailAtTestDto;
+//       nestedDtoLists?: ApiDetailAtTestDto;
+//     };
+//     pathVars?: ApiDetailAtTestItem[];
+//     params?: ApiDetailAtTestItem[];
+//   };
+//   response: {
+//     statusCode: string | number;
+//     desc: string;
+//     headers?: ApiDetailAtTestItem[];
+//     body?: {
+//       fields?: ApiDetailAtTestItem[];
+//       nestedDtos?: ApiDetailAtTestDto;
+//       nestedDtoLists?: ApiDetailAtTestDto;
+//     };
+//   }[];
+// }
 
 // 상상 queries 희희
 // api 상세 조회 (단일테스트나 usecaseTest를 위한) (nestedDtoLists:{}가 필요)
@@ -617,7 +647,7 @@ export const useApiDetailAtTest = function (
   apiId: string | number
 ) {
   return useQuery<ApiDetailAtTest>({
-    queryKey: queryKeys.spaceApiDetail(spaceId, apiId), // 이거 key이름 수정필요!!!!
+    queryKey: queryKeys.spaceApiDetail(spaceId, apiId),
     queryFn: async function () {
       return apiRequest({
         method: `get`,
@@ -660,7 +690,7 @@ export const useUsecaseResponses = function (
         },
       }).then((res) => res.data);
     },
-    enabled: !!spaceId && !!ids,
+    enabled: !!spaceId && !!ids.length,
   });
 };
 

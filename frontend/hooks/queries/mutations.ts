@@ -4,6 +4,7 @@ import { AxiosRequestConfig } from 'axios';
 import { queryKeys } from './QueryKeys';
 import { useStoreDispatch } from '../useStore';
 import { DispatchLogout, DispatchToast } from '@/store';
+import { UsecaseDetailType } from './queries';
 
 export const useExample = function () {
   const dispatch = useStoreDispatch();
@@ -605,6 +606,48 @@ export const useNewUsecase = function (workspaceId: string | number) {
     onError: function () {
       dispatch(
         DispatchToast('새 유스케이스 테스트 생성에 실패하였습니다.', false)
+      );
+    },
+  });
+};
+
+export interface TestResponseType {
+  success: boolean; // 끝까지 성공했는지
+  lastApiId: string | number; // 마지막으로 실행한 apiId
+  // 마지막으로 실행한 api 응답메세지
+  lastApiResponse: {
+    headers: any;
+    body: {
+      result: any;
+    };
+    statusCode: string;
+    statusCodeValue: number;
+  };
+}
+
+// 유스케이스 테스트 실행 & 수정
+export const useTestUsecase = function (spaceId: string | number) {
+  const queryClient = useQueryClient();
+  const dispatch = useStoreDispatch();
+  return useMutation({
+    mutationFn: function (testData: UsecaseDetailType) {
+      return apiRequest({
+        method: `put`,
+        url: `/api/usecase/exec`,
+        data: testData,
+      });
+    },
+    onSuccess: function () {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.usecase(spaceId),
+      });
+      dispatch(
+        DispatchToast('유스케이스 테스트가 현재 상태로 저장되었습니다.', true)
+      );
+    },
+    onError: function () {
+      dispatch(
+        DispatchToast('유스케이스 테스트 실행 및 저장에 실패하였습니다.', false)
       );
     },
   });

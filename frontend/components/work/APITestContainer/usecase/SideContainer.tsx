@@ -6,6 +6,7 @@ import { Box, Button } from '@/components/common';
 import { UsecaseListItemType, useUsecaseDetail } from '@/hooks/queries/queries';
 import { useRouter } from 'next/router';
 import { SpaceParams } from '@/pages/space';
+import { useTestUsecase } from '@/hooks/queries/mutations';
 
 type SideContainerPropsType = {
   curUsecase: UsecaseListItemType;
@@ -31,6 +32,7 @@ const SideContainer = function ({
     curUsecase.id,
     curUsecase.isNew ? curUsecase.isNew : false
   );
+
   return (
     <Box
       variant="two"
@@ -87,11 +89,14 @@ const SideContainer = function ({
       {/* 버튼 wrapper */}
       <div className={`w-full flex gap-3`}>
         <Button
+          type="button"
           className={`flex-1 !bg-mammoth-normal !border-mammoth-normal !py-1`}
         >
           초기화
         </Button>
-        <Button className={`flex-1 !py-1`}>실행</Button>
+        <Button type="submit" className={`flex-1 !py-1`}>
+          실행
+        </Button>
       </div>
     </Box>
   );

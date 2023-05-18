@@ -18,163 +18,167 @@ import UCReqBox from './UCReqBox';
 import UCResBox from './UCResBox';
 import SideContainer from './SideContainer';
 import UsecaseList from './UsecaseList';
-import { useNewUsecase } from '@/hooks/queries/mutations';
+import {
+  TestResponseType,
+  useNewUsecase,
+  useTestUsecase,
+} from '@/hooks/queries/mutations';
 import { useRouter } from 'next/router';
 import { SpaceParams } from '@/pages/space';
 
-const mockupData2: MockupData2Type = {
-  request: {
-    headers: [
-      {
-        keyName: 'Content-Type',
-        type: 'String',
-        desc: 'Define request data type',
-        value: null,
-      },
-      {
-        keyName: 'Age',
-        type: 'Integer',
-        desc: 'Fields for cashing',
-        value: null,
-      },
-    ],
-    body: {
-      fields: [
-        {
-          keyName: 'ID',
-          type: 1,
-          desc: '사용자 ID',
-          itera: false,
-          constraints: ['NotNull'],
-          value: null,
-        },
-        {
-          keyName: 'PW',
-          type: 1,
-          desc: '사용자 PW',
-          itera: false,
-          constraints: ['NotNull'],
-          value: null,
-        },
-      ],
-      nestedDtos: {
-        '11': {
-          name: 'UserInfo', // 실제 dto class 이름
-          keyName: '11Dto', // 사용자가 지정한 변수명 e.g) Test test2;
-          desc: '사용자 정보를 저장하는 class',
-          itera: false,
-          fields: [
-            {
-              keyName: 'userID',
-              type: 1,
-              desc: '추천인ID',
-              value: null,
-              itera: false,
-              constraints: ['NotNull'],
-            },
-            {
-              keyName: 'userPW',
-              type: 1,
-              desc: '추천인PW',
-              value: null,
-              itera: false,
-              constraints: ['NotNull'],
-            },
-          ],
-          nestedDtos: {},
-        },
-        '8': {
-          name: 'UserInfo', // 실제 dto class 이름
-          keyName: '8Dto', // 사용자가 지정한 변수명 e.g) Test test2;
-          desc: '사용자 정보를 저장하는 class',
-          itera: false,
-          fields: [
-            {
-              keyName: 'userID',
-              type: 1,
-              desc: '추천인ID',
-              value: null,
-              itera: false,
-              constraints: ['NotNull'],
-            },
-            {
-              keyName: 'userPW',
-              type: 1,
-              desc: '추천인PW',
-              value: null,
-              itera: false,
-              constraints: ['NotNull'],
-            },
-          ],
-          nestedDtos: {
-            '7': {
-              name: 'UserInfo', // 실제 dto class 이름
-              keyName: '7Dto', // 사용자가 지정한 변수명 e.g) Test test2;
-              desc: '사용자 정보를 저장하는 class',
-              itera: false,
-              fields: [
-                {
-                  keyName: 'userID',
-                  type: 1,
-                  desc: '추천인ID',
-                  value: null,
-                  itera: false,
-                  constraints: ['NotNull'],
-                },
-                {
-                  keyName: 'userPW',
-                  type: 1,
-                  desc: '추천인PW',
-                  value: null,
-                  itera: false,
-                  constraints: ['NotNull'],
-                },
-              ],
-              nestedDtos: {},
-            },
-          },
-        },
-      },
-      nestedDtoList: {
-        '12': {
-          name: 'RecUserInfo',
-          keyName: null,
-          desc: '추천한 사용자들의 정보를 담는 class',
-          itera: true,
-          fields: [
-            {
-              keyName: 'userID',
-              type: 1,
-              desc: '추천인ID',
-              value: null,
-              itera: false,
-              constraints: ['NotNull'],
-            },
-          ],
-          nestedDtos: {},
-        },
-      },
-    },
-    pathVars: [
-      {
-        keyName: 'userid',
-        type: 'String',
-        desc: 'for login',
-        constraints: ['NotNull'],
-        value: null,
-      },
-    ],
-    params: [
-      {
-        keyName: 'age',
-        type: 'int',
-        desc: 'user age',
-        constraints: ['NotNull'],
-        value: null,
-      },
-    ],
-  },
-};
+// const mockupData2: MockupData2Type = {
+//   request: {
+//     headers: [
+//       {
+//         keyName: 'Content-Type',
+//         type: 'String',
+//         desc: 'Define request data type',
+//         value: null,
+//       },
+//       {
+//         keyName: 'Age',
+//         type: 'Integer',
+//         desc: 'Fields for cashing',
+//         value: null,
+//       },
+//     ],
+//     body: {
+//       fields: [
+//         {
+//           keyName: 'ID',
+//           type: 1,
+//           desc: '사용자 ID',
+//           itera: false,
+//           constraints: ['NotNull'],
+//           value: null,
+//         },
+//         {
+//           keyName: 'PW',
+//           type: 1,
+//           desc: '사용자 PW',
+//           itera: false,
+//           constraints: ['NotNull'],
+//           value: null,
+//         },
+//       ],
+//       nestedDtos: {
+//         '11': {
+//           name: 'UserInfo', // 실제 dto class 이름
+//           keyName: '11Dto', // 사용자가 지정한 변수명 e.g) Test test2;
+//           desc: '사용자 정보를 저장하는 class',
+//           itera: false,
+//           fields: [
+//             {
+//               keyName: 'userID',
+//               type: 1,
+//               desc: '추천인ID',
+//               value: null,
+//               itera: false,
+//               constraints: ['NotNull'],
+//             },
+//             {
+//               keyName: 'userPW',
+//               type: 1,
+//               desc: '추천인PW',
+//               value: null,
+//               itera: false,
+//               constraints: ['NotNull'],
+//             },
+//           ],
+//           nestedDtos: {},
+//         },
+//         '8': {
+//           name: 'UserInfo', // 실제 dto class 이름
+//           keyName: '8Dto', // 사용자가 지정한 변수명 e.g) Test test2;
+//           desc: '사용자 정보를 저장하는 class',
+//           itera: false,
+//           fields: [
+//             {
+//               keyName: 'userID',
+//               type: 1,
+//               desc: '추천인ID',
+//               value: null,
+//               itera: false,
+//               constraints: ['NotNull'],
+//             },
+//             {
+//               keyName: 'userPW',
+//               type: 1,
+//               desc: '추천인PW',
+//               value: null,
+//               itera: false,
+//               constraints: ['NotNull'],
+//             },
+//           ],
+//           nestedDtos: {
+//             '7': {
+//               name: 'UserInfo', // 실제 dto class 이름
+//               keyName: '7Dto', // 사용자가 지정한 변수명 e.g) Test test2;
+//               desc: '사용자 정보를 저장하는 class',
+//               itera: false,
+//               fields: [
+//                 {
+//                   keyName: 'userID',
+//                   type: 1,
+//                   desc: '추천인ID',
+//                   value: null,
+//                   itera: false,
+//                   constraints: ['NotNull'],
+//                 },
+//                 {
+//                   keyName: 'userPW',
+//                   type: 1,
+//                   desc: '추천인PW',
+//                   value: null,
+//                   itera: false,
+//                   constraints: ['NotNull'],
+//                 },
+//               ],
+//               nestedDtos: {},
+//             },
+//           },
+//         },
+//       },
+//       nestedDtoList: {
+//         '12': {
+//           name: 'RecUserInfo',
+//           keyName: null,
+//           desc: '추천한 사용자들의 정보를 담는 class',
+//           itera: true,
+//           fields: [
+//             {
+//               keyName: 'userID',
+//               type: 1,
+//               desc: '추천인ID',
+//               value: null,
+//               itera: false,
+//               constraints: ['NotNull'],
+//             },
+//           ],
+//           nestedDtos: {},
+//         },
+//       },
+//     },
+//     pathVars: [
+//       {
+//         keyName: 'userid',
+//         type: 'String',
+//         desc: 'for login',
+//         constraints: ['NotNull'],
+//         value: null,
+//       },
+//     ],
+//     params: [
+//       {
+//         keyName: 'age',
+//         type: 'int',
+//         desc: 'user age',
+//         constraints: ['NotNull'],
+//         value: null,
+//       },
+//     ],
+//   },
+// };
 
 export interface RequestItem {
   [key: string]: {
@@ -310,21 +314,31 @@ const UseTestContainer = function () {
   const onClickAddApiBtn = (): void => {
     onToggleAddApiModal();
   };
-  const checkData = function (data: UsecaseDetailType) {
+
+  const { mutateAsync: testMutate } = useTestUsecase(spaceId);
+  const onClickTest = (data: UsecaseDetailType): void => {
+    testMutate(data).then(({ data }) =>
+      console.log('mutate 햇다@@@@@@!!!!!', data)
+    );
     console.log('usecaes test submit 원본', data);
   };
+
   useEffect(() => {
     // response 가져오기 위해 이전 api들의 id 가져오기
     if (curapi) {
-      const queryParams = new URLSearchParams();
+      // const queryParams = new URLSearchParams();
       const apiIds = apis
         .map((api: UseTestApiCompactType) => api.id)
         .slice(0, curapi.idx);
-      queryParams.set('apiIds', apiIds.join(','));
-      setResApiIds(queryParams.toString());
-      // console.log('!!!!!!!!!!!', queryParams.toString());
+      // queryParams.set('apiIds', apiIds.join(','));
+      setResApiIds(apiIds.join(','));
+      console.log('!!!!!!!!!!!', apiIds.join(','));
+      console.log('?????????????', apiIds);
     }
   }, [curapi]);
+
+  // test가넝한api
+  // 123, Test API, testAPI
 
   return (
     <Box variant="one" fontType="header" className="h-full w-full">
@@ -382,7 +396,7 @@ const UseTestContainer = function () {
           <FormProvider {...methods}>
             <form
               className="h-full w-full flex gap-[1.12%]"
-              onSubmit={handleSubmit(checkData)}
+              onSubmit={handleSubmit(onClickTest)}
             >
               {/* 왼쪽 사이드 */}
               <SideContainer
@@ -418,7 +432,7 @@ const UseTestContainer = function () {
                     curUsecase={curUsecase}
                     control={control}
                     currentApi={curapi}
-                    resApis={resApiIds}
+                    resApiIds={resApiIds}
                   />
                 )}
               </Box>
