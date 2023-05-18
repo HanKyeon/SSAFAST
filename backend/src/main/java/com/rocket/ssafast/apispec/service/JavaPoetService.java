@@ -2,6 +2,7 @@ package com.rocket.ssafast.apispec.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.lang.model.element.Modifier;
 
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 import com.rocket.ssafast.apispec.domain.Enum.ContraintType;
 import com.rocket.ssafast.apispec.domain.Enum.JavaType;
 import com.rocket.ssafast.apispec.dto.request.JavaPoetBodyDto;
+import com.rocket.ssafast.dtospec.domain.DtoSpecEntity;
+import com.rocket.ssafast.dtospec.repository.DtoSpecEntityRepository;
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
 import com.squareup.javapoet.AnnotationSpec;
@@ -22,11 +25,15 @@ import com.squareup.javapoet.TypeSpec;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class JavaPoetService {
+
+	private final DtoSpecEntityRepository dtoSpecEntityRepository;
 
 	public String generateDtoClassCode(JavaPoetBodyDto javaPoetBodyDto) throws Exception {
 		String packageName = "com.example.dto";
@@ -65,11 +72,16 @@ public class JavaPoetService {
 			String fieldName = nestedDto.getKey();
 			TypeName fieldType;
 
+			Optional<DtoSpecEntity> dtoSpec = dtoSpecEntityRepository.findById(nestedDto.getType());
+			if(!dtoSpec.isPresent()) {
+				throw new CustomException(ErrorCode.DTO_NOT_FOUND);
+			}
+
 			if(!nestedDto.getItera()) {
-				fieldType = ClassName.get(packageName, nestedDto.getType());
+				fieldType = ClassName.get(packageName, dtoSpec.get().getName());
 			} else {
 				ClassName list = ClassName.get("java.util", "List");
-				fieldType = ParameterizedTypeName.get(list, ClassName.get(packageName, nestedDto.getType()));
+				fieldType = ParameterizedTypeName.get(list, ClassName.get(packageName, dtoSpec.get().getName()));
 			}
 
 			FieldSpec.Builder fieldBuilder = FieldSpec.builder(fieldType, fieldName)

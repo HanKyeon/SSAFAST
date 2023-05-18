@@ -1,0 +1,239 @@
+{
+    "rootApiId": "1",
+    "testDetails": {
+        "1" : {
+            "additionalUrl" : "/api/api-exec/:id/test/json-multipart/:userId",
+            "request" : {
+                "headers" : {
+                    "Content-Type": {
+                        "type" : "String",
+                        "desc" : "Define request data type",
+                        "mapped": false,
+                        "value" : "multipart/form-data"
+                    },
+                    "Authorization" : {
+                        "type" : "String",
+                        "desc" : "access token",
+                        "mapped": false,
+                        "value" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2ODM4MjA3NzUsInN1YiI6ImFjY2Vzcy10b2tlbiIsImVtYWlsIjoiY2hvaHllb245NzA4QGdtYWlsLmNvbSJ9.VUBAYPlyDbRXAoFKqNDvDqWfoQo8mIomHkZGRjiGLX1XW4Aj6x7W52xt9s-p9qLSEPJvKiJKjHl9yZjlrqEM_w"
+                    }
+                },
+                "pathVars" : {
+                    "id":{
+                        "type" : "long",
+                        "desc" : "패스 벨류 보내기",
+                        "itera" : false,
+                        "constraints" : [
+                            "NotEmpty"
+                        ],
+                        "mapped": false,
+                        "value" : 1
+                    },
+                    "userId":{
+                        "type" : "String",
+                        "desc" : "패스 벨류 보내기",
+                        "itera" : false,
+                        "constraints" : [
+                            "NotEmpty"
+                        ],
+                        "mapped": false,
+                        "value" : "1111"
+                    }
+                },
+                "params" : {
+                    "longParam":{
+                        "type" : "long",
+                        "desc" : "쿼리 파람 보내기",
+                        "itera" : false,
+                        "constraints" : [
+                            "NotEmpty"
+                        ],
+                        "mapped": false,
+                        "value" : 44
+                    },
+                    "stringParam":{
+                        "type" : "String",
+                        "desc" : "쿼리 파람 보내기",
+                        "itera" : false,
+                        "constraints" : [
+                            "NotEmpty"
+                        ],
+                        "mapped": false,
+                        "value" : "444444444444"
+                    }
+                },
+                "body" : {
+                    "nestedDtos" : {
+                        "user": {
+                            "itera" : false,
+                            "fields" : {
+                                "id": {
+                                    "type" : "long",
+                                    "desc" : "-",
+                                    "itera" : false,
+                                    "constraints" : [
+                                        "NotEmpty"
+                                    ],
+                                    "mapped": false,
+                                    "value" : 1
+                                },
+                                "name": {
+                                    "type" : "String",
+                                    "desc" : "이름",
+                                    "itera" : false,
+                                    "constraints" : [
+                                        "NotEmpty"
+                                    ],
+                                    "mapped": false,
+                                    "value" : "John Doe"
+                                },
+                                "age": {
+                                    "type" : "int",
+                                    "desc" : "나이",
+                                    "itera" : false,
+                                    "constraints" : [
+                                        "NotEmpty"
+                                    ],
+                                    "mapped": false,
+                                    "value" : 35
+                                }
+                            }
+                        },
+                        "address": {
+                            "itera" : true,
+                            "fieldsList" : [
+                                {
+                                    "num": {
+                                        "type" : "String",
+                                        "desc" : "주문번호",
+                                        "itera" : false,
+                                        "constraints" : [
+                                            "NotEmpty"
+                                        ],
+                                        "mapped": false,
+                                        "value" : "202305081445861"
+                                    }
+                                },
+                                {
+                                    "num": {
+                                        "type" : "String",
+                                        "desc" : "주문번호",
+                                        "itera" : false,
+                                        "constraints" : [
+                                            "NotEmpty"
+                                        ],
+                                        "mapped": false,
+                                        "value" : "11111111111111"
+                                    }
+                                }
+                            ]
+                        }  
+                    }
+                }
+            },
+            "response" : {
+                "headers" : {
+                    "Authorization" : {
+                        "type" : "String",
+                        "desc" : "access token"
+                    }
+                },
+                "body": {
+                    "nestedDtos": {
+                        "user" : {
+                            "itera" : false,
+                            "fields" : {
+                                "id": {
+                                    "type" : "long",
+                                    "desc" : "user pk",
+                                    "itera" : false
+                                },
+                                "name": {
+                                    "type" : "String",
+                                    "desc" : "사람 이름",
+                                    "itera" : false
+                                },
+                                "age": {
+                                    "type" : "int",
+                                    "desc" : "사람 나이",
+                                    "itera" : false
+                                },
+                                "pTest":  {
+                                    "type" : "String",
+                                    "desc" : "쿼리 파람 테스트",
+                                    "itera" : false
+                                }
+                            },
+                            "finalNestedDtos" : {
+                                "address": {
+                                    "itera" : false,
+                                    "fields" : {
+                                        "id": {
+                                            "type" : "long",
+                                            "desc" : "address pk",
+                                            "itera" : false
+                                        },
+                                        "street": {
+                                            "type" : "String",
+                                            "desc" : "길",
+                                            "itera" : false
+                                        },
+                                        "city": {
+                                            "type" : "String",
+                                            "desc" : "시군구",
+                                            "itera" : false
+                                        },
+                                        "state": {
+                                            "type" : "String",
+                                            "desc" : "주",
+                                            "itera" : false
+                                        }
+                                    }
+                                },
+                                "orderList": {
+                                    "itera" : true,
+                                    "fieldsList" : [
+                                        {
+                                            "id": {
+                                                "type" : "long",
+                                                "desc" : "order의 ok",
+                                                "itera" : false
+                                            },
+                                            "userId": {
+                                                "type" : "long",
+                                                "desc" : "주문자ㅏid",
+                                                "itera" : false
+                                            },
+                                            "num": {
+                                                "type" : "String",
+                                                "desc" : "주문번호",
+                                                "itera" : false
+                                            }
+                                        },
+                                        {
+                                            "id": {
+                                                "type" : "long",
+                                                "desc" : "order의 ok",
+                                                "itera" : false
+                                            },
+                                            "userId": {
+                                                "type" : "long",
+                                                "desc" : "주문자ㅏid",
+                                                "itera" : false
+                                            },
+                                            "num": {
+                                                "type" : "String",
+                                                "desc" : "주문번호",
+                                                "itera" : false
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

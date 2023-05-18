@@ -1,130 +1,216 @@
 package com.rocket.ssafast.overload.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rocket.ssafast.apispec.domain.Document.ApiTestResultDocument;
-import com.rocket.ssafast.apispec.domain.Entity.ApiTestResultEntity;
+import com.rocket.ssafast.apiexec.dto.request.ReqApiExecMessageDto;
 import com.rocket.ssafast.apispec.domain.Enum.HTTPMethod;
-import com.rocket.ssafast.apispec.dto.request.ApiExecReqMessageDto;
-import com.rocket.ssafast.apispec.dto.request.ApiTestResultDto;
-import com.rocket.ssafast.apispec.dto.response.ApiTestResultSummaryDto;
 import com.rocket.ssafast.apispec.repository.ApiSpecRepository;
-import com.rocket.ssafast.apispec.repository.ApiTestResultDocsRepository;
-import com.rocket.ssafast.apispec.repository.ApiTestResultEntityRepository;
 import com.rocket.ssafast.auth.service.RedisService;
 import com.rocket.ssafast.exception.CustomException;
 import com.rocket.ssafast.exception.ErrorCode;
+import com.rocket.ssafast.overload.domain.OverloadTestHistory;
 import com.rocket.ssafast.overload.dto.request.CertCodeDto;
-import com.rocket.ssafast.overload.dto.request.OverloadExecDto;
-import com.rocket.ssafast.overload.dto.response.CheckBaseurlDto;
+import com.rocket.ssafast.overload.dto.response.*;
+import com.rocket.ssafast.overload.repository.OverloadTestHistoryRepository;
 import com.rocket.ssafast.workspace.domain.Baseurl;
-import com.rocket.ssafast.workspace.domain.Workspace;
 import com.rocket.ssafast.workspace.dto.response.BaseurlDto;
 import com.rocket.ssafast.workspace.repository.BaseurlRepository;
 import com.rocket.ssafast.workspace.repository.WorkspaceRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.UnknownContentTypeException;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OverloadService {
-
 	@Value("${mongoid.document.test}")
 	private String SSAFAST_TEST_ID;
 	private static final RestTemplate restTemplate;
 	private final BaseurlRepository baseurlRepository;
 	private final WorkspaceRepository workspaceRepository;
 	private final RedisService redisService;
+	private final OverloadTestHistoryRepository overloadTestHistoryRepository;
+	private final ApiSpecRepository apiSpecRepository;
 
-	public ResponseEntity<?> requestOverload(OverloadExecDto overloadExecDto) throws JsonProcessingException {
-		ApiExecReqMessageDto apiExecReqMessageDto = overloadExecDto.getApiExecReqMessageDto();
+	public OverloadTestResDto testOverloadTest(
+			ReqApiExecMessageDto reqApiExecMessageDto,
+			MultipartFile[] files, MultipartFile[][] filesArr,
+			String[] filekeys, String[] filesArrKeys, int duration, int reqSec, long apiSpecId, long workspaceId) throws IOException {
 
-		if(HTTPMethod.getMethodByNumber(apiExecReqMessageDto.getMethod()) == null) {
+		if (HTTPMethod.getMethodByNumber(reqApiExecMessageDto.getMethod()) == null) {
 			throw new CustomException(ErrorCode.HTTPMETHOD_NOT_FOUND);
 		}
+		OverloadTestResDto overloadTestResDto = new OverloadTestResDto();
+		String resultBody = null;
 
 		// 1. URL에 Path Variable 셋팅
-		Map<String, String> reqPathVars = apiExecReqMessageDto.getPathVars();
+		Map<String, String> reqPathVars = reqApiExecMessageDto.getPathVars();
 		StringBuilder sb = new StringBuilder();
 
-		String[] splitedUrl = apiExecReqMessageDto.getUrl().split("/");
+		String[] splitedUrl = reqApiExecMessageDto.getUrl().split("/");
 
-		for(String urlWord : splitedUrl) {
-			if(urlWord.length() > 0 && urlWord.charAt(0) == ':' && Character.isAlphabetic(urlWord.charAt(1))) {
-				if(reqPathVars == null || urlWord.split(":")[0] == null) {
+		for (String urlWord : splitedUrl) {
+
+			if (urlWord.length() > 0 && urlWord.charAt(0) == ':' && Character.isAlphabetic(urlWord.charAt(1))) {
+				if (reqPathVars == null || urlWord.split(":")[0] == null) {
 					throw new CustomException(ErrorCode.BAD_REQUEST);
 				}
-				sb.append(reqPathVars.get(urlWord.split(":")[1])+"/");
+				sb.append(reqPathVars.get(urlWord.split(":")[1]) + "/");
 			} else {
-				sb.append(urlWord+"/");
+				sb.append(urlWord + "/");
 			}
 		}
 		sb.deleteCharAt(sb.lastIndexOf("/"));
 
-		// 3. params 셋팅
+
+		// 2. params 셋팅
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-		if(apiExecReqMessageDto.getParams() != null) {
-			apiExecReqMessageDto.getParams().forEach((key, value) -> {
-				params.add(key, value);
+		if (reqApiExecMessageDto.getParams() != null) {
+			reqApiExecMessageDto.getParams().forEach((key, param) -> {
+				if (!param.getItera()) {
+					params.add(key, param.getValue());
+				} else {
+					String[] pramArray = param.getValue().substring(1, param.getValue().length() - 1).split(",");
+					System.out.println("pramArray: " + Arrays.toString(pramArray));
+					Arrays.stream(pramArray).forEach(p -> params.add(key, p));
+				}
 			});
 		}
 
-		// 4. 최종 URI 셋팅
+
+		// 3. 최종 URI 셋팅
 		UriComponents uri = UriComponentsBuilder.fromHttpUrl(sb.toString())
 				.queryParams(params)
 				.build();
 
+		StringBuilder vegetaBuilder = new StringBuilder();
+		vegetaBuilder.append("echo \"").append(HTTPMethod.getMethodByNumber(reqApiExecMessageDto.getMethod())).append(" ");
+		vegetaBuilder.append(uri.toUriString());
+		vegetaBuilder.append("\" | vegeta attack ");
 
-		// 5. Headers 셋팅
-		HttpHeaders headers = new HttpHeaders();
-		Map<String, String> reqHeaders = apiExecReqMessageDto.getHeaders();
+		if (reqApiExecMessageDto.getBody() != null) {
+			vegetaBuilder.append("-body=").append("'").append(reqApiExecMessageDto.getBody()).append("'");
+		}
+		vegetaBuilder.append(" ");
 
-		if(reqHeaders != null) {
-			reqHeaders.forEach( (key, value) -> {
-				headers.set(key, value);
+		Map<String, String> reqHeaders = reqApiExecMessageDto.getHeaders();
+
+		if (reqHeaders != null) {
+			reqHeaders.forEach((key, value) -> {
+				vegetaBuilder.append("-header=").append("'").append(key).append(":").append(value).append("'").append(" ");
 			});
 		}
 
-		// 5. header, body를 entity에 담기
-		HttpEntity<?> entity;
-		if (apiExecReqMessageDto.getBody() == null) {
-			entity = new HttpEntity<>(headers);
+		vegetaBuilder.append("-duration=").append(duration).append("s").append(" ");
+		vegetaBuilder.append("-rate=").append(reqSec);
+		vegetaBuilder.append(" | vegeta report -type=json");
+
+
+		// Flask 서버의 엔드포인트 URL 설정
+		String flaskEndpoint = "http://3.36.61.67:5000/process_vegeta_command";
+
+		// Flask 서버로 전송할 데이터 설정
+		String vegetaCommand = vegetaBuilder.toString();
+		MultiValueMap<String, String> bodyMap = new LinkedMultiValueMap<>();
+		bodyMap.add("vegeta_command", vegetaCommand);
+
+		// 요청 헤더 설정
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+
+		// HttpEntity 생성 (요청 바디와 헤더 포함)
+		HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(bodyMap, headers);
+
+		// RestTemplate을 사용하여 POST 요청 보내기
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<String> response = restTemplate.exchange(
+				flaskEndpoint,
+				HttpMethod.POST,
+				entity,
+				String.class
+		);
+
+		// 응답 처리
+		if (response.getStatusCode().is2xxSuccessful()) {
+			resultBody = response.getBody();
+//			System.out.println("Flask 서버 응답 결과: " + result);
+			try {
+				ObjectMapper objectMapper = new ObjectMapper();
+				JsonNode jsonNode = objectMapper.readTree(resultBody);
+
+				// JSON 데이터에 접근하여 필요한 값을 추출하거나 사용할 수 있습니다
+				System.out.println(jsonNode.toString());
+				JsonNode parsingNode = objectMapper.readTree(jsonNode.get("result").asText());
+
+				Map<String, Object> latenciesMap = objectMapper.convertValue(parsingNode.get("latencies"), Map.class);
+				Map<String, Object> statusMap = objectMapper.convertValue(parsingNode.get("status_codes"), Map.class);
+
+				List<StatusCodeDto> statusCodeDtos = new ArrayList<>();
+				for(Map.Entry entry : statusMap.entrySet()){
+					statusCodeDtos.add(StatusCodeDto.builder()
+							.code((String) entry.getKey())
+							.count((Integer) entry.getValue()).build());
+				}
+				overloadTestResDto.setStatusCodes(statusCodeDtos);
+
+				overloadTestResDto.setLatencies(LatenciesDto.builder().total((Integer)latenciesMap.get("total"))
+						.fiftieth((Integer) latenciesMap.get("50th"))
+						.max((Integer) latenciesMap.get("max"))
+						.mean((Integer) latenciesMap.get("mean"))
+						.ninetyFifth((Integer) latenciesMap.get("95th"))
+						.ninetyNinth((Integer) latenciesMap.get("99th")).build());
+
+				overloadTestResDto.setRequests(parsingNode.get("requests").asInt());
+				overloadTestResDto.setDuration(duration);
+				overloadTestResDto.setSuccess(parsingNode.get("success").asInt());
+				overloadTestResDto.setThroughput(parsingNode.get("throughput").asInt());
+
+
+			} catch (Exception e) {
+				// 예외 처리
+				e.printStackTrace();
+
+			}
 		} else {
-			ObjectMapper objectMapper = new ObjectMapper();
-			Map<String, Object> requestBodyMap = objectMapper.readValue(apiExecReqMessageDto.getBody(), new TypeReference<Map<String, Object>>() {});
-			String requestBodyJson = objectMapper.writeValueAsString(requestBodyMap);
-			entity = new HttpEntity<>(requestBodyJson, headers);
+			System.out.println("Flask 서버 응답 실패: " + response.getStatusCodeValue());
 		}
 
-		// 6. API 요청
-		try {
-			return restTemplate.exchange(
-					uri.toUriString(),
-					HTTPMethod.getMethodByNumber(apiExecReqMessageDto.getMethod()),
-					entity,
-					new ParameterizedTypeReference<Object>() {});
-		} catch (Exception e) {
-			throw new RuntimeException("CLIENT_ERROR", e);
-		}
+		overloadTestHistoryRepository.save(OverloadTestHistory.builder()
+				.latencyMean(overloadTestResDto.getLatencies().getMean())
+				.apiSpecEntity(apiSpecRepository.findById(apiSpecId).get())
+				.workspace(workspaceRepository.findById(workspaceId).get())
+				.throughput(overloadTestResDto.getThroughput())
+				.reqSec(reqSec)
+				.duration(duration)
+				.detail(resultBody).build());
+
+		return overloadTestResDto;
+
 	}
+
+
+
+
 
 	static {
 		// 참고로 Patch Method 를 쓰기 위해서는
@@ -196,7 +282,9 @@ public class OverloadService {
 			} catch (JsonProcessingException e) {
 				throw new RuntimeException(e);
 			}
-			HttpEntity<?> entity = new HttpEntity<>(requestBodyJson);
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			HttpEntity<?> entity = new HttpEntity<>(requestBodyJson, headers);
 
 			//요청
 			try {
@@ -207,7 +295,11 @@ public class OverloadService {
 						new ParameterizedTypeReference<Object>() {
 						});
 				return;
-			} catch (Exception e) {
+			} catch(UnknownContentTypeException e){
+				continue;
+			}
+			catch (Exception e) {
+				e.printStackTrace();
 				throw new RuntimeException("CLIENT_ERROR", e);
 			}
 		}
@@ -220,8 +312,11 @@ public class OverloadService {
 		checkBaseurlDto.setBaseurls(new ArrayList<>());
 		//1. for문 돌면서
 		for(CertCodeDto certCodeDto : certCodeDtos){
+			redisService.getAllKeysAndValues().forEach((key, value) -> {
+				System.out.println("key: "+ key +"/ values: "+value);
+			});
 			Integer correctCode = Integer.parseInt(redisService.getValues("baseurl_" + certCodeDto.getBaseurlId().toString()));
-			if(correctCode == certCodeDto.getCode()){
+			if(correctCode.equals(certCodeDto.getCode())){
 				Baseurl baseurl = baseurlRepository.findById(certCodeDto.getBaseurlId()).get();
 				baseurl.updateCertified(true);
 				baseurlRepository.save(baseurl);
@@ -232,5 +327,71 @@ public class OverloadService {
 		}
 
 		return checkBaseurlDto;
+	}
+
+	public OverloadListDto getOverloadList(Long apiId) {
+		List<OverloadTestHistory> overloadTestHistories = overloadTestHistoryRepository.findAllByApiSpecEntity(apiSpecRepository.findById(apiId).get());
+		List<OverloadDto> overloadList = new ArrayList<>();
+
+		for(OverloadTestHistory overloadTestHistory : overloadTestHistories){
+			overloadList.add(OverloadDto.builder()
+					.createdTime(overloadTestHistory.getCreatedTime())
+					.latencyMean(overloadTestHistory.getLatencyMean())
+					.id(overloadTestHistory.getId())
+					.duration(overloadTestHistory.getDuration())
+					.reqSec(overloadTestHistory.getReqSec())
+					.throughput(overloadTestHistory.getThroughput())
+					.build());
+		}
+
+		return OverloadListDto.builder().overlosdList(overloadList).
+				build();
+	}
+
+	public OverloadTestResDto getOverloadDetail(Long testId) {
+
+		OverloadTestHistory overloadTestHistory = overloadTestHistoryRepository.findById(testId).get();
+		String resultBody = overloadTestHistory.getDetail();
+		OverloadTestResDto overloadTestResDto = new OverloadTestResDto();
+
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode jsonNode = objectMapper.readTree(resultBody);
+
+			// JSON 데이터에 접근하여 필요한 값을 추출하거나 사용할 수 있습니다
+			System.out.println(jsonNode.toString());
+			JsonNode parsingNode = objectMapper.readTree(jsonNode.get("result").asText());
+
+			Map<String, Object> latenciesMap = objectMapper.convertValue(parsingNode.get("latencies"), Map.class);
+			Map<String, Object> statusMap = objectMapper.convertValue(parsingNode.get("status_codes"), Map.class);
+
+			List<StatusCodeDto> statusCodeDtos = new ArrayList<>();
+			for(Map.Entry entry : statusMap.entrySet()){
+				statusCodeDtos.add(StatusCodeDto.builder()
+						.code((String) entry.getKey())
+						.count((Integer) entry.getValue()).build());
+			}
+			overloadTestResDto.setStatusCodes(statusCodeDtos);
+
+			overloadTestResDto.setLatencies(LatenciesDto.builder().total((Integer)latenciesMap.get("total"))
+					.fiftieth((Integer) latenciesMap.get("50th"))
+					.max((Integer) latenciesMap.get("max"))
+					.mean((Integer) latenciesMap.get("mean"))
+					.ninetyFifth((Integer) latenciesMap.get("95th"))
+					.ninetyNinth((Integer) latenciesMap.get("99th")).build());
+
+			overloadTestResDto.setRequests(parsingNode.get("requests").asInt());
+			overloadTestResDto.setDuration(overloadTestHistory.getDuration());
+			overloadTestResDto.setSuccess(parsingNode.get("success").asInt());
+			overloadTestResDto.setThroughput(parsingNode.get("throughput").asInt());
+
+
+		} catch (Exception e) {
+			// 예외 처리
+			e.printStackTrace();
+
+		}
+
+		return overloadTestResDto;
 	}
 }

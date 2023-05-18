@@ -30,7 +30,7 @@ public class DtoSpecDocumentService {
         return dtoInfo;
     }
 
-    public DtoSpecDocument createDtoDocs(Long dtoEntityId, DtoInfo dtoInfo){
+    public DtoSpecDocument createOrUpdateDtoDocs(Long dtoEntityId, DtoInfo dtoInfo){
         DtoSpecDocument document = createOrFindDtosIfExists();
         document.getDtos().put(dtoEntityId, dtoInfo);
         return dtoSpecDocumentRepository.save(document).toDto();

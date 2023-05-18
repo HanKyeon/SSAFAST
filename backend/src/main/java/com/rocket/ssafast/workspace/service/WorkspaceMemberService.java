@@ -65,7 +65,7 @@ public class WorkspaceMemberService {
         List<WorkspaceMemberDto> resultMembers = new ArrayList<>();
         for(WorkspaceMember workspaceMember : workspaceMembers){
             resultMembers.add(WorkspaceMemberDto.builder()
-                    .id(workspaceMember.getId())
+                    .id(workspaceMember.getMember().getId())
                     .name(workspaceMember.getMember().getName())
                     .profileImg(workspaceMember.getMember().getProfileImg())
                     .build()
