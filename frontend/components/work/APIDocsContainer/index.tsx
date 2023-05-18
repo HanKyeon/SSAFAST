@@ -175,12 +175,12 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
     console.log(`headers :`, headers);
     let pathVars: any = {};
     data.document.request.pathVars.forEach((v) => {
-      pathVars[v.keyName] = { value: v.value, itera: v.itera };
+      pathVars[v.keyName] = v.value;
     });
     console.log(`path variables :`, pathVars);
     let params: any = {};
     data.document.request.params.forEach((v) => {
-      params[v.keyName] = v.value;
+      params[v.keyName] = { value: v.value, itera: v.itera };
     });
     console.log(`params :`, params);
     let body: any = {};
