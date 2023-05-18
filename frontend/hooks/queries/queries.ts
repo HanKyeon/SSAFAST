@@ -563,6 +563,14 @@ export const useSpaceApis = function (spaceId: string | number) {
 //   });
 // };
 
+/**
+ *   keyName: string;
+ * type: number;
+ * desc: string;
+ * value?: any;
+ * itera?: boolean;
+ * constraints?: string[];
+ */
 export interface ApiDetailAtTestItem {
   keyName: string;
   type: number;
@@ -572,18 +580,19 @@ export interface ApiDetailAtTestItem {
   constraints?: string[];
 }
 
+export interface ApiDetailAtTestDtoInfo {
+  name?: string;
+  keyName: string | null;
+  desc: string;
+  itera: boolean;
+  type?: number;
+  constraints?: string[];
+  fields?: ApiDetailAtTestItem[];
+  nestedDtos?: ApiDetailAtTestDto;
+  nestedDtoLists?: ApiDetailAtTestDto;
+}
 export interface ApiDetailAtTestDto {
-  [key: string | number]: {
-    name?: string;
-    keyName: string | null;
-    desc: string;
-    itera: boolean;
-    type?: number;
-    constraints?: string[];
-    fields?: ApiDetailAtTestItem[];
-    nestedDtos?: ApiDetailAtTestDto;
-    nestedDtoLists?: ApiDetailAtTestDto;
-  }[];
+  [key: string | number]: ApiDetailAtTestDtoInfo[];
 }
 
 export interface ApiDetailAtTest {

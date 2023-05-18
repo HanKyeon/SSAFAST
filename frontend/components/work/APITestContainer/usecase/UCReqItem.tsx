@@ -8,7 +8,10 @@ import {
 import styles from '../../APIDocsContainer/ReqItem.module.css';
 import ToggleableHeader from '../../APIDocsContainer/ToggleableHeader';
 import { FieldsType, HeadersType } from '../../APIDocsContainer';
-import { ApiDetailAtTestItem } from '@/hooks/queries/queries';
+import {
+  ApiDetailAtTestDto,
+  ApiDetailAtTestItem,
+} from '@/hooks/queries/queries';
 import UCReqItemInner from './UCReqItemInner';
 
 type ReqtemPropsType = {
@@ -17,7 +20,11 @@ type ReqtemPropsType = {
   // control: Control<UsecaseDetailType, any>;
   control: any;
   name: string;
-  item: HeadersType[] | FieldsType[] | ApiDetailAtTestItem[];
+  item:
+    | HeadersType[]
+    | FieldsType[]
+    | ApiDetailAtTestItem[]
+    | ApiDetailAtTestDto;
 };
 const UCReqItem = function ({
   fields,
@@ -27,7 +34,11 @@ const UCReqItem = function ({
   control,
 }: ReqtemPropsType): JSX.Element {
   const [isOpen, setisOpen] = useState<boolean>(true);
-  const a = item?.length + 1;
+  const a =
+    (
+      (item as HeadersType[] | FieldsType[] | ApiDetailAtTestItem[]) ||
+      Object.keys(item as ApiDetailAtTestDto)
+    )?.length + 1;
 
   const Styles = {
     style: `${
@@ -43,7 +54,10 @@ const UCReqItem = function ({
     <div className={`${styles1[`style`]} w-full`}>
       <ToggleableHeader title={name} isOpen={isOpen} setIsOpen={setisOpen} />
       <div className={`${Styles['style']}`}>
-        {(item as HeadersType[] | FieldsType[])?.map((item, idx) => (
+        {(
+          (item as HeadersType[] | FieldsType[] | ApiDetailAtTestItem[]) ||
+          Object.keys(item as ApiDetailAtTestDto)
+        )?.map((item, idx) => (
           <Controller
             key={`${Math.random()}`} // fields[idx].id
             name={`${formName}.${item.keyName}`}

@@ -6,9 +6,18 @@ import { Controller } from 'react-hook-form';
 import { BodyType, FieldsType, HeadersType } from '../../APIDocsContainer';
 import { Dispatch, SetStateAction, useContext, useState } from 'react';
 import { UCContext, UCContextInterface } from '.';
+import {
+  ApiDetailAtTestDtoInfo,
+  ApiDetailAtTestItem,
+} from '@/hooks/queries/queries';
 
 interface UCReqItemInnerPropsType {
-  item: HeadersType | FieldsType | BodyType;
+  item:
+    | HeadersType
+    | FieldsType
+    | BodyType
+    | ApiDetailAtTestItem
+    | ApiDetailAtTestDtoInfo;
   className?: string;
   depth?: 0 | 1 | 2;
   control?: any;
@@ -130,7 +139,7 @@ const UCReqItemInner = function ({
               </div>
             )} */}
             {/* 아래는 화면에서 숨길 부분 */}
-            <>
+            <div>
               <Controller
                 name={`${formName}.type`}
                 control={control}
@@ -142,6 +151,7 @@ const UCReqItemInner = function ({
                     onChange={field.onChange}
                     className={`w-full`}
                     placeholder="value"
+                    type="hidden"
                   />
                 )}
               />
@@ -156,6 +166,7 @@ const UCReqItemInner = function ({
                     onChange={field.onChange}
                     className={`w-full`}
                     placeholder="value"
+                    type="hidden"
                   />
                 )}
               />
@@ -171,6 +182,7 @@ const UCReqItemInner = function ({
                       onChange={field.onChange}
                       className={`w-full`}
                       placeholder="value"
+                      type="hidden"
                     />
                   )}
                 />
@@ -186,43 +198,46 @@ const UCReqItemInner = function ({
                       onChange={field.onChange}
                       className={`w-full`}
                       placeholder="value"
+                      type="hidden"
                     />
                   )}
                 />
               )}
-            </>
-            {'constraints' in item && (
-              <Controller
-                name={`${formName}.constraints`}
-                control={control}
-                defaultValue={item.constraints}
-                render={({ field, fieldState }) => (
-                  <Input
-                    name={`${formName}.constraints`}
-                    value={field.value}
-                    onChange={field.onChange}
-                    className={`w-full`}
-                    placeholder="value"
-                  />
-                )}
-              />
-            )}
-            {'itera' in item && (
-              <Controller
-                name={`${formName}.constraints`}
-                control={control}
-                defaultValue={item.itera}
-                render={({ field, fieldState }) => (
-                  <Input
-                    name={`${formName}.constraints`}
-                    value={field.value}
-                    onChange={field.onChange}
-                    className={`w-full`}
-                    placeholder="value"
-                  />
-                )}
-              />
-            )}
+              {'constraints' in item && (
+                <Controller
+                  name={`${formName}.constraints`}
+                  control={control}
+                  defaultValue={item.constraints}
+                  render={({ field, fieldState }) => (
+                    <Input
+                      name={`${formName}.constraints`}
+                      value={field.value}
+                      onChange={field.onChange}
+                      className={`w-full`}
+                      placeholder="value"
+                      type="hidden"
+                    />
+                  )}
+                />
+              )}
+              {'itera' in item && (
+                <Controller
+                  name={`${formName}.constraints`}
+                  control={control}
+                  defaultValue={item.itera}
+                  render={({ field, fieldState }) => (
+                    <Input
+                      name={`${formName}.constraints`}
+                      value={field.value}
+                      onChange={field.onChange}
+                      className={`w-full`}
+                      placeholder="value"
+                      type="hidden"
+                    />
+                  )}
+                />
+              )}
+            </div>
           </div>
           <div onClick={onClickMappingBtn}>res에서 맵핑할궤</div>
           <div onClick={onClickSelfTyping}>직접 입력할궹</div>

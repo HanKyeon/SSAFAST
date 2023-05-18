@@ -12,6 +12,7 @@ import ReqItem from '../../APIDocsContainer/ReqItem';
 import ReqItemBody from '../../APIDocsContainer/ReqItemBody';
 import UCReqItem from './UCReqItem';
 import { Dispatch, SetStateAction } from 'react';
+import UCReqItemDto from './UCReqItemDto';
 
 type UCReqBoxPropsType = {
   curUsecase: UsecaseListItemType;
@@ -61,6 +62,7 @@ const UCReqBox = function ({
 
   return (
     <div className={`flex-1 overflow-scroll scrollbar-hide`}>
+      {/* headers!!!! */}
       {curapi?.document.request.headers &&
         curapi?.document.request.headers.length > 0 && (
           <UCReqItem
@@ -71,18 +73,45 @@ const UCReqBox = function ({
             item={curapi.document.request.headers}
           />
         )}
-      {/* {(curapi?.document.request.body &&
-        curapi?.document.request.body.fields &&
-        curapi?.document.request.body.fields.length > 0) ||
-        (curapi?.document.request.body && (
-          <ReqItemBody
+      {/* BODY 다!!!!!!!!! */}
+      {curapi?.document.request.body?.fields &&
+        curapi?.document.request.body?.fields?.length > 0 && (
+          <UCReqItem
             //   fields={headersFields}
-            formName={`request.headers`}
-            name="headers"
+            formName={`testDetails.${
+              currentApi.id as string
+            }.request.body.fields`}
+            name="body_fields"
             control={control}
-            item={curapiMock.request.body}
+            item={curapi.document.request.body.fields}
           />
-        ))} */}
+        )}
+      {curapi?.document.request.body?.nestedDtos &&
+        Object.keys(curapi?.document.request.body?.nestedDtos).length > 0 && (
+          <UCReqItemDto
+            //   fields={headersFields}
+            formName={`testDetails.${
+              currentApi.id as string
+            }.request.body.nestedDtos`}
+            name="body_dtos"
+            control={control}
+            item={curapi.document.request.body.nestedDtos}
+          />
+        )}
+      {curapi?.document.request.body?.nestedDtoLists &&
+        Object.keys(curapi?.document.request.body?.nestedDtoLists).length >
+          0 && (
+          <UCReqItemDto
+            //   fields={headersFields}
+            formName={`testDetails.${
+              currentApi.id as string
+            }.request.body.nestedDtoLists`}
+            name="body_dtoLists"
+            control={control}
+            item={curapi.document.request.body.nestedDtoLists}
+          />
+        )}
+      {/* params!!!! */}
       {curapi?.document.request.params && (
         <UCReqItem
           //   fields={headersFields}
@@ -92,6 +121,7 @@ const UCReqBox = function ({
           item={curapi.document.request.params}
         />
       )}
+      {/* pathVars!!!! */}
       {curapi?.document.request.pathVars && (
         <UCReqItem
           //   fields={headersFields}
