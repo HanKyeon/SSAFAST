@@ -669,17 +669,16 @@ export interface PrevResponse {
     nestedDtoLists?: ApiDetailAtTestDto;
   };
 }
-
-export interface PrevResponses {
-  prevResponses: PrevResponse[];
-}
+// export interface PrevResponses {
+//   prevResponses: PrevResponse[];
+// }
 
 // 이전 response 변수 목록 조회
 export const useUsecaseResponses = function (
   spaceId: string | number,
   ids: string
 ) {
-  return useQuery<PrevResponses>({
+  return useQuery<PrevResponse[]>({
     queryKey: queryKeys.usecaseResponses(spaceId, ids), // 이거 이름 수정필요!!!!
     queryFn: async function () {
       return apiRequest({
@@ -688,7 +687,7 @@ export const useUsecaseResponses = function (
         params: {
           apiIds: ids,
         },
-      }).then((res) => res.data);
+      }).then((res) => res.data.prevResponses);
     },
     enabled: !!spaceId && !!ids.length,
   });

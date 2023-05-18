@@ -13,6 +13,7 @@ type SideContainerPropsType = {
   apis: UseTestApiCompactType[];
   onClickApi: (api: UseTestApiCompactType) => void;
   onClickAddApiBtn: () => void;
+  onClickClearApis: () => void;
 };
 
 const SideContainer = function ({
@@ -20,6 +21,7 @@ const SideContainer = function ({
   apis,
   onClickApi,
   onClickAddApiBtn,
+  onClickClearApis,
 }: SideContainerPropsType): JSX.Element {
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
@@ -91,6 +93,7 @@ const SideContainer = function ({
         <Button
           type="button"
           className={`flex-1 !bg-mammoth-normal !border-mammoth-normal !py-1`}
+          onClick={onClickClearApis}
         >
           초기화
         </Button>
