@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import RequestForm from './RequestForm';
 import { Box, Button } from '@/components/common';
 import AnimationBox from '@/components/common/AnimationBox';
@@ -8,12 +8,19 @@ import MethodBadge from '@/components/apis/MethodBadge';
 import { ApiDetailInTest } from '@/hooks/queries/queries';
 interface Props {
   api: boolean;
-  toggleIsList: () => void;
   selectApi: () => void;
   item: ApiDetailInTest | undefined;
+  currentApiId: number;
+  changeSetResponse: (data: any) => void;
 }
 
-const LoadItem = function ({ api, toggleIsList, selectApi, item }: Props) {
+const LoadItem = function ({
+  api,
+  selectApi,
+  item,
+  currentApiId,
+  changeSetResponse,
+}: Props) {
   return (
     <>
       <div className="w-full h-full">
@@ -46,8 +53,10 @@ const LoadItem = function ({ api, toggleIsList, selectApi, item }: Props) {
                 Change Api
               </Button>
             </div>
-            <RequestForm toggleIsList={toggleIsList} />
-            {/* <ReqBoxPostman selectedId={2} /> */}
+            <RequestForm
+              selectedId={currentApiId}
+              changeSetResponse={changeSetResponse}
+            />
           </AnimationBox>
         )}
       </div>

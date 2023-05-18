@@ -161,6 +161,7 @@ const RequestForm = function () {
         <div className="flex items-center w-[90%]">
           <Input
             name={`document.request.additionalUrl`}
+            value={urlField.value}
             onChange={urlField.onChange}
             type="text"
             placeholder="Urn"

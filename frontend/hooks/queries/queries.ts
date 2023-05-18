@@ -531,7 +531,10 @@ export interface SpaceApiList {
 }
 
 // space api 목록 (api 전체 목록 조회)
-export const useSpaceApis = function (spaceId: string | number) {
+export const useSpaceApis = function (
+  spaceId: string | number,
+  methodList?: number[]
+) {
   return useQuery<SpaceApiList>({
     queryKey: queryKeys.spaceApiList(spaceId),
     queryFn: async function () {
@@ -540,6 +543,7 @@ export const useSpaceApis = function (spaceId: string | number) {
         url: `/api/api-pre/list`,
         params: {
           workspaceId: spaceId,
+          methods: methodList,
         },
       }).then((res) => res.data);
     },
@@ -1212,7 +1216,7 @@ interface OverLoadURL {
     isCertified: boolean;
   }[];
 }
-
+// BaseUrl 인증 확인
 export const useOverloadBaseUrl = function (spaceId: string | number) {
   return useQuery<OverLoadURL>({
     queryKey: queryKeys.overloadCertUrlList(spaceId),
@@ -1220,6 +1224,66 @@ export const useOverloadBaseUrl = function (spaceId: string | number) {
       return apiRequest({
         method: `get`,
         url: `/api/overload/baseurl`,
+        params: {
+          workspaceId: spaceId,
+        },
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId,
+  });
+};
+
+export const useOverloadList = function (
+  spaceId: string | number,
+  apiId: number | string
+) {
+  return useQuery<any>({
+    queryKey: queryKeys.overloadList(spaceId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/overload/list`,
+        params: {
+          apiId: apiId,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        return res.data;
+      });
+    },
+    enabled: !!spaceId && !!apiId,
+  });
+};
+
+export const useOverloadListDetail = function (
+  spaceId: string | number,
+  testId: number
+) {
+  return useQuery<any>({
+    queryKey: queryKeys.overloadDetail(spaceId, testId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/overload/detail`,
+        params: {
+          testId: testId,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        return res.data;
+      });
+    },
+    enabled: !!spaceId && !!testId,
+  });
+};
+
+export const useBaseUrlCert = function (spaceId: string | number) {
+  return useQuery<any>({
+    queryKey: queryKeys.overloadCertUrl(spaceId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/overload/cert`,
         params: {
           workspaceId: spaceId,
         },

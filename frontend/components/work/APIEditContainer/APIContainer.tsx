@@ -168,6 +168,7 @@ const APIContainer = function ({ store }: Props) {
               <APIList
                 toggleAddHandler={toggleAddHandler}
                 apiIdHandler={apiIdHandler}
+                isFiltered={true}
               />
             </div>
           </>
