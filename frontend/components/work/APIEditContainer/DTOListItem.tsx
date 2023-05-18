@@ -30,8 +30,12 @@ const DTOListItem = function ({
       }`}
       onClick={selectHandler}
     >
-      <div className="w-[30%] h-full flex px-2 truncate">{dtoName}</div>
-      <div className="w-[70%] h-full flex px-2 truncate">{dtoDesc}</div>
+      <div className="w-[30%] h-full flex px-2 truncate items-center">
+        {dtoName}
+      </div>
+      <div className="w-[70%] h-full flex px-2 truncate items-center">
+        {dtoDesc}
+      </div>
     </div>
   );
 };

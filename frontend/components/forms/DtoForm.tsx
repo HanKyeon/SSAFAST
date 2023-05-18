@@ -85,7 +85,11 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
   const { data: dtoClassCode } = useDtoClasses(spaceId, selectedId!);
   useEffect(
     function () {
-      reset(defaultData, { keepDefaultValues: true });
+      if (!selectedId) {
+        reset({ name: ``, desc: ``, fields: [] });
+      } else {
+        reset(defaultData);
+      }
     },
     [defaultData]
   );
@@ -209,7 +213,6 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
             nestedDtos: { ...res.data.nestedDtos },
           };
         });
-        console.log(`${dtoId}의 정보`, data);
         if (!data) {
           return;
         }
@@ -230,15 +233,18 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
           description: desc,
           document: { fields, nestedDtos },
         },
-      }).then((res) => {
-        dispatch(DispatchToast('수정 완료!', true));
-        queryClient.invalidateQueries(queryKeys.spaceDtoList(spaceId));
-        queryClient.invalidateQueries(
-          queryKeys.spaceDtoDetail(spaceId, selectedId)
-        );
-        resetSelected();
-        reset({ name: ``, desc: ``, fields: [] });
-      });
+      })
+        .then((res) => {
+          dispatch(DispatchToast('수정 완료!', true));
+          queryClient.invalidateQueries(queryKeys.spaceDtoList(spaceId));
+          queryClient.invalidateQueries(
+            queryKeys.spaceDtoDetail(spaceId, selectedId)
+          );
+        })
+        .then((res) => {
+          reset({ name: ``, desc: ``, fields: [] });
+          resetSelected();
+        });
     } else {
       postMutateAsync({
         workspaceId: spaceId,
@@ -251,8 +257,10 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
           queryClient.invalidateQueries(
             queryKeys.spaceDtoList(parseInt(spaceId))
           );
+        })
+        .then((res) => {
+          reset({ name: ``, desc: ``, fields: undefined });
           resetSelected();
-          reset({ name: ``, desc: ``, fields: [] });
         })
         .catch((err) => {
           if (err.response.data === 'DTO DEPTH OVER 2') {
