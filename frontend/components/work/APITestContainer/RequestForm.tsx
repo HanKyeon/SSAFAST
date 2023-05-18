@@ -14,7 +14,12 @@ import { Button, CircleBtn, Input } from '@/components/common';
 import ToggleableHeader from '../APIDocsContainer/ToggleableHeader';
 import ReqItem from '../APIDocsContainer/ReqItem';
 import ReqItemBody from '../APIDocsContainer/ReqItemBody';
-import { FieldsType, HeadersType, BodyType } from '../APIDocsContainer';
+import {
+  FieldsType,
+  HeadersType,
+  BodyType,
+  MockupData2Type,
+} from '../APIDocsContainer';
 import { useRouter } from 'next/router';
 import { SpaceParams } from '@/pages/space';
 import {
@@ -22,18 +27,14 @@ import {
   useApiSingleTestDetail,
   useBaseUrl,
 } from '@/hooks/queries/queries';
+import ReqBoxPostman from '../APIDocsContainer/formComponent/ReqBoxPostman';
 
 export interface LoadForm {
   request: {
-    url: string; // request.url
-    method: number; // request.method
-
-    // useFieldArray
-    headers: HeadersType[]; // request.headers
-    pathVars: FieldsType[]; // request.pathVars
-    params: FieldsType[]; // request.params
-
-    body: BodyType; // request.body
+    headers: HeadersType[];
+    body: BodyType;
+    pathVars: FieldsType[];
+    params: FieldsType[];
   };
   testInfo: {
     duration: number; // testInfo.duration
@@ -153,7 +154,7 @@ const RequestForm = function ({ toggleIsList }: Props) {
   });
 
   const methods = useForm<LoadForm>({
-    defaultValues: { request: data.request, testInfo: {} },
+    defaultValues: { request: undefined, testInfo: {} },
   });
   const { control, handleSubmit, reset } = methods;
 
@@ -202,7 +203,7 @@ const RequestForm = function ({ toggleIsList }: Props) {
           onSubmit={handleSubmit(checkData)}
         >
           <div className="flex flex-col">
-            <div className={`p-2 pb-4 flex flex-col gap-7`}>
+            {/* <div className={`p-2 pb-4 flex flex-col gap-7`}>
               {data.request.headers && (
                 <ReqItem
                   fields={headersFields}
@@ -239,7 +240,8 @@ const RequestForm = function ({ toggleIsList }: Props) {
                   item={data.request.params}
                 />
               )}
-            </div>
+            </div> */}
+            {/* <ReqBoxPostman selectedId={1} /> */}
             <div className="flex flex-col gap-7 pt-4">
               <Controller
                 name={`testInfo.reqPerSec`}

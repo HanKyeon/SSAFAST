@@ -47,6 +47,11 @@ const APIlistItem = function ({
       apiIdHandler(id);
     }
   };
+  const setApiId = function (id: number | string) {
+    if (apiIdHandler) {
+      apiIdHandler(id);
+    }
+  };
 
   const onClickApiItem = (apiID: string | number): void => {
     if (!checkBox) {
@@ -76,6 +81,8 @@ const APIlistItem = function ({
               onClickApi({ id: item.id, name: item.name, method: item.method })
           : toggleAddHandler && apiIdHandler
           ? () => letsEdit(item.id)
+          : apiIdHandler
+          ? () => setApiId(item.id)
           : () => onClickApiItem(item.id)
       }
       className={`${className} flex items-center gap-3 h-[40px] min-h-[40px] hover:scale-[101.4%] duration-[0.33s] cursor-pointer`}

@@ -12,7 +12,18 @@ import { Box, Button, Input } from '@/components/common';
 import UseCaseTest from './usecase';
 import { useRouter } from 'next/router';
 import { SpaceParams } from '@/pages/space';
-import { useBaseUrl } from '@/hooks/queries/queries';
+import { useOverloadBaseUrl } from '@/hooks/queries/queries';
+import { ValidateUrl, useValidateUrl } from '@/hooks/queries/mutations';
+import {
+  useForm,
+  useFieldArray,
+  useWatch,
+  Control,
+  FormProvider,
+  Controller,
+  useController,
+  useFormContext,
+} from 'react-hook-form';
 interface Props {
   serverSideStore?: RTCSpaceData;
   store: any;
@@ -32,6 +43,15 @@ const TestContainer = function ({ store, serverSideStore }: Props) {
     },
     [updatePresence]
   );
+  const router = useRouter();
+  const { spaceId } = router.query as SpaceParams;
+  const { data: baseUrlListData, isLoading: isBaseUrlLoading } =
+    useOverloadBaseUrl(parseInt(spaceId));
+
+  const { mutate: certMutate, mutateAsync: certMutateAsync } = useValidateUrl(
+    parseInt(spaceId)
+  );
+
   const [isModal, setIsModal] = useState<boolean>(false);
 
   const closeModal = useCallback(function () {
@@ -61,27 +81,30 @@ const TestContainer = function ({ store, serverSideStore }: Props) {
     closeModal();
   };
 
-  const isAccepted = function () {
-    setIsAuthenticated(true);
-    closeModal();
-    setUSE1LOAD2(() => 2);
+  const isAccepted = async function (data: ValidateUrl) {
+    // certMutateAsync(data).then(() => {
+    //   setIsAuthenticated(true);
+    //   closeModal();
+    //   setUSE1LOAD2(() => 2);
+    // });
+  };
+  const onSubmit = function (data: any) {
+    console.log('data :', data);
   };
 
-  const router = useRouter();
-  const { spaceId } = router.query as SpaceParams;
-  const { data: baseUrlListData, isLoading: isBaseUrlLoading } = useBaseUrl(
-    parseInt(spaceId)
-  );
-
-  console.log(spaceId);
+  const methods = useForm<ValidateUrl>();
+  const { control, handleSubmit, reset } = methods;
+  // console.log('baseUrlListData', baseUrlListData);
   return (
     <>
-      {isModal && (
+      {isModal && !baseUrlListData?.certification && (
         <Modal closeModal={closeModal} parentClasses="h-[80%] w-[80%]">
           <Box className="flex flex-col gap-4 w-full h-full p-5 items-center justify-center">
             <div className="text-[24px]">
               BaseUrl을 인증해야 사용할 수 있는 기능입니다.
             </div>
+            <p>환경에 맞는 아래의 코드를 서버에 입력하여 실행해 주세요.</p>
+
             <div className="h-[50%] w-[50%] ">
               <div className="flex w-full">
                 <div
@@ -104,51 +127,87 @@ const TestContainer = function ({ store, serverSideStore }: Props) {
                 </div>
               </div>
               {serverClass === 1 && (
-                <div className="w-full text-small h-[90%] border-red-900 border-[4px] flex flex-col items-center justify-center overflow-y-scroll">
-                  {`@RestController`}
-                  <br />
-                  {`@RequestMapping("/api/ssafast")`}
-                  <br />
-                  {`public class SsafastController {`}
-                  <br />
-                  {`    @PostMapping("")`}
-                  <br />
-                  {`    ResponseEntity<?> executeOverload(@RequestBody HashMap<String, String> map) {`}
-                  <br />
-                  {`        System.out.println(map.get("verification"));`}
-                  <br />
-                  {`        return new ResponseEntity<>("success", HttpStatus.OK);`}
-                  <br />
-                  {`    }`}
-                  <br />
-                  {`}`}
+                <div className="w-full text-small h-[90%] border-red-900 border-[4px] flex flex-col justify-center items-center overflow-auto">
+                  <pre>{`@RestController
+@RequestMapping("/api/ssafast")
+public class SsafastController {
+    @PostMapping("")
+    ResponseEntity<?> executeOverload(@RequestBody HashMap<String, String> map) {
+        System.out.println(map.get("verification"));
+        return new ResponseEntity<>("success", HttpStatus.OK);
+    }
+}`}</pre>
                 </div>
               )}
               {serverClass === 2 && (
-                <div className="w-full h-[90%] border-red-900 border flex items-center justify-center overflow-y-scroll">
-                  플라스크 코드
+                <div className="w-full text-small h-[90%] border-red-900 border-[4px] flex flex-col items-center justify-center overflow-x-scroll">
+                  <pre>
+                    {`from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.route('/api/ssafast', methods=['POST'])
+def receive_message():
+    message = request.form.get('verification')
+    if not message:
+        return 'fail'
+    print(f'You sent: {message}')
+    return 'success'`}
+                  </pre>
                 </div>
               )}
               {serverClass === 3 && (
-                <div className="w-full h-[90%] border-red-900 border flex items-center justify-center overflow-y-scroll">
-                  파이썬 코드
+                <div className="w-full text-small h-[90%] border-red-900 border-[4px] flex flex-col items-center justify-center overflow-x-scroll">
+                  <pre>{`from django.http import HttpResponse
+from django.views import View
+
+class Ssafast(View):
+    def post(self, request, *args, **kwargs):
+        message = request.POST.get('verification', '')
+        if message == '':
+            return HttpResponse('fail')
+        print(message)
+        return HttpResponse('success')`}</pre>
                 </div>
               )}
             </div>
             <div className="flex flex-col items-center justify-start overflow-y-scroll h-[40%] w-full">
-              <br />
               <label className="text-[18px]">인증해야할 URL 목록</label>
+              <p>{`( 실행한 코드에서 나온 5자리의 수를 입력해주세요. )`}</p>
               <br />
-
               {baseUrlListData?.baseurls.map((item, index) => (
                 <>
-                  <div className="flex w-[50%] justify-between gap-12">
-                    <div key={item.id}>{item.url}</div>
-                    <Input
-                      name={`${item.id}-${item.url}`}
-                      className="text-center !w-24"
-                    />
-                  </div>
+                  <FormProvider {...methods}>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                      <div className="flex w-[50%] justify-between gap-12">
+                        <div key={item.id}>{item.url}</div>
+                        {/* {baseUrlListData.isCertified && (<div>
+                      인증 완료
+                    </div>)} */}
+                        {!item.isCertified && (
+                          <Controller
+                            name={`certCodes.${index}.code`}
+                            control={control}
+                            render={({ field }) => {
+                              return (
+                                <Input
+                                  placeholder="5자리 숫자"
+                                  name={`certCodes.${index}.code`}
+                                  type="text"
+                                  onChange={field.onChange}
+                                  value={field.value}
+                                  className="text-center !w-24"
+                                />
+                              );
+                            }}
+                          />
+                        )}
+                        {item.isCertified && (
+                          <div className="text-green-400">인증 완료</div>
+                        )}
+                      </div>
+                    </form>
+                  </FormProvider>
                 </>
               ))}
             </div>
@@ -156,15 +215,15 @@ const TestContainer = function ({ store, serverSideStore }: Props) {
               <Box
                 variant="three"
                 className="w-[80px] h-[60px] rounded-[13px] flex items-center justify-center cursor-pointer hover:scale-105 duration-[0.33s]"
-                onClick={isAccepted}
+                // onClick={isAccepted}
               >
-                인증 해써!
+                인증하기
               </Box>
               <div
                 className="w-[80px] h-[60px] bg-red-500 rounded-[13px] flex items-center justify-center cursor-pointer hover:scale-105 duration-[0.33s]"
                 onClick={isBanned}
               >
-                인증 모태!
+                나가기
               </div>
             </div>
           </Box>

@@ -992,7 +992,7 @@ export interface ApiDetailInTest {
   apiId: number;
   name: string;
   description: string;
-  method: number;
+  method: 1 | 2 | 3 | 4 | 5;
   status: number;
   baseurlId: number;
   categoryId: number;
@@ -1053,5 +1053,30 @@ export const useApiUsecasePrevResponse = function (
       }).then((res) => res.data);
     },
     enabled: !!spaceId && !!apiIds,
+  });
+};
+
+interface OverLoadURL {
+  certification: boolean;
+  baseurls: {
+    id: number;
+    url: string;
+    isCertified: boolean;
+  }[];
+}
+
+export const useOverloadBaseUrl = function (spaceId: string | number) {
+  return useQuery<OverLoadURL>({
+    queryKey: queryKeys.overloadCertUrlList(spaceId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/overload/baseurl`,
+        params: {
+          workspaceId: spaceId,
+        },
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId,
   });
 };
