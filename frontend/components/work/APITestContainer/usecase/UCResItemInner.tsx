@@ -107,6 +107,7 @@ const UCResItemInner = function ({
                 onChange={field.onChange}
                 className={`w-full`}
                 placeholder="value"
+                type="hidden"
               />
             );
           }}
