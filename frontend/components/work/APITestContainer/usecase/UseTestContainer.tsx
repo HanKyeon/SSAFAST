@@ -234,8 +234,8 @@ const UseTestContainer = function () {
   const { inputData: ucDescInput, onChangeHandler: onChangeUcDescInput } =
     useInput(ucDescInputEl);
 
-  // const [isListModalOpen, setIsListModalOpen] = useState<boolean>(true); // 유케저장목록모달
-  const [isNewModalOpen, setIsNewModalOpen] = useState<boolean>(true);
+  const [isListModalOpen, setIsListModalOpen] = useState<boolean>(true); // 유케저장목록모달
+  const [isNewModalOpen, setIsNewModalOpen] = useState<boolean>(false);
   const [isApiListOpen, setIsApiListOpen] = useState<boolean>(false);
 
   const [curUsecase, setCurUsecase] = useState<UsecaseListItemType>({
@@ -271,7 +271,7 @@ const UseTestContainer = function () {
   const { control, handleSubmit } = methods;
 
   const onToggleListModal = (): void => {
-    // setIsListModalOpen((prev) => !prev);
+    setIsListModalOpen((prev) => !prev);
   };
   const onToggleNewModal = (): void => {
     setIsNewModalOpen((prev) => !prev);
@@ -349,11 +349,10 @@ const UseTestContainer = function () {
 
   return (
     <Box variant="one" fontType="header" className="h-full w-full">
-      {/* {isListModalOpen ? ( */}
-      {isNewModalOpen ? (
+      {isListModalOpen ? (
         // 처음에 저장된 usecase list 모달 오픈
         <Modal closeModal={onToggleListModal} parentClasses="h-[50%] w-[50%]">
-          {/* {!isNewModalOpen ? (
+          {!isNewModalOpen ? (
             // 생성 모달
             <Box
               className={`w-full h-full p-5 flex flex-col justify-between items-center gap-3`}
@@ -364,40 +363,40 @@ const UseTestContainer = function () {
                 New Test
               </Button>
             </Box>
-          ) : ( */}
-          <Box
-            className={`w-full h-full p-5 flex flex-col justify-between items-center`}
-          >
-            {/* <div
-              className={`w-full flex items-center gap-2 ${
-                isDark ? 'text-mincho-normal' : 'text-taro-normal'
-              } cursor-pointer`}
-              onClick={onToggleNewModal}
+          ) : (
+            <Box
+              className={`w-full h-full p-5 flex flex-col justify-between items-center`}
             >
-              <IoArrowBackOutline />
-              <span className={`text-content mt-[3px]`}>뒤로</span>
-            </div> */}
-            <div className={`flex flex-col gap-5 w-[90%] mb-7`}>
-              <p className={`mb-2 text-center`}>새 유스케이스 테스트 생성</p>
-              <Input
-                inputref={ucNameInputEL}
-                value={ucNameInput}
-                onChange={onChangeUcNameInput}
-                placeholder="Name"
-                className={`!w-[50%]`}
-              />
-              <Input
-                inputref={ucDescInputEl}
-                value={ucDescInput}
-                onChange={onChangeUcDescInput}
-                placeholder="Description"
-              />
-            </div>
-            <Button onClick={onClickNew} className={`!py-1`}>
-              생성
-            </Button>
-          </Box>
-          {/* )} */}
+              <div
+                className={`w-full flex items-center gap-2 ${
+                  isDark ? 'text-mincho-normal' : 'text-taro-normal'
+                } cursor-pointer`}
+                onClick={onToggleNewModal}
+              >
+                <IoArrowBackOutline />
+                <span className={`text-content mt-[3px]`}>뒤로</span>
+              </div>
+              <div className={`flex flex-col gap-5 w-[90%] mb-7`}>
+                <p className={`mb-2 text-center`}>새 유스케이스 테스트 생성</p>
+                <Input
+                  inputref={ucNameInputEL}
+                  value={ucNameInput}
+                  onChange={onChangeUcNameInput}
+                  placeholder="Name"
+                  className={`!w-[50%]`}
+                />
+                <Input
+                  inputref={ucDescInputEl}
+                  value={ucDescInput}
+                  onChange={onChangeUcDescInput}
+                  placeholder="Description"
+                />
+              </div>
+              <Button onClick={onClickNew} className={`!py-1`}>
+                생성
+              </Button>
+            </Box>
+          )}
         </Modal>
       ) : (
         <>
@@ -456,7 +455,7 @@ const UseTestContainer = function () {
               <Logogogo msg="유즈케이스를 골라주세요!">
                 <div
                   className="bg-slate-600 rounded-full p-4 w-[10%] flex items-center justify-center cursor-pointer duration-[0.33s] hover:scale-105"
-                  onClick={() => setIsListModalOpen(true)}
+                  onClick={onToggleListModal}
                 >
                   고르기
                 </div>
