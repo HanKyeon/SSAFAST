@@ -49,22 +49,12 @@ public class TmpUser {
 	private TmpAddress address;
 
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "tmp_user_id")
-	private List<TmpOrder> orders = new ArrayList<>();
-
-
 	public TmpUserDto toDto() {
-		List<TmpOrderDto> orderDtos = new ArrayList<>();
-		orders.forEach((order) -> {
-			orderDtos.add(order.toDto());
-		});
 		return TmpUserDto.builder()
 			.id(id)
 			.name(name)
 			.age(age)
 			.address(address.toDto())
-			.orderList(orderDtos)
 			.build();
 	}
 }

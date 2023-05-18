@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 
 import com.rocket.ssafast.tmp.domain.TmpItem;
 import com.rocket.ssafast.tmp.domain.TmpOrder;
-import com.rocket.ssafast.tmp.domain.TmpUser;
 import com.rocket.ssafast.tmp.dto.TmpItemDto;
 import com.rocket.ssafast.tmp.dto.TmpOrderDto;
 import com.rocket.ssafast.tmp.dto.TmpUserDto;
 import com.rocket.ssafast.tmp.repository.TmpItemRepository;
+import com.rocket.ssafast.tmp.repository.TmpOrderRepository;
 import com.rocket.ssafast.tmp.repository.TmpUserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -22,31 +22,29 @@ public class TmpService {
 
 	private final TmpUserRepository tmpUserRepository;
 
+	private final TmpOrderRepository tmpOrderRepository;
+
 	private final TmpItemRepository tmpItemRepository;
 
-
-	public TmpUserDto save(TmpUserDto tmpUserDto) {
-		TmpUser tmpUser = tmpUserDto.toEntity();
-		List<TmpOrder> tmpOrders = new ArrayList<>();
-		tmpUserDto.getOrderList().forEach(orderDto -> {
-			TmpOrder order = orderDto.toEntity();
-			order.setTmpUser(tmpUser);
-			tmpOrders.add(order);
-		});
-		tmpUser.setOrders(tmpOrders);
-		return tmpUserRepository.save(tmpUser).toDto();
+	public TmpUserDto saveUser(TmpUserDto tmpUserDto) {
+		return tmpUserRepository.save(tmpUserDto.toEntity()).toDto();
 	}
 
-	public List<TmpItemDto> saveOrderItems(long orderId, List<TmpItemDto> tmpItemDtos) {
-		List<TmpItemDto> tmpItemList = new ArrayList<>();
-		tmpItemDtos.forEach(tmpItemDto -> {
-			tmpItemDto.setOrderId(orderId);
-			tmpItemList.add(tmpItemRepository.save(tmpItemDto.toEntity()).toDto());
-		});
-		return tmpItemList;
+	public TmpOrderDto saveOrder(TmpOrderDto tmpOrderDto) {
+		TmpOrder tmpOrder = tmpOrderDto.toEntity();
+
+		TmpItem tmpItem = tmpOrderDto.getItem().toEntity();
+		tmpItem.setOrder(tmpOrder);
+
+		List<TmpItem> items = new ArrayList<>();
+		items.add(tmpItem);
+
+		tmpOrder.setItems(items);
+
+		return tmpOrderRepository.save(tmpOrder).toDto();
 	}
 
-	public TmpItemDto getOrderItems(long itemId) {
+	public TmpItemDto getOrderItem(long itemId) {
 		return tmpItemRepository.findById(itemId).get().toDto();
 	}
 }

@@ -1,7 +1,6 @@
 package com.rocket.ssafast.tmp.dto;
 
 import com.rocket.ssafast.tmp.domain.TmpOrder;
-import com.rocket.ssafast.tmp.domain.TmpUser;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,10 +17,12 @@ public class TmpOrderDto {
 	private Long id;
 	private Long userId;
 	private String num;
+	private TmpItemDto item;
 
 	// getters and setters
 	public TmpOrder toEntity() {
 		return TmpOrder.builder()
+			.userId(userId)
 			.num(num)
 			.build();
 	}
