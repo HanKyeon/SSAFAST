@@ -63,7 +63,7 @@ const UCResItemInner = function ({
   // }, [contextMapped]);
 
   const styles = {
-    innerBox: `w-full h-auto flex items-center overflow-hidden rounded-[8px] relative ${
+    innerBox: `w-full h-auto flex items-center overflow-hidden rounded-[13px] relative ${
       depth === 0
         ? isDark
           ? 'bg-grayscale-deepdark text-white'

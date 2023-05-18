@@ -179,8 +179,8 @@ const UseTestContainer = function () {
     }).then((res) => {
       setCurUsecase({
         id: res.data.usecaseTestId,
-        name: ucNameInput,
-        desc: ucDescInput,
+        name: curUsecase.name,
+        desc: curUsecase.desc,
         isNew: true,
       });
     });
