@@ -5,6 +5,8 @@ import com.rocket.ssafast.apiexec.domain.document.element.ApiTestResultRequestBo
 import com.rocket.ssafast.apiexec.domain.document.element.ApiTestResultRequestNestedDto;
 import com.rocket.ssafast.apiexec.domain.document.element.ApiTestResultRequestNestedDtoList;
 import com.rocket.ssafast.apispec.domain.Document.element.ApiDoc;
+import com.rocket.ssafast.apispec.domain.Document.element.ApiTestForDetailResponseBody;
+import com.rocket.ssafast.apispec.domain.Document.element.ApiTestResultResponseDoc;
 import com.rocket.ssafast.apispec.domain.Document.element.HeaderField;
 import com.rocket.ssafast.apispec.domain.Document.temp.ApiSpecDoc;
 import com.rocket.ssafast.apispec.domain.Document.temp.BodyField;
@@ -261,7 +263,7 @@ public class ApiSpecService {
                                 }
                             });
 
-                            forNestedDtos.put(docDtoKey, innerNestedDto);
+                            if(innerNestedDto.size() >0) { forNestedDtos.put(docDtoKey, innerNestedDto); }
 
                         });
                     }
@@ -285,7 +287,7 @@ public class ApiSpecService {
                     }
                 });
 
-                nestedDtos.put(dtoId, outerNestedDto);
+                if(outerNestedDto.size() >0 ){ nestedDtos.put(dtoId, outerNestedDto); }
             }
         }
 
@@ -296,6 +298,109 @@ public class ApiSpecService {
                         .nestedDtos(nestedDtos)
                         .nestedDtoLists(nestedDtoLists)
                         .build();
+
+        List<ApiTestResultResponseDoc> response = new ArrayList<>();
+        //response 만들기
+        UtilMethods.emptyIfNull(apiDoc.getResponse()).forEach(value -> {
+            log.info(value.toString());
+
+            List<HeaderField> responseHeaderFields = new ArrayList<>();
+
+            UtilMethods.emptyIfNull(value.getHeaders()).forEach(header -> {
+                responseHeaderFields.add(header.convertTo());
+            });
+
+            List<FieldInfo> responseBodyFields = new ArrayList<>();
+
+            UtilMethods.emptyIfNull(value.getBody().getFields()).forEach(field -> {
+                responseBodyFields.add(field.convertTo());
+            });
+
+            Map<Long, List<ApiTestResultRequestNestedDto>> responseNestedDtos = new HashMap<>();
+            Map<Long, List<ApiTestResultRequestNestedDtoList>> responseNestedDtoLists = new HashMap<>();
+
+            if(value.getBody().getNestedDtos()!= null){
+                value.getBody().getNestedDtos().forEach((dtoId, dtoList) -> {
+
+                    DtoSpecEntity targetDtoEntity = dtoSpecEntityService.getDtoSpecEntityById(dtoId);
+                    DtoInfo targetDtoDoc = dtoSpecDocumentService.findByDtoId(dtoId);
+
+                    List<ApiTestResultRequestNestedDto> newListByNestedDto = new ArrayList<>();
+                    UtilMethods.emptyIfNull(dtoList).forEach(dtoInfo ->{
+                        Map<Long, List<ApiTestResultRequestNestedDto>> innerNestedDtos = new HashMap<>();
+                        Map<Long, List<ApiTestResultRequestNestedDtoList>> innerNestedDtoLists = new HashMap<>();
+
+                        if(targetDtoDoc.getNestedDtos() != null){
+                            targetDtoDoc.getNestedDtos().forEach((innerNestedDtoKey, innerNestedDtoValue) -> {
+
+                                DtoSpecEntity innerDtoSpecEntity = dtoSpecEntityService.getDtoSpecEntityById(innerNestedDtoKey);
+                                DtoInfo innerDtoDoc = dtoSpecDocumentService.findByDtoId(innerNestedDtoKey);
+
+                                List<ApiTestResultRequestNestedDto> newListByInnerNestedDto = new ArrayList<>();
+
+                                innerNestedDtoValue.forEach(innerValue -> {
+                                    if(innerValue.isItera()){
+                                        //for nestedDtoLists
+                                    }
+                                    else{
+                                        newListByInnerNestedDto.add(
+                                                ApiTestResultRequestNestedDto.builder()
+                                                        .keyName(innerValue.getKeyName())
+                                                        .name(innerDtoSpecEntity.getName())
+                                                        .desc(innerValue.getDesc())
+                                                        .fields(innerDtoDoc.getFields())
+                                                        .nestedDtos(new HashMap<>())
+                                                        .nestedDtoLists(new HashMap<>())
+                                                        .build()
+                                        );
+                                    }
+                                });
+
+                                if(newListByInnerNestedDto.size() >0){
+                                    innerNestedDtos.put(innerNestedDtoKey, newListByInnerNestedDto);
+                                }
+
+                            });
+                        }
+
+                        //nestedDtoLists
+                        if(dtoInfo.isItera()){
+
+                        }
+                        else{
+                            newListByNestedDto.add(
+                                    ApiTestResultRequestNestedDto.builder()
+                                            .keyName(dtoInfo.getKeyName())
+                                            .name(targetDtoEntity.getName())
+                                            .desc(dtoInfo.getDesc())
+                                            .fields(targetDtoDoc.getFields())
+                                            .nestedDtos(innerNestedDtos)
+                                            .nestedDtoLists(innerNestedDtoLists)
+                                            .build()
+                            );
+                        }
+                    });
+
+                    if(newListByNestedDto.size() > 0) { responseNestedDtos.put(dtoId, newListByNestedDto); }
+                });
+            }
+
+            ApiTestForDetailResponseBody responseBody =
+                    ApiTestForDetailResponseBody.builder()
+                            .fields(responseBodyFields)
+                            .nestedDtos(responseNestedDtos)
+                            .nestedDtoLists(responseNestedDtoLists)
+                            .build();
+
+            response.add(
+                ApiTestResultResponseDoc.builder()
+                        .statusCode(value.getStatusCode())
+                        .desc(value.getDesc())
+                        .headers(responseHeaderFields)
+                        .body(responseBody)
+                        .build()
+            );
+        });
 
         DetailApiInfoDocument document =
                 DetailApiInfoDocument.builder()
@@ -308,6 +413,7 @@ public class ApiSpecService {
                                         .body(requestBody)
                                         .build()
                         )
+                        .response(response)
                         .build();
 
 

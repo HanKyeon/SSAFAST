@@ -15,6 +15,6 @@ public class ApiTestResultResponseDoc {
     private int statusCode;
     private String desc;
     private List<HeaderField> headers;
-    private List<ApiTestForDetailResponseBody> body;
+    private ApiTestForDetailResponseBody body;
 
 }
