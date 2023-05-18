@@ -82,7 +82,7 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
     defaultValues: defaultData,
   });
   const { handleSubmit, control, reset, resetField } = methods;
-  const { data: dtoClassCode } = useDtoClasses(spaceId, selectedId!);
+  const { data: dtoClassCode } = useDtoClasses(spaceId, selectedId as number);
   useEffect(
     function () {
       if (!selectedId) {
@@ -323,9 +323,9 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
           <Box className="flex flex-col gap-4 w-full h-full p-5 items-center justify-center">
             <div className="text-[36px]">DTO Code</div>
             <div className="text-[24px] text-red-500">
-              가장 최근에 저장된 데이터로 코드입니다.
+              가장 최근 저장된 데이터 코드입니다.
             </div>
-            <Box variant="three" className="w-full h-full p-5">
+            <Box variant="three" className="w-full h-full p-5 overflow-scroll">
               <pre>
                 {dtoClassCode?.dtoClass ||
                   '이 편지는 17세기 영국으로부터 시작되어...'}

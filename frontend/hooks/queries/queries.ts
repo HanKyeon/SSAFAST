@@ -404,7 +404,7 @@ export const useDtoClasses = function (
         params: {
           dtoId: dtoId,
         },
-      });
+      }).then((res) => res.data);
     },
     enabled: !!spaceId && !!dtoId,
   });
