@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.jayway.jsonpath.JsonPath;
 import com.rocket.ssafast.apispec.domain.Document.ApiSpecDocument;
+import com.rocket.ssafast.apispec.domain.Document.element.ApiTestForDetailResponseBody;
+import com.rocket.ssafast.apispec.domain.Document.element.ApiTestResultResponseDoc;
 import com.rocket.ssafast.apispec.domain.Entity.ApiSpecEntity;
 import com.rocket.ssafast.apiexec.dto.request.ReqApiExecMessageDto;
 import com.rocket.ssafast.apiexec.dto.request.element.ReqApiExecMessageParamDto;
@@ -27,6 +30,7 @@ import com.rocket.ssafast.apiexec.dto.request.ReqApiTestResultResponseDto;
 import com.rocket.ssafast.apispec.repository.ApiSpecMongoTempRepository;
 import com.rocket.ssafast.apispec.repository.ApiSpecRepository;
 import com.rocket.ssafast.apiexec.service.ApiExecService;
+import com.rocket.ssafast.apispec.service.ApiSpecService;
 import com.rocket.ssafast.dtospec.domain.ApiHasDtoEntity;
 import com.rocket.ssafast.dtospec.repository.ApiHasDtoEntityRepository;
 import com.rocket.ssafast.exception.CustomException;
@@ -73,6 +77,7 @@ public class UsecaseTestService {
 	private final BaseurlRepository baseurlRepository;
 	private final ApiHasDtoEntityRepository apiHasDtoEntityRepository;
 	private final ApiSpecMongoTempRepository apiSpecMongoTempRepository;
+	private final ApiSpecService apiSpecService;
 
 	@Transactional
 	public Long saveUsecaseTestEntity(ReqUsecaseEntityDto reqUsecaseTestEntityDto) {
@@ -479,12 +484,22 @@ public class UsecaseTestService {
 			apiNames.put(apiId, new String[] {apiSpec.get().getName(), apiSpec.get().getDescription()});
 		});
 
+		// api들의 200 response의 headers 정보 채우기
 		List<ResUsecasePrevResponseDto> prevResponseDtos = apiSpecMongoTempRepository
 										.findApiResponseListByIdAndApiIdLIst(SSAFAST_API_SPEC, apiIds);
 
+		// api name, desc & api들의 200 response의 body 정보 채우기
 		prevResponseDtos.forEach(prevResponseDto -> {
+
 			prevResponseDto.setApiName(apiNames.get(prevResponseDto.getApiId())[0]);
 			prevResponseDto.setDesc(apiNames.get(prevResponseDto.getApiId())[1]);
+
+			List<ApiTestResultResponseDoc> apiResponses = apiSpecService.getApiSpecDetail(prevResponseDto.getApiId())
+															.getDocument().getResponse();
+			ApiTestForDetailResponseBody apiResponseBody = apiResponses.stream()
+															.filter(apiRes -> apiRes.getStatusCode() == 200)
+															.collect(Collectors.toList()).get(0).getBody();
+			prevResponseDto.setBody(apiResponseBody);
 		});
 
 		return prevResponseDtos;

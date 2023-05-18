@@ -27,7 +27,7 @@ public class ApiSpecMongoTempRepository {
 	private final MongoTemplate mongoTemplate;
 
 	public List<ResUsecasePrevResponseDto> findApiResponseListByIdAndApiIdLIst(String id, List<Long> apiIds) {
-		
+
 		// 1. collection에서 api의 spec 정보 가져오기
 		Query query = Query.query(Criteria.where("_id").is(id));
 		ApiSpecDocument document = mongoTemplate.findOne(query, ApiSpecDocument.class,"SSAFAST_API_SPEC");
@@ -42,10 +42,9 @@ public class ApiSpecMongoTempRepository {
 					.findFirst()
 					.get();
 				prevResponseDtos.add(ResUsecasePrevResponseDto.builder()
-						.apiId(apiId)
-						.headers(response.getHeaders())
-						.body(response.getBody())
-						.build());
+					.apiId(apiId)
+					.headers(response.getHeaders())
+					.build());
 			}
 		});
 
