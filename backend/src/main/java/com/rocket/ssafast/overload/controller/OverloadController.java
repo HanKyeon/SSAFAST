@@ -119,7 +119,7 @@ public class OverloadController {
 		for(int i = 0; i < certCodes.size(); i++){
 			Map<String, Object> certCode = (Map<String, Object>) certCodes.get(i);
 			certCodeDtos.add(CertCodeDto.builder()
-					.code((Integer) certCode.get("code"))
+					.code((String) certCode.get("code"))
 					.baseurlId(new Long((Integer) certCode.get("baseurlId")))
 					.build());
 		}

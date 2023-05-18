@@ -10,5 +10,5 @@ import lombok.*;
 @ToString
 public class CertCodeDto {
     private Long baseurlId;
-    private Integer code;
+    private String code;
 }
