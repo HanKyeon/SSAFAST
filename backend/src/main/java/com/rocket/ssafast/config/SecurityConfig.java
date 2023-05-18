@@ -83,6 +83,7 @@ public class SecurityConfig {
 	public CorsConfigurationSource corsConfigurationSource(){
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		CorsConfiguration config = new CorsConfiguration();
+		config.setAllowCredentials(true);       // 서버의 json 응답을 JS로 처리가능하게 함
 		config.addAllowedOriginPattern("*");    // springboot cors 설정 시, allowCredentials(true)와 allowedOrigin("*") 같이 사용 불가하게 업뎃
 		config.addAllowedHeader("*");
 		config.addAllowedMethod("*");
