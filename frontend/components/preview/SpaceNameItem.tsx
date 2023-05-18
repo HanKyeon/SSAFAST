@@ -2,9 +2,10 @@ import Image from 'next/image';
 import SpaceIcon from '/public/assets/images/Ggo.png';
 import { TbSettingsFilled } from 'react-icons/tb';
 import { useRouter } from 'next/router';
+import { SpaceShortcut } from '@/hooks/queries/queries';
 
 interface SpaceNameItemPropsType {
-  item: { id: number | string; name: string };
+  item: SpaceShortcut;
   // curSpaceId: number;
   onClickSpaceItem: (id: number) => void;
 }
@@ -32,9 +33,9 @@ const SpaceNameItem = function ({
       <div className="flex items-center">
         <i className="w-[30px] h-[30px] mr-2">
           <Image
-            src={SpaceIcon}
+            src={item.favicon}
             alt="space icon"
-            className="h-full w-auto object-contain"
+            className="h-full w-auto object-contain rounded-full"
             width={30}
             height={30}
           />

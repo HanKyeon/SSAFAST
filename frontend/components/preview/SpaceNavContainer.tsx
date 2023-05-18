@@ -41,7 +41,7 @@ const SpaceNavContainer = function (): JSX.Element {
     <div className="w-[20%] h-full flex flex-col gap-3">
       <div className="h-[10%] w-full flex items-center justify-center gap-3">
         <Image
-          className="object-contain w-[30%] cursor-pointer hover:scale-[102%] duration-[0.33s]"
+          className="object-contain w-[30%] cursor-pointer hover:scale-[102%] duration-[0.33s] p-2"
           src={isDark ? DarkLogo : LightLogo}
           alt="logo"
           width={70}

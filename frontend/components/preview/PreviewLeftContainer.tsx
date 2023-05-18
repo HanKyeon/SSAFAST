@@ -54,11 +54,11 @@ const PreviewLeftContainer = function (): JSX.Element {
       >
         <div className="w-full h-full p-9 bg-basic-black bg-opacity-60 flex flex-col gap-2">
           {/* header */}
-          <div className="flex gap-3 items-center">
+          <div className="flex gap-3 items-center rounded-full">
             <Image
               src={spaceDetailData?.favicon || SpaceIcon}
               alt="space icon"
-              className={`w-[50px] h-[50px] object-contain ${
+              className={`w-[50px] h-[50px] object-contain rounded-full ${
                 dark ? '' : 'invert'
               }`}
               width={500}
