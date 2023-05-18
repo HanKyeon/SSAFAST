@@ -582,7 +582,7 @@ export const useSaveSingleApiTest = function (spaceId: string | number) {
 };
 
 export interface ValidateUrl {
-  certCodes: { baseurlId: number; code: number }[];
+  certCodes: { baseurlId: number; code: string }[];
 }
 
 export const useValidateUrl = function (spaceId: string | number) {
@@ -593,7 +593,7 @@ export const useValidateUrl = function (spaceId: string | number) {
       return apiRequest({
         method: `post`,
         url: `/api/overload/cert`,
-        data: data.certCodes,
+        data: data,
       });
     },
     onSuccess: function () {
@@ -603,7 +603,9 @@ export const useValidateUrl = function (spaceId: string | number) {
       dispatch(DispatchToast('모든 URL 인증이 완료되었습니다.', true));
     },
     onError: function () {
-      dispatch(DispatchToast('URL 인증에 실패하였습니다.', false));
+      dispatch(
+        DispatchToast('URL 인증에 실패하였습니다. 다시 시도해주세요.', false)
+      );
     },
   });
 };

@@ -1,23 +1,48 @@
 import AnimationBox from '@/components/common/AnimationBox';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import LoadResultList from './LoadResultList';
 import LoadResultDetail from './LoadResultDetail';
 
 interface Props {
   isList: boolean;
-  toggleIsList: () => void;
+  changeSetResponse: (data: any) => void;
+  responseData: any;
+  currentApiId: number;
 }
 
-const LoadResult = function ({ isList, toggleIsList }: Props) {
+const LoadResult = function ({
+  changeSetResponse,
+  responseData,
+  currentApiId,
+}: Props) {
+  // useEffect(
+  //   function () {
+  //     console.log(isList);
+  //     toggleIsList();
+  //   },
+  //   [isList]
+  // );
+
   return (
     <>
-      <AnimationBox isOpened={isList} className="h-full w-full">
-        <LoadResultList toggleIsList={toggleIsList} />
-      </AnimationBox>
-
-      <AnimationBox isOpened={!isList} className="h-full w-full">
-        <LoadResultDetail toggleIsList={toggleIsList} />
-      </AnimationBox>
+      <>
+        {!responseData && (
+          <AnimationBox className="h-full w-full">
+            <LoadResultList
+              changeSetResponse={changeSetResponse}
+              currentApiId={currentApiId}
+            />
+          </AnimationBox>
+        )}
+        {responseData && (
+          <AnimationBox className="h-full w-full">
+            <LoadResultDetail
+              changeSetResponse={changeSetResponse}
+              responseData={responseData}
+            />
+          </AnimationBox>
+        )}
+      </>
     </>
   );
 };

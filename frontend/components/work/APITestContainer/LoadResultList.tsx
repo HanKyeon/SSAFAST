@@ -1,164 +1,62 @@
+import {
+  useOverloadList,
+  useOverloadListDetail,
+} from '@/hooks/queries/queries';
 import LoadListInner from './LoadListInner';
-
-const data = [
-  {
-    id: 1,
-    duration: 10,
-    reqSec: 1,
-    latencyMean: 100,
-    throuthput: 1000,
-    createdTime: '2023.12.31',
-  },
-  {
-    id: 333,
-    duration: 100000,
-    reqSec: 1,
-    latencyMean: 100,
-    throuthput: 1000,
-    createdTime: '2023.12.31',
-  },
-  {
-    id: 999,
-    duration: 10,
-    reqSec: 1,
-    latencyMean: 122222222200,
-    throuthput: 1000,
-    createdTime: '2023.12.31',
-  },
-  {
-    id: 999,
-    duration: 10,
-    reqSec: 1,
-    latencyMean: 122222222200,
-    throuthput: 1000,
-    createdTime: '2023.12.31',
-  },
-  {
-    id: 999,
-    duration: 10,
-    reqSec: 1,
-    latencyMean: 122222222200,
-    throuthput: 1000,
-    createdTime: '2023.12.31',
-  },
-  {
-    id: 999,
-    duration: 10,
-    reqSec: 1,
-    latencyMean: 122222222200,
-    throuthput: 1000,
-    createdTime: '2023.12.31',
-  },
-  {
-    id: 999,
-    duration: 10,
-    reqSec: 1,
-    latencyMean: 122222222200,
-    throuthput: 1000,
-    createdTime: '2023.12.31',
-  },
-  {
-    id: 999,
-    duration: 10,
-    reqSec: 1,
-    latencyMean: 122222222200,
-    throuthput: 1000,
-    createdTime: '2023.12.31',
-  },
-  {
-    id: 999,
-    duration: 10,
-    reqSec: 1,
-    latencyMean: 122222222200,
-    throuthput: 1000,
-    createdTime: '2023.12.31',
-  },
-  {
-    id: 999,
-    duration: 10,
-    reqSec: 1,
-    latencyMean: 122222222200,
-    throuthput: 1000,
-    createdTime: '2023.12.31',
-  },
-  {
-    id: 999,
-    duration: 10,
-    reqSec: 1,
-    latencyMean: 122222222200,
-    throuthput: 1000,
-    createdTime: '2023.12.31',
-  },
-  {
-    id: 999,
-    duration: 10,
-    reqSec: 1,
-    latencyMean: 122222222200,
-    throuthput: 1000,
-    createdTime: '2023.12.31',
-  },
-  {
-    id: 999,
-    duration: 10,
-    reqSec: 1,
-    latencyMean: 122222222200,
-    throuthput: 1000,
-    createdTime: '2023.12.31',
-  },
-  {
-    id: 999,
-    duration: 10,
-    reqSec: 1,
-    latencyMean: 122222222200,
-    throuthput: 1000,
-    createdTime: '2023.12.31',
-  },
-];
-
-// const data = [];
-
-interface ListData {
-  data: {
-    id: number;
-    duration: number;
-    reqSec: number;
-    latencyMean: number;
-    throuthput: number;
-    createdTime: Date;
-  }[];
-}
+import { useRouter } from 'next/router';
+import { SpaceParams } from '@/pages/space';
+import { useEffect, useState } from 'react';
 
 interface Props {
-  toggleIsList: () => void;
+  changeSetResponse: (data: any) => void;
+  currentApiId: number | string;
 }
 
-const LoadResultList = function ({ toggleIsList }: Props) {
+const LoadResultList = function ({ changeSetResponse, currentApiId }: Props) {
+  const router = useRouter();
+  const [detailId, setDetailId] = useState<number>(0);
+  const { spaceId } = router.query as SpaceParams;
   const colName = {
     id: 'id',
     duration: 'duration(sec)',
     reqSec: 'req/s',
     latencyMean: 'mean(μs)',
-    throuthput: 'throuthput',
+    throughput: 'throughput',
     createdTime: 'date',
+  };
+  const { data, isFetched, isSuccess } = useOverloadList(spaceId, currentApiId);
+  const { data: detailedData } = useOverloadListDetail(spaceId, detailId);
+  useEffect(
+    function () {
+      if (changeSetResponse && isSuccess) {
+        changeSetResponse(detailedData);
+        console.log('할아방탱', detailedData);
+      }
+    },
+    [detailedData]
+  );
+  const idHandler = function (id: number) {
+    setDetailId(id);
   };
   return (
     <>
-      {data[0] && (
+      {isFetched && (
         <div className="h-full w-full">
           <div className="h-[10%] w-full py-5 pr-2">
             <LoadListInner item={colName} />
           </div>
 
           <div className="h-[90%] w-full flex flex-col justify-start overflow-y-scroll">
-            {data.map((item) => (
+            {data?.overlosdList.map((item: any) => (
               <div key={item.id} className="w-full py-2">
-                <LoadListInner item={item} />
+                <LoadListInner item={item} idHandler={idHandler} />
               </div>
             ))}
           </div>
         </div>
       )}
-      {!data[0] && (
+
+      {!isFetched && (
         <div className="h-full w-full">
           <div className="h-[10%] w-full py-5 pr-2">
             <LoadListInner item={colName} />
