@@ -221,11 +221,17 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
         params,
         body: JSON.stringify(body),
       },
-    }).then((res) => {
-      queryClient.invalidateQueries(queryKeys.spaceResult(spaceId, selectedId));
-      console.log('처리해야함');
-      setResponseData(res.data);
-    });
+    })
+      .then((res) => {
+        queryClient.invalidateQueries(
+          queryKeys.spaceResult(spaceId, selectedId)
+        );
+        console.log('처리해야함');
+        setResponseData(res.data);
+      })
+      .catch((err) => {
+        setResponseData(err);
+      });
   };
   return (
     <>
