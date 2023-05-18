@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class RedisService {
-
 	private final RedisTemplate<String, String> redisTemplate;
 
 	// 만료시간 설정 -> 자동 삭제

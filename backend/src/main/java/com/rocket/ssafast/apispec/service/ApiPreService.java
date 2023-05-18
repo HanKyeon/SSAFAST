@@ -40,6 +40,7 @@ public class ApiPreService {
         for(Baseurl baseurl : baseurls){
             baseurlDtos.add(BaseurlDto.builder()
                     .id(baseurl.getId())
+                    .isCertified(baseurl.getIsCertified())
                     .url(baseurl.getUrl()).build()
             );
         }
