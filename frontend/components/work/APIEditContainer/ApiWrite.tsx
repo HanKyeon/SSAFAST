@@ -269,8 +269,8 @@ const ApiWrite = function ({
     setStep(() => 2);
   };
   return (
-    <div className="flex flex-col gap-3 p-[3%] w-full h-full overflow-y-scroll">
-      <div className="h-[5%]">
+    <div className="flex flex-col gap-3 p-[3%] w-full h-full">
+      <div className="h-[5%] w-full">
         <Button
           onClick={goToApiContainer}
           isEmpty
@@ -282,7 +282,7 @@ const ApiWrite = function ({
 
       <Box
         fontType="normal"
-        className="flex justify-around flex-row items-center box-border h-[5%]"
+        className="flex justify-around flex-row items-center box-border h-[5%] w-full"
       >
         <div
           className={`${step === 1 ? selectedStyle(dark) : ''} cursor-pointer `}
@@ -299,13 +299,13 @@ const ApiWrite = function ({
       </Box>
       {/* <button onClick={onSubmit}>최종 제출</button> */}
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)} className="h-[80%]">
+        <form onSubmit={handleSubmit(onSubmit)} className="h-[80%] w-full">
           <div
             className={`${
               step === 1 ? '' : 'hidden'
             } flex flex-col w-full h-full overflow-y-scroll`}
           >
-            <div className="flex flex-row items-center pt-10 h-[10%]">
+            <div className="flex flex-row items-center pt-5 h-[10%]">
               <Controller
                 name={`categoryId`}
                 control={control}
@@ -353,7 +353,7 @@ const ApiWrite = function ({
                 )}
               />
             </div>
-            <div className="flex flex-col w-full items-center justify-center gap-4 py-10">
+            <div className="flex flex-col w-full items-center justify-center gap-4 py-5">
               <Controller
                 control={control}
                 name={`name`}
@@ -408,7 +408,7 @@ const ApiWrite = function ({
                   render={({ field, fieldState }) => (
                     <div className="flex flex-col w-[21%]">
                       <Select
-                        className={`w-full text-center items-start`}
+                        className={`w-[90%] text-center items-start`}
                         name={'method'}
                         onChange={field.onChange}
                         onBlur={field.onBlur}
@@ -462,7 +462,7 @@ const ApiWrite = function ({
           >
             <ResponseForm />
           </AnimationBox>
-          <div className="flex justify-end pt-10">
+          <div className="flex justify-end">
             <Button type="submit">저장</Button>
           </div>
         </form>

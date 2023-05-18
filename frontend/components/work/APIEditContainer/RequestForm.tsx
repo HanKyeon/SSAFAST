@@ -169,7 +169,7 @@ const RequestForm = function () {
         </div>
       </div>
       {/* Params */}
-      <div className="w-full flex flex-col items-center">
+      <div className="w-full flex flex-col items-center gap-3">
         <div className="flex items-center w-[95%]">
           <ToggleableHeader
             title="Params"
@@ -198,7 +198,7 @@ const RequestForm = function () {
           </AnimationBox>
         ))}
         {/* Path Variables */}
-        <div className="flex items-center w-[95%]">
+        <div className="flex items-center w-[95%] gap-3">
           <ToggleableHeader
             title="Path Variables"
             isOpen={pathOpen}
@@ -226,7 +226,7 @@ const RequestForm = function () {
           </AnimationBox>
         ))}
         {/* Headers */}
-        <div className="flex items-center w-[95%]">
+        <div className="flex items-center w-[95%] gap-3">
           <ToggleableHeader
             title="Headers"
             isOpen={headersOpen}
@@ -241,7 +241,7 @@ const RequestForm = function () {
         {headersFields.map((item, index) => (
           <AnimationBox
             key={item.id}
-            className={`flex items-center justify-between 
+            className={`flex items-center justify-center 
           ${headersOpen ? '' : 'hidden'}
           `}
           >
@@ -254,7 +254,7 @@ const RequestForm = function () {
           </AnimationBox>
         ))}
         {/* Body */}
-        <div className="flex items-center w-[95%]">
+        <div className="flex items-center w-[95%] gap-3">
           <ToggleableHeader
             title="Body"
             isOpen={bodyOpen}

@@ -85,7 +85,6 @@ const APIContainer = function ({ store }: Props) {
         {/* </div> */}
       </Box>
       {/* 오른쪽 */}
-
       <Box
         variant="two"
         fontType="normal"

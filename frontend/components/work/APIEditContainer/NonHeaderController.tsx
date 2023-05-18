@@ -11,6 +11,7 @@ import {
   FieldArrayWithId,
   useFormContext,
   useFieldArray,
+  useController,
 } from 'react-hook-form';
 import { Box, CircleBtn } from '@/components/common';
 import { useState } from 'react';
@@ -70,14 +71,19 @@ const NonHeaderController = function ({
     remove(index);
   };
 
+  const { field } = useController({
+    name: `${formName}.${index}.type`,
+    control,
+  });
+
   return (
     <AnimationBox
       key={`${item.id}-container`}
-      className="flex flex-col w-full items-center pl-12"
+      className="flex flex-col w-full items-center"
     >
       <Box
         variant="three"
-        className="px-3 py-2 flex flex-row gap-3 w-full items-center"
+        className="px-3 py-2 flex flex-row gap-3 w-[90%] items-center"
       >
         <Controller
           key={`${formName}-keyName-${index}`}
@@ -145,23 +151,25 @@ const NonHeaderController = function ({
             </div>
           )}
         />
-        <Controller
-          key={`${formName}.${index}.itera`}
-          name={`${formName}.${index}.itera`}
-          control={control}
-          render={({ field }) => (
-            <div className="flex flex-col w-[7%] items-center justify-center">
-              <label className="text-[16.6px]">배열</label>
-              <input
-                type="checkbox"
-                name={`${formName}.${index}.itera`}
-                onChange={field.onChange}
-                value={field.value}
-                className="flex items-center justify-center outline-none border-b-[3px] border-b-grayscale-dark bg-opacity-0 bg-theme-white-light px-2"
-              />
-            </div>
-          )}
-        />
+        {field.value < 10 && (
+          <Controller
+            key={`${formName}.${index}.itera`}
+            name={`${formName}.${index}.itera`}
+            control={control}
+            render={({ field }) => (
+              <div className="flex flex-col w-[7%] items-center justify-center">
+                <label className="text-[16.6px]">배열</label>
+                <input
+                  type="checkbox"
+                  name={`${formName}.${index}.itera`}
+                  onChange={field.onChange}
+                  value={field.value}
+                  className="flex items-center justify-center outline-none border-b-[3px] border-b-grayscale-dark bg-opacity-0 bg-theme-white-light px-2"
+                />
+              </div>
+            )}
+          />
+        )}
         <Controller
           key={`${formName}.${index}.desc`}
           name={`${formName}.${index}.desc`}

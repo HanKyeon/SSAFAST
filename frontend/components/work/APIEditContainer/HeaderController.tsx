@@ -32,7 +32,7 @@ const HeaderController = function ({ item, index, formName, remove }: Props) {
   return (
     <AnimationBox
       key={`${item.id}-container`}
-      className="flex flex-col w-full items-center pl-12"
+      className="flex flex-col w-[90%] items-center"
     >
       <Box
         variant="three"

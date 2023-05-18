@@ -274,7 +274,7 @@ function HeaderFields({
         >
           <AnimationBox
             key={`document.response.${Keyindex}.headers-container`}
-            className={`flex flex-col h-full w-full items-center pl-12 
+            className={`flex flex-col h-full w-full items-center 
             `}
           >
             <Box
@@ -457,7 +457,7 @@ function BodyFields({
         >
           <AnimationBox
             key={`${item.id}-container`}
-            className="flex flex-col w-full items-center pl-12"
+            className="flex flex-col w-full items-center"
           >
             <Box
               variant="three"
