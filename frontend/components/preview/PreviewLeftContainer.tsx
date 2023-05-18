@@ -14,48 +14,6 @@ import { useMemo } from 'react';
 
 const statusLsit = [``, `명세중`, `명세완료`, `개발중`, `개발완료`];
 
-const apiListMockup: EachCateApi[] = [
-  {
-    id: 1,
-    name: '전체 회원 목록',
-    description: '아무튼 다 가져오는거',
-    method: 2,
-    status: 1,
-    writter: {
-      id: 1,
-      name: '로사짱',
-      email: 'a@naver.com',
-      profileImg: 'anjanj.png',
-    },
-  },
-  {
-    id: 2,
-    name: '회원 한명 조회',
-    description: '한명 가져오는거',
-    method: 1,
-    status: 3,
-    writter: {
-      id: 1,
-      name: '로사짱',
-      email: 'a@naver.com',
-      profileImg: 'anjanj.png',
-    },
-  },
-  {
-    id: 3,
-    name: '회원가입',
-    description: '아무튼 가입',
-    method: 2,
-    status: 2,
-    writter: {
-      id: 1,
-      name: '로사짱',
-      email: 'a@naver.com',
-      profileImg: 'anjanj.png',
-    },
-  },
-];
-
 const PreviewLeftContainer = function (): JSX.Element {
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
@@ -69,7 +27,7 @@ const PreviewLeftContainer = function (): JSX.Element {
     isLoading: spaceApiLoading,
     isError: spaceApiError,
   } = useSpaceApis(parseInt(spaceId));
-  console.log(spaceDetailData);
+
   const apiList = useMemo(
     function () {
       let ret: EachCateApi[] = [];
@@ -140,26 +98,22 @@ const PreviewLeftContainer = function (): JSX.Element {
           <span className="w-[70px] text-center">status</span>
         </div>
         <ul className="flex-1 flex flex-col overflow-scroll scrollbar-hide">
-          {apiList.map((api) => {
-            return (
-              <APIlistItem
-                key={`${api.id}-api-preview-item`}
-                item={api}
-                writter={false}
-                hoverOpt={false}
-              />
-            );
-          })}
-          {apiListMockup.map((api) => {
-            return (
-              <APIlistItem
-                key={`${api.id}-api-preview-item`}
-                item={api}
-                writter={false}
-                hoverOpt={false}
-              />
-            );
-          })}
+          {apiList.length ? (
+            apiList.map((api) => {
+              return (
+                <APIlistItem
+                  key={`${api.id}-api-preview-item`}
+                  item={api}
+                  writter={false}
+                  hoverOpt={false}
+                />
+              );
+            })
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              API를 생성하세요!
+            </div>
+          )}
         </ul>
       </Box>
     </div>
