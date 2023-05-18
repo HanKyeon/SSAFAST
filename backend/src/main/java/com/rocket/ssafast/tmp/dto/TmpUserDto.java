@@ -24,7 +24,6 @@ public class TmpUserDto {
 	private String name;
 	private int age;
 	private TmpAddressDto address;
-	private List<TmpOrderDto> orderList;
 
 	// getters and setters
 	public TmpUser toEntity() {

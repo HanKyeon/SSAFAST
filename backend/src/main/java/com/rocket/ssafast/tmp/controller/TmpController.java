@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rocket.ssafast.tmp.domain.TmpOrder;
-import com.rocket.ssafast.tmp.domain.TmpUser;
 import com.rocket.ssafast.tmp.dto.TmpItemDto;
 import com.rocket.ssafast.tmp.dto.TmpOrderDto;
 import com.rocket.ssafast.tmp.dto.TmpUserDto;
@@ -41,23 +39,23 @@ public class TmpController {
 		responseHeaders.set("Authorization", auth);
 
 		Map<String, TmpUserDto> result = new HashMap<>();
-		result.put("user", tmpService.save(tmpUserDto));
+		result.put("user", tmpService.saveUser(tmpUserDto));
 		return ResponseEntity.ok().headers(responseHeaders).body(result);
 	}
 
-	@PostMapping("/order/{orderId}")
-	ResponseEntity<?> postItemsMethod(@RequestBody Map<String, List<TmpItemDto>> orderItemList, @RequestParam String[] userAddressStreet, @RequestParam(required = false) String orderNum, @PathVariable("orderId") Long orderId) {
-		System.out.println("/api/tmp/order/주문id?주문번호: "+ Arrays.toString(userAddressStreet));
-		Map<String, List<TmpItemDto>> result = new HashMap<>();
-		result.put("orderItemList", tmpService.saveOrderItems(orderId, orderItemList.get("orderItemList")));
+	@PostMapping("/order")
+	ResponseEntity<?> postOrderMethod(@RequestBody TmpOrderDto tmpOrderDto, @RequestParam String[] userAddressStreet) {
+		System.out.println("/api/tmp/order: "+ Arrays.toString(userAddressStreet));
+		Map<String, TmpOrderDto> result = new HashMap<>();
+		result.put("order", tmpService.saveOrder(tmpOrderDto));
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
-	@GetMapping("/item/{itemId}")
+	@GetMapping("/order-item/{itemId}")
 	ResponseEntity<?> getItemsMethod(@PathVariable("itemId") Long itemId) {
-		System.out.println("/api/tmp/item/itemid: "+ itemId);
+		System.out.println("/api/tmp/order-item/itemid: "+ itemId);
 		Map<String, TmpItemDto> result = new HashMap<>();
-		result.put("orderItem", tmpService.getOrderItems(itemId));
+		result.put("orderItem", tmpService.getOrderItem(itemId));
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 }

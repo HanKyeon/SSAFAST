@@ -23,7 +23,6 @@ public class TmpItemDto {
 
 	public TmpItem toEntity() {
 		return TmpItem.builder()
-			.orderId(orderId)
 			.name(name)
 			.price(price)
 			.build();
