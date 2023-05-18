@@ -453,6 +453,10 @@ module.exports = {
           '80%': { width: '10%', height: '0%' },
           '100%': { width: '10%', height: '0%' },
         },
+        shokshok: {
+          '0%': { transform: 'scale(100%)' },
+          '50%': { transform: 'scale(103%)' },
+        },
       },
     },
   },
