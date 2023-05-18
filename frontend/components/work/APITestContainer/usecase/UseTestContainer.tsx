@@ -25,6 +25,7 @@ import {
 } from '@/hooks/queries/mutations';
 import { useRouter } from 'next/router';
 import { SpaceParams } from '@/pages/space';
+import Logogogo from '@/components/common/Logogogo';
 
 // const mockupData2: MockupData2Type = {
 //   request: {
@@ -238,7 +239,7 @@ const UseTestContainer = function () {
   const [isApiListOpen, setIsApiListOpen] = useState<boolean>(false);
 
   const [curUsecase, setCurUsecase] = useState<UsecaseListItemType>({
-    id: -1,
+    id: 0,
     isNew: false,
   });
   const {
@@ -399,52 +400,68 @@ const UseTestContainer = function () {
         </Modal>
       ) : (
         <>
-          <FormProvider {...methods}>
-            <form
-              className="h-full w-full flex gap-[1.12%]"
-              onSubmit={handleSubmit(onClickTest)}
+          {curUsecase.id ? (
+            <FormProvider {...methods}>
+              <form
+                className="h-full w-full flex gap-[1.12%]"
+                onSubmit={handleSubmit(onClickTest)}
+              >
+                {/* 왼쪽 사이드 */}
+                <SideContainer
+                  curUsecase={curUsecase}
+                  apis={apis}
+                  onClickApi={onClickApi}
+                  onClickAddApiBtn={onClickAddApiBtn}
+                  onClickClearApis={onClickClearApis}
+                />
+                {/* Request */}
+                <Box
+                  variant="two"
+                  fontType="normal"
+                  className="flex-1 h-full p-5 flex flex-col"
+                >
+                  <BoxHeader title="Request" />
+                  {curapi && (
+                    <UCReqBox
+                      curUsecase={curUsecase}
+                      control={control}
+                      currentApi={curapi}
+                    />
+                  )}
+                </Box>
+                {/* Response */}
+                <Box
+                  variant="two"
+                  fontType="normal"
+                  className="flex-1 h-full p-5 flex flex-col"
+                >
+                  <BoxHeader title="Response" />
+                  {curapi && (
+                    <UCResBox
+                      curUsecase={curUsecase}
+                      control={control}
+                      currentApi={curapi}
+                      resApiIds={resApiIds}
+                    />
+                  )}
+                </Box>
+              </form>
+            </FormProvider>
+          ) : (
+            <Box
+              variant="two"
+              className="w-full h-full flex items-center justify-center"
             >
-              {/* 왼쪽 사이드 */}
-              <SideContainer
-                curUsecase={curUsecase}
-                apis={apis}
-                onClickApi={onClickApi}
-                onClickAddApiBtn={onClickAddApiBtn}
-                onClickClearApis={onClickClearApis}
-              />
-              {/* Request */}
-              <Box
-                variant="two"
-                fontType="normal"
-                className="flex-1 h-full p-5 flex flex-col"
-              >
-                <BoxHeader title="Request" />
-                {curapi && (
-                  <UCReqBox
-                    curUsecase={curUsecase}
-                    control={control}
-                    currentApi={curapi}
-                  />
-                )}
-              </Box>
-              {/* Response */}
-              <Box
-                variant="two"
-                fontType="normal"
-                className="flex-1 h-full p-5 flex flex-col"
-              >
-                <BoxHeader title="Response" />
-                {curapi && (
-                  <UCResBox
-                    curUsecase={curUsecase}
-                    control={control}
-                    currentApi={curapi}
-                    resApiIds={resApiIds}
-                  />
-                )}
-              </Box>
-            </form>
-          </FormProvider>
+              <Logogogo msg="유즈케이스를 골라주세요!">
+                <div
+                  className="bg-slate-600 rounded-full p-4 w-[10%] flex items-center justify-center cursor-pointer duration-[0.33s] hover:scale-105"
+                  onClick={() => setIsListModalOpen(true)}
+                >
+                  고르기
+                </div>
+              </Logogogo>
+            </Box>
+          )}
           {isApiListOpen && (
             // usecase에 api 추가하는 api list 모달
             <Modal
