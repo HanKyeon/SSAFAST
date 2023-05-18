@@ -315,7 +315,7 @@ public class OverloadService {
 			redisService.getAllKeysAndValues().forEach((key, value) -> {
 				System.out.println("key: "+ key +"/ values: "+value);
 			});
-			Integer correctCode = Integer.parseInt(redisService.getValues("baseurl_" + certCodeDto.getBaseurlId().toString()));
+			String correctCode = redisService.getValues("baseurl_" + certCodeDto.getBaseurlId().toString());
 			if(correctCode.equals(certCodeDto.getCode())){
 				Baseurl baseurl = baseurlRepository.findById(certCodeDto.getBaseurlId()).get();
 				baseurl.updateCertified(true);
