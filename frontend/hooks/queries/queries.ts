@@ -945,8 +945,37 @@ export const getApiDetail = async function (apiId: number) {
   });
 };
 
+export interface ApiDetailDef {
+  name: string;
+  description: string;
+  method: number;
+  status: number;
+  baseurlId: number;
+  categoryId: number;
+  member: { id: number; name: string; email: string; profileImg: string };
+
+  document: {
+    request: {
+      additionalUrl: string;
+      headers: DtoField[];
+      body: DtoDetailForTestBody;
+      pathVars: DtoField[];
+      params: DtoField[];
+    };
+    response: {
+      statusCode: number;
+      desc: string;
+      headers: DtoField[];
+      body: DtoDetailForTestBody;
+    }[];
+  };
+  createdTime?: string;
+  apiId?: number;
+  workspaceId?: number;
+}
+
 export const useApiDetail = function (spaceId: string | number, apiId: number) {
-  return useQuery<any>({
+  return useQuery<ApiDetailDef>({
     queryKey: queryKeys.spaceApiDetail(spaceId, apiId),
     queryFn: async function () {
       return getApiDetail(apiId).then((res) => res.data);
@@ -1011,7 +1040,7 @@ export interface ApiDetailInTest {
       desc: string;
       headers: DtoField[];
       body: DtoDetailForTestBody;
-    };
+    }[];
   };
 }
 

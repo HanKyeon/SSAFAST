@@ -3,7 +3,12 @@ import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { useStoreSelector } from '@/hooks/useStore';
 import { IoMdArrowRoundBack } from 'react-icons/io';
 import { useRouter } from 'next/router';
-import { useBaseUrl, useSpaceCategory } from '@/hooks/queries/queries';
+import {
+  ApiDetailDef,
+  useBaseUrl,
+  useSpaceCategory,
+  useUserData,
+} from '@/hooks/queries/queries';
 import { SpaceParams } from '@/pages/space';
 import { RequestFormData } from './RequestForm';
 import { ResponseFormData } from './ResponseForm';
@@ -22,7 +27,7 @@ export interface ApiCreateForm {
   name: string;
   description: string;
   method?: 1 | 2 | 3 | 4 | 5;
-  baseUrl: number;
+  baseurlId: number;
   categoryId?: number;
   status: number;
   document: Document;
@@ -36,7 +41,7 @@ export interface ServerData {
   name: string;
   description: string;
   method?: 1 | 2 | 3 | 4 | 5;
-  baseUrl: number;
+  baseurlId: number;
   categoryId?: number;
   status: number;
   document: {
@@ -85,29 +90,28 @@ const ApiWrite = function ({
 
   let defaultData: ApiCreateForm | undefined;
 
-  const methods = useForm<ApiCreateForm>({
-    defaultValues: defaultData,
-  });
+  const methods = useForm<ApiDetailDef>();
 
   const { mutate: createMutate, mutateAsync: createMutateAsync } = useCreateApi(
     parseInt(spaceId)
   );
   const { control, handleSubmit, reset } = methods;
+  const { data: userData } = useUserData();
 
   useEffect(
     function () {
-      if (baseUrlListData && categoryListData) {
-        reset({
+      if (baseUrlListData && categoryListData && !Editdata && userData) {
+        const defaultDatas: ApiDetailDef = {
           workspaceId: parseInt(spaceId),
           name: '',
           description: '',
           method: 1,
-          baseUrl: baseUrlListData?.baseurls[0].id as number,
-          categoryId: categoryListData?.categorys[0].id as number,
           status: 1,
+          baseurlId: baseUrlListData?.baseurls[0].id as number,
+          categoryId: categoryListData?.categorys[0].id as number,
           document: {
             request: {
-              additional_url: '',
+              additionalUrl: '',
               body: {
                 fields: [],
               },
@@ -126,7 +130,14 @@ const ApiWrite = function ({
               },
             ],
           },
-        });
+          member: {
+            id: userData.id as number,
+            name: userData.name,
+            email: userData.email,
+            profileImg: userData.profileImg,
+          },
+        };
+        reset(defaultDatas);
       }
     },
     [baseUrlListData, categoryListData]
@@ -139,8 +150,8 @@ const ApiWrite = function ({
           workspaceId: parseInt(spaceId),
           name: Editdata.name,
           description: Editdata.description,
-          method: Editdata.method,
-          baseUrl: Editdata.baseUrl,
+          method: Editdata.method as 1 | 2 | 3 | 4 | 5,
+          baseurlId: Editdata.baseurlId,
           categoryId: Editdata.categoryId,
           status: Editdata.status,
           document: Editdata.document,
@@ -152,18 +163,18 @@ const ApiWrite = function ({
     [Editdata]
   );
 
-  const onSubmit = async function (data: ApiCreateForm) {
-    // console.log('API 요청 데이터', data);
+  const onSubmit = async function (data: ApiDetailDef) {
+    console.log('API 요청 데이터', data);
     let workspaceId = spaceId;
     let name = data.name;
     let description = data.description;
     let method = data.method;
-    let baseUrl = data.baseUrl;
+    let baseurlId = data.baseurlId;
     let categoryId = data.categoryId;
     let status = data.status;
     let refinedocument: any = {
       request: {
-        additionalUrl: data.document.request.additional_url,
+        additionalUrl: data.document.request.additionalUrl,
         headers: [...data.document.request.headers],
         params: [...data.document.request.params],
         pathVars: [...data.document.request.pathVars],
@@ -173,7 +184,7 @@ const ApiWrite = function ({
     let requestBody: any = { fields: [], nestedDtos: {} };
 
     for (const field of data.document.request.body.fields) {
-      if (field.type < 10) {
+      if ((field.type as number) < 10) {
         requestBody.fields.push(field);
       } else {
         let dtoData = {
@@ -200,7 +211,7 @@ const ApiWrite = function ({
         body: { fields: [], nestedDtos: {} },
       };
       response.body.fields.forEach((resBodyField) => {
-        if (parseInt(resBodyField.type) < 10) {
+        if ((resBodyField.type as number) < 10) {
           ret.body.fields.push({
             keyName: resBodyField.keyName,
             type: resBodyField.type,
@@ -231,14 +242,17 @@ const ApiWrite = function ({
       name,
       description,
       method,
-      baseUrl,
+      baseUrl: baseurlId,
       categoryId,
       status,
       document: { ...refinedocument },
     };
 
     console.log('제출 할 데이터 :', finalConfig);
-    createMutateAsync(finalConfig).then(() => toggleAddHandler());
+    createMutateAsync(finalConfig).then(() => {
+      apiIdHandler(0);
+      toggleAddHandler();
+    });
   };
 
   const goToApiContainer = function () {
@@ -414,21 +428,21 @@ const ApiWrite = function ({
                 />
 
                 <Controller
-                  name={`baseUrl`}
+                  name={`baseurlId`}
                   control={control}
                   render={({ field, fieldState }) => (
                     <div className="flex flex-col w-[79%]">
                       <Select
-                        name={'baseUrl'}
+                        name={'baseurlId'}
                         onChange={field.onChange}
                         value={field.value}
                         onBlur={field.onBlur}
                         className={`w-full text-start items-start`}
                       >
                         {baseUrlListData?.baseurls?.map((item, index) => (
-                          <>
-                            <option value={item.id}>{item.url}</option>
-                          </>
+                          <option selected={index === 0} value={item.id}>
+                            {item.url}
+                          </option>
                         ))}
                       </Select>
                     </div>

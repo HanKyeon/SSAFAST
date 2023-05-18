@@ -94,7 +94,7 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
   const { data: selectedApiData } = useApiSingleTestDetail(spaceId, selectedId);
   const { data: baseUrlListdata } = useBaseUrl(spaceId);
   const [curStatus, setCurStatus] = useState<number>(0);
-  const [responseData, setResponseData] = useState<string>(``);
+  const [responseData, setResponseData] = useState<any>();
   const [requestConfigModal, setRequestConfigModal] = useState<boolean>(false);
   // status 변경
   const onChangeStatus = (): void => {
@@ -144,6 +144,9 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
 
   const formDataSettingHandler = function (data: ApiDetailInTest) {
     console.log(data);
+    console.log(
+      baseUrlListdata?.baseurls.find((v) => v.id === data.baseurlId)?.url
+    );
     if (
       baseUrlListdata?.baseurls
         .find((v) => v.id === data.baseurlId)
@@ -221,7 +224,7 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
     }).then((res) => {
       queryClient.invalidateQueries(queryKeys.spaceResult(spaceId, selectedId));
       console.log('처리해야함');
-      setResponseData(JSON.stringify(res.data));
+      setResponseData(res.data);
     });
   };
   return (

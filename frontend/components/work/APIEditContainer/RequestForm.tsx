@@ -22,7 +22,7 @@ import AnimationBox from '@/components/common/AnimationBox';
 import NonHeaderController from './NonHeaderController';
 import HeaderController from './HeaderController';
 export interface RequestFormData {
-  additional_url: string;
+  additionalUrl: string;
   headers: Headers[];
   body: BodyType;
   pathVars: PathVariables[];
@@ -152,7 +152,7 @@ const RequestForm = function () {
     }
   };
   const { field: urlField } = useController({
-    name: `document.request.additional_url`,
+    name: `document.request.additionalUrl`,
   });
 
   return (
@@ -160,7 +160,7 @@ const RequestForm = function () {
       <div className="flex flex-col w-full items-center justify-center gap-3 pb-5">
         <div className="flex items-center w-[90%]">
           <Input
-            name={`document.request.additional_url`}
+            name={`document.request.additionalUrl`}
             onChange={urlField.onChange}
             type="text"
             placeholder="Urn"

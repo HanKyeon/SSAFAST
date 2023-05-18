@@ -132,9 +132,11 @@ const APIContainer = function ({ store }: Props) {
                 </AnimationBox>
               </Modal>
             )}
-            <div className="p-5">
+            <div className="h-full w-full p-5">
               {/* 헤더 */}
-              <div className={`mb-5 flex items-center justify-between`}>
+              <div
+                className={`w-full h-[7%] mb-5 flex items-center justify-between`}
+              >
                 <div className={`flex items-center gap-2`}>
                   <BsFilter className={`text-[26px]`} />
                   <EomSelect
@@ -161,10 +163,12 @@ const APIContainer = function ({ store }: Props) {
                 </Button>
               </div>
               {/* api 목록 */}
-              <APIList
-                toggleAddHandler={toggleAddHandler}
-                apiIdHandler={apiIdHandler}
-              />
+              <div className="w-full h-[92%] overflow-y-scroll">
+                <APIList
+                  toggleAddHandler={toggleAddHandler}
+                  apiIdHandler={apiIdHandler}
+                />
+              </div>
             </div>
           </>
         )}
