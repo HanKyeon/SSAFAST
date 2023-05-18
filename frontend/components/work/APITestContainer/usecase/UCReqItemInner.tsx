@@ -239,8 +239,20 @@ const UCReqItemInner = function ({
               )}
             </div>
           </div>
-          <div onClick={onClickMappingBtn}>res에서 맵핑할궤</div>
-          <div onClick={onClickSelfTyping}>직접 입력할궹</div>
+          <div className={`flex gap-2 justify-between`}>
+            <div
+              onClick={onClickMappingBtn}
+              className={`flex-1 cursor-pointer bg-theme-dark-light rounded-b-[8px] px-3 py-1 active:bg-grayscale-deepdarkdeep`}
+            >
+              response에서 선택
+            </div>
+            <div
+              onClick={onClickSelfTyping}
+              className={`cursor-pointer bg-theme-dark-light rounded-b-[8px] px-3 py-1 active:bg-grayscale-deepdarkdeep`}
+            >
+              직접 입력
+            </div>
+          </div>
         </>
       )}
     </>
