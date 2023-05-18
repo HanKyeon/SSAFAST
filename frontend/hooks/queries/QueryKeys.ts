@@ -120,6 +120,9 @@ export const queryKeys = {
   // 오버로드 상세 조회
   overloadDetail: (spaceId: number | string, overloadId: string | number) =>
     [...queryKeys.overload(spaceId), `detail`, `${overloadId}`] as const,
+  // 오버로드 서버 url 인증
+  overloadCertUrl: (spaceId: number | string) =>
+    [...queryKeys.overload(spaceId), `auth`] as const,
   // 오버로드 인증 url 리스트
   overloadCertUrlList: (spaceId: number | string) =>
     [...queryKeys.overload(spaceId), `auth`, `list`] as const,

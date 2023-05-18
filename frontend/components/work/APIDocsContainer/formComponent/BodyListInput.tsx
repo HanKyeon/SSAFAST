@@ -62,7 +62,6 @@ const BodyListInput = function ({
   const { field: nestedDtoLists } = useController({
     name: `${formName}.nestedDtoLists`,
   });
-  console.log(nestedDtos.value);
 
   const Styles = {
     style: `${

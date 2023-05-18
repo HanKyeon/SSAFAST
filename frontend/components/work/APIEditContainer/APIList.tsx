@@ -84,8 +84,7 @@ const ApiList = function ({
   } = useInput(categoryRef);
 
   const { data: spaceApiList, isLoading, isError } = useSpaceApis(spaceId);
-  // const {data: sectionApiList} = useSectionsApi(spaceId, sectionId, selectedMethod, searchInputData)
-  const { data: sectionApiList } = useSectionsApi(spaceId, 1);
+  // const { data: filteredApiList } = useSpaceApis(spaceId, [1, 3]);
 
   const onClickOpenCate = (cateID: string | number, cateIdx: number): void => {
     setCurCateIdx(cateIdx);
@@ -119,7 +118,6 @@ const ApiList = function ({
   //   },
   //   [spaceApiList]
   // );
-
   return (
     <ul
       className={`h-full w-full overflow-y-scroll scrollbar-hide flex flex-col items-center gap-3`}
