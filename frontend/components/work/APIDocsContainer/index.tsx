@@ -158,10 +158,10 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
       dispatch(DispatchToast('로컬 서버는 지원하지 않습니다!', false));
       return;
     }
-    let url: string = `${
-      baseUrlListdata?.baseurls.find((v) => v.id === data.baseurlId)?.url! +
-      selectedApiData?.document.request.additionalUrl
-    }`;
+    let url: string = `${baseUrlListdata?.baseurls.find(
+      (v) => v.id === data.baseurlId
+    )?.url!}`;
+    let adUrl = selectedApiData?.document.request.additionalUrl.split(`/`);
     console.log(`url :`, url);
     let method = data.method;
     console.log(
@@ -176,6 +176,12 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
     let pathVars: any = {};
     data.document.request.pathVars.forEach((v) => {
       pathVars[v.keyName] = v.value;
+      adUrl = adUrl?.map((st) => {
+        if (st === `:${v.keyName}`) {
+          return v.value;
+        }
+        return st;
+      });
     });
     console.log(`path variables :`, pathVars);
     let params: any = {};
@@ -216,7 +222,7 @@ const APIDocsContainer = function ({ store, serverSideStore }: Props) {
       method: `post`,
       url: `/api/api-exec`,
       data: {
-        url,
+        url: url + adUrl?.join(`/`),
         method,
         headers,
         pathVars,
