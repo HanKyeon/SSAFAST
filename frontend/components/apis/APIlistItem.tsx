@@ -98,7 +98,6 @@ const APIlistItem = function ({
       <p className="text-content flex-1 truncate hover:text-clip">
         {item.name}
       </p>
-      <div>{item.status}</div>
       <StatusBadge className="w-[70px] text-center" status={item.status} />
       {writter && <UserBadge imgSrc={item.writter.profileImg} />}
     </li>
