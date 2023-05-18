@@ -734,12 +734,12 @@ export interface UsecaseDetailType {
   name: string;
   desc: string;
   rootApiId: string | number;
-  testDetails: {
+  testDetails?: {
     [key: string | number]: {
       additionalUrl: string;
       parent?: string | number;
       child?: string | number;
-      request: {
+      request?: {
         headers?: RequestItem;
         pathVars?: RequestItem;
         params?: RequestItem;
@@ -749,7 +749,7 @@ export interface UsecaseDetailType {
           nestedDtoLists?: UseTestDtoItem;
         };
       };
-      response: {
+      response?: {
         headers?: ResponseItem;
         body?: {
           fields?: ResponseItem;

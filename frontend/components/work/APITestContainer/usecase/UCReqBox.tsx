@@ -37,33 +37,6 @@ const UCReqBox = function ({
     isError,
   } = useApiDetailAtTest(spaceId, currentApi.id);
 
-  // console.log('뿌! 현재 선택된 api의 정보 ::::::::::', curapi);
-
-  //   const {
-  //     fields: headersFields,
-  //     append: headersAppend,
-  //     remove: headersRemove,
-  //   } = useFieldArray({
-  //     control,
-  //     name: `testDetails.${currentApi.id as string}.request.headers`,
-  //   });
-  //   const {
-  //     fields: paramsFields,
-  //     append: paramsAppend,
-  //     remove: paramsRemove,
-  //   } = useFieldArray({
-  //     control,
-  //     name: `testDetails.${currentApi.id as string}.request.params`,
-  //   });
-  //   const {
-  //     fields: pathFields,
-  //     append: pathAppend,
-  //     remove: pathRemove,
-  //   } = useFieldArray({
-  //     control,
-  //     name: `testDetails.${currentApi.id as string}.request.pathVars`,
-  //   });
-
   useEffect(() => {
     if (curapi) {
       setFormValue(
@@ -90,7 +63,7 @@ const UCReqBox = function ({
         curapi?.document.request.headers.length > 0 && (
           <UCReqItem
             //   fields={headersFields}
-            formName={`testDetails.${currentApi.id as string}.request.headers`}
+            formName={`testDetails.${currentApi.id}.request.headers`}
             name="headers"
             control={control}
             item={curapi.document.request.headers!}
@@ -101,9 +74,7 @@ const UCReqBox = function ({
         curapi?.document.request.body?.fields?.length > 0 && (
           <UCReqItem
             //   fields={headersFields}
-            formName={`testDetails.${
-              currentApi.id as string
-            }.request.body.fields`}
+            formName={`testDetails.${currentApi.id}.request.body.fields`}
             name="body_fields"
             control={control}
             item={curapi.document.request.body.fields}
@@ -113,9 +84,7 @@ const UCReqBox = function ({
         Object.keys(curapi?.document.request.body?.nestedDtos).length > 0 && (
           <UCReqItemDto
             //   fields={headersFields}
-            formName={`testDetails.${
-              currentApi.id as string
-            }.request.body.nestedDtos`}
+            formName={`testDetails.${currentApi.id}.request.body.nestedDtos`}
             name="body_dtos"
             control={control}
             item={curapi.document.request.body.nestedDtos}
@@ -139,7 +108,7 @@ const UCReqBox = function ({
         curapi?.document.request.params.length > 0 && (
           <UCReqItem
             //   fields={headersFields}
-            formName={`testDetails.${currentApi.id as string}.request.params`}
+            formName={`testDetails.${currentApi.id}.request.params`}
             name="params"
             control={control}
             item={curapi.document.request.params}
@@ -150,7 +119,7 @@ const UCReqBox = function ({
         curapi?.document.request.pathVars.length > 0 && (
           <UCReqItem
             //   fields={headersFields}
-            formName={`testDetails.${currentApi.id as string}.request.pathVars`}
+            formName={`testDetails.${currentApi.id}.request.pathVars`}
             name="path variables"
             control={control}
             item={curapi.document.request.pathVars}

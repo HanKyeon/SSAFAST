@@ -88,7 +88,7 @@ const PreviewLeftContainer = function (): JSX.Element {
             </div> */}
             <div className="flex-1 h-full">
               <span className="text-[14px] text-grayscale-dark">Figma</span>
-              <div className="h-[96%] w-auto border-red-400 border-[1px] rounded-[8px]">
+              <div className="h-[96%] w-auto border-red-400 border-[0px] rounded-[8px]">
                 <img
                   src={spaceDetailData?.figmaImg}
                   alt="figma thumbnail"

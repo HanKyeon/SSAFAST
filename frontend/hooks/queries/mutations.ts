@@ -670,7 +670,10 @@ export interface TestResponseType {
 }
 
 // 유스케이스 테스트 실행 & 수정
-export const useTestUsecase = function (spaceId: string | number) {
+export const useTestUsecase = function (
+  spaceId: string | number,
+  usecaseId: string | number
+) {
   const queryClient = useQueryClient();
   const dispatch = useStoreDispatch();
   return useMutation({
@@ -679,6 +682,9 @@ export const useTestUsecase = function (spaceId: string | number) {
         method: `put`,
         url: `/api/usecase/exec`,
         data: testData,
+        params: {
+          usecaseId: usecaseId,
+        },
       });
     },
     onSuccess: function () {

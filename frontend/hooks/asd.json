@@ -1,0 +1,208 @@
+{
+  "name": "",
+  "desc": "",
+  "rootApiId": 11,
+  "testDetails": {
+    "11": {
+      "request": {
+        "headers": {
+          "Content-Type": {
+            "value": "as",
+            "type": "1",
+            "desc": "데이터 타입",
+            "mapped": true
+          },
+          "Authorization": {
+            "value": "fasdfas",
+            "type": "1",
+            "desc": "Bearer 로 시작",
+            "mapped": true
+          }
+        },
+        "body": {
+          "fields": {
+            "name": {
+              "value": "asdfadf",
+              "type": "1",
+              "desc": "사용자 이름",
+              "mapped": true,
+              "constraints": []
+            },
+            "age": {
+              "value": "123",
+              "type": "2",
+              "desc": "사용자 나이",
+              "mapped": true,
+              "constraints": []
+            }
+          },
+          "nestedDtos": {
+            "address": {
+              "fields": {
+                "street": {
+                  "value": "adsfasdf",
+                  "type": "1",
+                  "desc": "도로명",
+                  "mapped": true,
+                  "constraints": []
+                },
+                "state": {
+                  "value": "asdfasf",
+                  "type": "1",
+                  "desc": "주",
+                  "mapped": true,
+                  "constraints": []
+                },
+                "city": {
+                  "value": "asdfasf",
+                  "type": "1",
+                  "desc": "서울",
+                  "mapped": true,
+                  "constraints": []
+                },
+                "id": {
+                  "value": "312",
+                  "type": "3",
+                  "desc": "pk",
+                  "mapped": true,
+                  "constraints": []
+                }
+              }
+            }
+          }
+        },
+        "params": {
+          "pTest": {
+            "value": "asdfasdf",
+            "type": "1",
+            "desc": "쿼리 파람 테스트용도",
+            "mapped": true,
+            "constraints": []
+          }
+        },
+        "pathVars": {
+          "userName": {
+            "value": "123asfdasd",
+            "type": "1",
+            "desc": "사용자 이름",
+            "mapped": true,
+            "constraints": []
+          }
+        }
+      },
+      "additionalUrl": "/api/tmp/user/:userName",
+      "child": 12
+    },
+    "12": {
+      "request": {
+        "headers": {
+          "Content-Type": {
+            "value": "1231",
+            "type": "2",
+            "desc": "데이터 타입",
+            "mapped": true
+          },
+          "Authorization": {
+            "value": "asdfasdfasdf",
+            "type": "1",
+            "desc": "Bearer 로 시작",
+            "mapped": true
+          }
+        },
+        "body": {
+          "fields": {
+            "userId": {
+              "value": "1231231313",
+              "type": "3",
+              "desc": "주문자 PK",
+              "mapped": true,
+              "constraints": []
+            },
+            "num": {
+              "value": "asdfasdf",
+              "type": "1",
+              "desc": "주문번호",
+              "mapped": true,
+              "constraints": []
+            }
+          },
+          "nestedDtos": {
+            "item": {
+              "fields": {
+                "id": {
+                  "value": "212312",
+                  "type": "2",
+                  "desc": "orderItem 자체 id",
+                  "mapped": true,
+                  "constraints": []
+                },
+                "orderId": {
+                  "value": "1231",
+                  "type": "2",
+                  "desc": "주문 Id",
+                  "mapped": true,
+                  "constraints": []
+                },
+                "name": {
+                  "value": "asdfasdf",
+                  "type": "1",
+                  "desc": "상품명",
+                  "mapped": true,
+                  "constraints": []
+                },
+                "price": {
+                  "value": "1231",
+                  "type": "2",
+                  "desc": "상품 가격",
+                  "mapped": true,
+                  "constraints": []
+                }
+              }
+            }
+          }
+        },
+        "params": {
+          "userAddressStreet": {
+            "value": "asdfasdfasdfdas",
+            "type": "1",
+            "desc": "주문자 주소의 도로명",
+            "mapped": true,
+            "constraints": []
+          }
+        }
+      },
+      "additionalUrl": "/api/tmp/order",
+      "parent": 11,
+      "child": 14
+    },
+    "14": {
+      "request": {
+        "headers": {
+          "Content-Type": {
+            "value": "11.body.user.name",
+            "type": "1",
+            "desc": "데이터 타입",
+            "mapped": true
+          },
+          "Authorization": {
+            "value": "12.body.order.num",
+            "type": "1",
+            "desc": "Bearer 로 시작",
+            "mapped": true
+          }
+        },
+        "pathVars": {
+          "itemId": {
+            "value": "11.body.user.id",
+            "type": "3",
+            "desc": "주문 상품 PK",
+            "mapped": true,
+            "constraints": []
+          }
+        }
+      },
+      "additionalUrl": "/api/tmp/order-item/:itemId",
+      "parent": 12
+    }
+  }
+}

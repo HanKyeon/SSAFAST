@@ -25,15 +25,15 @@ const SideContainer = function ({
 }: SideContainerPropsType): JSX.Element {
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
-  const {
-    data: ucData,
-    isLoading,
-    isError,
-  } = useUsecaseDetail(
-    spaceId,
-    curUsecase.id,
-    curUsecase.isNew ? curUsecase.isNew : false
-  );
+  // const {
+  //   data: ucData,
+  //   isLoading,
+  //   isError,
+  // } = useUsecaseDetail(
+  //   spaceId,
+  //   curUsecase.id,
+  //   curUsecase.isNew ? curUsecase.isNew : false
+  // );
 
   return (
     <Box
@@ -45,18 +45,18 @@ const SideContainer = function ({
       <div className={`w-full`}>
         <BoxHeader title="info" className={`!pb-1`} />
         <span className={`text-content`}>
-          {curUsecase.isNew
+          {curUsecase.name
             ? curUsecase.name
-            : ucData
-            ? ucData.name
-            : '뭐 없다 안된다?'}
+            : // : ucData
+              // ? ucData.name
+              '뭐 없다 안된다?'}
         </span>
         <p className={`text-small text-grayscale-deeplightlight`}>
-          {curUsecase.isNew
+          {curUsecase.name
             ? curUsecase.desc
-            : ucData
-            ? ucData.desc
-            : '뭐 없다 안된다?'}
+            : // : ucData
+              // ? ucData.desc
+              '뭐 없다 안된다?'}
         </p>
       </div>
       {/* api 순서대로 조록 */}

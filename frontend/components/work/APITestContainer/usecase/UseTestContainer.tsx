@@ -107,11 +107,11 @@ const UseTestContainer = function () {
     id: 0,
     isNew: false,
   });
-  const { data: curUCData, isFetching: ucDataFetching } = useUsecaseDetail(
-    spaceId,
-    curUsecase.id,
-    curUsecase.isNew ? curUsecase.isNew : false
-  );
+  // const { data: curUCData, isFetching: ucDataFetching } = useUsecaseDetail(
+  //   spaceId,
+  //   curUsecase.id,
+  //   curUsecase.isNew ? curUsecase.isNew : false
+  // );
   const onClickUsecaseItem = (usecase: UsecaseListItemType) => {
     if (usecase) {
       setCurUsecase({ ...usecase, isNew: false });
@@ -125,10 +125,15 @@ const UseTestContainer = function () {
   const [countApi, setCountApi] = useState<number>(0);
   const [resApiIds, setResApiIds] = useState<string>('');
   const requestData = useUcWithIds(resApiIds);
-  // console.log('useCaseRequestConfig: ', requestData);
-  // console.log(JSON.stringify(requestData));
 
-  const methods = useForm<UsecaseDetailType>();
+  const methods = useForm<UsecaseDetailType>({
+    defaultValues: {
+      name: `${ucNameInput}`,
+      desc: `${ucDescInput}`,
+      rootApiId: 0,
+      testDetails: {},
+    },
+  });
   const {
     control,
     handleSubmit,
@@ -222,7 +227,7 @@ const UseTestContainer = function () {
     setContextMapped(false);
   };
 
-  const { mutateAsync: testMutate } = useTestUsecase(spaceId);
+  const { mutateAsync: testMutate } = useTestUsecase(spaceId, curUsecase.id);
   const onClickTest = (data: UsecaseDetailType): void => {
     testMutate(data).then(({ data }) =>
       console.log('mutate 햇다@@@@@@!!!!!', data)
@@ -246,21 +251,10 @@ const UseTestContainer = function () {
 
   return (
     <Box variant="one" fontType="header" className="h-full w-full">
-      {isListModalOpen ? (
+      {isNewModalOpen ? (
         // 처음에 저장된 usecase list 모달 오픈
         <Modal closeModal={onToggleListModal} parentClasses="h-[50%] w-[50%]">
-          {!isNewModalOpen ? (
-            // 생성 모달
-            <Box
-              className={`w-full h-full p-5 flex flex-col justify-between items-center gap-3`}
-            >
-              <div>유스케이스 테스트 목록</div>
-              <UsecaseList onClickUsecaseItem={onClickUsecaseItem} />
-              <Button className={`!py-1`} onClick={onClickOpenNew}>
-                New Test
-              </Button>
-            </Box>
-          ) : (
+          {isNewModalOpen ? ( // 생성 모달
             <Box
               className={`w-full h-full p-5 flex flex-col justify-between items-center`}
             >
@@ -293,7 +287,7 @@ const UseTestContainer = function () {
                 생성
               </Button>
             </Box>
-          )}
+          ) : null}
         </Modal>
       ) : (
         <>
@@ -354,7 +348,7 @@ const UseTestContainer = function () {
               <Logogogo msg="유즈케이스를 골라주세요!">
                 <div
                   className="bg-slate-600 rounded-full p-4 w-[10%] flex items-center justify-center cursor-pointer duration-[0.33s] hover:scale-105"
-                  onClick={onToggleListModal}
+                  onClick={() => setIsNewModalOpen(true)}
                 >
                   고르기
                 </div>
