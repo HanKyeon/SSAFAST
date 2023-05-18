@@ -226,7 +226,10 @@ public class DtoSpecEntityService {
                 convertList.add(
                         FieldDtoInfo.builder()
                                 .itera(child.isItera())
+                                .keyName(child.getKeyName())
+                                .desc(child.getDesc())
                                 .type(key)
+                                .constraints(child.getConstraints())
                                 .build()
                 );
             }
@@ -249,7 +252,15 @@ public class DtoSpecEntityService {
 
         dtoSpecDocumentService.createOrUpdateDtoDocs(dtoId, updateDto);
 
-        return updateDtoSpecDto;
+
+
+        return
+                AddDtoSpecDto.builder()
+                        .workspaceId(updateDtoSpecDto.getWorkspaceId())
+                        .name(updateEntity.getName())
+                        .description(updateEntity.getDescription())
+                        .document(updateDto)
+                        .build();
     }
 
     public boolean deleteDto(Long dtoId){
