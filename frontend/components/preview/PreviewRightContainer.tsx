@@ -78,7 +78,9 @@ const PreviewRightContainer = function (): JSX.Element {
           className={`flex-1 flex flex-col items-center justify-center gap-10`}
         >
           <div>
-            <span className={`flex justify-center items-center gap-3`}>
+            <span
+              className={`flex justify-center items-center gap-3 border-[8px] p-5 w-[13vw] h-[13vw] rounded-full`}
+            >
               <span className={`text-[65px]`}>{percent}</span>
               <MdOutlinePercent className={`text-[30px]`} />
             </span>
