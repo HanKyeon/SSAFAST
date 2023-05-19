@@ -195,14 +195,14 @@ public class OverloadService {
 			System.out.println("Flask 서버 응답 실패: " + response.getStatusCodeValue());
 		}
 
-		overloadTestHistoryRepository.save(OverloadTestHistory.builder()
-				.latencyMean(overloadTestResDto.getLatencies().getMean())
-				.apiSpecEntity(apiSpecRepository.findById(apiSpecId).get())
-				.workspace(workspaceRepository.findById(workspaceId).get())
-				.throughput(overloadTestResDto.getThroughput())
-				.reqSec(reqSec)
-				.duration(duration)
-				.detail(resultBody).build());
+//		overloadTestHistoryRepository.save(OverloadTestHistory.builder()
+//				.latencyMean(overloadTestResDto.getLatencies().getMean())
+//				.apiSpecEntity(apiSpecRepository.findById(apiSpecId).get())
+//				.workspace(workspaceRepository.findById(workspaceId).get())
+//				.throughput(overloadTestResDto.getThroughput())
+//				.reqSec(reqSec)
+//				.duration(duration)
+//				.detail(resultBody).build());
 
 		return overloadTestResDto;
 
