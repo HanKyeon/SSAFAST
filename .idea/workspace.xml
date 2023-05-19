@@ -4,13 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="07b52940-1828-4ae6-ba42-968c6dcaf444" name="Changes" comment="[BE] Feat : overload 테스트 요청시 헤더 변경">
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="07b52940-1828-4ae6-ba42-968c6dcaf444" name="Changes" comment="[BE] Feat : overload 인증코드 타입 int -&gt; String 변경">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/overload/controller/OverloadController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/overload/controller/OverloadController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/overload/dto/request/CertCodeDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/overload/dto/request/CertCodeDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/overload/service/OverloadService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/rocket/ssafast/overload/service/OverloadService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,7 +122,7 @@
       <workItem from="1683850168312" duration="625000" />
       <workItem from="1683875944610" duration="3147000" />
       <workItem from="1684194218697" duration="13018000" />
-      <workItem from="1684411651143" duration="4257000" />
+      <workItem from="1684411651143" duration="5055000" />
     </task>
     <task id="LOCAL-00001" summary="[BE] Feat : baseurl 인증 확인">
       <created>1683709922125</created>
@@ -157,7 +152,14 @@
       <option name="project" value="LOCAL" />
       <updated>1684408955203</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="[BE] Feat : overload 인증코드 타입 int -&gt; String 변경">
+      <created>1684443704737</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1684443704737</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -179,6 +181,7 @@
     <MESSAGE value="[BE] Feat : baseurl 칼럼 변경 반영" />
     <MESSAGE value="[BE] Feat : overload 테스트 기능 생성 완료" />
     <MESSAGE value="[BE] Feat : overload 테스트 요청시 헤더 변경" />
-    <option name="LAST_COMMIT_MESSAGE" value="[BE] Feat : overload 테스트 요청시 헤더 변경" />
+    <MESSAGE value="[BE] Feat : overload 인증코드 타입 int -&gt; String 변경" />
+    <option name="LAST_COMMIT_MESSAGE" value="[BE] Feat : overload 인증코드 타입 int -&gt; String 변경" />
   </component>
 </project>
