@@ -36,6 +36,7 @@ import { SpaceParams } from '@/pages/space';
 import Logogogo from '@/components/common/Logogogo';
 import { UCContext, UCContextInterface } from '.';
 import useUcWithIds from '@/hooks/useUcWithIds';
+import { mokupResponse } from '@/utils/constraints';
 
 export interface RequestItem {
   [key: string]: {
@@ -126,7 +127,7 @@ const UseTestContainer = function () {
   const [resApiIds, setResApiIds] = useState<string>('');
   const requestData = useUcWithIds(resApiIds);
 
-  const methods = useForm<UsecaseDetailType>({
+  const methods = useForm<any>({
     defaultValues: {
       rootApiId: 0,
       testDetails: {},
@@ -149,7 +150,9 @@ const UseTestContainer = function () {
         resetField(`${contextFormName}.value` as any, {
           defaultValue: contextResName,
         });
-        resetField(`${contextFormName}.mapped` as any, { defaultValue: true });
+        resetField(`${contextFormName}.mapped` as any, {
+          defaultValue: !!`gd`,
+        });
         setContextFormName(() => ``);
         setContextResName(() => ``);
       }
@@ -225,26 +228,26 @@ const UseTestContainer = function () {
   };
 
   const { mutateAsync: testMutate } = useTestUsecase(spaceId, curUsecase.id);
+
+  const [resultModal, setResultModal] = useState<boolean>(false);
+  const [response, setResponse] = useState<any>(``);
   const onClickTest = (data: UsecaseDetailType): void => {
-    testMutate(data).then(({ data }) =>
-      console.log('mutate 햇다@@@@@@!!!!!', data)
-    );
+    testMutate(data).then(({ data }) => {
+      setResponse(() => data);
+      console.log('mutate 햇다@@@@@@!!!!!', data);
+    });
     console.log('usecaes test submit 원본', data);
+    setResultModal(() => true);
   };
 
-  const a = useUcWithIds(
-    apis
-      .map((api) => api.id)
-      .join(`,`)
-      .slice(1)
-  );
+  const a = useUcWithIds(apis.map((api) => api.id).join(`,`));
   useEffect(
     function () {
       if (a) {
         reset(a);
       }
     },
-    [a]
+    [a.testDetails]
   );
 
   useEffect(() => {
@@ -262,132 +265,163 @@ const UseTestContainer = function () {
   }, [curapi]);
 
   return (
-    <Box variant="one" fontType="header" className="h-full w-full">
-      {isNewModalOpen ? (
-        // 처음에 저장된 usecase list 모달 오픈
-        <Modal closeModal={onToggleListModal} parentClasses="h-[50%] w-[50%]">
-          {isNewModalOpen ? ( // 생성 모달
-            <Box
-              className={`w-full h-full p-5 flex flex-col justify-between items-center`}
-            >
-              <div
-                className={`w-full flex items-center gap-2 ${
-                  isDark ? 'text-mincho-normal' : 'text-taro-normal'
-                } cursor-pointer`}
-                onClick={onToggleNewModal}
-              >
-                <IoArrowBackOutline />
-                <span className={`text-content mt-[3px]`}>뒤로</span>
-              </div>
-              <div className={`flex flex-col gap-5 w-[90%] mb-7`}>
-                <p className={`mb-2 text-center`}>새 유스케이스 테스트 생성</p>
-                <Input
-                  inputref={ucNameInputEL}
-                  value={ucNameInput}
-                  onChange={onChangeUcNameInput}
-                  placeholder="Name"
-                  className={`!w-[50%]`}
-                />
-                <Input
-                  inputref={ucDescInputEl}
-                  value={ucDescInput}
-                  onChange={onChangeUcDescInput}
-                  placeholder="Description"
-                />
-              </div>
-              <Button onClick={onClickNew} className={`!py-1`}>
-                생성
-              </Button>
+    <>
+      {resultModal && (
+        <Modal
+          closeModal={() => setResultModal(false)}
+          parentClasses="h-[70%] w-[60%]"
+        >
+          <Box className="flex flex-col gap-4 w-full h-full p-5 items-center justify-center">
+            <div className="text-[36px]">Usecase Test Result</div>
+            <div className="text-[24px] text-red-500">
+              유즈케이스 결과 코드 입니다!
+            </div>
+            <Box variant="three" className="w-full h-full p-5 overflow-scroll">
+              <pre>{response || mokupResponse}</pre>
             </Box>
-          ) : null}
-        </Modal>
-      ) : (
-        <>
-          {curUsecase.id ? (
-            <FormProvider {...methods}>
-              <form
-                className="h-full w-full flex gap-[1.12%]"
-                onSubmit={handleSubmit(onClickTest)}
-              >
-                {/* 왼쪽 사이드 */}
-                <SideContainer
-                  curUsecase={curUsecase}
-                  apis={apis}
-                  onClickApi={onClickApi}
-                  onClickAddApiBtn={onClickAddApiBtn}
-                  onClickClearApis={onClickClearApis}
-                />
-                {/* Request */}
-                <Box
-                  variant="two"
-                  fontType="normal"
-                  className="flex-1 h-full p-5 flex flex-col"
-                >
-                  <BoxHeader title="Request" />
-                  {curapi && (
-                    <UCReqBox
-                      curUsecase={curUsecase}
-                      control={control}
-                      currentApi={curapi}
-                      apis={apis}
-                      setFormValue={setFormValue}
-                    />
-                  )}
-                </Box>
-                {/* Response */}
-                <Box
-                  variant="two"
-                  fontType="normal"
-                  className="flex-1 h-full p-5 flex flex-col"
-                >
-                  <BoxHeader title="Response" />
-                  {curapi && (
-                    <UCResBox
-                      curUsecase={curUsecase}
-                      control={control}
-                      currentApi={curapi}
-                      resApiIds={resApiIds}
-                    />
-                  )}
-                </Box>
-              </form>
-            </FormProvider>
-          ) : (
-            <Box
-              variant="two"
-              className="w-full h-full flex items-center justify-center"
-            >
-              <Logogogo msg="유즈케이스를 골라주세요!">
-                <div
-                  className="bg-slate-600 rounded-full p-4 w-[10%] flex items-center justify-center cursor-pointer duration-[0.33s] hover:scale-105"
-                  onClick={() => setIsNewModalOpen(true)}
-                >
-                  고르기
-                </div>
-              </Logogogo>
-            </Box>
-          )}
-          {isApiListOpen && (
-            // usecase에 api 추가하는 api list 모달
-            <Modal
-              closeModal={onToggleAddApiModal}
-              parentClasses="h-[50%] w-[50%]"
-            >
+            <div className="flex flex-row gap-4">
               <Box
-                className={`w-full h-full pt-7 pb-5 px-10 flex flex-col gap-7`}
+                variant="three"
+                className="w-[80px] h-[60px] rounded-[13px] flex items-center justify-center cursor-pointer hover:scale-105 duration-[0.33s]"
+                onClick={() => setResultModal(false)}
               >
-                <div className={`w-full text-center`}>
-                  추가할 API를 선택해 주세요.
-                </div>
-                <div className={`w-full flex-1 overflow-scroll scrollbar-hide`}>
-                  <APIList onClickApi={onClickApitoAdd} />
-                </div>
+                닫기
               </Box>
-            </Modal>
-          )}
-        </>
+            </div>
+          </Box>
+        </Modal>
       )}
-    </Box>
+      <Box variant="one" fontType="header" className="h-full w-full">
+        {isNewModalOpen ? (
+          // 처음에 저장된 usecase list 모달 오픈
+          <Modal closeModal={onToggleListModal} parentClasses="h-[50%] w-[50%]">
+            {isNewModalOpen ? ( // 생성 모달
+              <Box
+                className={`w-full h-full p-5 flex flex-col justify-between items-center`}
+              >
+                <div
+                  className={`w-full flex items-center gap-2 ${
+                    isDark ? 'text-mincho-normal' : 'text-taro-normal'
+                  } cursor-pointer`}
+                  onClick={onToggleNewModal}
+                >
+                  <IoArrowBackOutline />
+                  <span className={`text-content mt-[3px]`}>뒤로</span>
+                </div>
+                <div className={`flex flex-col gap-5 w-[90%] mb-7`}>
+                  <p className={`mb-2 text-center`}>
+                    새 유스케이스 테스트 생성
+                  </p>
+                  <Input
+                    inputref={ucNameInputEL}
+                    value={ucNameInput}
+                    onChange={onChangeUcNameInput}
+                    placeholder="Name"
+                    className={`!w-[50%]`}
+                  />
+                  <Input
+                    inputref={ucDescInputEl}
+                    value={ucDescInput}
+                    onChange={onChangeUcDescInput}
+                    placeholder="Description"
+                  />
+                </div>
+                <Button onClick={onClickNew} className={`!py-1`}>
+                  생성
+                </Button>
+              </Box>
+            ) : null}
+          </Modal>
+        ) : (
+          <>
+            {curUsecase.id ? (
+              <FormProvider {...methods}>
+                <form
+                  className="h-full w-full flex gap-[1.12%]"
+                  onSubmit={handleSubmit(onClickTest)}
+                >
+                  {/* 왼쪽 사이드 */}
+                  <SideContainer
+                    curUsecase={curUsecase}
+                    apis={apis}
+                    onClickApi={onClickApi}
+                    onClickAddApiBtn={onClickAddApiBtn}
+                    onClickClearApis={onClickClearApis}
+                  />
+                  {/* Request */}
+                  <Box
+                    variant="two"
+                    fontType="normal"
+                    className="flex-1 h-full p-5 flex flex-col"
+                  >
+                    <BoxHeader title="Request" />
+                    {curapi && (
+                      <UCReqBox
+                        curUsecase={curUsecase}
+                        control={control}
+                        currentApi={curapi}
+                        apis={apis}
+                        setFormValue={setFormValue}
+                      />
+                    )}
+                  </Box>
+                  {/* Response */}
+                  <Box
+                    variant="two"
+                    fontType="normal"
+                    className="flex-1 h-full p-5 flex flex-col"
+                  >
+                    <BoxHeader title="Response" />
+                    {curapi && (
+                      <UCResBox
+                        curUsecase={curUsecase}
+                        control={control}
+                        currentApi={curapi}
+                        resApiIds={resApiIds}
+                      />
+                    )}
+                  </Box>
+                </form>
+              </FormProvider>
+            ) : (
+              <Box
+                variant="two"
+                className="w-full h-full flex items-center justify-center"
+              >
+                <Logogogo msg="유즈케이스를 골라주세요!">
+                  <div
+                    className="bg-slate-600 rounded-full p-4 w-[10%] flex items-center justify-center cursor-pointer duration-[0.33s] hover:scale-105"
+                    onClick={() => setIsNewModalOpen(true)}
+                  >
+                    고르기
+                  </div>
+                </Logogogo>
+              </Box>
+            )}
+            {isApiListOpen && (
+              // usecase에 api 추가하는 api list 모달
+              <Modal
+                closeModal={onToggleAddApiModal}
+                parentClasses="h-[50%] w-[50%]"
+              >
+                <Box
+                  className={`w-full h-full pt-7 pb-5 px-10 flex flex-col gap-7`}
+                >
+                  <div className={`w-full text-center`}>
+                    추가할 API를 선택해 주세요.
+                  </div>
+                  <div
+                    className={`w-full flex-1 overflow-scroll scrollbar-hide`}
+                  >
+                    <APIList onClickApi={onClickApitoAdd} />
+                  </div>
+                </Box>
+              </Modal>
+            )}
+          </>
+        )}
+      </Box>
+    </>
   );
 };
 

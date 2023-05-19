@@ -691,14 +691,14 @@ export const useTestUsecase = function (
       queryClient.invalidateQueries({
         queryKey: queryKeys.usecase(spaceId),
       });
-      dispatch(
-        DispatchToast('유스케이스 테스트가 현재 상태로 저장되었습니다.', true)
-      );
+      // dispatch(
+      //   DispatchToast('유스케이스 테스트가 현재 상태로 저장되었습니다.', true)
+      // );
     },
     onError: function () {
-      dispatch(
-        DispatchToast('유스케이스 테스트 실행 및 저장에 실패하였습니다.', false)
-      );
+      // dispatch(
+      //   DispatchToast('유스케이스 테스트 실행 및 저장에 실패하였습니다.', false)
+      // );
     },
   });
 };

@@ -55,7 +55,7 @@ const useUcWithIds = function (ids: string) {
             apiObj.headers[headerOpt.keyName] = {
               type: headerOpt.type,
               desc: headerOpt.desc,
-              mapped: false,
+              mapped: false as boolean,
               value: headerOpt.value,
             };
           });
@@ -68,7 +68,7 @@ const useUcWithIds = function (ids: string) {
               desc: paramOpt.desc,
               itera: paramOpt.itera,
               constraints: [...paramOpt.constraints!],
-              mapped: false,
+              mapped: false as boolean,
               value: paramOpt.value,
             };
           });
@@ -82,7 +82,7 @@ const useUcWithIds = function (ids: string) {
               desc: bodyField.desc,
               itera: bodyField.itera,
               constraints: [...bodyField.constraints!],
-              mapped: false,
+              mapped: false as boolean,
               value: bodyField.value,
             };
           });
@@ -97,7 +97,7 @@ const useUcWithIds = function (ids: string) {
                   type: nestedDtoInnerFields.type,
                   desc: nestedDtoInnerFields.desc,
                   itera: nestedDtoInnerFields.itera,
-                  mapped: false,
+                  mapped: false as boolean,
                   constraints: nestedDtoInnerFields.constraints,
                   value: nestedDtoInnerFields.value,
                 };
@@ -106,6 +106,7 @@ const useUcWithIds = function (ids: string) {
               apiObj.body.nestedDtos[nestedDtoInner.keyName!] = {
                 name: nestedDtoInner.name,
                 desc: nestedDtoInner.desc,
+                mapped: false as boolean,
                 fields: { ...nestedDtoInnerFieldsObj },
               };
             });
@@ -125,6 +126,7 @@ const useUcWithIds = function (ids: string) {
             apiObj.response.headers[header.keyName] = {
               type: header.type,
               desc: header.desc,
+              mapped: false as boolean,
             };
           });
           // 응답 바디 필즈
@@ -133,6 +135,7 @@ const useUcWithIds = function (ids: string) {
               type: resField.type,
               desc: resField.desc,
               itera: resField.itera,
+              mapped: false as boolean,
             };
           });
           // 응답 바디 nestedDtos
@@ -146,11 +149,13 @@ const useUcWithIds = function (ids: string) {
                   type: nestedDtoInnerFields.type,
                   desc: nestedDtoInnerFields.desc,
                   itera: nestedDtoInnerFields.itera,
+                  mapped: false as boolean,
                 };
               });
               apiObj.response.body.nestedDtos[nestedDtoInner.keyName!] = {
                 name: nestedDtoInner.name,
                 desc: nestedDtoInner.desc,
+                mapped: false as boolean as boolean,
                 fields: { ...nestedDtoInnerFieldsObj },
               };
             });
