@@ -41,7 +41,7 @@ const PreviewRightContainer = function (): JSX.Element {
 
   const percent = useMemo(() => {
     if (countSpaceCompleteApis && countSpaceApis) {
-      return (countSpaceCompleteApis / countSpaceApis) * 100;
+      return Math.floor((countSpaceCompleteApis / countSpaceApis) * 100);
     } else return 0;
   }, [countSpaceApis, countSpaceCompleteApis]);
 
