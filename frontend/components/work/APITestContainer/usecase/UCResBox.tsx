@@ -34,6 +34,10 @@ const UCResBox = function ({
     isError,
   } = useUsecaseResponses(spaceId, resApiIds);
 
+  useEffect(() => {
+    console.log('resDatas', resDatas);
+  }, [resDatas]);
+
   // const [refineData, setRefineData] = useState<any>({});
   // useEffect(() => {
   //   let headersFields: any = [];
