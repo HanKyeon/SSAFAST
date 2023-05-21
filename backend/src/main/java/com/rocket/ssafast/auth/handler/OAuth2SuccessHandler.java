@@ -61,7 +61,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 		if (request.getServerName().equals("localhost") && request.getServerPort() == 3000) {
 			url.append("http://localhost:3000/google-loading");
 		} else {
-			url.append("https://ssafast.com/google-loading");
+			url.append("https://www.ssafast.com/google-loading");
 		}
 
 		url.append("?refresh-token=")
