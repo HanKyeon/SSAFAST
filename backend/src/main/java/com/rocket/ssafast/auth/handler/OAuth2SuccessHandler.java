@@ -29,6 +29,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 	private final RedisService redisService;
 	private final JwtTokenProvider jwtTokenProvider;
 	private long COOKIE_EXPIRATION = 7776000; // 90일
+	private String serverUrl = "http://localhost:3000";
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -57,14 +58,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 		response.setContentType("application/json;charset=UTF-8");
 
 		StringBuilder url = new StringBuilder();
-
-		if (request.getServerName().equals("localhost") && request.getServerPort() == 3000) {
-			url.append("http://localhost:3000/google-loading");
-		} else {
-			url.append("https://www.ssafast.com/google-loading");
-		}
-
-		url.append("?refresh-token=")
+		url.append(serverUrl).append("/google-loading?refresh-token=")
 			.append(tokenDto.getRefreshToken())
 			.append("&access-token=")
 			.append(tokenDto.getAccessToken());
