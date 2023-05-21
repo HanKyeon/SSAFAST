@@ -58,7 +58,7 @@ public class SecurityConfig {
 
 			.and()
 			.authorizeRequests()
-			.antMatchers("/api/auth/test", "/api/tmp/**", "/api/usecase/**","/api/auth/login", "/api/auth/reissue").permitAll() 	// signup permit
+			.antMatchers("/api/auth/test", "/api/tmp/**","/api/auth/login", "/api/auth/reissue").permitAll() 	// signup permit
 			.anyRequest().authenticated()
 
 			.and()
