@@ -1,9 +1,14 @@
 import { useForm, FormProvider, Controller } from 'react-hook-form';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { useStoreSelector } from '@/hooks/useStore';
 import { IoMdArrowRoundBack } from 'react-icons/io';
 import { useRouter } from 'next/router';
-import { useBaseUrl, useSpaceCategory } from '@/hooks/queries/queries';
+import {
+  ApiDetailDef,
+  useBaseUrl,
+  useSpaceCategory,
+  useUserData,
+} from '@/hooks/queries/queries';
 import { SpaceParams } from '@/pages/space';
 import { RequestFormData } from './RequestForm';
 import { ResponseFormData } from './ResponseForm';
@@ -13,6 +18,8 @@ import AnimationBox from '@/components/common/AnimationBox';
 import RequestForm from './RequestForm';
 import ResponseForm from './ResponseForm';
 import { useCreateApi } from '@/hooks/queries/mutations';
+import { useApiDetail } from '@/hooks/queries/queries';
+import apiRequest from '@/utils/axios';
 
 // Api interface
 export interface ApiCreateForm {
@@ -20,7 +27,7 @@ export interface ApiCreateForm {
   name: string;
   description: string;
   method?: 1 | 2 | 3 | 4 | 5;
-  baseUrl: number;
+  baseurlId: number;
   categoryId?: number;
   status: number;
   document: Document;
@@ -34,13 +41,14 @@ export interface ServerData {
   name: string;
   description: string;
   method?: 1 | 2 | 3 | 4 | 5;
-  baseUrl: number;
+  baseurlId: number;
   categoryId?: number;
   status: number;
   document: {
     request: MockupData2Type;
     response: Body;
   };
+  isEdit: boolean;
 }
 
 // Form Tab 스타일
@@ -53,9 +61,15 @@ const selectedStyle = (dark: boolean) =>
 
 interface ApiCreateProps {
   toggleAddHandler: () => void;
+  apiIdHandler: (id: string | number) => void;
+  currentApiId: string | number;
 }
 // Form을 모을 최상위 함수
-const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
+const ApiWrite = function ({
+  toggleAddHandler,
+  currentApiId,
+  apiIdHandler,
+}: ApiCreateProps) {
   const { dark } = useStoreSelector((state) => state.dark);
   const [step, setStep] = useState<number>(1);
   const router = useRouter();
@@ -66,39 +80,184 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
     isError: baseUrlError,
   } = useBaseUrl(parseInt(spaceId));
 
-  const { data: categoryListData } = useSpaceCategory(parseInt(spaceId));
-  const { data: baseUrlListData } = useBaseUrl(parseInt(spaceId));
+  const { data: categoryListData, isLoading: isCategoryLoading } =
+    useSpaceCategory(parseInt(spaceId));
+  const { data: baseUrlListData, isLoading: isBaseUrlLoading } = useBaseUrl(
+    parseInt(spaceId)
+  );
 
-  const methods = useForm<ApiCreateForm>({
-    defaultValues: {
-      workspaceId: parseInt(spaceId),
-      name: '',
-      description: '',
-      method: undefined,
-      baseUrl: 5,
-      categoryId: undefined,
-      status: undefined,
-      document: {
-        request: undefined,
-        response: [
-          {
-            status_code: 200,
-            desc: 'success',
-            headers: [],
-            body: undefined,
-          },
-        ],
-      },
-    },
-  });
+  const { data: Editdata } = useApiDetail(spaceId, currentApiId as number);
+
+  let defaultData: ApiCreateForm | undefined;
+
+  const methods = useForm<ApiDetailDef>();
+
   const { mutate: createMutate, mutateAsync: createMutateAsync } = useCreateApi(
     parseInt(spaceId)
   );
-  const { control, handleSubmit } = methods;
+  const { control, handleSubmit, reset } = methods;
+  const { data: userData } = useUserData();
 
-  const onSubmit = function (data: ApiCreateForm) {
-    console.log('API 데이터', data);
-    createMutateAsync(data).then(() => toggleAddHandler());
+  useEffect(
+    function () {
+      if (baseUrlListData && categoryListData && !Editdata && userData) {
+        const defaultDatas: ApiDetailDef = {
+          workspaceId: parseInt(spaceId),
+          name: '',
+          description: '',
+          method: 1,
+          status: 1,
+          baseurlId: baseUrlListData?.baseurls[0].id as number,
+          categoryId: categoryListData?.categorys[0].id as number,
+          document: {
+            request: {
+              additionalUrl: '',
+              body: {
+                fields: [],
+              },
+              headers: [],
+              params: [],
+              pathVars: [],
+            },
+            response: [
+              {
+                statusCode: 200,
+                desc: 'success',
+                headers: [],
+                body: {
+                  fields: [],
+                },
+              },
+            ],
+          },
+          member: {
+            id: userData.id as number,
+            name: userData.name,
+            email: userData.email,
+            profileImg: userData.profileImg,
+          },
+        };
+        reset(defaultDatas);
+      }
+    },
+    [baseUrlListData, categoryListData]
+  );
+
+  useEffect(
+    function () {
+      if (Editdata) {
+        reset({
+          workspaceId: parseInt(spaceId),
+          name: Editdata.name,
+          description: Editdata.description,
+          method: Editdata.method as 1 | 2 | 3 | 4 | 5,
+          baseurlId: Editdata.baseurlId,
+          categoryId: Editdata.categoryId,
+          status: Editdata.status,
+          document: Editdata.document,
+        });
+        console.log('기본 데이터는?', defaultData);
+        console.log('수정 데이터', Editdata);
+      }
+    },
+    [Editdata]
+  );
+
+  const onSubmit = async function (data: ApiDetailDef) {
+    console.log('API 요청 데이터', data);
+    let workspaceId = spaceId;
+    let name = data.name;
+    let description = data.description;
+    let method = data.method;
+    let baseurlId = data.baseurlId;
+    let categoryId = data.categoryId;
+    let status = data.status;
+    let refinedocument: any = {
+      request: {
+        additionalUrl: data.document.request.additionalUrl,
+        headers: [...data.document.request.headers],
+        params: [...data.document.request.params],
+        pathVars: [...data.document.request.pathVars],
+      },
+      response: [],
+    };
+    let requestBody: any = { fields: [], nestedDtos: {} };
+
+    for (const field of data.document.request.body.fields) {
+      if ((field.type as number) < 10) {
+        requestBody.fields.push(field);
+      } else {
+        let dtoData = {
+          keyName: field.keyName,
+          type: field.type,
+          desc: field.desc,
+          itera: false,
+          constraints: [],
+        };
+        if (requestBody.nestedDtos[field.type]) {
+          requestBody.nestedDtos[field.type].push(dtoData);
+        } else {
+          requestBody.nestedDtos[field.type] = [{ ...dtoData }];
+        }
+      }
+    }
+    refinedocument.request.body = { ...requestBody };
+
+    data.document.response.map((response) => {
+      let ret: any = {
+        statusCode: response.statusCode,
+        desc: response.desc,
+        headers: [...response.headers],
+        body: { fields: [], nestedDtos: {} },
+      };
+      response.body.fields.forEach((resBodyField) => {
+        if ((resBodyField.type as number) < 10) {
+          ret.body.fields.push({
+            keyName: resBodyField.keyName,
+            type: resBodyField.type,
+            desc: resBodyField.desc,
+            itera: resBodyField.itera,
+            constraints: [],
+          });
+        } else {
+          let resBodyDtoData = {
+            keyName: resBodyField.keyName,
+            type: resBodyField.type,
+            desc: resBodyField.desc,
+            itera: resBodyField.itera,
+            constraints: [],
+          };
+          if (ret.body.nestedDtos[resBodyField.type]) {
+            ret.body.nestedDtos[resBodyField.type].push(resBodyDtoData);
+          } else {
+            ret.body.nestedDtos[resBodyField.type] = [{ ...resBodyDtoData }];
+          }
+        }
+      });
+      refinedocument.response.push(ret);
+    });
+
+    const finalConfig = {
+      workspaceId: parseInt(workspaceId),
+      name,
+      description,
+      method,
+      baseUrl: baseurlId,
+      categoryId,
+      status,
+      document: { ...refinedocument },
+    };
+
+    console.log('제출 할 데이터 :', finalConfig);
+    createMutateAsync(finalConfig).then(() => {
+      apiIdHandler(0);
+      toggleAddHandler();
+    });
+  };
+
+  const goToApiContainer = function () {
+    toggleAddHandler();
+    apiIdHandler(0);
   };
 
   // Request Tab 이동
@@ -109,12 +268,11 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
   const responseTabHandler = function () {
     setStep(() => 2);
   };
-
   return (
-    <div className="flex flex-col gap-3 p-[3%] w-full h-full overflow-y-scroll">
-      <div className="h-[5%]">
+    <div className="flex flex-col gap-3 p-[3%] w-full h-full">
+      <div className="h-[5%] w-full">
         <Button
-          onClick={toggleAddHandler}
+          onClick={goToApiContainer}
           isEmpty
           className="flex flex-row gap-2 items-center"
         >
@@ -124,7 +282,7 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
 
       <Box
         fontType="normal"
-        className="flex justify-around flex-row items-center box-border h-[5%]"
+        className="flex justify-around flex-row items-center box-border h-[5%] w-full"
       >
         <div
           className={`${step === 1 ? selectedStyle(dark) : ''} cursor-pointer `}
@@ -141,13 +299,13 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
       </Box>
       {/* <button onClick={onSubmit}>최종 제출</button> */}
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)} className="h-[80%]">
+        <form onSubmit={handleSubmit(onSubmit)} className="h-[80%] w-full">
           <div
             className={`${
               step === 1 ? '' : 'hidden'
             } flex flex-col w-full h-full overflow-y-scroll`}
           >
-            <div className="flex flex-row items-center pt-10 h-[10%]">
+            <div className="flex flex-row items-center pt-5 h-[10%]">
               <Controller
                 name={`categoryId`}
                 control={control}
@@ -163,7 +321,9 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
                     >
                       {categoryListData?.categorys?.map((item, index) => (
                         <>
-                          <option value={item.id}>{item.name}</option>
+                          <option key={`${item.id}_${index}`} value={item.id}>
+                            {item.name}
+                          </option>
                         </>
                       ))}
                     </Select>
@@ -193,7 +353,7 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
                 )}
               />
             </div>
-            <div className="flex flex-col w-full items-center justify-center gap-4 py-10">
+            <div className="flex flex-col w-full items-center justify-center gap-4 py-5">
               <Controller
                 control={control}
                 name={`name`}
@@ -205,6 +365,7 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
                       placeholder="Name"
                       name={`name`}
                       className={`w-full text-start`}
+                      value={field.value}
                       onChange={field.onChange}
                       onBlur={field.onBlur}
                     />
@@ -227,6 +388,7 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
                       placeholder="Description"
                       name={`description`}
                       className={`w-full text-start`}
+                      value={field.value}
                       onChange={field.onChange}
                       onBlur={field.onBlur}
                     />
@@ -246,7 +408,7 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
                   render={({ field, fieldState }) => (
                     <div className="flex flex-col w-[21%]">
                       <Select
-                        className={`w-full text-center items-start`}
+                        className={`w-[90%] text-center items-start`}
                         name={'method'}
                         onChange={field.onChange}
                         onBlur={field.onBlur}
@@ -268,20 +430,21 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
                 />
 
                 <Controller
-                  name={`baseUrl`}
+                  name={`baseurlId`}
                   control={control}
                   render={({ field, fieldState }) => (
                     <div className="flex flex-col w-[79%]">
                       <Select
-                        name={'baseUrl'}
+                        name={'baseurlId'}
                         onChange={field.onChange}
+                        value={field.value}
                         onBlur={field.onBlur}
                         className={`w-full text-start items-start`}
                       >
                         {baseUrlListData?.baseurls?.map((item, index) => (
-                          <>
-                            <option value={item.id}>{item.url}</option>
-                          </>
+                          <option key={`${item.id}_${index}`} value={item.id}>
+                            {item.url}
+                          </option>
                         ))}
                       </Select>
                     </div>
@@ -299,7 +462,7 @@ const ApiWrite = function ({ toggleAddHandler }: ApiCreateProps) {
           >
             <ResponseForm />
           </AnimationBox>
-          <div className="flex justify-end pt-10">
+          <div className="flex justify-end">
             <Button type="submit">저장</Button>
           </div>
         </form>

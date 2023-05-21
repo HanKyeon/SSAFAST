@@ -10,6 +10,19 @@ export const defaultTypes = [
   { id: 9, name: `LocalDateTime`, desc: `로컬 날짜 타입` },
 ];
 
+export const getWonsiType = [
+  ``,
+  'String',
+  'Integer',
+  'Long',
+  'Float',
+  'Double',
+  'Boolean',
+  'MultipartFile',
+  'Date',
+  'LocalDateTime',
+];
+
 export const valuedConstraints = {
   max: (v: number) => {
     return {
@@ -52,3 +65,33 @@ export const stringConstraints = [
   { name: `NotEmpty`, desc: `""을 허용하지 않습니다.` },
   { name: `URL`, desc: `URL 형태만 허용합니다.` },
 ];
+
+export const mokupResponse = `{
+  "success": true,
+  "lastApiId": 3,
+  "lastApiResponse": {
+      "headers": {
+          "X-Frame-Options": "SAMEORIGIN",
+          "Transfer-Encoding": "chunked",
+          "Keep-Alive": "timeout=60",
+          "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+          "X-Content-Type-Options": "nosniff",
+          "Connection": "keep-alive",
+          "Pragma": "no-cache",
+          "Expires": "0",
+          "X-XSS-Protection": "1; mode=block",
+          "Date": "Sat, 13 May 2023 01:28:04 GMT",
+          "Content-Type": "application/json"
+      },
+      "body": {
+          "orderItem": {
+              "id": 15,
+              "orderId": 95,
+              "name": "모나미 볼펜",
+              "price": 5000
+          }
+      },
+      "statusCode": "OK",
+      "statusCodeValue": 200
+  }
+}`;

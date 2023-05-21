@@ -8,18 +8,25 @@ import {
 import styles from '../../APIDocsContainer/ReqItem.module.css';
 import ToggleableHeader from '../../APIDocsContainer/ToggleableHeader';
 import { FieldsType, HeadersType } from '../../APIDocsContainer';
-import { ApiDetailAtTestItem } from '@/hooks/queries/queries';
+import {
+  ApiDetailAtTestDto,
+  ApiDetailAtTestItem,
+  DtoField,
+} from '@/hooks/queries/queries';
 import UCReqItemInner from './UCReqItemInner';
-import { UseTestForm } from './UseTestContainer';
 
 type ReqtemPropsType = {
   fields?: FieldArrayWithId[]; // 잠깐 ?넣어유,,
   formName: string;
-  // control: Control<UseTestForm, any>;
+  // control: Control<UsecaseDetailType, any>;
   control: any;
   name: string;
-  item: HeadersType[] | FieldsType[] | ApiDetailAtTestItem[];
-  setMappingFormName: Dispatch<SetStateAction<string | null>>;
+  item:
+    | HeadersType[]
+    | FieldsType[]
+    | ApiDetailAtTestItem[]
+    | ApiDetailAtTestDto
+    | DtoField[];
 };
 const UCReqItem = function ({
   fields,
@@ -27,10 +34,13 @@ const UCReqItem = function ({
   name, // 그냥 이름
   item, // item
   control,
-  setMappingFormName,
 }: ReqtemPropsType): JSX.Element {
   const [isOpen, setisOpen] = useState<boolean>(true);
-  const a = item?.length + 1;
+  const a =
+    (
+      (item as HeadersType[] | FieldsType[] | ApiDetailAtTestItem[]) ||
+      Object.keys(item as ApiDetailAtTestDto)
+    )?.length + 1;
 
   const Styles = {
     style: `${
@@ -41,12 +51,15 @@ const UCReqItem = function ({
   const styles1 = {
     style: `${isOpen ? `h-[calc(${a}*43px)]` : 'h-[43px]'}`,
   };
-  console.log('111111', formName, item);
+  //   console.log('111111', formName, item);
   return (
     <div className={`${styles1[`style`]} w-full`}>
       <ToggleableHeader title={name} isOpen={isOpen} setIsOpen={setisOpen} />
       <div className={`${Styles['style']}`}>
-        {(item as HeadersType[] | FieldsType[])?.map((item, idx) => (
+        {(
+          (item as HeadersType[] | FieldsType[] | ApiDetailAtTestItem[]) ||
+          Object.keys(item as ApiDetailAtTestDto)
+        )?.map((item, idx) => (
           <Controller
             key={`${Math.random()}`} // fields[idx].id
             name={`${formName}.${item.keyName}`}
@@ -63,7 +76,6 @@ const UCReqItem = function ({
                     item={item}
                     control={control}
                     name={name}
-                    setMappingFormName={setMappingFormName}
                   />
                 </div>
               );

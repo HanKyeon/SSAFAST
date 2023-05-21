@@ -1,173 +1,42 @@
 import { Box, Button, Input } from '@/components/common';
 import { useStoreSelector } from '@/hooks/useStore';
-import MappingContainer from './MappingContainer';
-import SideApiItem from './SideApiItem';
 import BoxHeader from '@/components/common/BoxHeader';
 import { FormProvider, useForm } from 'react-hook-form';
 import { ApiTestForm, MockupData2Type } from '../../APIDocsContainer';
-import { EventHandler, FormEvent, useEffect, useRef, useState } from 'react';
+import {
+  EventHandler,
+  FormEvent,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import Modal from '@/components/common/Modal';
 import { IoArrowBackOutline } from 'react-icons/io5';
 import useInput from '@/hooks/useInput';
 import APIList from '../../APIEditContainer/APIList';
-import { EachCateApi } from '@/hooks/queries/queries';
+import {
+  EachCateApi,
+  UsecaseDetailType,
+  UsecaseListItemType,
+  useApiDetailAtTest,
+  useUsecaseDetail,
+} from '@/hooks/queries/queries';
 import UCReqBox from './UCReqBox';
 import UCResBox from './UCResBox';
 import SideContainer from './SideContainer';
-
-const mockupData2: MockupData2Type = {
-  request: {
-    headers: [
-      {
-        keyName: 'Content-Type',
-        type: 'String',
-        desc: 'Define request data type',
-        value: null,
-      },
-      {
-        keyName: 'Age',
-        type: 'Integer',
-        desc: 'Fields for cashing',
-        value: null,
-      },
-    ],
-    body: {
-      fields: [
-        {
-          keyName: 'ID',
-          type: 1,
-          desc: '사용자 ID',
-          itera: false,
-          constraints: ['NotNull'],
-          value: null,
-        },
-        {
-          keyName: 'PW',
-          type: 1,
-          desc: '사용자 PW',
-          itera: false,
-          constraints: ['NotNull'],
-          value: null,
-        },
-      ],
-      nestedDtos: {
-        '11': {
-          name: 'UserInfo', // 실제 dto class 이름
-          keyName: '11Dto', // 사용자가 지정한 변수명 e.g) Test test2;
-          desc: '사용자 정보를 저장하는 class',
-          itera: false,
-          fields: [
-            {
-              keyName: 'userID',
-              type: 1,
-              desc: '추천인ID',
-              value: null,
-              itera: false,
-              constraints: ['NotNull'],
-            },
-            {
-              keyName: 'userPW',
-              type: 1,
-              desc: '추천인PW',
-              value: null,
-              itera: false,
-              constraints: ['NotNull'],
-            },
-          ],
-          nestedDtos: {},
-        },
-        '8': {
-          name: 'UserInfo', // 실제 dto class 이름
-          keyName: '8Dto', // 사용자가 지정한 변수명 e.g) Test test2;
-          desc: '사용자 정보를 저장하는 class',
-          itera: false,
-          fields: [
-            {
-              keyName: 'userID',
-              type: 1,
-              desc: '추천인ID',
-              value: null,
-              itera: false,
-              constraints: ['NotNull'],
-            },
-            {
-              keyName: 'userPW',
-              type: 1,
-              desc: '추천인PW',
-              value: null,
-              itera: false,
-              constraints: ['NotNull'],
-            },
-          ],
-          nestedDtos: {
-            '7': {
-              name: 'UserInfo', // 실제 dto class 이름
-              keyName: '7Dto', // 사용자가 지정한 변수명 e.g) Test test2;
-              desc: '사용자 정보를 저장하는 class',
-              itera: false,
-              fields: [
-                {
-                  keyName: 'userID',
-                  type: 1,
-                  desc: '추천인ID',
-                  value: null,
-                  itera: false,
-                  constraints: ['NotNull'],
-                },
-                {
-                  keyName: 'userPW',
-                  type: 1,
-                  desc: '추천인PW',
-                  value: null,
-                  itera: false,
-                  constraints: ['NotNull'],
-                },
-              ],
-              nestedDtos: {},
-            },
-          },
-        },
-      },
-      nestedDtoList: {
-        '12': {
-          name: 'RecUserInfo',
-          keyName: null,
-          desc: '추천한 사용자들의 정보를 담는 class',
-          itera: true,
-          fields: [
-            {
-              keyName: 'userID',
-              type: 1,
-              desc: '추천인ID',
-              value: null,
-              itera: false,
-              constraints: ['NotNull'],
-            },
-          ],
-          nestedDtos: {},
-        },
-      },
-    },
-    pathVars: [
-      {
-        keyName: 'userid',
-        type: 'String',
-        desc: 'for login',
-        constraints: ['NotNull'],
-        value: null,
-      },
-    ],
-    params: [
-      {
-        keyName: 'age',
-        type: 'int',
-        desc: 'user age',
-        constraints: ['NotNull'],
-        value: null,
-      },
-    ],
-  },
-};
+import UsecaseList from './UsecaseList';
+import {
+  TestResponseType,
+  useNewUsecase,
+  useTestUsecase,
+} from '@/hooks/queries/mutations';
+import { useRouter } from 'next/router';
+import { SpaceParams } from '@/pages/space';
+import Logogogo from '@/components/common/Logogogo';
+import { UCContext, UCContextInterface } from '.';
+import useUcWithIds from '@/hooks/useUcWithIds';
+import { mokupResponse } from '@/utils/constraints';
 
 export interface RequestItem {
   [key: string]: {
@@ -198,35 +67,6 @@ export interface ResponseItem {
   };
 }
 
-export interface UseTestForm {
-  rootApiId: string | number;
-  testDetails: {
-    [key: string | number]: {
-      additionalUrl: string;
-      parent?: string | number;
-      child?: string | number;
-      request: {
-        headers?: RequestItem;
-        pathVars?: RequestItem;
-        params?: RequestItem;
-        body?: {
-          fields?: RequestItem;
-          nestedDtos?: UseTestDtoItem;
-          nestedDtoLists?: UseTestDtoItem;
-        };
-      };
-      response: {
-        headers?: ResponseItem;
-        body?: {
-          fields?: ResponseItem;
-          nestedDtos?: UseTestDtoItem;
-          nestedDtoLists?: UseTestDtoItem;
-        };
-      };
-    };
-  };
-}
-
 export type UseTestApiCompactType = {
   id: string | number;
   name: string;
@@ -236,30 +76,89 @@ export type UseTestApiCompactType = {
 };
 
 const UseTestContainer = function () {
-  const { dark } = useStoreSelector((state) => state.dark);
+  const router = useRouter();
+  const { spaceId } = router.query as SpaceParams;
 
-  const testName = useRef<HTMLInputElement>(null);
-  const { inputData, onChangeHandler } = useInput(testName);
+  const { dark: isDark } = useStoreSelector((state) => state.dark);
+  const { mutateAsync: newUCMutate } = useNewUsecase(spaceId);
 
-  const [isListModalOpen, setIsListModalOpen] = useState<boolean>(true);
-  const [curTestId, setCurTestId] = useState<number | string>();
+  const [ucNameInputEL, ucDescInputEl] = [
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+  ];
+  const { inputData: ucNameInput, onChangeHandler: onChangeUcNameInput } =
+    useInput(ucNameInputEL);
+  const { inputData: ucDescInput, onChangeHandler: onChangeUcDescInput } =
+    useInput(ucDescInputEl);
+
+  const {
+    contextFormName,
+    setContextFormName,
+    contextResName,
+    setContextResName,
+    contextMapped,
+    setContextMapped,
+  } = useContext<UCContextInterface>(UCContext);
+
+  const [isListModalOpen, setIsListModalOpen] = useState<boolean>(true); // 유케저장목록모달
   const [isNewModalOpen, setIsNewModalOpen] = useState<boolean>(false);
-  const [newTestName, setNewTestName] = useState<string>('');
   const [isApiListOpen, setIsApiListOpen] = useState<boolean>(false);
+
+  const [curUsecase, setCurUsecase] = useState<UsecaseListItemType>({
+    id: 0,
+    isNew: false,
+  });
+  // const { data: curUCData, isFetching: ucDataFetching } = useUsecaseDetail(
+  //   spaceId,
+  //   curUsecase.id,
+  //   curUsecase.isNew ? curUsecase.isNew : false
+  // );
+  const onClickUsecaseItem = (usecase: UsecaseListItemType) => {
+    if (usecase) {
+      setCurUsecase({ ...usecase, isNew: false });
+      // setIsListModalOpen(() => false);
+      console.log(curUsecase);
+    }
+  };
+
   const [curapi, setCurApi] = useState<UseTestApiCompactType>();
   const [apis, setApis] = useState<UseTestApiCompactType[]>([]);
   const [countApi, setCountApi] = useState<number>(0);
   const [resApiIds, setResApiIds] = useState<string>('');
+  const requestData = useUcWithIds(resApiIds);
 
-  const [mappingFormName, setMappingFormName] = useState<string | null>(null);
-
-  const methods = useForm<UseTestForm>({
+  const methods = useForm<any>({
     defaultValues: {
-      rootApiId: '',
+      rootApiId: 0,
       testDetails: {},
     },
   });
-  const { control, handleSubmit } = methods;
+  const {
+    control,
+    handleSubmit,
+    reset,
+    setValue: setFormValue,
+    getValues,
+    resetField,
+  } = methods;
+
+  useEffect(
+    function () {
+      if (contextFormName && contextResName) {
+        console.log(contextFormName);
+        console.log(contextResName);
+        resetField(`${contextFormName}.value` as any, {
+          defaultValue: contextResName,
+        });
+        resetField(`${contextFormName}.mapped` as any, {
+          defaultValue: !!`gd`,
+        });
+        setContextFormName(() => ``);
+        setContextResName(() => ``);
+      }
+    },
+    [contextFormName, contextResName]
+  );
 
   const onToggleListModal = (): void => {
     setIsListModalOpen((prev) => !prev);
@@ -274,18 +173,34 @@ const UseTestContainer = function () {
     onToggleNewModal();
   };
   const onClickNew = () => {
-    // 유스케이스 테스트 생성하는 dispatch
-    // 1에서 나온 usecaseTestId를 curTestId에!
-    setCurTestId(1);
+    newUCMutate({
+      name: ucNameInput,
+      description: ucDescInput,
+      workspaceId: spaceId,
+    }).then((res) => {
+      console.log('usecaseTestId!!!!!!!!!', res.data.usecaseTestId);
+      setCurUsecase({
+        id: res.data.usecaseTestId,
+        name: curUsecase.name,
+        desc: curUsecase.desc,
+        isNew: true,
+      });
+    });
+
+    // 모달닫음
     onToggleListModal();
     onToggleNewModal();
   };
   const onClickApi = (api: UseTestApiCompactType): void => {
     // side에서 api하나 클릭 -> req, res 세팅
+    console.log('mapping하는쪽 바꼈나? 현재 선택된 api는', api);
     setCurApi(api);
   };
   // const onClickApitoAdd = (apiId: string | number,apiName: string, method: 1|2|3|4|5): void => {
   const onClickApitoAdd = (api: UseTestApiCompactType): void => {
+    if (countApi === 0) {
+      setFormValue('rootApiId', api.id);
+    }
     setCurApi({ ...api, idx: countApi });
     setApis((prev) => [...prev, { ...api, idx: countApi }]);
     setCountApi((prev) => prev + 1);
@@ -294,119 +209,219 @@ const UseTestContainer = function () {
   const onClickAddApiBtn = (): void => {
     onToggleAddApiModal();
   };
-  const checkData = function (data: UseTestForm) {
-    console.log('원본', data);
+  const onClickClearApis = (): void => {
+    // 왼쪽 사이드에 있는 api 목록 지움
+    setCurApi(undefined);
+    setApis([]);
+    setCountApi(0);
+
+    // 지금까지 만들어졌던 useForm의 method 그 data도 초기화
+    reset({
+      rootApiId: '',
+      testDetails: {},
+    });
+
+    // context도 초기화
+    setContextFormName(null);
+    setContextResName(null);
+    setContextMapped(false);
   };
+
+  const { mutateAsync: testMutate } = useTestUsecase(spaceId, curUsecase.id);
+
+  const [resultModal, setResultModal] = useState<boolean>(false);
+  const [response, setResponse] = useState<any>(``);
+  const onClickTest = (data: UsecaseDetailType): void => {
+    testMutate(data).then(({ data }) => {
+      setResponse(() => data);
+      console.log('mutate 햇다@@@@@@!!!!!', data);
+    });
+    console.log('usecaes test submit 원본', data);
+    setResultModal(() => true);
+  };
+
+  const a = useUcWithIds(apis.map((api) => api.id).join(`,`));
+  useEffect(
+    function () {
+      if (a) {
+        reset(a);
+      }
+    },
+    [a.testDetails]
+  );
+
   useEffect(() => {
     // response 가져오기 위해 이전 api들의 id 가져오기
     if (curapi) {
-      const queryParams = new URLSearchParams();
+      // const queryParams = new URLSearchParams();
       const apiIds = apis
         .map((api: UseTestApiCompactType) => api.id)
         .slice(0, curapi.idx);
-      queryParams.set('apiIds', apiIds.join(','));
-      setResApiIds(queryParams.toString());
-      // console.log('!!!!!!!!!!!', queryParams.toString());
+      // queryParams.set('apiIds', apiIds.join(','));
+      setResApiIds(apiIds.join(','));
+      // console.log('!!!!!!!!!!!', apiIds.join(','));
+      // console.log('?????????????', apiIds);
     }
   }, [curapi]);
 
   return (
-    <Box variant="one" fontType="header" className="h-full w-full">
-      {isListModalOpen ? (
-        <Modal closeModal={onToggleListModal} parentClasses="h-[50%] w-[50%]">
-          {!isNewModalOpen ? (
-            <Box
-              className={`w-full h-full p-5 flex flex-col justify-between items-center`}
-            >
-              <div>usecase test 리스트</div>
-              <Button onClick={onClickOpenNew}>New Test</Button>
+    <>
+      {resultModal && (
+        <Modal
+          closeModal={() => setResultModal(false)}
+          parentClasses="h-[70%] w-[60%]"
+        >
+          <Box className="flex flex-col gap-4 w-full h-full p-5 items-center justify-center">
+            <div className="text-[36px]">Usecase Test Result</div>
+            <div className="text-[24px] text-red-500">
+              유즈케이스 결과 코드 입니다!
+            </div>
+            <Box variant="three" className="w-full h-full p-5 overflow-scroll">
+              <pre>{response || mokupResponse}</pre>
             </Box>
-          ) : (
-            <Box
-              className={`w-full h-full p-5 flex flex-col justify-between items-center`}
-            >
-              <div
-                className={`flex gap-2 items-center text-mincho-normal hover:text-mincho-strong`}
-                onClick={onToggleNewModal}
+            <div className="flex flex-row gap-4">
+              <Box
+                variant="three"
+                className="w-[80px] h-[60px] rounded-[13px] flex items-center justify-center cursor-pointer hover:scale-105 duration-[0.33s]"
+                onClick={() => setResultModal(false)}
               >
-                <IoArrowBackOutline />
-                <span className={`text-content mt-[3px]`}>뒤로</span>
-              </div>
-              <Input
-                inputref={testName}
-                onChange={onChangeHandler}
-                placeholder="usecase test name"
-              />
-              <Button onClick={onClickNew}>Start</Button>
-            </Box>
-          )}
+                닫기
+              </Box>
+            </div>
+          </Box>
         </Modal>
-      ) : (
-        <>
-          <FormProvider {...methods}>
-            <form
-              className="h-full w-full flex gap-[1.12%]"
-              onSubmit={handleSubmit(checkData)}
-            >
-              {/* 왼쪽 사이드 */}
-              <SideContainer
-                apis={apis}
-                onClickApi={onClickApi}
-                onClickAddApiBtn={onClickAddApiBtn}
-              />
-              {/* Request */}
-              <Box
-                variant="two"
-                fontType="normal"
-                className="flex-1 h-full p-5 flex flex-col"
-              >
-                <BoxHeader title="Request" />
-                {curapi && (
-                  <UCReqBox
-                    control={control}
-                    currentApi={curapi}
-                    setMappingFormName={setMappingFormName}
-                  />
-                )}
-              </Box>
-              {/* Response */}
-              <Box
-                variant="two"
-                fontType="normal"
-                className="flex-1 h-full p-5 flex flex-col"
-              >
-                <BoxHeader title="Response" />
-                {curapi && (
-                  <UCResBox
-                    control={control}
-                    currentApi={curapi}
-                    resApis={resApiIds}
-                    formName={mappingFormName}
-                  />
-                )}
-              </Box>
-            </form>
-          </FormProvider>
-          {isApiListOpen && (
-            <Modal
-              closeModal={onToggleAddApiModal}
-              parentClasses="h-[50%] w-[50%]"
-            >
-              <Box
-                className={`w-full h-full pt-7 pb-5 px-10 flex flex-col gap-7`}
-              >
-                <div className={`w-full text-center`}>
-                  추가할 API를 선택해 주세요.
-                </div>
-                <div className={`w-full flex-1 overflow-scroll scrollbar-hide`}>
-                  <APIList onClickApi={onClickApitoAdd} />
-                </div>
-              </Box>
-            </Modal>
-          )}
-        </>
       )}
-    </Box>
+      <Box variant="one" fontType="header" className="h-full w-full">
+        {isNewModalOpen ? (
+          // 처음에 저장된 usecase list 모달 오픈
+          <Modal closeModal={onToggleListModal} parentClasses="h-[50%] w-[50%]">
+            {isNewModalOpen ? ( // 생성 모달
+              <Box
+                className={`w-full h-full p-5 flex flex-col justify-between items-center`}
+              >
+                <div
+                  className={`w-full flex items-center gap-2 ${
+                    isDark ? 'text-mincho-normal' : 'text-taro-normal'
+                  } cursor-pointer`}
+                  onClick={onToggleNewModal}
+                >
+                  <IoArrowBackOutline />
+                  <span className={`text-content mt-[3px]`}>뒤로</span>
+                </div>
+                <div className={`flex flex-col gap-5 w-[90%] mb-7`}>
+                  <p className={`mb-2 text-center`}>
+                    새 유스케이스 테스트 생성
+                  </p>
+                  <Input
+                    inputref={ucNameInputEL}
+                    value={ucNameInput}
+                    onChange={onChangeUcNameInput}
+                    placeholder="Name"
+                    className={`!w-[50%]`}
+                  />
+                  <Input
+                    inputref={ucDescInputEl}
+                    value={ucDescInput}
+                    onChange={onChangeUcDescInput}
+                    placeholder="Description"
+                  />
+                </div>
+                <Button onClick={onClickNew} className={`!py-1`}>
+                  생성
+                </Button>
+              </Box>
+            ) : null}
+          </Modal>
+        ) : (
+          <>
+            {curUsecase.id ? (
+              <FormProvider {...methods}>
+                <form
+                  className="h-full w-full flex gap-[1.12%]"
+                  onSubmit={handleSubmit(onClickTest)}
+                >
+                  {/* 왼쪽 사이드 */}
+                  <SideContainer
+                    curUsecase={curUsecase}
+                    apis={apis}
+                    onClickApi={onClickApi}
+                    onClickAddApiBtn={onClickAddApiBtn}
+                    onClickClearApis={onClickClearApis}
+                  />
+                  {/* Request */}
+                  <Box
+                    variant="two"
+                    fontType="normal"
+                    className="flex-1 h-full p-5 flex flex-col"
+                  >
+                    <BoxHeader title="Request" />
+                    {curapi && (
+                      <UCReqBox
+                        curUsecase={curUsecase}
+                        control={control}
+                        currentApi={curapi}
+                        apis={apis}
+                        setFormValue={setFormValue}
+                      />
+                    )}
+                  </Box>
+                  {/* Response */}
+                  <Box
+                    variant="two"
+                    fontType="normal"
+                    className="flex-1 h-full p-5 flex flex-col"
+                  >
+                    <BoxHeader title="Response" />
+                    {curapi && (
+                      <UCResBox
+                        curUsecase={curUsecase}
+                        control={control}
+                        currentApi={curapi}
+                        resApiIds={resApiIds}
+                      />
+                    )}
+                  </Box>
+                </form>
+              </FormProvider>
+            ) : (
+              <Box
+                variant="two"
+                className="w-full h-full flex items-center justify-center"
+              >
+                <Logogogo msg="유즈케이스를 골라주세요!">
+                  <div
+                    className="bg-slate-600 rounded-full p-4 w-[10%] flex items-center justify-center cursor-pointer duration-[0.33s] hover:scale-105"
+                    onClick={() => setIsNewModalOpen(true)}
+                  >
+                    고르기
+                  </div>
+                </Logogogo>
+              </Box>
+            )}
+            {isApiListOpen && (
+              // usecase에 api 추가하는 api list 모달
+              <Modal
+                closeModal={onToggleAddApiModal}
+                parentClasses="h-[50%] w-[50%]"
+              >
+                <Box
+                  className={`w-full h-full pt-7 pb-5 px-10 flex flex-col gap-7`}
+                >
+                  <div className={`w-full text-center`}>
+                    추가할 API를 선택해 주세요.
+                  </div>
+                  <div
+                    className={`w-full flex-1 overflow-scroll scrollbar-hide`}
+                  >
+                    <APIList onClickApi={onClickApitoAdd} />
+                  </div>
+                </Box>
+              </Modal>
+            )}
+          </>
+        )}
+      </Box>
+    </>
   );
 };
 

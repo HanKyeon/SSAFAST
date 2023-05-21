@@ -1,17 +1,29 @@
+import { useOverloadListDetail } from '@/hooks/queries/queries';
 import { useStoreSelector } from '@/hooks/useStore';
+import { SpaceParams } from '@/pages/space';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { HiChatBubbleBottomCenterText } from 'react-icons/hi2';
 
 interface LoadListInner {
   item?: any;
   className?: string;
+  getLoadDetail?: (data: any) => void;
+  idHandler?: (id: number) => void;
 }
 
 const LoadListInner = function ({
   item,
   className,
+  idHandler,
 }: LoadListInner): JSX.Element {
   const { dark: isDark } = useStoreSelector((state) => state.dark);
-
+  const getDetail = function (id: number) {
+    if (idHandler) {
+      idHandler(id);
+      console.log('1111111', id);
+    }
+  };
   const styles = {
     innerBox: `w-full h-auto flex items-center relative text-center rounded-[13px] ${
       isDark
@@ -37,7 +49,7 @@ const LoadListInner = function ({
         ? `text-grayscale-light border-grayscale-deepdarklight`
         : `text-grayscale-deepdarkdeep border-grayscale-deeplightlight`
     }`,
-    throuthput: `py-[8px] px-3 w-1/6 border-x-[1px] truncate ${
+    throughput: `py-[8px] px-3 w-1/6 border-x-[1px] truncate ${
       isDark
         ? `text-grayscale-light border-grayscale-deepdarklight`
         : `text-grayscale-deepdarkdeep border-grayscale-deeplightlight`
@@ -56,7 +68,7 @@ const LoadListInner = function ({
   return (
     <>
       {item && (
-        <div className="h-full w-full pr-2">
+        <div className="h-full w-full pr-2" onClick={() => getDetail(item.id)}>
           <div className={`${styles['innerBox']} ${className}`}>
             <div className={`${styles['id']}`}>
               <div>{'id' in item ? item.id : item.name}</div>
@@ -80,11 +92,13 @@ const LoadListInner = function ({
             <div className={`${styles['reqSec']}`}>
               {'reqSec' in item ? item.reqSec : item.name}
             </div>
-            <div className={`${styles['throuthput']}`}>
-              {'throuthput' in item ? item.throuthput : item.name}
+            <div className={`${styles['throughput']}`}>
+              {'throughput' in item ? item.throughput : item.name}
             </div>
             <div className={`${styles['createdTime']}`}>
-              {'createdTime' in item ? item.createdTime : item.name}
+              {'createdTime' in item
+                ? item.createdTime.replace('T', ' ')
+                : item.name}
             </div>
           </div>
         </div>

@@ -6,6 +6,11 @@ import apiRequest from '@/utils/axios';
 import { useStoreDispatch, useStoreSelector } from '../useStore';
 import { figmaTokenActions } from '@/store/figma-token-slice';
 import { FieldsType, HeadersType } from '@/components/work/APIDocsContainer';
+import {
+  RequestItem,
+  ResponseItem,
+  UseTestDtoItem,
+} from '@/components/work/APITestContainer/usecase/UseTestContainer';
 
 /**
  * dtoList: 디티오 리스트
@@ -15,18 +20,19 @@ export interface DtoList {
 }
 
 /**
- * key: 이름
+ * keyName: 이름
  * type: 타입
  * desc: 설명
- * itera: 배열 여부
- * constraints: 제약조건 문자열 배열
+ * itera?: 배열 여부
+ * constraints?: 제약조건 문자열 배열
+ * value?: 값 옵셔널
  */
 export interface DtoField {
   keyName: string;
   type: string | number;
   desc: string;
-  itera: boolean;
-  constraints: string[];
+  constraints?: string[];
+  itera?: boolean;
   value?: any;
 }
 
@@ -398,7 +404,7 @@ export const useDtoClasses = function (
         params: {
           dtoId: dtoId,
         },
-      });
+      }).then((res) => res.data);
     },
     enabled: !!spaceId && !!dtoId,
   });
@@ -525,7 +531,10 @@ export interface SpaceApiList {
 }
 
 // space api 목록 (api 전체 목록 조회)
-export const useSpaceApis = function (spaceId: string | number) {
+export const useSpaceApis = function (
+  spaceId: string | number,
+  methodList?: number[]
+) {
   return useQuery<SpaceApiList>({
     queryKey: queryKeys.spaceApiList(spaceId),
     queryFn: async function () {
@@ -534,6 +543,7 @@ export const useSpaceApis = function (spaceId: string | number) {
         url: `/api/api-pre/list`,
         params: {
           workspaceId: spaceId,
+          methods: methodList,
         },
       }).then((res) => res.data);
     },
@@ -557,6 +567,14 @@ export const useSpaceApis = function (spaceId: string | number) {
 //   });
 // };
 
+/**
+ *   keyName: string;
+ * type: number;
+ * desc: string;
+ * value?: any;
+ * itera?: boolean;
+ * constraints?: string[];
+ */
 export interface ApiDetailAtTestItem {
   keyName: string;
   type: number;
@@ -566,43 +584,74 @@ export interface ApiDetailAtTestItem {
   constraints?: string[];
 }
 
+export interface ApiDetailAtTestDtoInfo {
+  name?: string;
+  keyName: string | null;
+  desc: string;
+  itera: boolean;
+  type?: number;
+  constraints?: string[];
+  fields?: ApiDetailAtTestItem[];
+  nestedDtos?: ApiDetailAtTestDto;
+  nestedDtoLists?: ApiDetailAtTestDto;
+}
 export interface ApiDetailAtTestDto {
-  [key: string | number]: {
-    name?: string;
-    keyName: string | null;
-    desc: string;
-    itera: boolean;
-    type?: number;
-    constraints?: string[];
-    fields?: ApiDetailAtTestItem[];
-    nestedDtos?: ApiDetailAtTestDto;
-    nestedDtoLists?: ApiDetailAtTestDto;
-  }[];
+  [key: string | number]: ApiDetailAtTestDtoInfo[];
 }
 
 export interface ApiDetailAtTest {
-  request: {
-    additionalUrl: string;
-    headers?: ApiDetailAtTestItem[];
-    body?: {
-      fields?: ApiDetailAtTestItem[];
-      nestedDtos?: ApiDetailAtTestDto;
-      nestedDtoLists?: ApiDetailAtTestDto;
-    };
-    pathVars?: ApiDetailAtTestItem[];
-    params?: ApiDetailAtTestItem[];
+  apiId: string | number;
+  name: string;
+  description: string;
+  method: number;
+  status: number;
+  baseurlId: string | number;
+  categoryId: string | number;
+  member: {
+    id: number;
+    name: string;
+    email: string;
+    profileImg: string;
   };
-  response: {
-    statusCode: string | number;
-    desc: string;
-    headers?: ApiDetailAtTestItem[];
-    body?: {
-      fields?: ApiDetailAtTestItem[];
-      nestedDtos?: ApiDetailAtTestDto;
-      nestedDtoLists?: ApiDetailAtTestDto;
+  createdTime: Date;
+  document: {
+    request: {
+      additionalUrl: string;
+      headers?: ApiDetailAtTestItem[];
+      body?: {
+        fields?: ApiDetailAtTestItem[];
+        nestedDtos?: ApiDetailAtTestDto;
+        nestedDtoLists?: ApiDetailAtTestDto;
+      };
+      pathVars?: ApiDetailAtTestItem[];
+      params?: ApiDetailAtTestItem[];
     };
-  }[];
+    response: {} | null;
+  };
 }
+// export interface ApiDetailAtTest {
+//   request: {
+//     additionalUrl: string;
+//     headers?: ApiDetailAtTestItem[];
+//     body?: {
+//       fields?: ApiDetailAtTestItem[];
+//       nestedDtos?: ApiDetailAtTestDto;
+//       nestedDtoLists?: ApiDetailAtTestDto;
+//     };
+//     pathVars?: ApiDetailAtTestItem[];
+//     params?: ApiDetailAtTestItem[];
+//   };
+//   response: {
+//     statusCode: string | number;
+//     desc: string;
+//     headers?: ApiDetailAtTestItem[];
+//     body?: {
+//       fields?: ApiDetailAtTestItem[];
+//       nestedDtos?: ApiDetailAtTestDto;
+//       nestedDtoLists?: ApiDetailAtTestDto;
+//     };
+//   }[];
+// }
 
 // 상상 queries 희희
 // api 상세 조회 (단일테스트나 usecaseTest를 위한) (nestedDtoLists:{}가 필요)
@@ -610,8 +659,8 @@ export const useApiDetailAtTest = function (
   spaceId: string | number,
   apiId: string | number
 ) {
-  return useQuery<ApiDetailAtTest>({
-    queryKey: queryKeys.spaceApiDetail(spaceId, apiId), // 이거 key이름 수정필요!!!!
+  return useQuery<ApiDetailInTest>({
+    queryKey: queryKeys.spaceUseCaseApiDetail(spaceId, apiId),
     queryFn: async function () {
       return apiRequest({
         method: `get`,
@@ -633,25 +682,100 @@ export interface PrevResponse {
     nestedDtoLists?: ApiDetailAtTestDto;
   };
 }
-
-export interface PrevResponses {
-  prevResponses: PrevResponse[];
-}
+// export interface PrevResponses {
+//   prevResponses: PrevResponse[];
+// }
 
 // 이전 response 변수 목록 조회
-export const useUseCaseResList = function (
+export const useUsecaseResponses = function (
   spaceId: string | number,
-  apiIds: string
+  ids: string
 ) {
-  return useQuery<PrevResponses>({
-    queryKey: queryKeys.spaceApiDetail(spaceId, apiIds), // 이거 이름 수정필요!!!!
+  return useQuery<PrevResponse[]>({
+    queryKey: queryKeys.usecaseResponses(spaceId, ids), // 이거 이름 수정필요!!!!
     queryFn: async function () {
       return apiRequest({
         method: `get`,
         url: `/api/usecase/prev-responses`,
-      }).then((res) => res.data);
+        params: {
+          apiIds: ids,
+        },
+      }).then((res) => res.data.prevResponses);
     },
-    enabled: !!spaceId && !!apiIds,
+    enabled: !!spaceId && !!ids.length,
+  });
+};
+
+export interface UsecaseListItemType {
+  id: string | number;
+  name?: string;
+  desc?: string;
+  isNew?: boolean;
+}
+
+// 유스케이스 테스트 목록 조회
+export const useUsecaseList = function (workspaceId: string | number) {
+  return useQuery<UsecaseListItemType[]>({
+    queryKey: queryKeys.usecaseList(workspaceId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/usecase/list`,
+        params: {
+          workspaceId,
+        },
+      }).then((res) => res.data.usecaseTestList);
+    },
+    enabled: !!workspaceId,
+  });
+};
+
+export interface UsecaseDetailType {
+  name: string;
+  desc: string;
+  rootApiId: string | number;
+  testDetails?: {
+    [key: string | number]: {
+      additionalUrl: string;
+      parent?: string | number;
+      child?: string | number;
+      request?: {
+        headers?: RequestItem;
+        pathVars?: RequestItem;
+        params?: RequestItem;
+        body?: {
+          fields?: RequestItem;
+          nestedDtos?: UseTestDtoItem;
+          nestedDtoLists?: UseTestDtoItem;
+        };
+      };
+      response?: {
+        headers?: ResponseItem;
+        body?: {
+          fields?: ResponseItem;
+          nestedDtos?: UseTestDtoItem;
+          nestedDtoLists?: UseTestDtoItem;
+        };
+      };
+    };
+  };
+}
+
+// 유스케이스 테스트 상세 조회
+export const useUsecaseDetail = function (
+  spaceId: string | number,
+  usecaseId: string | number,
+  isNew: boolean
+) {
+  return useQuery<UsecaseDetailType>({
+    queryKey: queryKeys.usecaseDetail(spaceId, usecaseId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/usecase/${usecaseId}`,
+      }).then((res) => res.data.usecaseTest);
+    },
+    enabled: !!spaceId && !!usecaseId,
   });
 };
 
@@ -944,8 +1068,37 @@ export const getApiDetail = async function (apiId: number) {
   });
 };
 
+export interface ApiDetailDef {
+  name: string;
+  description: string;
+  method: number;
+  status: number;
+  baseurlId: number;
+  categoryId: number;
+  member: { id: number; name: string; email: string; profileImg: string };
+
+  document: {
+    request: {
+      additionalUrl: string;
+      headers: DtoField[];
+      body: DtoDetailForTestBody;
+      pathVars: DtoField[];
+      params: DtoField[];
+    };
+    response: {
+      statusCode: number;
+      desc: string;
+      headers: DtoField[];
+      body: DtoDetailForTestBody;
+    }[];
+  };
+  createdTime?: string;
+  apiId?: number;
+  workspaceId?: number;
+}
+
 export const useApiDetail = function (spaceId: string | number, apiId: number) {
-  return useQuery<any>({
+  return useQuery<ApiDetailDef>({
     queryKey: queryKeys.spaceApiDetail(spaceId, apiId),
     queryFn: async function () {
       return getApiDetail(apiId).then((res) => res.data);
@@ -955,6 +1108,65 @@ export const useApiDetail = function (spaceId: string | number, apiId: number) {
 };
 
 // Api 단일 테스트용 상세 조회
+
+export interface BodyNestedDtoDetail {
+  [id: number]: {
+    name?: string;
+    keyName?: string;
+    desc?: string;
+    constraints?: string[];
+    itera?: boolean;
+    fields?: DtoField[];
+    nestedDtos?: BodyNestedDtoDetail;
+  }[];
+  [id: string]: {
+    name?: string;
+    keyName?: string;
+    desc?: string;
+    constraints?: string[];
+    itera?: boolean;
+    fields?: DtoField[];
+    nestedDtos?: BodyNestedDtoDetail;
+  }[];
+}
+
+export interface DtoDetailForTestBody {
+  fields: DtoField[];
+  nestedDtos?: BodyNestedDtoDetail;
+  nestedDtoLists?: BodyNestedDtoDetail;
+}
+
+/**
+ * Form에서 Request 접근 시 :
+ * document.request
+ */
+export interface ApiDetailInTest {
+  apiId: number;
+  name: string;
+  description: string;
+  method: 1 | 2 | 3 | 4 | 5;
+  status: number;
+  baseurlId: number;
+  categoryId: number;
+  member: { id: number; name: string; email: string; profileImg: string };
+  createdTime: string;
+  document: {
+    request: {
+      additionalUrl: string;
+      headers: DtoField[];
+      body: DtoDetailForTestBody;
+      pathVars: DtoField[];
+      params: DtoField[];
+    };
+    response: {
+      statusCode: number;
+      desc: string;
+      headers: DtoField[];
+      body: DtoDetailForTestBody;
+    }[];
+  };
+}
+
 export const getApiSingleTestDetail = async function (apiId: string | number) {
   return apiRequest({
     method: `get`,
@@ -966,8 +1178,8 @@ export const useApiSingleTestDetail = function (
   spaceId: string | number,
   apiId: string | number
 ) {
-  return useQuery<any>({
-    queryKey: queryKeys.spaceApiDetail(spaceId, apiId),
+  return useQuery<ApiDetailInTest>({
+    queryKey: queryKeys.spaceTestApiDetail(spaceId, apiId),
     queryFn: async function () {
       return getApiSingleTestDetail(apiId).then((res) => res.data);
     },
@@ -993,5 +1205,90 @@ export const useApiUsecasePrevResponse = function (
       }).then((res) => res.data);
     },
     enabled: !!spaceId && !!apiIds,
+  });
+};
+
+interface OverLoadURL {
+  certification: boolean;
+  baseurls: {
+    id: number;
+    url: string;
+    isCertified: boolean;
+  }[];
+}
+// BaseUrl 인증 확인
+export const useOverloadBaseUrl = function (spaceId: string | number) {
+  return useQuery<OverLoadURL>({
+    queryKey: queryKeys.overloadCertUrlList(spaceId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/overload/baseurl`,
+        params: {
+          workspaceId: spaceId,
+        },
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId,
+  });
+};
+
+export const useOverloadList = function (
+  spaceId: string | number,
+  apiId: number | string
+) {
+  return useQuery<any>({
+    queryKey: queryKeys.overloadList(spaceId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/overload/list`,
+        params: {
+          apiId: apiId,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        return res.data;
+      });
+    },
+    enabled: !!spaceId && !!apiId,
+  });
+};
+
+export const useOverloadListDetail = function (
+  spaceId: string | number,
+  testId: number
+) {
+  return useQuery<any>({
+    queryKey: queryKeys.overloadDetail(spaceId, testId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/overload/detail`,
+        params: {
+          testId: testId,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        return res.data;
+      });
+    },
+    enabled: !!spaceId && !!testId,
+  });
+};
+
+export const useBaseUrlCert = function (spaceId: string | number) {
+  return useQuery<any>({
+    queryKey: queryKeys.overloadCertUrl(spaceId),
+    queryFn: async function () {
+      return apiRequest({
+        method: `get`,
+        url: `/api/overload/cert`,
+        params: {
+          workspaceId: spaceId,
+        },
+      }).then((res) => res.data);
+    },
+    enabled: !!spaceId,
   });
 };

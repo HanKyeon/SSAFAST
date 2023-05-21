@@ -18,28 +18,37 @@ const APIConnectContainer = function ({ store, serverSideStore }: Props) {
   const [sectionId, setSectionId] = useState<string | number>(0);
 
   const onChangeSection = (id: string | number): void => {
-    setSectionId(id);
+    setSectionId((oid) => {
+      console.log(id, '열었어요');
+      return id;
+    });
   };
 
-  useEffect(() => {
-    // sectionId가 변하면 거기 연결되어있는 api list 목록 가져와서 뿌림
-    console.log('sectionId', sectionId);
-  }, [sectionId]);
+  // useEffect(() => {
+  //   // sectionId가 변하면 거기 연결되어있는 api list 목록 가져와서 뿌림
+  //   console.log('sectionId', sectionId);
+  // }, [sectionId]);
 
   return (
-    <div className={`h-full flex justify-center items-center gap-3`}>
+    <Box
+      variant="one"
+      className={`h-full w-full flex justify-center items-center gap-[1.12%]`}
+    >
       {/* 왼쪽 */}
-      <Box variant="two" className={`h-full p-5 flex-1 flex flex-col`}>
+      <Box
+        variant="two"
+        className={`h-full p-5 flex-1 flex flex-col basis-[50%] w-[50%]`}
+      >
         <BoxHeader title="Figma" />
         <div className={`flex-1 overflow-y-scroll scrollbar-hide`}>
-          <FigmaList onChangeSection={onChangeSection} />
+          <FigmaList onChangeSection={onChangeSection} isConnect={true} />
         </div>
       </Box>
       {/* 오른쪽 */}
-      <Box className={`h-full p-5 flex-1 flex flex-col`}>
+      <Box className={`h-full p-5 flex-1 flex flex-col basis-[50%] w-[50%]`}>
         <RightContainer sectionId={sectionId} />
       </Box>
-    </div>
+    </Box>
   );
 };
 

@@ -18,6 +18,7 @@ import {
 import {
   DtoDetail,
   getDtoDetail,
+  useDtoClasses,
   useDtoDetail,
   useDtoList,
 } from '@/hooks/queries/queries';
@@ -81,9 +82,14 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
     defaultValues: defaultData,
   });
   const { handleSubmit, control, reset, resetField } = methods;
+  const { data: dtoClassCode } = useDtoClasses(spaceId, selectedId as number);
   useEffect(
     function () {
-      reset(defaultData, { keepDefaultValues: true });
+      if (!selectedId) {
+        reset({ name: ``, desc: ``, fields: [] });
+      } else {
+        reset(defaultData);
+      }
     },
     [defaultData]
   );
@@ -106,16 +112,9 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
       return apiRequest({
         method: `delete`,
         url: `/api/dto/${dtoId}`,
-        // params: {},
-        // data: {}
       });
     },
     onSuccess: function (data) {
-      // if (data) {
-      //   queryClient.removeQueries({
-      //     queryKey: queryKeys.spaceDtoDetail(parseInt(spaceId), data),
-      //   });
-      // }
       queryClient.invalidateQueries(queryKeys.spaceDto(parseInt(spaceId)));
       queryClient.invalidateQueries(queryKeys.spaceApi(parseInt(spaceId)));
     },
@@ -130,28 +129,6 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
     },
   });
   const { data: dtoListData } = useDtoList(spaceId);
-
-  // 이 부분은 확신이 없음!
-  // useEffect(
-  //   function () {
-  //     if (!dtoListData) {
-  //       return;
-  //     }
-  //     dtoListData?.dtoList.forEach((dto) => {
-  //       queryClient.setQueryData(
-  //         queryKeys.spaceDtoDetail(spaceId, dto.id),
-  //         async (old) => {
-  //           let data;
-  //           await getDtoDetail(dto.id).then((res) => {
-  //             data = res.data;
-  //           });
-  //           return data;
-  //         }
-  //       );
-  //     });
-  //   },
-  //   [dtoListData]
-  // );
 
   const [isModal, setIsModal] = useState<boolean>(false);
   const closeModal = useCallback(function () {
@@ -231,12 +208,12 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
             keyName: field.keyName,
             type: dtoId,
             desc: field.desc,
-            itera: field.itera,
+            itera: false,
             constraints: [],
             nestedDtos: { ...res.data.nestedDtos },
           };
         });
-        console.log(`${dtoId}의 정보`, data);
+        console.log(`요청해서 응답으로 온 dtoId ${dtoId}의 정보`, data);
         if (!data) {
           return;
         }
@@ -257,15 +234,18 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
           description: desc,
           document: { fields, nestedDtos },
         },
-      }).then((res) => {
-        dispatch(DispatchToast('수정 완료!', true));
-        queryClient.invalidateQueries(queryKeys.spaceDtoList(spaceId));
-        queryClient.invalidateQueries(
-          queryKeys.spaceDtoDetail(spaceId, selectedId)
-        );
-        resetSelected();
-        reset({ name: ``, desc: ``, fields: [] });
-      });
+      })
+        .then((res) => {
+          dispatch(DispatchToast('수정 완료!', true));
+          queryClient.invalidateQueries(queryKeys.spaceDtoList(spaceId));
+          queryClient.invalidateQueries(
+            queryKeys.spaceDtoDetail(spaceId, selectedId)
+          );
+        })
+        .then((res) => {
+          reset({ name: ``, desc: ``, fields: [] });
+          resetSelected();
+        });
     } else {
       postMutateAsync({
         workspaceId: spaceId,
@@ -274,14 +254,16 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
         document: { fields, nestedDtos },
       })
         .then((res) => {
+          dispatch(DispatchToast('생성 완료!', true));
           queryClient.invalidateQueries(
             queryKeys.spaceDtoList(parseInt(spaceId))
           );
+        })
+        .then((res) => {
+          reset({ name: ``, desc: ``, fields: undefined });
           resetSelected();
-          reset({ name: ``, desc: ``, fields: [] });
         })
         .catch((err) => {
-          console.log(err.data, '<<<<<<<<<');
           if (err.response.data === 'DTO DEPTH OVER 2') {
             dispatch(DispatchToast('DTO의 최대 깊이는 2입니다!', false));
           }
@@ -340,12 +322,15 @@ const DtoForm = function ({ defaultData, resetSelected, selectedId }: Props) {
       {isCodeModal && (
         <Modal closeModal={closeCodeModal} parentClasses="h-[70%] w-[60%]">
           <Box className="flex flex-col gap-4 w-full h-full p-5 items-center justify-center">
-            <div className="text-[36px]">ㅎㅇ 님들 DTO 코드임</div>
+            <div className="text-[36px]">DTO Code</div>
             <div className="text-[24px] text-red-500">
-              근데 니들 저장해야 저장된거 보여줌. 꼬우면 결제 ㄱ
+              가장 최근 저장된 데이터 코드입니다.
             </div>
-            <Box variant="three" className="w-full h-full p-5">
-              이 편지는 17세기 영국으로부터 시작되어...
+            <Box variant="three" className="w-full h-full p-5 overflow-scroll">
+              <pre>
+                {dtoClassCode?.dtoClass ||
+                  '이 편지는 17세기 영국으로부터 시작되어...'}
+              </pre>
             </Box>
             <div className="flex flex-row gap-4">
               <Box

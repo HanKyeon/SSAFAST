@@ -8,15 +8,31 @@ import apiRequest from '@/utils/axios';
 import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
 import { GetServerSideProps } from 'next';
 import { ParsedUrlQuery } from 'querystring';
+import LightLogo from '/public/assets/images/LightLogo.png';
+import DarkLogo from '/public/assets/images/DarkLogo.png';
+import Image from 'next/image';
+import { useStoreSelector } from '@/hooks/useStore';
 
 const SpacePage = function (): JSX.Element {
+  const { dark } = useStoreSelector((state) => state.dark);
   return (
     <>
       <MetaHead title={`space`} description={`프로젝트`} url="/space" />
       <div className="flex h-full w-full gap-3 p-5">
         <SpaceNavContainer />
-        <Box variant="two" className="h-full w-full">
-          여기는 튜토리얼이나 서비스 이용 가이드 그런거 간단히 넣으면 될 듯
+        <Box
+          variant="two"
+          className="h-full w-[80%] p-5 flex flex-col items-center justify-center gap-3"
+        >
+          <Image
+            className="animate-[spinning_2s_infinite] get-pers"
+            src={dark ? DarkLogo : LightLogo}
+            alt="로고"
+            width={216}
+            height={191}
+          />
+          <div className="text-[48px]">SSAFAST</div>
+          <div className="text-[22px]">당신의 프로젝트를 시작해보세요!</div>
         </Box>
       </div>
     </>
