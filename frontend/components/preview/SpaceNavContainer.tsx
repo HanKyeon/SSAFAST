@@ -10,6 +10,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSpaceList, useUserData } from '@/hooks/queries/queries';
 import { SpinnerDots } from '../common/Spinner';
+import LightLogo from '/public/assets/images/LightLogo.png';
+import DarkLogo from '/public/assets/images/DarkLogo.png';
 
 const SpaceNavContainer = function (): JSX.Element {
   const router = useRouter();
@@ -27,6 +29,9 @@ const SpaceNavContainer = function (): JSX.Element {
     // setCurSpaceId(id);
     router.push(`/space/${id}`);
   };
+  const pushHome = function () {
+    router.push(`/`);
+  };
 
   const styles = {
     userImgWrapper:
@@ -34,8 +39,18 @@ const SpaceNavContainer = function (): JSX.Element {
   };
   return (
     <div className="w-[20%] h-full flex flex-col gap-3">
-      <div className="h-[10%]">
-        <Image src={UserImg} alt="logo" width={70} height={70} />
+      <div className="h-[10%] w-full flex items-center justify-center gap-3">
+        <Image
+          className="object-contain w-[30%] cursor-pointer hover:scale-[102%] duration-[0.33s] p-2"
+          src={isDark ? DarkLogo : LightLogo}
+          alt="logo"
+          width={70}
+          height={70}
+          onClick={pushHome}
+        />
+        <div className="w-[70%] flex items-center text-[27px] animate-[shokshok_10s_infinite]">
+          SSAFAST
+        </div>
       </div>
       <Box className="flex-1 min-h-0 flex flex-col p-5 gap-5" fontType="normal">
         {/* 이미지 */}

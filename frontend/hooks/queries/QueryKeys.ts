@@ -15,6 +15,7 @@ user                                  // 로그인or로그아웃 시 invalidate
       ㄴapi
         ㄴlist
         ㄴdetail, [apiId]
+          ㄴtestdetail
           ㄴresult
             ㄴlist
             ㄴdetail, [resId]
@@ -83,9 +84,29 @@ export const queryKeys = {
   // space에 귀속된 api 상세
   spaceApiDetail: (spaceId: string | number, apiId: string | number) =>
     [...queryKeys.spaceApi(spaceId), `detail`, `${apiId}`] as const,
+  spaceTestApiDetail: (spaceId: string | number, apiId: string | number) =>
+    [...queryKeys.spaceApiDetail(spaceId, apiId), `test-detail`] as const,
+  spaceUseCaseApiDetail: (spaceId: string | number, apiId: string | number) =>
+    [
+      ...queryKeys.spaceApiDetail(spaceId, apiId),
+      `test-detail`,
+      `usecase`,
+    ] as const,
+  spaceUseCaseApiDetailSpecial: (
+    spaceId: string | number,
+    apiId: string | number
+  ) =>
+    [
+      ...queryKeys.spaceApiDetail(spaceId, apiId),
+      `test-detail`,
+      `usecase`,
+      `refined`,
+    ] as const,
   // space의 section 하나에 귀속된 api들 => 사용
+  spaceSection: (spaceId: string | number) =>
+    [...queryKeys.spaceApi(spaceId), `section`] as const,
   spaceSectionApis: (spaceId: string | number, sectionId: string | number) =>
-    [...queryKeys.spaceApi(spaceId), `section`, `${sectionId}`] as const,
+    [...queryKeys.spaceSection(spaceId), `${sectionId}`] as const,
   // space의 category 목록 => 사용
   spaceCategoryList: (spaceId: string | number) =>
     [...queryKeys.spaceApi(spaceId), `category`, `list`] as const,
@@ -105,7 +126,7 @@ export const queryKeys = {
   // usecase detail
   usecaseDetail: (spaceId: string | number, usecaseId: string | number) =>
     [...queryKeys.usecase(spaceId), `detail`, `${usecaseId}`] as const,
-  // response 응답
+  // response 응답 (apis(: usecase test실행 api들 id 목록)에 따른 response 목록)
   usecaseResponses: (spaceId: string | number, ids: string) =>
     [...queryKeys.usecase(spaceId), `detail`, `${ids}`] as const,
 
@@ -118,6 +139,9 @@ export const queryKeys = {
   // 오버로드 상세 조회
   overloadDetail: (spaceId: number | string, overloadId: string | number) =>
     [...queryKeys.overload(spaceId), `detail`, `${overloadId}`] as const,
+  // 오버로드 서버 url 인증
+  overloadCertUrl: (spaceId: number | string) =>
+    [...queryKeys.overload(spaceId), `auth`] as const,
   // 오버로드 인증 url 리스트
   overloadCertUrlList: (spaceId: number | string) =>
     [...queryKeys.overload(spaceId), `auth`, `list`] as const,

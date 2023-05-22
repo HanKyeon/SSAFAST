@@ -23,7 +23,7 @@ import ToggleableHeader from '../APIDocsContainer/ToggleableHeader';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import CodeToggleHeader from './CodeToggleHeader';
 export interface ResponseFormData {
-  status_code: number;
+  statusCode: number;
   desc: string;
   headers: Headers[];
   body: BodyType;
@@ -43,7 +43,6 @@ interface Fields {
   type: string;
   desc: string;
   itera: boolean;
-  value: string | null;
 }
 
 interface ItemProps {
@@ -89,7 +88,7 @@ const ResponseForm = function () {
 
   const addComponent = function () {
     append({
-      status_code: codeInput,
+      statusCode: codeInput,
       desc: descInput,
       headers: [],
       body: {
@@ -176,7 +175,7 @@ const ResponseForm = function () {
 function ItemCompos({ item, index, remove, control, getValues }: ItemProps) {
   const dispatch = useStoreDispatch();
   const removeComponentHandler = function () {
-    if (item.status_code === 200) {
+    if (item.statusCode === 200) {
       dispatch(
         DispatchToast('성공시 응답은 반드시 입력해 주셔야합니다!', false)
       );
@@ -191,7 +190,7 @@ function ItemCompos({ item, index, remove, control, getValues }: ItemProps) {
         <CodeToggleHeader
           isOpen={detailOpen}
           setIsOpen={setDetailOpen}
-          title={item.status_code}
+          title={item.statusCode}
           description={item.desc}
         />
         <CircleBtn
@@ -275,7 +274,7 @@ function HeaderFields({
         >
           <AnimationBox
             key={`document.response.${Keyindex}.headers-container`}
-            className={`flex flex-col h-full w-full items-center pl-12 
+            className={`flex flex-col h-full w-full items-center 
             `}
           >
             <Box
@@ -422,7 +421,6 @@ function BodyFields({
       type: '',
       desc: '',
       itera: false,
-      value: null,
     });
     if (bodyOpen === false) {
       setBodyOpen((prev) => !prev);
@@ -459,7 +457,7 @@ function BodyFields({
         >
           <AnimationBox
             key={`${item.id}-container`}
-            className="flex flex-col w-full items-center pl-12"
+            className="flex flex-col w-full items-center"
           >
             <Box
               variant="three"

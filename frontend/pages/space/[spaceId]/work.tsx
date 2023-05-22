@@ -60,40 +60,43 @@ const SpaceWorkPage = function (
   const { data: userData, isLoading } = useUserData();
   const store = useSyncedStore(state);
   const [awareness, setAwareness] = useState<Awareness>();
-  useEffect(function () {
-    let provider: WebrtcProvider;
-    if (state && spaceId?.length) {
-      provider = new WebrtcProvider(
-        `ssafast${spaceId}`,
-        getYjsDoc(state) as any,
-        {
-          signaling: [
-            // `ws://localhost:4444`,
-            // `wss://localhost:4444`,
-            `wss://www.ssafast.com/ws`,
-            // `wss://0.0.0.0:4444`,
-            // `wss://www.ssafast.com:4444`,
-            // `ws://www.ssafast.com:4444`,
-            // 'wss://signaling.yjs.dev',
-            // 'wss://y-webrtc-signaling-eu.herokuapp.com',
-            // 'wss://y-webrtc-signaling-us.herokuapp.com',
-          ], //`ws://www.ssafast.com:4444`
-        }
-      );
-      provider.connect();
+  useEffect(
+    function () {
+      let provider: WebrtcProvider;
+      if (state && spaceId?.length) {
+        provider = new WebrtcProvider(
+          `ssafast${spaceId}`,
+          getYjsDoc(state) as any,
+          {
+            signaling: [
+              // `ws://localhost:4444`,
+              // `wss://localhost:4444`,
+              `wss://www.ssafast.com/ws`,
+              // `wss://0.0.0.0:4444`,
+              // `wss://www.ssafast.com:4444`,
+              // `ws://www.ssafast.com:4444`,
+              // 'wss://signaling.yjs.dev',
+              // 'wss://y-webrtc-signaling-eu.herokuapp.com',
+              // 'wss://y-webrtc-signaling-us.herokuapp.com',
+            ], //`ws://www.ssafast.com:4444`
+          }
+        );
+        provider.connect();
 
-      console.log('커넥트', provider.signalingConns);
-      console.log('쌩 provider', provider);
-      console.log('어웨어니스', provider.awareness);
-      const { awareness: innerAwareness } = provider;
-      setAwareness(innerAwareness);
-    }
+        console.log('커넥트', provider.signalingConns);
+        console.log('쌩 provider', provider);
+        console.log('어웨어니스', provider.awareness);
+        const { awareness: innerAwareness } = provider;
+        setAwareness(innerAwareness);
+      }
 
-    return function () {
-      console.log('디스커넥트');
-      provider.disconnect();
-    };
-  }, []);
+      return function () {
+        console.log('디스커넥트');
+        provider.disconnect();
+      };
+    },
+    [state, spaceId]
+  );
 
   useEffect(
     function () {
@@ -102,39 +105,7 @@ const SpaceWorkPage = function (
       }
       if (!figmaY.length && spaceFrameData) {
         figmaY.push([...spaceFrameData.figmaSections]);
-        // const nfigmaY = new Y.Array<SpaceFigma>();
-        // nfigmaY.push([...spaceFrameData.figmaSections]);
-        // figmaY = nfigmaY;
       }
-      // if (!figmaY.length) {
-      //   // const nfigmaY = new Y.Array<SpaceFigma>();
-      //   figmaY.push([
-      //     {
-      //       id: 1,
-      //       name: `d`,
-      //       sectionId: `123`,
-      //       sectionUrl: ``,
-      //     },
-      //     {
-      //       id: 2,
-      //       name: `dd`,
-      //       sectionId: `123`,
-      //       sectionUrl: ``,
-      //     },
-      //     {
-      //       id: 3,
-      //       name: `ddd`,
-      //       sectionId: `123`,
-      //       sectionUrl: ``,
-      //     },
-      //     {
-      //       id: 4,
-      //       name: `dddd`,
-      //       sectionId: `123`,
-      //       sectionUrl: ``,
-      //     },
-      //   ]);
-      // }
     },
     [awareness, spaceFrameData, baseUrls]
   );
@@ -148,13 +119,15 @@ const SpaceWorkPage = function (
       />
       <div className="h-full w-full overflow-hidden">
         <YjsProvider>
-          {awareness && (
+          {awareness && userData && (
             <RoomProvider<PresenceUserData>
+              key={`RoomProvider`}
               awareness={awareness}
               initialPresence={{
                 name: `${userData?.name || `나다이띱때끼야`}`,
                 color: `#${Math.round(Math.random() * 0xffffff).toString(16)}`,
                 step: 1,
+                img: userData?.profileImg,
               }}
             >
               <WorkContainer store={state} />

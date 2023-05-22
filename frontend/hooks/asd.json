@@ -1,0 +1,397 @@
+{
+  "rootApiId": "11",
+  "testDetails": {
+    "11": {
+      "additionalUrl": "/api/tmp/user/:userName",
+      "child": 12,
+      "headers": {
+        "Content-Type": {
+          "type": 1,
+          "desc": "데이터 타입",
+          "mapped": false,
+          "value": null
+        },
+        "Authorization": {
+          "type": 1,
+          "desc": "Bearer 로 시작",
+          "mapped": false,
+          "value": null
+        }
+      },
+      "params": {
+        "pTest": {
+          "type": 1,
+          "desc": "쿼리 파람 테스트용도",
+          "itera": false,
+          "constraints": [],
+          "mapped": false,
+          "value": null
+        }
+      },
+      "body": {
+        "fields": {
+          "name": {
+            "type": 1,
+            "desc": "사용자 이름",
+            "itera": false,
+            "constraints": [],
+            "mapped": false,
+            "value": null
+          },
+          "age": {
+            "type": 2,
+            "desc": "사용자 나이",
+            "itera": false,
+            "constraints": [],
+            "mapped": false,
+            "value": null
+          }
+        },
+        "nestedDtos": {
+          "address": {
+            "name": "AddressDto",
+            "desc": "street, state, city 담는 객체",
+            "mapped": false,
+            "fields": {
+              "street": {
+                "type": 1,
+                "desc": "도로명",
+                "itera": false,
+                "mapped": false,
+                "constraints": [],
+                "value": null
+              },
+              "state": {
+                "type": 1,
+                "desc": "주",
+                "itera": false,
+                "mapped": false,
+                "constraints": [],
+                "value": null
+              },
+              "city": {
+                "type": 1,
+                "desc": "서울",
+                "itera": false,
+                "mapped": false,
+                "constraints": [],
+                "value": null
+              },
+              "id": {
+                "type": 3,
+                "desc": "pk",
+                "itera": false,
+                "mapped": false,
+                "constraints": [],
+                "value": null
+              }
+            }
+          }
+        },
+        "nestedDtoList": {}
+      },
+      "response": {
+        "headers": {},
+        "body": {
+          "fields": {},
+          "nestedDtos": {
+            "user": {
+              "name": "UserDto",
+              "desc": "가입된 사용자 정보 담은 객체",
+              "mapped": false,
+              "fields": {
+                "id": {
+                  "type": 3,
+                  "desc": "사용자 pk",
+                  "itera": false,
+                  "mapped": false
+                },
+                "name": {
+                  "type": 1,
+                  "desc": "사용자 이름",
+                  "itera": false,
+                  "mapped": false
+                },
+                "age": {
+                  "type": 2,
+                  "desc": "사용자 나이",
+                  "itera": false,
+                  "mapped": false
+                }
+              }
+            }
+          },
+          "nestedDtoLists": {}
+        }
+      },
+      "request": {
+        "headers": {
+          "Content-Type": {
+            "value": "123",
+            "type": "1",
+            "desc": "데이터 타입"
+          },
+          "Authorization": {
+            "value": "12313",
+            "type": "1",
+            "desc": "Bearer 로 시작"
+          }
+        },
+        "body": {
+          "fields": {
+            "name": {
+              "value": "1231",
+              "type": "1",
+              "desc": "사용자 이름",
+              "constraints": []
+            },
+            "age": {
+              "value": "312312",
+              "type": "2",
+              "desc": "사용자 나이",
+              "constraints": []
+            }
+          },
+          "nestedDtos": {
+            "address": {
+              "fields": {
+                "street": {
+                  "value": "32132",
+                  "type": "1",
+                  "desc": "도로명",
+                  "constraints": []
+                },
+                "state": {
+                  "value": "13123",
+                  "type": "1",
+                  "desc": "주",
+                  "constraints": []
+                },
+                "city": {
+                  "value": "12",
+                  "type": "1",
+                  "desc": "서울",
+                  "constraints": []
+                },
+                "id": {
+                  "value": "1231",
+                  "type": "3",
+                  "desc": "pk",
+                  "constraints": []
+                }
+              }
+            }
+          }
+        },
+        "params": {
+          "pTest": {
+            "value": "213",
+            "type": "1",
+            "desc": "쿼리 파람 테스트용도",
+            "constraints": []
+          }
+        },
+        "pathVars": {
+          "userName": {
+            "value": "123",
+            "type": "1",
+            "desc": "사용자 이름",
+            "constraints": []
+          }
+        }
+      }
+    },
+    "12": {
+      "additionalUrl": "/api/tmp/order",
+      "parent": 11,
+      "headers": {
+        "Content-Type": {
+          "type": 2,
+          "desc": "데이터 타입",
+          "mapped": false,
+          "value": null
+        },
+        "Authorization": {
+          "type": 1,
+          "desc": "Bearer 로 시작",
+          "mapped": false,
+          "value": null
+        }
+      },
+      "params": {
+        "userAddressStreet": {
+          "type": 1,
+          "desc": "주문자 주소의 도로명",
+          "itera": false,
+          "constraints": [],
+          "mapped": false,
+          "value": null
+        }
+      },
+      "body": {
+        "fields": {
+          "userId": {
+            "type": 3,
+            "desc": "주문자 PK",
+            "itera": false,
+            "constraints": [],
+            "mapped": false,
+            "value": null
+          },
+          "num": {
+            "type": 1,
+            "desc": "주문번호",
+            "itera": false,
+            "constraints": [],
+            "mapped": false,
+            "value": null
+          }
+        },
+        "nestedDtos": {
+          "item": {
+            "name": "OrderItemDto",
+            "desc": "id, orderId, name, price 담는 객체",
+            "mapped": false,
+            "fields": {
+              "id": {
+                "type": 2,
+                "desc": "orderItem 자체 id",
+                "itera": false,
+                "mapped": false,
+                "constraints": [],
+                "value": null
+              },
+              "orderId": {
+                "type": 2,
+                "desc": "주문 Id",
+                "itera": false,
+                "mapped": false,
+                "constraints": [],
+                "value": null
+              },
+              "name": {
+                "type": 1,
+                "desc": "상품명",
+                "itera": false,
+                "mapped": false,
+                "constraints": [],
+                "value": null
+              },
+              "price": {
+                "type": 2,
+                "desc": "상품 가격",
+                "itera": false,
+                "mapped": false,
+                "constraints": [],
+                "value": null
+              }
+            }
+          }
+        },
+        "nestedDtoList": {}
+      },
+      "response": {
+        "headers": {},
+        "body": {
+          "fields": {},
+          "nestedDtos": {
+            "order": {
+              "name": "OrderDto",
+              "desc": "주문된 정보 객체",
+              "mapped": false,
+              "fields": {
+                "id": {
+                  "type": 2,
+                  "desc": "주문 id",
+                  "itera": false,
+                  "mapped": false
+                },
+                "userId": {
+                  "type": 2,
+                  "desc": "유저 id",
+                  "itera": false,
+                  "mapped": false
+                },
+                "num": {
+                  "type": 1,
+                  "desc": "주문 개수",
+                  "itera": false,
+                  "mapped": false
+                }
+              }
+            }
+          },
+          "nestedDtoLists": {}
+        }
+      },
+      "request": {
+        "headers": {
+          "Content-Type": {
+            "value": "1234",
+            "type": "2",
+            "desc": "데이터 타입"
+          },
+          "Authorization": {
+            "value": "134",
+            "type": "1",
+            "desc": "Bearer 로 시작"
+          }
+        },
+        "body": {
+          "fields": {
+            "userId": {
+              "value": "11.body.user.id",
+              "type": "3",
+              "desc": "주문자 PK",
+              "constraints": []
+            },
+            "num": {
+              "value": "1231",
+              "type": "1",
+              "desc": "주문번호",
+              "constraints": []
+            }
+          },
+          "nestedDtos": {
+            "item": {
+              "fields": {
+                "id": {
+                  "value": "123",
+                  "type": "2",
+                  "desc": "orderItem 자체 id",
+                  "constraints": []
+                },
+                "orderId": {
+                  "value": "3123",
+                  "type": "2",
+                  "desc": "주문 Id",
+                  "constraints": []
+                },
+                "name": {
+                  "value": "312",
+                  "type": "1",
+                  "desc": "상품명",
+                  "constraints": []
+                },
+                "price": {
+                  "value": "12321",
+                  "type": "2",
+                  "desc": "상품 가격",
+                  "constraints": []
+                }
+              }
+            }
+          }
+        },
+        "params": {
+          "userAddressStreet": {
+            "value": "123",
+            "type": "1",
+            "desc": "주문자 주소의 도로명",
+            "constraints": []
+          }
+        }
+      }
+    }
+  }
+}

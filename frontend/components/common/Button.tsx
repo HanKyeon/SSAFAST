@@ -18,7 +18,7 @@ const Button = function ({
 }: PropsWithChildren<ButtonProps>) {
   const { dark: isDark } = useStoreSelector((state) => state.dark);
   const styles = {
-    small: `py-2 px-7 rounded-[20px] ${
+    small: `py-1 px-7 rounded-[20px] ${
       isDark && !isEmpty
         ? 'bg-mincho-strong text-theme-white-strong border-mincho-strong border-[3px]'
         : isDark && isEmpty

@@ -23,7 +23,7 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
   const users = useUsers<PresenceUserData>();
   const { spaceId } = router.query;
   const exitHandler = function () {
-    window.location.href = `${process.env.NEXT_PUBLIC_HOSTNAME}/space/${spaceId}`
+    window.location.href = `${process.env.NEXT_PUBLIC_HOSTNAME}/space/${spaceId}`;
     // router.push(`/space/${spaceId}`);
   };
   const [isTutorial, setIsTutorial] = useState<boolean>(false);
@@ -69,15 +69,15 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
           <CircleBtn onClick={modalOnHandler} />
         </div>
         {/* 공동작업 토글 && 사용자뱃지 */}
-        <div className={`flex items-center justify-center basis-[18%] w-[18%]`}>
-          {
-            <div
-              onClick={dispatchPresenceHandler}
-              className={`h-full w-[20%] mr-3 cursor-pointer hover:scale-[105%] duration-[0.33s]`}
-            >
-              {presence ? 'OFF' : 'ON'}
-            </div>
-          }
+        <div
+          className={`flex items-center justify-center basis-[18%] w-[18%] pt-3`}
+        >
+          <div
+            onClick={dispatchPresenceHandler}
+            className={`h-full w-[20%] mr-3 cursor-pointer hover:scale-[105%] duration-[0.33s]`}
+          >
+            {presence ? 'OFF' : 'ON'}
+          </div>
           <HorizonBadgeList className="w-full" users={users} />
         </div>
         {/* 다크모드 토글 */}

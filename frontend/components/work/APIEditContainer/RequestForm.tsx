@@ -5,6 +5,7 @@ import {
   useFieldArray,
   UseFormReturn,
   useFormContext,
+  useController,
 } from 'react-hook-form';
 import { Box, Button, CircleBtn, Input, Select } from '@/components/common';
 import { FormEvent, useCallback, useRef, useState } from 'react';
@@ -21,7 +22,7 @@ import AnimationBox from '@/components/common/AnimationBox';
 import NonHeaderController from './NonHeaderController';
 import HeaderController from './HeaderController';
 export interface RequestFormData {
-  additional_url: string;
+  additionalUrl: string;
   headers: Headers[];
   body: BodyType;
   pathVars: PathVariables[];
@@ -31,7 +32,6 @@ export interface Headers {
   keyName: string;
   type: string;
   desc: string;
-  value: string | null;
 }
 
 export interface BodyType {
@@ -45,7 +45,6 @@ export interface Fields {
   desc: string;
   itera: boolean;
   constraints: string[];
-  value: string | null;
 }
 
 export type NestedDtosType = {
@@ -57,7 +56,6 @@ export interface PathVariables {
   type: number;
   desc: string;
   constraints: string[];
-  value: null;
 }
 
 export interface Params {
@@ -66,7 +64,6 @@ export interface Params {
   desc: string;
   constraints: string[];
   itera: boolean;
-  value: null;
 }
 
 const RequestForm = function () {
@@ -89,7 +86,6 @@ const RequestForm = function () {
       keyName: '',
       type: '',
       desc: '',
-      value: null,
     });
     if (pathOpen === false) {
       setHeadersOpen((prev) => !prev);
@@ -110,7 +106,6 @@ const RequestForm = function () {
       type: 0,
       desc: '',
       constraints: [],
-      value: null,
       itera: false,
     });
     if (paramsOpen === false) {
@@ -131,7 +126,6 @@ const RequestForm = function () {
       type: 0,
       desc: '',
       constraints: [],
-      value: null,
     });
     if (pathOpen === false) {
       setPathOpen((prev) => !prev);
@@ -152,22 +146,31 @@ const RequestForm = function () {
       desc: '',
       itera: false,
       constraints: [],
-      value: null,
     });
     if (pathOpen === false) {
       setPathOpen((prev) => !prev);
     }
   };
+  const { field: urlField } = useController({
+    name: `document.request.additionalUrl`,
+  });
 
   return (
     <>
-      <div className="flex flex-col w-full items-center justify-center gap-3 pb-10">
+      <div className="flex flex-col w-full items-center justify-center gap-3 pb-5">
         <div className="flex items-center w-[90%]">
-          <Input type="text" placeholder="Urn" className="" />
+          <Input
+            name={`document.request.additionalUrl`}
+            value={urlField.value}
+            onChange={urlField.onChange}
+            type="text"
+            placeholder="Urn"
+            className=""
+          />
         </div>
       </div>
       {/* Params */}
-      <div className="w-full flex flex-col items-center">
+      <div className="w-full flex flex-col items-center gap-3">
         <div className="flex items-center w-[95%]">
           <ToggleableHeader
             title="Params"
@@ -196,7 +199,7 @@ const RequestForm = function () {
           </AnimationBox>
         ))}
         {/* Path Variables */}
-        <div className="flex items-center w-[95%]">
+        <div className="flex items-center w-[95%] gap-3">
           <ToggleableHeader
             title="Path Variables"
             isOpen={pathOpen}
@@ -224,7 +227,7 @@ const RequestForm = function () {
           </AnimationBox>
         ))}
         {/* Headers */}
-        <div className="flex items-center w-[95%]">
+        <div className="flex items-center w-[95%] gap-3">
           <ToggleableHeader
             title="Headers"
             isOpen={headersOpen}
@@ -239,7 +242,7 @@ const RequestForm = function () {
         {headersFields.map((item, index) => (
           <AnimationBox
             key={item.id}
-            className={`flex items-center justify-between 
+            className={`flex items-center justify-center 
           ${headersOpen ? '' : 'hidden'}
           `}
           >
@@ -252,7 +255,7 @@ const RequestForm = function () {
           </AnimationBox>
         ))}
         {/* Body */}
-        <div className="flex items-center w-[95%]">
+        <div className="flex items-center w-[95%] gap-3">
           <ToggleableHeader
             title="Body"
             isOpen={bodyOpen}

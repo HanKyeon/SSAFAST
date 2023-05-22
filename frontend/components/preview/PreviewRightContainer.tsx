@@ -3,22 +3,17 @@ import { IoEnterOutline } from 'react-icons/io5';
 import BoxHeader from '../common/BoxHeader';
 import UserBadge from '../common/UserBadge';
 import { TbCrown } from 'react-icons/tb';
-import { FormEvent, useEffect, useRef } from 'react';
+import { FormEvent, useEffect, useRef, useState, useMemo } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart } from 'chart.js';
 import { useRouter } from 'next/router';
-import { useSpaceDetail, useSpaceMembers } from '@/hooks/queries/queries';
+import {
+  useSpaceDetail,
+  useSpaceMembers,
+  useSpaceApis,
+} from '@/hooks/queries/queries';
 import { SpaceParams } from '@/pages/space';
-
-// const chartData = [
-//   { year: 2010, count: 10 },
-//   { year: 2011, count: 20 },
-//   { year: 2012, count: 15 },
-//   { year: 2013, count: 25 },
-//   { year: 2014, count: 22 },
-//   { year: 2015, count: 30 },
-//   { year: 2016, count: 28 },
-// ];
+import { MdOutlinePercent } from 'react-icons/md';
 
 const PreviewRightContainer = function (): JSX.Element {
   const router = useRouter();
@@ -38,67 +33,63 @@ const PreviewRightContainer = function (): JSX.Element {
     isLoading: spaceDetailLoading,
     isError: spaceDetailError,
   } = useSpaceDetail(parseInt(spaceId));
+  const { data: spaceApis } = useSpaceApis(spaceId);
 
-  // const chartEl = useRef<HTMLCanvasElement>(null);
+  const [countSpaceApis, setCountSpaceApis] = useState<number>();
+  const [countSpaceCompleteApis, setCountSpaceCompleteApis] =
+    useState<number>();
 
-  //   const drawChart = (): void => {
-  //     const ctx = document.getElementById('myChart');
-  //     if(ctx){
-  //       new Chart(ctx, {
-  //         type: 'doughnut',
-  // data:{
-  //     labels: ['Red', 'Blue', 'Yellow'],
-  //     datasets: [
-  //       {
-  //         label: 'My First Dataset',
-  //         data: [300, 50, 100],
-  //         backgroundColor: [
-  //           'rgb(255, 99, 132)',
-  //           'rgb(54, 162, 235)',
-  //           'rgb(255, 205, 86)',
-  //         ],
-  //         hoverOffset: 4,
-  //       },
-  //     ],
-  //   },
+  const percent = useMemo(() => {
+    if (countSpaceCompleteApis && countSpaceApis) {
+      return Math.floor((countSpaceCompleteApis / countSpaceApis) * 100);
+    } else return 0;
+  }, [countSpaceApis, countSpaceCompleteApis]);
 
-  //       });
-  //     }
-  //   };
+  useEffect(() => {
+    if (spaceApis) {
+      // 전체 api 개수 세기
+      let countAll = 0;
+      spaceApis.apiCategories.map(
+        (eachCate) => (countAll += eachCate.apis.length)
+      );
+      // console.log('전체 api 개수 : ', count);
+      setCountSpaceApis(countAll);
 
-  // const data = {
-  //   labels: ['Red', 'Blue', 'Yellow'],
-  //   datasets: [
-  //     {
-  //       label: 'My First Dataset',
-  //       data: [300, 50, 100],
-  //       backgroundColor: [
-  //         'rgb(255, 99, 132)',
-  //         'rgb(54, 162, 235)',
-  //         'rgb(255, 205, 86)',
-  //       ],
-  //       hoverOffset: 4,
-  //     },
-  //   ],
-  // };
+      // 완료된 api 개수 세기
+      let countCom = 0;
+      spaceApis.apiCategories.map((eachCate) =>
+        eachCate.apis.map((api) => {
+          if (api.status === 4) countCom++;
+        })
+      );
+      setCountSpaceCompleteApis(countCom);
+    }
+  }, [spaceApis]);
 
-  // useEffect(() => {
-  //   // drawChart();
-  // }, []);
   return (
     <div className="h-full min-h-0 min-w-0 flex-1 py-3 pr-3 flex flex-col gap-3">
-      <Box className="p-5 flex-1">
-        <div>
+      <Box className="p-5 flex-1 flex flex-col">
+        {/* <div>
           <BoxHeader title="Load Test? Test Coverage?" />
           <div></div>
-        </div>
-        <div>
-          <BoxHeader title="API 진행률?" />
+        </div> */}
+        <BoxHeader title="progress" />
+        <div
+          className={`flex-1 flex flex-col items-center justify-center gap-10`}
+        >
           <div>
-            <canvas id="myChart"></canvas>
-            {<div>전체 api 갯수 : {spaceDetailData?.totalApiCount}</div>}
-            {<div>완료된 api 갯수 : {spaceDetailData?.completeApiCount}</div>}
-            {/* <Doughnut data={data} /> */}
+            <span
+              className={`flex justify-center items-center gap-3 border-[8px] p-5 w-[13vw] h-[13vw] rounded-full`}
+            >
+              <span className={`text-[65px]`}>{percent}</span>
+              <MdOutlinePercent className={`text-[30px]`} />
+            </span>
+          </div>
+          <div className={`text-grayscale-deeplight`}>
+            <div>전체 api : {countSpaceApis}개</div>
+            <div className={`mt-3`}>
+              완료된 api : {countSpaceCompleteApis}개
+            </div>
           </div>
         </div>
       </Box>
@@ -109,21 +100,14 @@ const PreviewRightContainer = function (): JSX.Element {
             return (
               <li
                 key={`${member.id}-preview-member`}
-                className="flex justify-center items-center gap-3 h-[30px] w-full"
+                className="relative flex justify-center items-center gap-3 h-[30px] w-full"
               >
                 <UserBadge imgSrc={member.profileImg} />
-                <span
-                  className={`${
-                    member.id === spaceDetailData?.leaderId
-                      ? 'w-[66%]'
-                      : 'w-[80%]'
-                  } truncate`}
-                  title={member.name}
-                >
+                <span className={`w-[80%] truncate`} title={member.name}>
                   {member.name}
                 </span>
                 {member.id === spaceDetailData?.leaderId && (
-                  <div className="flex justify-center items-center gap-1 w-[40px]">
+                  <div className="absolute right-[4px] flex justify-center items-center gap-1 w-[50px]">
                     <span className="text-[11px] text-grayscale-dark">
                       팀장
                     </span>
@@ -169,7 +153,7 @@ const PreviewRightContainer = function (): JSX.Element {
         </ul>
       </Box>
       <Button
-        className="flex gap-2 items-center justify-center"
+        className="flex !py-3 text-header gap-2 items-center justify-center"
         onClick={pushWorkHandler}
       >
         Enter

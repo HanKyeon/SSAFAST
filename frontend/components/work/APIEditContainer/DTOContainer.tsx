@@ -31,8 +31,8 @@ const DTOContainer = function () {
   >(null);
   const [defaultData, setDefaultData] = useState<DtoInterfaceInForm>({
     desc: ``,
-    fields: [],
     name: ``,
+    fields: [],
   });
   const { data: selectedDtoData } = useDtoDetail(spaceId, selectedDtoItem || 0);
 
@@ -89,6 +89,13 @@ const DTOContainer = function () {
 
   const resetSelectedHandler = function () {
     setSelectedDtoItem(() => null);
+    setDefaultData(() => {
+      return {
+        desc: ``,
+        name: ``,
+        fields: [],
+      };
+    });
   };
 
   const selectDtoHandler = function (id: string | number) {

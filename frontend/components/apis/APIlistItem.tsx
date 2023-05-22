@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import CheckBox from '../common/CheckBox';
 import UserBadge from '../common/UserBadge';
 import MethodBadge, { MethodBadgePropsType } from './MethodBadge';
@@ -18,10 +18,13 @@ interface APIlistItemPropsType {
   writter?: boolean;
   checkBox?: boolean;
   checked?: boolean;
+  hoverOpt?: boolean;
   // checkedList?: (string | number)[];
   onToggleCheck?: (apiId: number | string, check: boolean) => void;
   setSelectedIdHandler?: (id: number) => void;
   onClickApi?: (api: UseTestApiCompactType) => void;
+  toggleAddHandler?: () => void;
+  apiIdHandler?: (id: string | number) => void;
 }
 
 const APIlistItem = function ({
@@ -33,9 +36,24 @@ const APIlistItem = function ({
   onToggleCheck,
   setSelectedIdHandler,
   onClickApi,
+  toggleAddHandler,
+  apiIdHandler,
+  hoverOpt = true,
 }: APIlistItemPropsType): JSX.Element {
   const router = useRouter();
   const { spaceId } = router.query as SpaceParams;
+
+  const letsEdit = function (id: number | string) {
+    if (toggleAddHandler && apiIdHandler) {
+      toggleAddHandler();
+      apiIdHandler(id);
+    }
+  };
+  const setApiId = function (id: number | string) {
+    if (apiIdHandler) {
+      apiIdHandler(id);
+    }
+  };
 
   const onClickApiItem = (apiID: string | number): void => {
     if (!checkBox) {
@@ -63,9 +81,15 @@ const APIlistItem = function ({
         onClickApi
           ? () =>
               onClickApi({ id: item.id, name: item.name, method: item.method })
+          : toggleAddHandler && apiIdHandler
+          ? () => letsEdit(item.id)
+          : apiIdHandler
+          ? () => setApiId(item.id)
           : () => onClickApiItem(item.id)
       }
-      className={`${className} flex items-center gap-3 h-[40px] min-h-[40px]`}
+      className={`${className} flex items-center gap-3 h-[40px] min-h-[40px] duration-[0.33s] ${
+        hoverOpt ? 'cursor-pointer hover:scale-[101.4%]' : ''
+      }`}
     >
       {checkBox && (
         <CheckBox isChecked={checked} onToggleCheck={onClickCheckBox} />
@@ -75,7 +99,7 @@ const APIlistItem = function ({
         {item.name}
       </p>
       <StatusBadge className="w-[70px] text-center" status={item.status} />
-      {writter && <UserBadge />}
+      {writter && <UserBadge imgSrc={item.writter.profileImg} />}
     </li>
   );
 };
