@@ -46,7 +46,7 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
     dispatch(darkActions.togglePresencs({}));
   };
   return (
-    <>
+    <div className="w-full h-full">
       {isLogout && (
         <Modal closeModal={LogoutModalOffHandler}>
           <div className="w-full h-full flex items-center justify-center text-theme-white-normal">
@@ -137,7 +137,7 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
           나가기
         </Box>
       </div>
-    </>
+    </div>
   );
 };
 
