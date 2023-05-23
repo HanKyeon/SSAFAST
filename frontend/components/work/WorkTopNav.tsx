@@ -7,7 +7,7 @@ import Modal from '../common/Modal';
 import { HorizonBadgeList } from '../common/BadgeList';
 import { useUsers } from '@y-presence/react';
 import { PresenceUserData } from './presence-type';
-import { Box, CircleBtn } from '../common';
+import { Box, Button, CircleBtn } from '../common';
 import Logo from '/public/assets/images/Logo.png';
 import LightLogo from '/public/assets/images/LightLogo.png';
 import DarkLogo from '/public/assets/images/DarkLogo.png';
@@ -27,11 +27,18 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
     // router.push(`/space/${spaceId}`);
   };
   const [isTutorial, setIsTutorial] = useState<boolean>(false);
+  const [isLogout, setIsLogout] = useState<boolean>(false);
   const modalOffHandler = function () {
     setIsTutorial(() => false);
   };
   const modalOnHandler = function () {
     setIsTutorial(() => true);
+  };
+  const LogoutModalOnHandler = function () {
+    setIsLogout(() => true);
+  };
+  const LogoutModalOffHandler = function () {
+    setIsLogout(() => false);
   };
   const { dark, presence } = useStoreSelector((state) => state.dark);
   const dispatch = useStoreDispatch();
@@ -86,8 +93,41 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
         </div>
         {/* 설정 */}
         <div className={`flex items-center justify-center basis-[4%] w-[4%]`}>
-          <TbSettingsFilled className="h-full w-full p-[25%] text-gray-300 active:text-gray-500 hover:scale-[105%] duration-[0.33s] cursor-pointer" />
+          <TbSettingsFilled
+            className="h-full w-full p-[25%] text-gray-300 active:text-gray-500 hover:scale-[105%] duration-[0.33s] cursor-pointer"
+            onClick={LogoutModalOnHandler}
+          />
         </div>
+        {isLogout && (
+          <Modal closeModal={LogoutModalOffHandler}>
+            <div className="text-theme-white-normal">
+              <Box
+                variant="two"
+                className="w-[50%] h-[50%] flex flex-col items-center justify-center"
+              >
+                <div className="text-2xl">로그아웃 하시겠습니까?</div>
+                <div className="flex gap-4">
+                  <Button
+                    isEmpty
+                    onClick={() => {
+                      LogoutModalOffHandler();
+                      router.push('/');
+                    }}
+                  >
+                    확인
+                  </Button>
+                  <Button
+                    isEmpty
+                    onClick={LogoutModalOffHandler}
+                    className="!border-red-500 !text-red-500"
+                  >
+                    닫기
+                  </Button>
+                </div>
+              </Box>
+            </div>
+          </Modal>
+        )}
         {/* 나가기 */}
         <Box
           className={`flex items-center justify-center basis-[10%] w-[10%] py-3 px-1 cursor-pointer hover:scale-[107%] duration-[0.33s]`}
