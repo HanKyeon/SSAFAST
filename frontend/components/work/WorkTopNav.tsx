@@ -47,6 +47,36 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
   };
   return (
     <>
+      {isLogout && (
+        <Modal closeModal={LogoutModalOffHandler}>
+          <div className="w-full h-full flex items-center justify-center text-theme-white-normal">
+            <Box
+              variant="two"
+              className="w-[30%] h-[40%] flex flex-col items-center justify-center gap-12"
+            >
+              <div className="text-2xl">로그아웃 하시겠습니까?</div>
+              <div className="flex gap-4">
+                <Button
+                  isEmpty
+                  onClick={() => {
+                    LogoutModalOffHandler();
+                    router.push('/');
+                  }}
+                >
+                  확인
+                </Button>
+                <Button
+                  isEmpty
+                  onClick={LogoutModalOffHandler}
+                  className="!border-red-500 !text-red-500"
+                >
+                  닫기
+                </Button>
+              </div>
+            </Box>
+          </div>
+        </Modal>
+      )}
       {isTutorial && (
         <Modal closeModal={modalOffHandler}>
           <div className="text-theme-white-normal">하이요?</div>
@@ -98,36 +128,7 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
             onClick={LogoutModalOnHandler}
           />
         </div>
-        {isLogout && (
-          <Modal closeModal={LogoutModalOffHandler}>
-            <div className="w-full h-full flex items-center justify-center text-theme-white-normal">
-              <Box
-                variant="two"
-                className="w-[30%] h-[40%] flex flex-col items-center justify-center gap-12"
-              >
-                <div className="text-2xl">로그아웃 하시겠습니까?</div>
-                <div className="flex gap-4">
-                  <Button
-                    isEmpty
-                    onClick={() => {
-                      LogoutModalOffHandler();
-                      router.push('/');
-                    }}
-                  >
-                    확인
-                  </Button>
-                  <Button
-                    isEmpty
-                    onClick={LogoutModalOffHandler}
-                    className="!border-red-500 !text-red-500"
-                  >
-                    닫기
-                  </Button>
-                </div>
-              </Box>
-            </div>
-          </Modal>
-        )}
+
         {/* 나가기 */}
         <Box
           className={`flex items-center justify-center basis-[10%] w-[10%] py-3 px-1 cursor-pointer hover:scale-[107%] duration-[0.33s]`}

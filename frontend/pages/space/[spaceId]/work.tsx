@@ -79,6 +79,7 @@ const SpaceWorkPage = function (
               // 'wss://y-webrtc-signaling-eu.herokuapp.com',
               // 'wss://y-webrtc-signaling-us.herokuapp.com',
             ], //`ws://www.ssafast.com:4444`
+            filterBcConns: true,
           }
         );
         provider.connect();
