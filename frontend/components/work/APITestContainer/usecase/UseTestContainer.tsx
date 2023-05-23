@@ -181,8 +181,8 @@ const UseTestContainer = function () {
       console.log('usecaseTestId!!!!!!!!!', res.data.usecaseTestId);
       setCurUsecase({
         id: res.data.usecaseTestId,
-        name: curUsecase.name,
-        desc: curUsecase.desc,
+        name: res.data.name,
+        desc: res.data.desc,
         isNew: true,
       });
     });
