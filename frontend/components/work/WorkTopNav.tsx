@@ -88,7 +88,7 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
         {/* 로고 */}
         <div
           className={`flex items-center justify-center basis-[6%] w-[6%] cursor-pointer hover:scale-[105%] duration-[0.33s] pt-3 pb-1`}
-          onClick={() => router.push(`/`)}
+          onClick={() => router.push(`/space`)}
         >
           <Image
             src={dark ? DarkLogo : LightLogo}
