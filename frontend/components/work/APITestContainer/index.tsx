@@ -107,7 +107,7 @@ const TestContainer = function ({ store, serverSideStore }: Props) {
 
   const onSubmit = function (data: ValidateUrl) {
     console.log('data :', data);
-    urlMutateAsync(data).then(() => isAccepted);
+    urlMutateAsync(data).then(() => isAccepted());
   };
 
   // const { data: certCode } = useBaseUrlCert(spaceId);
