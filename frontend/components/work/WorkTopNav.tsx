@@ -48,36 +48,34 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
   return (
     <>
       {isLogout && (
-        <div className="w-full h-full">
-          <Modal closeModal={LogoutModalOffHandler}>
-            <div className="w-full h-full flex items-center justify-center text-theme-white-normal">
-              <Box
-                variant="two"
-                className="w-[30%] h-[40%] flex flex-col items-center justify-center gap-12"
-              >
-                <div className="text-2xl">로그아웃 하시겠습니까?</div>
-                <div className="flex gap-4">
-                  <Button
-                    isEmpty
-                    onClick={() => {
-                      LogoutModalOffHandler();
-                      router.push('/');
-                    }}
-                  >
-                    확인
-                  </Button>
-                  <Button
-                    isEmpty
-                    onClick={LogoutModalOffHandler}
-                    className="!border-red-500 !text-red-500"
-                  >
-                    닫기
-                  </Button>
-                </div>
-              </Box>
-            </div>
-          </Modal>
-        </div>
+        <Modal parentClasses="w-full h-full" closeModal={LogoutModalOffHandler}>
+          <div className="w-full h-full flex items-center justify-center text-theme-white-normal">
+            <Box
+              variant="two"
+              className="w-[30%] h-[40%] flex flex-col items-center justify-center gap-12"
+            >
+              <div className="text-2xl">로그아웃 하시겠습니까?</div>
+              <div className="flex gap-4">
+                <Button
+                  isEmpty
+                  onClick={() => {
+                    LogoutModalOffHandler();
+                    router.push('/');
+                  }}
+                >
+                  확인
+                </Button>
+                <Button
+                  isEmpty
+                  onClick={LogoutModalOffHandler}
+                  className="!border-red-500 !text-red-500"
+                >
+                  닫기
+                </Button>
+              </div>
+            </Box>
+          </div>
+        </Modal>
       )}
       {isTutorial && (
         <Modal closeModal={modalOffHandler}>
