@@ -179,12 +179,10 @@ const UseTestContainer = function () {
       workspaceId: spaceId,
     }).then((res) => {
       console.log('usecaseTestId!!!!!!!!!', res.data.usecaseTestId);
-      console.log('UCname', ucNameInput);
-      console.log('UCdesc', ucDescInput);
       setCurUsecase({
         id: res.data.usecaseTestId,
-        name: ucNameInput,
-        desc: ucDescInput,
+        name: curUsecase.name,
+        desc: curUsecase.desc,
         isNew: true,
       });
     });

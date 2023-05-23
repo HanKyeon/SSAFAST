@@ -73,17 +73,6 @@ const useUcWithIds = function (ids: string) {
             };
           });
           // console.log(apiObj, '파람 넣기');
-          // 패스
-          apiObj.pathVars = {};
-          data.document.request.pathVars.forEach((pathOpt) => {
-            apiObj.pathVars[pathOpt.keyName] = {
-              type: pathOpt.type,
-              desc: pathOpt.desc,
-              constraints: [...pathOpt.constraints!],
-              mapped: false as boolean,
-              value: pathOpt.value,
-            };
-          });
           // 바디
           apiObj.body = { fields: {}, nestedDtos: {}, nestedDtoList: {} };
           // 바디 필즈
@@ -129,34 +118,26 @@ const useUcWithIds = function (ids: string) {
             (ress) => ress.statusCode === 200
           );
           apiObj.response = {
-            // headers: {},
-            // body: { fields: {}, nestedDtos: {}, nestedDtoLists: {} },
-            // body: {},
+            headers: {},
+            body: { fields: {}, nestedDtos: {}, nestedDtoLists: {} },
           };
           // 응답 헤더
-          if (res200?.headers.length && res200?.headers.length > 0) {
-            apiObj.response = { headers: {} };
-            res200?.headers.forEach((header) => {
-              apiObj.response.headers[header.keyName] = {
-                type: header.type,
-                desc: header.desc,
-                // mapped: false as boolean,
-              };
-            });
-          }
-
+          res200?.headers.forEach((header) => {
+            apiObj.response.headers[header.keyName] = {
+              type: header.type,
+              desc: header.desc,
+              mapped: false as boolean,
+            };
+          });
           // 응답 바디 필즈
-          if (res200?.body && 'fields' in res200?.body) {
-            ///////////ㅡㅇㅁ,,,
-            res200?.body.fields.forEach((resField) => {
-              apiObj.response.body.fields[resField.keyName] = {
-                type: resField.type,
-                desc: resField.desc,
-                itera: resField.itera,
-                mapped: false as boolean,
-              };
-            });
-          }
+          res200?.body.fields.forEach((resField) => {
+            apiObj.response.body.fields[resField.keyName] = {
+              type: resField.type,
+              desc: resField.desc,
+              itera: resField.itera,
+              mapped: false as boolean,
+            };
+          });
           // 응답 바디 nestedDtos
           for (const [dtoId, dtoDetail] of Object.entries(
             res200?.body?.nestedDtos || {}
