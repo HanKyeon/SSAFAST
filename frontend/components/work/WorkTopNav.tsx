@@ -100,10 +100,10 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
         </div>
         {isLogout && (
           <Modal closeModal={LogoutModalOffHandler}>
-            <div className="text-theme-white-normal">
+            <div className="w-full h-full flex items-center justify-center text-theme-white-normal">
               <Box
                 variant="two"
-                className="w-[50%] h-[50%] flex flex-col items-center justify-center"
+                className="w-[30%] h-[40%] flex flex-col items-center justify-center gap-12"
               >
                 <div className="text-2xl">로그아웃 하시겠습니까?</div>
                 <div className="flex gap-4">
