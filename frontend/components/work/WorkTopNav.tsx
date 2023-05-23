@@ -47,8 +47,8 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
   };
   return (
     <>
-      <div className="w-full h-full">
-        {isLogout && (
+      {isLogout && (
+        <div className="w-full h-full">
           <Modal closeModal={LogoutModalOffHandler}>
             <div className="w-full h-full flex items-center justify-center text-theme-white-normal">
               <Box
@@ -77,8 +77,8 @@ const WorkTopNav = function ({ children }: PropsWithChildren<TopNavProps>) {
               </Box>
             </div>
           </Modal>
-        )}
-      </div>
+        </div>
+      )}
       {isTutorial && (
         <Modal closeModal={modalOffHandler}>
           <div className="text-theme-white-normal">하이요?</div>
