@@ -42,8 +42,8 @@ public class UsecaseTestController {
 	@PostMapping
 	ResponseEntity<?> saveUsecaseTest(@RequestBody ReqUsecaseEntityDto reqUsecaseTestEntityDto) {
 		try {
-			Map<String, Long> result = new HashMap<>();
-			result.put("usecaseTestId", usecaseTestService.saveUsecaseTestEntity(reqUsecaseTestEntityDto));
+			Map<String, ResUsecaseSummaryDto> result = new HashMap<>();
+			result.put("usecaseTest", usecaseTestService.saveUsecaseTestEntity(reqUsecaseTestEntityDto));
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch (CustomException e) {
 			return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());

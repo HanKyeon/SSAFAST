@@ -16,6 +16,4 @@ public class ResUsecaseSummaryDto {
 	String name;
 
 	String desc;
-
-
 }

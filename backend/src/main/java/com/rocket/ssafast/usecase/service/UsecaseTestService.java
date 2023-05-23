@@ -80,11 +80,11 @@ public class UsecaseTestService {
 	private final ApiSpecService apiSpecService;
 
 	@Transactional
-	public Long saveUsecaseTestEntity(ReqUsecaseEntityDto reqUsecaseTestEntityDto) {
+	public ResUsecaseSummaryDto saveUsecaseTestEntity(ReqUsecaseEntityDto reqUsecaseTestEntityDto) {
 		if(!workspaceRepository.findById(reqUsecaseTestEntityDto.getWorkspaceId()).isPresent()) {
 			throw new CustomException(ErrorCode.WORKSPACE_NOT_FOUND);
 		}
-		return usecaseTestEntityRepository.save(reqUsecaseTestEntityDto.toEntity()).getId();
+		return usecaseTestEntityRepository.save(reqUsecaseTestEntityDto.toEntity()).toResSummaryDto();
 	}
 
 	@Transactional
