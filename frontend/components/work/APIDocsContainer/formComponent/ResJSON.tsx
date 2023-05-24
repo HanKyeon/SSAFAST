@@ -39,7 +39,7 @@ const ResJSONPostman = function ({ response }: ResJSONPropsType): JSX.Element {
     <div
       className={`border-[1px] border-grayscale-dark rounded-[8px] p-2 min-h-[30px] flex gap-2 text-content`}
     >
-      <div className={`w-[20px] h-full text-right`}>1</div>
+      {/* <div className={`w-[20px] h-full text-right`}>1</div> */}
       <pre className={`flex-1 h-full overflow-scroll`}>{jsonData}</pre>
     </div>
   );

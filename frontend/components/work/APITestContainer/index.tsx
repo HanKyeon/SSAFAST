@@ -67,21 +67,24 @@ const TestContainer = function ({ store, serverSideStore }: Props) {
 
   const { presence: isPresence } = useStoreSelector((state) => state.dark);
   const [USE1LOAD2, setUSE1LOAD2] = useState<1 | 2>(1);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [serverClass, setServerClass] = useState<1 | 2 | 3>(1);
   const goUseTest = function () {
     setUSE1LOAD2(() => 1);
   };
   const goLoadTest = function () {
-    if (baseUrlListData?.certification) {
-      setUSE1LOAD2(() => 2);
-      return;
+    if (baseUrlListData) {
+      if (baseUrlListData.certification) {
+        setUSE1LOAD2(() => 2);
+        return;
+      } else {
+        openModal();
+        return;
+      }
+    } else {
+      dispatch(
+        DispatchToast('잠시 기다려주세요.. url 목록을 받아오고 있습니다.', true)
+      );
     }
-    if (!baseUrlListData?.certification) {
-      openModal();
-      return;
-    }
-    setUSE1LOAD2(() => 2);
   };
 
   const isBanned = function () {
@@ -89,25 +92,15 @@ const TestContainer = function ({ store, serverSideStore }: Props) {
     closeModal();
   };
 
-  // const isAccepted = async function (data: ValidateUrl) {
-  //   certMutateAsync(data).then(() => {
-  //     setIsAuthenticated(true);
-  //     closeModal();
-  //     setUSE1LOAD2(() => 2);
-  //   });
-  // };
-  const isAccepted = function () {
-    setIsAuthenticated(true);
-    closeModal();
-    setUSE1LOAD2(() => 2);
-  };
-
   const { mutate: urlMutate, mutateAsync: urlMutateAsync } =
     useValidateUrl(spaceId);
 
   const onSubmit = function (data: ValidateUrl) {
     console.log('data :', data);
-    urlMutateAsync(data).then(() => isAccepted);
+    urlMutateAsync(data).then(() => {
+      closeModal();
+      setUSE1LOAD2(() => 2);
+    });
   };
 
   // const { data: certCode } = useBaseUrlCert(spaceId);

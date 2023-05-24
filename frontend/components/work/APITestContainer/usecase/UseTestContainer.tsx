@@ -106,6 +106,8 @@ const UseTestContainer = function () {
 
   const [curUsecase, setCurUsecase] = useState<UsecaseListItemType>({
     id: 0,
+    name: '',
+    desc: '',
     isNew: false,
   });
   // const { data: curUCData, isFetching: ucDataFetching } = useUsecaseDetail(
@@ -178,11 +180,10 @@ const UseTestContainer = function () {
       description: ucDescInput,
       workspaceId: spaceId,
     }).then((res) => {
-      console.log('usecaseTestId!!!!!!!!!', res.data.usecaseTestId);
       setCurUsecase({
-        id: res.data.usecaseTestId,
-        name: curUsecase.name,
-        desc: curUsecase.desc,
+        id: res.data.usecaseTest.id,
+        name: res.data.usecaseTest.name,
+        desc: res.data.usecaseTest.desc,
         isNew: true,
       });
     });

@@ -49,14 +49,14 @@ const SideContainer = function ({
             ? curUsecase.name
             : // : ucData
               // ? ucData.name
-              '뭐 없다 안된다?'}
+              'UseCase 이름을 불러올 수 없습니다.'}
         </span>
         <p className={`text-small text-grayscale-deeplightlight`}>
-          {curUsecase.name
+          {curUsecase.desc
             ? curUsecase.desc
             : // : ucData
               // ? ucData.desc
-              '뭐 없다 안된다?'}
+              'UseCase 설명을 불러올 수 없습니다.'}
         </p>
       </div>
       {/* api 순서대로 조록 */}
