@@ -279,7 +279,8 @@
 
 ## 🗂 ERD
 
- <img src="https://file.notion.so/f/s/65004c33-5176-4ce7-b5df-91b34e6019b0/erd_img.png?id=bd9f93a2-79fb-4c9f-9a7b-49da2175d713&table=block&spaceId=26ae456f-746f-4803-abcb-5d882cacc221&expirationTimestamp=1684242755170&signature=iSQRQUoqWIUW35DaYXgNk8xTTLuq0tyCk8pBRDPZivA&downloadName=erd+img.png" width="50%"></div>
+ ![](https://velog.velcdn.com/images/bisous1519/post/e722bdda-8292-48bc-aee5-eaa86440f00a/image.png)
+
 
 <br />
 
