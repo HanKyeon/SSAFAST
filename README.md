@@ -312,7 +312,7 @@
 
 ### I. 워크스페이스 생성
 
-![image](https://github.com/angly97/DoLearnDoLearn/assets/70613905/8b283c55-e590-4a3b-acfd-f013d701552e)
+![워크스페이스생성](https://github.com/angly97/DoLearnDoLearn/assets/70613905/1721edc9-5246-466c-b6d7-65fd9979f799)
 
 ---
 
@@ -337,7 +337,7 @@
 
 ### III. DTO 명세 & API 명세
 
-![image](https://github.com/angly97/DoLearnDoLearn/assets/70613905/ac28f337-3d4e-4aa1-b85c-81c69136aaf4)
+![DTO생성](https://github.com/angly97/DoLearnDoLearn/assets/70613905/acdc86ee-955a-4744-8f4f-15ab9dd924f1)
 
 ---
 
@@ -346,7 +346,7 @@
 - 오른쪽 상단 DTO 코드 버튼을 누르면 명세한 정보를 바탕으로 생성된 DTO 클래스 코드를 받을 수 있습니다.
 
 
-![image](https://github.com/angly97/DoLearnDoLearn/assets/70613905/ed86ef64-f38c-45fc-abc3-9762c694f179)
+![API명세](https://github.com/angly97/DoLearnDoLearn/assets/70613905/e711158e-ded7-4c0c-86d4-f7de1f2f8af6)
 
 ---
 
@@ -358,8 +358,8 @@
 
 ### IV. Figma 화면별 사용되는 API 연결
 
-![image](https://github.com/angly97/DoLearnDoLearn/assets/70613905/28b8837f-38ed-4184-8041-7783bb21680b)
- 
+![API매핑](https://github.com/angly97/DoLearnDoLearn/assets/70613905/88610f86-49ba-4a75-9d54-c7039b1caa4b)
+
 ---
 
 - 화면별로 사용될 API를 연결하는 단계입니다.
@@ -369,7 +369,7 @@
 
 ### V. API 요청 및 Axios 요청 객체 코드 반환
 
-![image](https://github.com/angly97/DoLearnDoLearn/assets/70613905/7662e793-d877-40d3-91a7-a2dd72d54e52)
+![API요청](https://github.com/angly97/DoLearnDoLearn/assets/70613905/6da3ed82-1cc1-4cce-8dfb-dc22936dcb66)
 
 ---
 
@@ -381,7 +381,7 @@
 
 ### VI. 유스케이스 테스트
 
-![image](https://github.com/angly97/DoLearnDoLearn/assets/70613905/13d3d3f7-ead0-4686-8934-ef565d366fae)
+![유스케이스](https://github.com/angly97/DoLearnDoLearn/assets/70613905/ae0f1eea-7b70-40b5-96d8-f55cb796bb50)
 
 ---
 
@@ -394,17 +394,13 @@
 
 ### VII. 성능테스트
 
-![image](https://github.com/angly97/DoLearnDoLearn/assets/70613905/73fe314f-1c56-4555-b081-5504bfcc8558)
+![KakaoTalk_20230526_175045748_01](https://github.com/angly97/DoLearnDoLearn/assets/70613905/2cf3b711-8681-4a0a-aaeb-1929485dd1bf)
 
 ---
 - 서버 소유 인증 : 상단의 코드 중 서버의 프레임워크와 일치하는 코드를 복사하여 서버에 붙입니다. 이때 요청을 받을 수 있는 경로가 "[server_url]/api/ssfast" 인지 꼭 확인해야합니다.
 - 모든 서버에 대한 인증이 완료되어야 성능테스트를 이용할 수 있습니다.
 - 테스트하고자 하는 API를 선택해서 데이터를 삽입하고 초당 요청 횟수, duration을 입력하고 요청합니다.
 
-<br />
-
-
-## 🎥 [UCC 보러가기](https://youtu.be/LxDlqr280do)
 
 <br />
 
