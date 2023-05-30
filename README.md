@@ -15,8 +15,8 @@
 <td align="center">CI/CD<br/>UsecaseTest<br/>APIExec<br/>Auth<br/>Member<br/>JavaPoet<br/>SpringSecurity<br/>Spring Boot<br/>JPA<br/>MySQL<br/>MongoDB<br/>Redis</td> 
 <td align="center">APISpec<br/>DtoSpec<br/>Spring Boot<br/>JPA<br/>MySQL<br/>MongoDB</td>
 <td align="center">UI/UX<br/>NextJS<br/>React<br/>ReactHookForm<br/>Typescript<br/>Redux<br/>Tailwind<br/></td>
-<td align="center">UI/UX<br/>NextJS<br/>React<br/>Typescript<br/>Redux<br/>ReduxTookKit<br/>Tailwind<br/></td>
-<td align="center">NextJS<br/>React<br/>Typescript<br/>ReactQuery<br/>Redux<br/>ReduxTookKit<br/>Tailwind<br/>FigmaAPI<br/>Y.JS<br/></td></tr> </table>
+<td align="center">UI/UX<br/>NextJS<br/>React<br/>Typescript<br/>Redux<br/>ReduxToolKit<br/>Tailwind<br/></td>
+<td align="center">NextJS<br/>React<br/>Typescript<br/>ReactQuery<br/>ReactHookForm<br/>Redux<br/>ReduxToolKit<br/>Tailwind<br/>FigmaAPI<br/>Y.JS<br/></td></tr> </table>
 
 <br />
 
@@ -44,18 +44,19 @@
 
 #### Front
 
-<img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=Next.js&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/><img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black" style="height : auto; margin-left : 10px; margin-right : 10px;"/><img src="https://img.shields.io/badge/Typescript-3178C6?style=for-the-badge&logo=Typescript&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/><img src="https://img.shields.io/badge/ReactQuery-FF4154?style=for-the-badge&logo=React%20Query&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/><img src="https://img.shields.io/badge/React Hook Form-EC5990?style=for-the-badge&logo=React-hook-form&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/><img src="https://img.shields.io/badge/Tailwind-06B6D4?style=for-the-badge&logo=Tailwind%20CSS&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/><img src="https://img.shields.io/badge/Redux-764ABC?style=for-the-badge&logo=Redux&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/><img src="https://img.shields.io/badge/Reduxtoolkit-764ABC?style=for-the-badge&logo=Redux&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/><img src="https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=Axios&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/><img src="https://img.shields.io/badge/Y.JS-7FEB7E?style=for-the-badge&logo=yjs&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/>
+<img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=Next.js&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Typescript-3178C6?style=for-the-badge&logo=Typescript&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/ReactQuery-FF4154?style=for-the-badge&logo=React%20Query&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/React Hook Form-EC5990?style=for-the-badge&logo=React-hook-form&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Tailwind-06B6D4?style=for-the-badge&logo=Tailwind%20CSS&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Redux-764ABC?style=for-the-badge&logo=Redux&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Reduxtoolkit-764ABC?style=for-the-badge&logo=Redux&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=Axios&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Y.JS-7FEB7E?style=for-the-badge&logo=yjs&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/>
 
 #### Back
 
 <img src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=Java&logoColor=#007396" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Spring Security-6DB33F?style=for-the-badge&logo=Spring Security&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/JSON Web Tokens-000000?style=for-the-badge&logo=JSON Web Tokens&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <br/> <img src="https://img.shields.io/badge/MongoDB-FFEEEEE?style=for-the-badge&logo=MongoDB&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Redis-000000?style=for-the-badge&logo=Redis&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/><img src="https://img.shields.io/badge/GCP SDK-BBBBBB?style=for-the-badge&logo=GCPSDK&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/OAuth2-2496ED?style=for-the-badge&logo=OAuth2&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/GCP-2496ED?style=for-the-badge&logo=Ubuntu&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/><img src="https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=Gradle&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/>
 
 #### CI/CD
+
 <img src="https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=NGINX&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=Jenkins&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/>
 
 #### 기타
 
-<img src="https://img.shields.io/badge/Java Poet-E25A1C?style=for-the-badge&logo=JavaPoet&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Vegeta-3776AB?style=for-the-badge&logo=Vegeta&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> 
+<img src="https://img.shields.io/badge/Java Poet-E25A1C?style=for-the-badge&logo=JavaPoet&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/> <img src="https://img.shields.io/badge/Vegeta-3776AB?style=for-the-badge&logo=Vegeta&logoColor=white" style="height : auto; margin-left : 10px; margin-right : 10px;"/>
 
 #### 협업 툴
 
@@ -63,39 +64,39 @@
 
 <details><summary> <b> 상세 기술스택 및 버전</b> </summary>
 
-| 구분     | 기술스택                   | 상세내용                   | 버전      |
-| -------- | -------------------------- | -------------------------- | --------- |
-| 공통     | Gitlab                     | 형상관리                   | \-        |
-|          | Jira                       | 이슈관리                   | \-        |
-|          | Mattermost, Notion         | 커뮤니케이션               | \-        |
-| BackEnd  | MySQL                      | DBMS                       | 8.0.21    |
-|          | MongoDB                   |DBMS, DataBase               | 6.0.5     |
-|          | Java                       | OpenJDK                    | 1.8.0_362 |
-|          | Spring Boot                | Java Server Framework      | 2.7.6     |
-|          | Spring Security            |                            | \-        |
-|          | JPA                        |                            | \-        |
-|          | IntelliJ                   | IDE                        | \-        |
-|          | Java Poet                  | Code Generator             | 1.13.0     |
-|          | OAuth2                     |                            | 2.6.2     |
-|          | Vegeta                     | 부하테스트 오픈소스         | 8.0.0    |
-|          | Redis                      | 인메모리 데이터베이스       | 7.0.11   |
-|          | Gradle                     | Build                     | 7.6.1     |
-| FrontEnd | Next.JS                    | 프론트 프레임워크         | 13.3.0        |
-|          | React                      |                            | 18.0.35        |
-|          | Typescript                 |                            | 5.0.4        |
-|          | ReactQuery               | 서버 상태 관리 라이브러리       | 0.17.6    |
-|          | React Hook Form         | 폼 관리 라이브러리          | 7.43.9     |
-|          | Redux ToolKit                 | 상태 관리 라이브러리 | 1.9.3     |
-|          | Tailwind                    | CSS 라이브러리     | 3.3.1       |
-|          | axios                      | API 통신 라이브러리        | 1.2.3     |
-|          | IDE                        | Visual Studio Code         | 1.75.1    |
-| Server   | AWS EC2                    | Server                     | \-        |
-|          | Nginx                      |                            | 1.23.3    |
-|          | Docker                     |                            | 23.0.1    |
-| Test     | test            | Postman              | 10.9.4            |
-|          | test            | JUnit5               | \-                |
-|          | test            | Mockito              | \-                |
-|          | test            | Jacoco               | toolVersion 0.8.7 |
+| 구분     | 기술스택           | 상세내용                  | 버전              |
+| -------- | ------------------ | ------------------------- | ----------------- |
+| 공통     | Gitlab             | 형상관리                  | \-                |
+|          | Jira               | 이슈관리                  | \-                |
+|          | Mattermost, Notion | 커뮤니케이션              | \-                |
+| BackEnd  | MySQL              | DBMS                      | 8.0.21            |
+|          | MongoDB            | DBMS, DataBase            | 6.0.5             |
+|          | Java               | OpenJDK                   | 1.8.0_362         |
+|          | Spring Boot        | Java Server Framework     | 2.7.6             |
+|          | Spring Security    |                           | \-                |
+|          | JPA                |                           | \-                |
+|          | IntelliJ           | IDE                       | \-                |
+|          | Java Poet          | Code Generator            | 1.13.0            |
+|          | OAuth2             |                           | 2.6.2             |
+|          | Vegeta             | 부하테스트 오픈소스       | 8.0.0             |
+|          | Redis              | 인메모리 데이터베이스     | 7.0.11            |
+|          | Gradle             | Build                     | 7.6.1             |
+| FrontEnd | Next.JS            | 프론트 프레임워크         | 13.3.0            |
+|          | React              |                           | 18.0.35           |
+|          | Typescript         |                           | 5.0.4             |
+|          | ReactQuery         | 서버 상태 관리 라이브러리 | 0.17.6            |
+|          | React Hook Form    | 폼 관리 라이브러리        | 7.43.9            |
+|          | Redux ToolKit      | 상태 관리 라이브러리      | 1.9.3             |
+|          | Tailwind           | CSS 라이브러리            | 3.3.1             |
+|          | axios              | API 통신 라이브러리       | 1.2.3             |
+|          | IDE                | Visual Studio Code        | 1.75.1            |
+| Server   | AWS EC2            | Server                    | \-                |
+|          | Nginx              |                           | 1.23.3            |
+|          | Docker             |                           | 23.0.1            |
+| Test     | test               | Postman                   | 10.9.4            |
+|          | test               | JUnit5                    | \-                |
+|          | test               | Mockito                   | \-                |
+|          | test               | Jacoco                    | toolVersion 0.8.7 |
 
 </details>
 
@@ -273,47 +274,47 @@
 
 ## **🎨 Figma**
 
- <img src="https://github.com/angly97/DoLearnDoLearn/assets/70613905/8c673930-6578-4b7c-9692-a997a5431e9f" width=50%>
+ <img src="https://github.com/angly97/DoLearnDoLearn/assets/70613905/8c673930-6578-4b7c-9692-a997a5431e9f" width=100%>
 
 <br />
 
 ## 🗂 ERD
 
- ![](https://velog.velcdn.com/images/bisous1519/post/e722bdda-8292-48bc-aee5-eaa86440f00a/image.png)
-
+ <img src="https://velog.velcdn.com/images/bisous1519/post/e722bdda-8292-48bc-aee5-eaa86440f00a/image.png" width=100%>
 
 <br />
 
 ## 🖥️ 주요기능
 
 ### 개요
+
 - API 명세
-	- 화면 별 UI 디자인을 보며 필요한 요청/응답 데이터를 확인하여 같은 공간에서 API 설계
-		- API 명세 작성을 위해 Figma 화면과 명세 작성 문서를 번거롭게 이동해야하는 불편함 해소
-		- Postman, Swagger와 달리 Request 값 제약조건의 제약조건과 Response 항목에 대한 주석 가능하게 함으로써 개발 과정의 오해를 최소화
-	- 각 화면마다 필요한 API 목록 연결 가능
-		- 프론트엔드 개발을 위해 화면별로 어떤 API가 필요한지 한눈에 확인 가능
+  - 화면 별 UI 디자인을 보며 필요한 요청/응답 데이터를 확인하여 같은 공간에서 API 설계
+    - API 명세 작성을 위해 Figma 화면과 명세 작성 문서를 번거롭게 이동해야하는 불편함 해소
+    - Postman, Swagger와 달리 Request 값 제약조건의 제약조건과 Response 항목에 대한 주석 가능하게 함으로써 개발 과정의 오해를 최소화
+  - 각 화면마다 필요한 API 목록 연결 가능
+    - 프론트엔드 개발을 위해 화면별로 어떤 API가 필요한지 한눈에 확인 가능
   - code generator
 - API 요청
-	- 화면별로 연결된 API 목록을 한눈에 확인하고 같은 공간에서 요청 테스트를 진행함으로써, 해당 화면에 필요한 API들이 성공적으로 작동하는지 쉽게 확인 가능
-	- API 요청에 대한 응답을 저장함으로써, 성공 응답과 실패 응답 그리고 그 응답을 보냈을 때의 요청값 정보를 확인 가능
+  - 화면별로 연결된 API 목록을 한눈에 확인하고 같은 공간에서 요청 테스트를 진행함으로써, 해당 화면에 필요한 API들이 성공적으로 작동하는지 쉽게 확인 가능
+  - API 요청에 대한 응답을 저장함으로써, 성공 응답과 실패 응답 그리고 그 응답을 보냈을 때의 요청값 정보를 확인 가능
 - 유스케이스 테스트
-	- 하나의 시나리오를 위해 실행되어야하는 API들의 데이터를 **유기적**으로 요청하여, 해당 기능이 성공적으로 구현되었는지 쉽게 확인
-		- ex. 댓글 작성 유스케이스 테스트
-			1. 로그인 API 호출을 위해, 계정 정보를 입력
-			2. 글 작성 API 호출을 위해, 제목과 내용을 입력하고 1번 API 응답 헤더의 Access Token를 2번 API 요청 헤더의 Authorization에 매핑
-			3. 해당 글에 대한 댓글 작성 API 호출을 위해, 댓글 내용을 입력하고 2번 API 응답의 글 ID를 3번 API의 요청 바디의 글 id에 매핑
-			4. 유스케이스 테스트 실행 버튼을 클릭하여, 위의 API들을 순차적으로 실행 마지막으로 호출된 API 응답을 확인
+  - 하나의 시나리오를 위해 실행되어야하는 API들의 데이터를 **유기적**으로 요청하여, 해당 기능이 성공적으로 구현되었는지 쉽게 확인
+    - ex. 댓글 작성 유스케이스 테스트
+      1.  로그인 API 호출을 위해, 계정 정보를 입력
+      2.  글 작성 API 호출을 위해, 제목과 내용을 입력하고 1번 API 응답 헤더의 Access Token를 2번 API 요청 헤더의 Authorization에 매핑
+      3.  해당 글에 대한 댓글 작성 API 호출을 위해, 댓글 내용을 입력하고 2번 API 응답의 글 ID를 3번 API의 요청 바디의 글 id에 매핑
+      4.  유스케이스 테스트 실행 버튼을 클릭하여, 위의 API들을 순차적으로 실행 마지막으로 호출된 API 응답을 확인
 - 성능 테스트
-	- 테스트하고자 하는 api, duration, 초당 request 수를 입력하면 동적으로 테스트 서버를 생성하여 성능테스트를 대리 수행함
+  - 테스트하고자 하는 api, duration, 초당 request 수를 입력하면 동적으로 테스트 서버를 생성하여 성능테스트를 대리 수행함
     - GCP SDK를 이용하여 클라우드 서버 동적 생성
-		- vegeta 오픈소스로 성능테스트 수행
+    - vegeta 오픈소스로 성능테스트 수행
 
 <br />
 
 ### I. 워크스페이스 생성
 
-![워크스페이스생성](https://github.com/angly97/DoLearnDoLearn/assets/70613905/1721edc9-5246-466c-b6d7-65fd9979f799)
+<img src="https://github.com/angly97/DoLearnDoLearn/assets/70613905/1721edc9-5246-466c-b6d7-65fd9979f799" width="70%"/>
 
 ---
 
@@ -325,7 +326,7 @@
 
 ### II. 워크스페이스 홈화면
 
-  <img src="https://github.com/angly97/DoLearnDoLearn/assets/70613905/d9abe420-1ad9-457b-b1b9-88a51e660359" width="50%"/>
+  <img src="https://github.com/angly97/DoLearnDoLearn/assets/70613905/d9abe420-1ad9-457b-b1b9-88a51e660359" width="70%"/>
 
 ---
 
@@ -338,7 +339,7 @@
 
 ### III. DTO 명세 & API 명세
 
-![DTO생성](https://github.com/angly97/DoLearnDoLearn/assets/70613905/acdc86ee-955a-4744-8f4f-15ab9dd924f1)
+  <img src="https://github.com/angly97/DoLearnDoLearn/assets/70613905/acdc86ee-955a-4744-8f4f-15ab9dd924f1" width="70%"/>
 
 ---
 
@@ -346,8 +347,7 @@
 - 등록한 DTO는 왼쪽에서 확인할 수 있습니다.
 - 오른쪽 상단 DTO 코드 버튼을 누르면 명세한 정보를 바탕으로 생성된 DTO 클래스 코드를 받을 수 있습니다.
 
-
-![API명세](https://github.com/angly97/DoLearnDoLearn/assets/70613905/e711158e-ded7-4c0c-86d4-f7de1f2f8af6)
+  <img src="https://github.com/angly97/DoLearnDoLearn/assets/70613905/e711158e-ded7-4c0c-86d4-f7de1f2f8af6" width="70%"/>
 
 ---
 
@@ -359,7 +359,7 @@
 
 ### IV. Figma 화면별 사용되는 API 연결
 
-![API매핑](https://github.com/angly97/DoLearnDoLearn/assets/70613905/88610f86-49ba-4a75-9d54-c7039b1caa4b)
+  <img src="https://github.com/angly97/DoLearnDoLearn/assets/70613905/88610f86-49ba-4a75-9d54-c7039b1caa4b" width="70%"/>
 
 ---
 
@@ -370,7 +370,7 @@
 
 ### V. API 요청 및 Axios 요청 객체 코드 반환
 
-![API요청](https://github.com/angly97/DoLearnDoLearn/assets/70613905/6da3ed82-1cc1-4cce-8dfb-dc22936dcb66)
+  <img src="https://github.com/angly97/DoLearnDoLearn/assets/70613905/6da3ed82-1cc1-4cce-8dfb-dc22936dcb66" width="70%"/>
 
 ---
 
@@ -382,7 +382,7 @@
 
 ### VI. 유스케이스 테스트
 
-![유스케이스](https://github.com/angly97/DoLearnDoLearn/assets/70613905/ae0f1eea-7b70-40b5-96d8-f55cb796bb50)
+  <img src="https://github.com/angly97/DoLearnDoLearn/assets/70613905/ae0f1eea-7b70-40b5-96d8-f55cb796bb50" width="70%"/>
 
 ---
 
@@ -395,13 +395,13 @@
 
 ### VII. 성능테스트
 
-![KakaoTalk_20230526_175045748_01](https://github.com/angly97/DoLearnDoLearn/assets/70613905/2cf3b711-8681-4a0a-aaeb-1929485dd1bf)
+  <img src="https://github.com/angly97/DoLearnDoLearn/assets/70613905/2cf3b711-8681-4a0a-aaeb-1929485dd1bf" width="70%"/>
 
 ---
+
 - 서버 소유 인증 : 상단의 코드 중 서버의 프레임워크와 일치하는 코드를 복사하여 서버에 붙입니다. 이때 요청을 받을 수 있는 경로가 "[server_url]/api/ssfast" 인지 꼭 확인해야합니다.
 - 모든 서버에 대한 인증이 완료되어야 성능테스트를 이용할 수 있습니다.
 - 테스트하고자 하는 API를 선택해서 데이터를 삽입하고 초당 요청 횟수, duration을 입력하고 요청합니다.
-
 
 <br />
 
