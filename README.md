@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/angly97/DoLearnDoLearn/assets/70613905/8ef87700-4a2b-42f0-982b-4a8dd4f594b8" width="50"/>
+  <img src="https://github.com/angly97/DoLearnDoLearn/assets/70613905/8ef87700-4a2b-42f0-982b-4a8dd4f594b8" width="50%"/>
 </div>
 
 <br/>
@@ -324,7 +324,7 @@
 
 ### II. 워크스페이스 홈화면
 
-![image](https://github.com/angly97/DoLearnDoLearn/assets/70613905/d9abe420-1ad9-457b-b1b9-88a51e660359)
+  <img src="https://github.com/angly97/DoLearnDoLearn/assets/70613905/d9abe420-1ad9-457b-b1b9-88a51e660359" width="50%"/>
 
 ---
 
