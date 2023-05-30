@@ -15,7 +15,7 @@
                         "type" : "String",
                         "desc" : "access token",
                         "mapped": false,
-                        "value" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2ODM4MjA3NzUsInN1YiI6ImFjY2Vzcy10b2tlbiIsImVtYWlsIjoiY2hvaHllb245NzA4QGdtYWlsLmNvbSJ9.VUBAYPlyDbRXAoFKqNDvDqWfoQo8mIomHkZGRjiGLX1XW4Aj6x7W52xt9s-p9qLSEPJvKiJKjHl9yZjlrqEM_w"
+                        "value" : "Bearer Hello world!!"
                     }
                 },
                 "pathVars" : {
